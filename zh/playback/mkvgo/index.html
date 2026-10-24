@@ -13,7 +13,7 @@
         <link rel="prev" href="../transcoding/">
       
       
-        <link rel="next" href="../hdr/">
+        <link rel="next" href="../ac3go/">
       
       
         
@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1410,6 +1442,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3268,6 +3328,7 @@
 <p><strong>监控它。</strong> 在 <code>GET /metrics</code> 上（见<a href="../../operations/monitoring/#prometheus-metrics">监控与日志</a>），<code>evey_mkvgo_walks_in_flight</code> 是此刻正在读取的窗口数，<code>evey_mkvgo_plan_stats</code> 按 <code>stat</code> 汇总打包器的各项计数。如果 <code>walks_in_flight</code> 一直停在上限，同时 <code>stat="slot_waits"</code> 不断上升，说明观众在排队等处理器；<code>stream_fallbacks</code> 统计的是无法以流式方式发送、只能先在内存中组装的片段数。</p>
 <h2 id="seeing-which-engine-served-a-stream">查看是哪个引擎提供的视频流<a class="headerlink" href="#seeing-which-engine-served-a-stream" title="Permanent link">¶</a></h2>
 <p><strong>管理 → 仪表盘</strong>和<strong>管理 → 正在播放</strong>会标明每条轨道用的引擎：<code>mkvgo</code> 或 <code>ffmpeg</code>。一次重封装可能两个都有，例如视频由 MKVGo 打包，音频由 FFmpeg 复制。</p>
+<p>mkvgo 以 MIT 许可证发布。</p>
 <!-- sources
 in-process, no ffmpeg, no session state, no on-disk segments: internal/adapters/driven/mkvgo/ondemand.go - OnDemandPackager
 probe + fallback reasons: internal/adapters/driven/prober/dispatcher.go (container gate, ReadMeta error, panic) ; internal/adapters/driven/prober/mapper.go (ColourDetermined, VP9 feature metadata) ; docs/adr/0016-mkv-fastpath-prober.md
@@ -3344,13 +3405,13 @@ plain opening: rules below ; i18n admin.sessions.track.engine
         
         
           
-          <a href="../hdr/" class="md-footer__link md-footer__link--next" aria-label="下一页: HDR 与杜比视界">
+          <a href="../ac3go/" class="md-footer__link md-footer__link--next" aria-label="下一页: Evey 中的 ac3go">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 下一页
               </span>
               <div class="md-ellipsis">
-                HDR 与杜比视界
+                Evey 中的 ac3go
               </div>
             </div>
             <div class="md-footer__button md-icon">

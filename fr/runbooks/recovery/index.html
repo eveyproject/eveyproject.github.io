@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3205,7 +3265,7 @@ depuis peuvent être perdues. La commande passe un dump <code>.sql.gz</code> par
 <code>gunzip | psql</code> dans la base configurée.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>La restauration écrase les lignes actuelles. Prenez d'abord une
+<p>La restauration supprime et recrée chaque table avant de la charger, donc les lignes actuelles sont remplacées. Prenez d'abord une
 sauvegarde de l'état courant (<strong>Administration → Sauvegarde BDD et restauration →
 Lancer maintenant</strong>) s'il y a la moindre chance d'en avoir besoin.</p>
 </div>
@@ -3231,8 +3291,9 @@ Lancer maintenant</strong>) s'il y a la moindre chance d'en avoir besoin.</p>
 <li>Le nom du fichier doit finir par <code>.sql.gz</code>. Les archives <code>.tar.gz</code> de
   <strong>Administration → Sauvegarde BDD et restauration</strong> se restaurent depuis le
   panneau, pas avec cette commande.</li>
-<li>La base cible doit exister ; le dump supprime et recrée les tables, pas la
-  base.</li>
+<li>La base cible doit exister ; le dump supprime et recrée chaque table avant de la
+  charger, ce qui permet de le restaurer sur une base déjà remplie, mais il ne
+  crée pas la base.</li>
 <li><code>psql</code> et <code>gunzip</code> doivent être dans le PATH, ce que l'image garantit.</li>
 </ul>
 <p>Les dumps de pré-migration sont écrits automatiquement avant chaque

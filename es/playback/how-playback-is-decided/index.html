@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1446,6 +1478,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3338,7 +3398,7 @@ directa</strong>, los motivos.</p>
 </tr>
 <tr>
 <td>Un ajuste o una decisión ya tomada</td>
-<td>Reproducción directa desactivada en el perfil · Remux desactivado en el perfil · Códec de vídeo preferido (ajuste del perfil) · Elección fijada para esta sesión</td>
+<td>Códec de vídeo preferido (ajuste del perfil) · Elección fijada para esta sesión</td>
 </tr>
 </tbody>
 </table>
@@ -3422,15 +3482,15 @@ la sesión, para que el reproductor nunca reciba segmentos de dos
 codificaciones distintas. Cambiar la pista de audio o de subtítulos de una
 forma que lo exija, o volver a empezar el título, provoca una nueva decisión.</p>
 <h2 id="forcing-a-method">Forzar un método<a class="headerlink" href="#forcing-a-method" title="Permanent link">¶</a></h2>
-<p><strong>Ajustes → Reproducción</strong> tiene <strong>Permitir reproducción directa</strong>,
-<strong>Permitir remux</strong> y <strong>Permitir transcodificación</strong> para cada perfil. Si
-desactivas uno, el servidor se salta ese método, e Información del flujo
-muestra por qué.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Es una herramienta de diagnóstico, no un ajuste de calidad: una
-transcodificación forzada nunca es mejor que el original.</p>
-</div>
+<p>No se puede forzar un método: el servidor siempre lo elige según el archivo y el
+reproductor. Lo que sí puedes limitar es la calidad, dispositivo por
+dispositivo, con <strong>Ajustes → Reproducción → Ahorro de datos (este
+dispositivo)</strong>. Limita el flujo solo en ese dispositivo; los demás dispositivos
+de la cuenta conservan su propio ajuste. <strong>Desactivado</strong> no pone ningún límite.
+<strong>Ahorro</strong> pide como máximo 720p, 3 Mbps y sonido estéreo. <strong>Viaje / pocos
+datos</strong> pide como máximo 480p, 1 Mbps y sonido estéreo. Un título por encima del
+límite se transcodifica hasta él, e Información del flujo muestra el límite como
+motivo.</p>
 <p><strong>Calidad</strong>, en los ajustes del reproductor, es otra cosa: elige entre las
 calidades de un flujo transcodificado. <strong>Auto</strong> sigue a la conexión; una
 altura (1080p, 720p...) mantiene esa calidad; <strong>Original</strong> quita el límite de
@@ -3444,7 +3504,8 @@ altura que el reproductor pediría si no.</p>
 <li>La implementación: <a href="../../playback-serving/">Cadena de reproducción</a></li>
 </ul>
 <!-- sources
-decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels), applyDirectPlayPrefs
+decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels)
+
 session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked)
 remote cap: internal/adapters/driving/grpcapi/playback_handler.go - resolvePlaybackPrefs ; internal/config/config.go - RemoteBitrateCapKbps
 client caps: internal/domain/transcoding/playback_decision.go - ClientProfile ; frontend/packages/client/src/web/codec.ts ; frontend/packages/media-caps/src/castUrl.ts

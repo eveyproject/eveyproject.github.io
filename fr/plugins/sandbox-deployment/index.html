@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3347,8 +3407,8 @@ machine virtuelle complète.</p>
 <p>N'installez que des plugins de confiance sur un tel hôte, ou passez à un
 noyau moderne pour avoir la restriction d'accès complète.</p>
 <h2 id="configuration-examples">Exemples de configuration<a class="headerlink" href="#configuration-examples" title="Permanent link">¶</a></h2>
-<p>À mettre dans votre <code>.env</code> (compose) ou comme variables d'environnement
-<code>EVEY_*</code>.</p>
+<p>Chaque ligne se place sous <code>environment:</code> dans le fichier compose, écrite
+<code>KEY: value</code> (par exemple <code>EVEY_PLUGINS_UID_SEPARATION: "on"</code>).</p>
 <div class="language-bash highlight"><span class="filename">1. Serveur moderne, recommandé (rien à faire)</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_SANDBOX_MODE</span><span class="o">=</span>auto<span class="w">          </span><span class="c1"># choisit le plus fort disponible (défaut)</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># EVEY_PLUGINS_UID_SEPARATION=auto      # (défaut) active seulement là où c'est nécessaire</span>
 </span></code></pre></div>
@@ -3380,7 +3440,7 @@ erreur : rétablissez le mode précédent.</p>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>getcap<span class="w"> </span>/evey-plugin-launcher<span class="w">        </span><span class="c1"># cap_setuid=ep</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># sous quel utilisateur tourne un plugin (evey = partagé avec le serveur,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># evey-plugin = séparé) ; l'image n'a pas de ps, demandez à Docker</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># evey-plugin = séparé) ; l'image a ps, donc `docker exec evey-server ps` fonctionne aussi</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>docker<span class="w"> </span>top<span class="w"> </span>evey-server<span class="w"> </span>-o<span class="w"> </span>user,pid,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"node|python"</span>
 </span></code></pre></div>
 <p>Le mode de sandbox en vigueur est le badge de <strong>Administration → Plugins → Tableau

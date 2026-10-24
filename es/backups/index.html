@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1295,6 +1325,8 @@
       
         
       
+        
+      
     
     
     
@@ -1411,6 +1443,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3235,8 +3295,9 @@ auditoría.</p>
 <li>la caché de vídeo (se vuelve a llenar sola);</li>
 <li>el índice de búsqueda (se reconstruye a partir de la base de datos);</li>
 <li>las claves guardadas en <code>./evey-data</code>: <code>jwt.key</code>, que protege todos los
-  inicios de sesión, y la carpeta <code>keys</code> (contraseña de la base de datos,
-  clave de búsqueda);</li>
+  inicios de sesión, la carpeta <code>keys</code> (contraseña de la base de datos,
+  clave de búsqueda) y <code>hls_aes.key</code>, la clave que cifra los segmentos de
+  streaming (se crea en el primer arranque, permisos 0600);</li>
 <li>los archivos de los plugins instalados.</li>
 </ul>
 <p><strong>Así que guarda también una copia de toda la carpeta <code>./evey-data</code>.</strong> Una
@@ -3291,13 +3352,12 @@ copias de seguridad hechas antes de una actualización
 </ul>
 <details class="info">
 <summary>Fijar la versión exacta que usas</summary>
-<p>Durante la beta no hay versiones numeradas ni etiqueta <code>latest</code>. La
-etiqueta <code>beta-0.0.1</code> cambia con cada actualización. Para un servidor
-del que dependes, pon una etiqueta fija <code>sha-&lt;commit&gt;</code> en la línea
+<p><code>latest</code> sigue la versión publicada más reciente y cambia con cada
+actualización. Para un servidor del que dependes, pon una etiqueta de
+versión (<code>0.1.0</code>, o <code>0.1</code> para recibir solo sus arreglos) o una etiqueta fija <code>sha-&lt;commit&gt;</code> en la línea
 <code>image:</code>, para que dos descargas con un día de diferencia ejecuten el
-mismo código. Cuando haya versiones publicadas, <code>latest</code> seguirá la
-versión estable más reciente, y una etiqueta de versión (<code>0.2.0</code>) la
-fijará.</p>
+mismo código.
+La tabla de <a href="../installation/#common-variations">Instalación</a> indica qué te da cada etiqueta.</p>
 </details>
 <h3 id="going-back">Volver atrás<a class="headerlink" href="#going-back" title="Permanent link">¶</a></h3>
 <ol>
@@ -3318,7 +3378,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
-rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (beta-0.0.1 + sha-<short>, latest gated on vX.Y.Z)
+rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->
 

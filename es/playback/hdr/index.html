@@ -10,7 +10,7 @@
         <link rel="canonical" href="https://eveyproject.org/es/playback/hdr/">
       
       
-        <link rel="prev" href="../mkvgo/">
+        <link rel="prev" href="../ac3go/">
       
       
         <link rel="next" href="../audio/">
@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3195,9 +3255,11 @@
 <li>En una pantalla HDR con la app de Android o de Android TV (y un dispositivo
   que descodifique HEVC), recibes la imagen HDR original, siempre que nada
   más obligue a convertirla.</li>
-<li>En un navegador web, y en cualquier pantalla que no sea HDR, el servidor
-  convierte la imagen a SDR. Es a propósito: el HDR mostrado en una pantalla
-  SDR se ve gris y apagado.</li>
+<li>En cualquier pantalla que no sea HDR, el servidor convierte la imagen a SDR.
+  Es a propósito: el HDR mostrado en una pantalla SDR se ve gris y apagado. Un
+  navegador web con una pantalla SDR recibe SDR; uno que informa de una
+  pantalla HDR y descodifica HEVC conserva HDR10 y HLG. Dolby Vision se sigue
+  convirtiendo.</li>
 <li>Convertir HDR a SDR es el trabajo más pesado que puede hacer el
   procesador. Una tarjeta gráfica ayuda: consulta
   <a href="../../administration/hardware-acceleration/">Aceleración por hardware</a>.</li>
@@ -3221,7 +3283,7 @@ generales de la reproducción están en
 </tr>
 <tr>
 <td>Un navegador</td>
-<td>Una conversión a SDR, siempre: el reproductor web no declara una pantalla HDR, así que el servidor convierte la imagen para él.</td>
+<td>Una conversión a SDR en una pantalla SDR. Cuando el navegador informa de una pantalla HDR (<code>dynamic-range: high</code>) y descodifica HEVC, se conservan HDR10 y HLG; Dolby Vision se sigue convirtiendo.</td>
 </tr>
 <tr>
 <td>Un receptor de envío</td>
@@ -3322,7 +3384,7 @@ decision: internal/app/transcoding/decision.go - evaluateVideo (hdr_tonemapping_
 re-encode with HDR kept, copy unavailable: internal/app/transcoding/playback_plan_resolver.go - Decide (hdr_copy_unavailable) ; internal/app/transcoding/resolver_route.go - naturalRoute, passthroughWanted, hwTonemapWanted
 hdr signalling carried: internal/adapters/driven/ffmpeg/hls_args_hw.go - hwHDRPassthroughArgs (no HDR10+ metadata)
 dovi copy rule: internal/app/transcoding/copy_eligibility.go (dovi_profile, DoViBLCompat)
-who declares an HDR screen: frontend/packages/client/src/native/displayHdr.ts - probeDisplayHdr ; frontend/packages/client/src/native/playSession.ts (supportsHdr) ; frontend/apps/web/src/cast-receiver/receiverLogic.ts (hdr=1) ; the web player sends no hdr parameter
+who declares an HDR screen: frontend/packages/client/src/native/displayHdr.ts - probeDisplayHdr ; frontend/packages/client/src/native/playSession.ts (supportsHdr) ; frontend/apps/web/src/cast-receiver/receiverLogic.ts (hdr=1) ; frontend/packages/client/src/web/codec.ts - canDisplayHdr (dynamic-range: high)
 tonemapx, software HDR ceiling: internal/adapters/driven/ffmpeg/tonemapx.go ; internal/pkg/hdr/hdr.go ; docs/adr/0017-software-hdr-tonemap-delivery-resolution.md
 tests: internal/app/transcoding/route_golden_test.go ; internal/app/transcoding/route_tonemap_report_test.go
 labels: i18n player.streamInfo.reason.* ; admin.nowPlaying
@@ -3368,7 +3430,7 @@ plain opening: rules below ; tone mapping cost: internal/app/transcoding/calibra
       <nav class="md-footer__inner md-grid" aria-label="Pie">
         
           
-          <a href="../mkvgo/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: MKVGo en Evey">
+          <a href="../ac3go/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: ac3go en Evey">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3378,7 +3440,7 @@ plain opening: rules below ; tone mapping cost: internal/app/transcoding/calibra
                 Anterior
               </span>
               <div class="md-ellipsis">
-                MKVGo en Evey
+                ac3go en Evey
               </div>
             </div>
           </a>

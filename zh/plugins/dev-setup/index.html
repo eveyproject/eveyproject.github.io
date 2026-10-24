@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3342,11 +3402,11 @@
 </tbody>
 </table>
 <p>从服务器能启动的运行时里选择插件的语言：<code>python</code>、<code>nodejs</code>、<code>php</code>、<code>ruby</code>、<code>lua</code>、<code>bash</code> 和 <code>sh</code> 需要镜像里有对应的解释器；
-<code>go</code> 提供编译好的二进制文件，需要 <code>native-binary</code> 权限。默认镜像只带 Python；<code>-nodejs</code> 镜像加上了 Node.js，<code>-full</code> 镜像再加上 PHP、Ruby 和 Lua。
+<code>go</code> 提供编译好的二进制文件，需要 <code>native-binary</code> 权限。默认镜像带有 Python、Node.js、PHP、Ruby 和 Lua；<code>-nodejs</code> 镜像保留 Python 和 Node.js，<code>-lean</code> 镜像只保留 Python。
 如果清单写了镜像里没有的运行时，安装时就会被拒绝，并列出可用的运行时。</p>
-<p>gRPC 约定只有一个文件：<code>proto/plugin/v1/plugin_api.proto</code>。<code>sdk/&lt;language&gt;/</code> 下有为 Python、Node.js、PHP、Ruby、Dart、Java 和 Swift 生成的存根；
-插件启动时，服务器会把对应语言的存根复制到您的入口文件旁边，所以 Node.js 或 Python 插件不需要自带任何依赖：
-镜像为 Node.js 插件提供了 <code>@grpc/grpc-js</code> 和 <code>@grpc/proto-loader</code>，为 Python 插件提供了 <code>grpcio</code>。
+<p>gRPC 约定只有一个文件：<code>proto/plugin/v1/plugin_api.proto</code>。只有 Python SDK 附带生成好的存根；<code>sdk/&lt;language&gt;/</code> 下其他语言的目录里是 <code>.proto</code>。
+插件启动时，服务器会把对应语言的文件复制到您的入口文件旁边。镜像为 Python 插件提供了 <code>grpcio</code>，所以 Python 插件不需要自带任何依赖。
+Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js</code> 和 <code>@grpc/proto-loader</code>）放进包里。
 其他语言请用 <code>protoc</code> 生成存根，并放进 ZIP 包里：</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>
@@ -3399,7 +3459,7 @@
 </li>
 <li>
 <p><strong>打包成 ZIP。</strong> 清单必须位于压缩包的根目录，不能放在子目录里：</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span><span class="w"> </span><span class="s2">"node_modules/*"</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3444,7 +3504,7 @@
 <code>examples/plugins/weather</code> 是一个带构建步骤的完整小组件；<code>examples/plugins/data-demo</code> 演示了 <code>prefs</code>、<code>public</code> 和 <code>admin.nav</code> 插槽。
 桥接接口和插槽的说明见<a href="../api-reference/#frontend-api">插件 API 参考</a>。</p>
 <h2 id="6-reach-the-outside-world">6. 与外界通信<a class="headerlink" href="#6-reach-the-outside-world" title="Permanent link">¶</a></h2>
-<p>无论哪种沙箱模式，插件进程都不能打开通向互联网的套接字。唯一的途径是 <code>HostService</code> 的 <code>Fetch</code> 调用：
+<p>在启动器运行的每一种模式下，插件进程都不能打开通向互联网的套接字（没有启动器的 <code>basic</code> 只拒绝 <code>execve</code>）。唯一的途径是 <code>HostService</code> 的 <code>Fetch</code> 调用：
 服务器按清单检查目标，然后由它自己发出请求。</p>
 <div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">permissions</span><span class="p">:</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
@@ -3456,13 +3516,13 @@
 所以小组件可以通过 <code>https</code> 直接调用这些主机。规则见<a href="../security-model/#external-fetch-rules">权限与插槽</a>。</p>
 <div class="admonition note">
 <p class="admonition-title">主机列表是您和管理员之间的约定</p>
-<p>管理员在安装时会看到主机列表，更新时新增的任何主机都必须经过批准。只写插件真正需要的主机，
+<p>管理员在更新时和<strong>安全仪表板</strong>里会看到主机列表，更新时新增的任何主机都必须经过批准。只写插件真正需要的主机，
 并在 README 里说明每个主机会收到什么。</p>
 </div>
 <h2 id="7-sign-your-plugin">7. 给插件签名<a class="headerlink" href="#7-sign-your-plugin" title="Permanent link">¶</a></h2>
 <div class="admonition info">
 <p class="admonition-title">签名能证明什么</p>
-<p>签名说明管理员安装的 ZIP 包，和<strong>您</strong>发布的那个逐字节相同，并且是用他们信任的密钥签的。
+<p>签名说明管理员安装的 ZIP 包，和<strong>您</strong>发布的那个逐字节相同。您的公钥随包一起分发（ZIP 根目录下的 <code>cosign.pub</code>），Evey 在安装时把它的指纹固定在插件上：用另一把密钥签名、或不再签名的更新会被拒绝，直到管理员接受这个变化。
 它不说明插件做了什么：权限、主机列表和预览里的分析照样适用。Evey 在进程内离线检查签名
 （对 ZIP 的 SHA-256 做 ECDSA P-256 签名，也就是 <code>cosign sign-blob --key</code> 生成的格式）：
 服务器上不需要 <code>cosign</code> 程序，不联网，也不用透明日志。</p>
@@ -3477,13 +3537,14 @@
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>每次发布：先打包，再签名</strong>，签的必须是您要分发的那个文件。</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>hello-plugin.zip
+<p><strong>每次发布：把您的公钥放在插件根目录，再打包，再签名</strong>，签的必须是您要分发的那个文件。</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>hello-plugin.zip
 </span></code></pre></div>
 </li>
 <li>
@@ -3493,23 +3554,23 @@
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>三个文件一起发布</strong>：<code>hello-plugin.zip</code>、<code>hello-plugin.zip.sig</code> 和 <code>cosign.pub</code>。
-   把公钥的指纹放在用户能对照的地方（README、发布说明），这样他们就知道 <code>cosign.pub</code> 没有被替换。</p>
+<p><strong>把两个文件一起发布</strong>：<code>hello-plugin.zip</code>（您的公钥就在里面）和 <code>hello-plugin.zip.sig</code>，放在一起，这样通过 URL 安装时能在 <code>&lt;url&gt;.sig</code> 找到签名。
+   把密钥的指纹（<code>sha256:...</code>，Evey 会显示在插件卡片上）写进您的 README 和发布说明，方便管理员在信任这把密钥之前对照。</p>
 </li>
 </ol>
-<p>在要安装插件的服务器上，管理员设置公钥和策略，然后重启服务器：</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">   </span><span class="c1"># 或者 "enforce"，拒绝验证不通过的包</span>
-</span></code></pre></div>
-<p>之后，在<strong>管理 → 插件</strong>里选择 ZIP 包，并在<strong>签名文件（.zip.sig，可选）<strong>里选择对应的 <code>.zip.sig</code>；
-通过 API 上传时，签名放在 <code>sig</code> 字段里。预览会显示</strong>已签名</strong>或签名无效，<strong>安全仪表板</strong>会保存这个结果。</p>
+<p>在要安装插件的服务器上，管理员在<strong>管理 → 插件</strong>里选择 ZIP 包，并在<strong>签名文件（.zip.sig，可选）</strong>里选择对应的 <code>.zip.sig</code>；通过 API 上传时，签名放在 <code>sig</code> 字段里。Evey 用包里自带的密钥验证这个包，并显示下面几种结果之一：</p>
+<ul>
+<li><strong>由 &lt;发布者&gt; 签名</strong>：这把密钥在本实例的<strong>受信任的发布者</strong>列表里。</li>
+<li><strong>已签名 - 未知密钥 sha256:...</strong>：签名没问题，但这把密钥还不受信任。点一下<strong>信任此密钥</strong>，就能给它起个名字加进列表。</li>
+<li><strong>未签名</strong>，或<strong>签名无效</strong>。</li>
+</ul>
+<p>后果由策略决定：<code>EVEY_PLUGINS_COSIGN_POLICY=warn</code>（默认）只记录结论，所有安装都放行；<code>enforce</code> 只接受受信任的密钥。无论策略如何，如果更新的密钥与已安装版本不同，或者去掉了签名，就会被拒绝，直到管理员在更新对话框里勾选<strong>发布者已更改，我接受新密钥</strong>。<code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> 是可选的：它在启动时往受信任列表里加入一把密钥（标记为服务器运营者的密钥）。</p>
 <p>常见问题：</p>
 <ul>
 <li><strong>对 ZIP 包的任何改动都会让签名失效</strong>，哪怕只是把同样的文件重新打包。请给您分发的那个文件签名，每个版本都重新签一次。</li>
+<li><strong>各个版本之间请使用同一把密钥。</strong> 对每个已经安装了您的插件的管理员来说，新密钥就是新的发布者：他们会被要求接受它。换密钥要有意为之，并在发布说明里讲清楚。</li>
 <li><strong>只接受 ECDSA P-256 密钥</strong>，<code>cosign generate-key-pair</code> 生成的正是这种。无密钥签名和 KMS 引用不会被验证。</li>
-<li>公钥在启动时从 PEM 文件读取：文件缺失或格式错误，服务器会直接停止，而不是等到第一次安装时才失败。
-  设为 <code>enforce</code> 却没有公钥时，服务器拒绝启动。</li>
-<li>保持默认的 <code>warn</code> 且没有配置公钥时，<strong>什么都不会验证</strong>；服务器只会在启动时记录一条警告。</li>
+<li>ZIP 里有 <code>.sig</code> 却没有 <code>cosign.pub</code>，或者反过来，都算<strong>未签名</strong>。</li>
 <li>密钥不对、ZIP 被篡改、缺少 <code>.sig</code>，都会被当作签名失败：在 <code>enforce</code> 下，安装或更新会被拒绝。</li>
 </ul>
 <h2 id="8-what-the-installer-checks-in-order">8. 安装程序依次检查什么<a class="headerlink" href="#8-what-the-installer-checks-in-order" title="Permanent link">¶</a></h2>
@@ -3528,18 +3589,18 @@
    <code>native_code</code>、编译好的二进制文件和内嵌的压缩包也会拒绝，除非清单声明了 <code>native-binary</code>。</li>
 <li><strong>保存并启动。</strong> 临时目录被换到正式位置，写入数据库记录，然后启动进程。</li>
 </ol>
-<p>分析会查找什么，列在<a href="../../SECURITY/#static-analysis">插件沙箱与威胁模型</a>里。它也会读注释：注释里的一行 <code># pip install foo</code> 会和代码一样被报告。</p>
+<p>分析会查找什么，列在<a href="../../SECURITY/#static-analysis">插件沙箱与威胁模型</a>里。分析之前会先去掉注释，所以被注释掉的行不会被报告。</p>
 <h2 id="9-what-your-process-runs-under">9. 您的进程在什么条件下运行<a class="headerlink" href="#9-what-your-process-runs-under" title="Permanent link">¶</a></h2>
 <p>服务器以较低的 CPU 优先级启动进程，并设置内存上限、进程和线程数量上限，以及目录大小上限；
 超出这些限制的插件会被监控程序停止。默认值是 256 MiB、64 个进程和 100 MiB，管理员可以在<strong>管理 → 插件 → 资源限制</strong>里调整。
 没有 <code>subprocess</code> 权限时，无论用什么语言，进程都不能创建子进程；线程可以正常使用。</p>
-<p>沙箱把文件系统限制在插件自己的目录里，并无条件切断所有网络套接字。生效的是哪种模式，取决于宿主机器，而不是插件：
+<p>在启动器运行的每一种模式下，沙箱都会把文件系统限制在插件自己的目录里，并切断所有网络套接字（没有启动器的 <code>basic</code> 只拒绝 <code>execve</code>）。生效的是哪种模式，取决于宿主机器，而不是插件：
 <a href="../../SECURITY/#sandbox-modes">插件沙箱与威胁模型</a>介绍了各种模式，<a href="../sandbox-deployment/">插件沙箱设置</a>告诉管理员该选哪一种。</p>
 <h2 id="10-distribute-a-plugin">10. 分发插件<a class="headerlink" href="#10-distribute-a-plugin" title="Permanent link">¶</a></h2>
 <p>没有插件目录商店：管理员在管理面板里上传插件的 ZIP 包，或者粘贴它的网址，来源是您发布它的任何地方（代码托管平台上的一个 release，您自己的网站）。</p>
 <ul>
 <li>把 ZIP 包、它的 <code>.sig</code> 和您的 <code>cosign.pub</code> 放在一起发布（第 7 节）。</li>
-<li>在 README 里写明权限和 <code>external_fetch</code> 主机：管理员安装时会看到它们，并且必须批准；这里出现未预期的内容，是安装被拒绝的首要原因。</li>
+<li>在 README 里写明权限和 <code>external_fetch</code> 主机：管理员在安装时会看到权限，在更新时和<strong>安全仪表板</strong>里会看到主机，并且必须批准；这里出现未预期的内容，是安装被拒绝的首要原因。</li>
 <li>如果想让您的插件和自带的示例列在一起，请向 <code>examples/plugins/</code> 提交一个 pull request，附上源代码和 README。
   示例会经过审查，并从源代码构建；被列入并不代表项目背书，也不带项目的签名。</li>
 </ul>
@@ -3556,7 +3617,7 @@
 <tr>
 <td><code>plugin requires "nodejs" runtime which is not installed in this image</code></td>
 <td>这个镜像版本缺少对应的解释器。</td>
-<td>使用 <code>-nodejs</code> 或 <code>-full</code> 镜像，或者用 Python 编写插件。</td>
+<td>使用默认镜像或 <code>-nodejs</code> 镜像，或者用 Python 编写插件。</td>
 </tr>
 <tr>
 <td><code>manifest: external_fetch entry "*.tmdb.org" is a wildcard - use explicit hostnames</code></td>

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3221,10 +3281,9 @@ página.</p>
    compruebe la descarga.</li>
 <li><strong>Vista previa e instalar</strong> analiza el paquete sin instalarlo. La vista
    previa muestra los <strong>Permisos</strong> y las <strong>Capacidades</strong> que pide el plugin,
-   los huecos de la interfaz (slots) en los que quiere aparecer, los
-   servidores con los que va a contactar, el resultado del <strong>Análisis
-   estático</strong> y, si el servidor comprueba las firmas, si el paquete está
-   <strong>Firmado</strong>.</li>
+   el resultado del <strong>Análisis estático</strong> y, cuando se dio una firma, el
+   veredicto de <strong>Firma</strong> con el editor. Los huecos (slots) y los servidores
+   se muestran en la actualización y en el <strong>Panel de seguridad</strong>.</li>
 <li>Lee esa lista como un contrato: es lo único que el plugin podrá hacer.
    Confirma y el plugin arranca.</li>
 </ol>
@@ -3236,21 +3295,22 @@ página.</p>
 <p>Un paquete cuyo análisis encuentra un patrón crítico se rechaza, respondas lo
 que respondas. Los avisos se muestran y la decisión es tuya. El lenguaje del
 plugin tiene que estar entre los <strong>Entornos de ejecución disponibles</strong> del
-servidor: la imagen por defecto solo trae Python, la imagen <code>-nodejs</code> añade
-Node.js y la imagen <code>-full</code> añade PHP, Ruby y Lua.</p>
+servidor: la imagen por defecto trae Python, Node.js, PHP, Ruby y Lua, la imagen
+<code>-nodejs</code> conserva Python y Node.js y la imagen <code>-lean</code> solo Python.</p>
 <div class="admonition tip">
 <p class="admonition-title">Plugins firmados</p>
-<p>El autor de un plugin puede firmar el ZIP con <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>,
-y tú decides qué pasa con un plugin sin firma o mal firmado. Para
-comprobar las firmas, dale al servidor la clave pública del autor y elige
-una política:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (por defecto) | enforce</span>
+<p>El autor de un plugin puede firmar el ZIP con <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>;
+su clave pública viaja dentro del paquete. Evey comprueba la firma por sí
+mismo (sin binario <code>cosign</code>) y muestra <strong>Firmado por <editor></editor></strong> cuando la
+clave está en tu lista de <strong>Editores de confianza</strong>, <strong>Firmado, clave
+desconocida</strong> con su huella en caso contrario (un clic confía en ella),
+<strong>Sin firma</strong> o <strong>No válida</strong>. Una actualización que cambia de clave, o que
+abandona la firma, espera tu aceptación explícita. La política decide el
+resto:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (por defecto) | enforce</span>
 </span></code></pre></div>
-<p>Con <code>warn</code>, una firma que falla se muestra en la vista previa y en el
-<strong>Panel de seguridad</strong>; con <code>enforce</code>, la instalación o la actualización
-se rechaza. Sin clave pública no se verifica nada, y el servidor no
-necesita el binario <code>cosign</code>. Para los autores: consulta
+<p>Con <code>warn</code>, el veredicto se muestra y no se bloquea nada; con <code>enforce</code>,
+solo se instalan los editores de confianza. Para los autores: consulta
 <a href="dev-setup/#7-sign-your-plugin">Firma tu plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Actualizar un plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
@@ -3332,8 +3392,8 @@ entorno los define mientras el panel no se haya guardado nunca.</p>
 </table>
 <p>La memoria, los procesos y el disco se aplican en la siguiente revisión del
 monitor, que detiene un plugin que los supere; la prioridad de CPU y el modo
-de sandbox se aplican a los plugins que arranquen después. <code>0</code> desactiva un
-límite de memoria, de procesos o de disco.</p>
+de sandbox se aplican a los plugins que arranquen después. <code>0</code> restablece el
+valor por defecto para la memoria y los procesos; solo el límite de disco trata <code>0</code> como desactivado.</p>
 <p>El <strong>Panel de seguridad</strong> guarda, para cada plugin, lo que encontró el
 análisis, el resultado de la firma y el último error. Su línea <strong>Sandbox del
 host</strong> muestra el modo de sandbox realmente activo en esta máquina: si dice

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3369,8 +3429,8 @@
 在检查过服务器之前，请保留 <code>./postgres-data</code>。如果已有集群旁边放着一个导出文件，它会被报告并忽略，绝不会合并进去；
 导入失败时，新建的集群会被丢弃，这样下次启动会重新从导出文件开始。</p>
 <h2 id="arm-hosts">ARM 主机<a class="headerlink" href="#arm-hosts" title="Permanent link">¶</a></h2>
-<p>从发布标签构建的镜像（<code>0.2.0</code>，也包括 <code>0.2.0-beta.1</code> 这样的预发布版本）支持多种架构（<code>linux/amd64</code> 和 <code>linux/arm64</code>）；
-Docker 会自动选择对应的架构。像 <code>beta-0.0.1</code> 这样的分支标签只有 amd64：在 ARM 主机上请固定使用发布标签。</p>
+<p>从发布标签构建的镜像（<code>0.1.0</code>，也包括预发布版本）支持多种架构（<code>linux/amd64</code> 和 <code>linux/arm64</code>）；
+Docker 会自动选择对应的架构。分支标签只有 amd64：在 ARM 主机上请固定使用发布标签。</p>
 <ul>
 <li><strong>ARM 上的硬件转码</strong>只支持 Rockchip 芯片（RK3588、RK3576、RK3568 这一类），通过 RKMPP 实现。
   请映射 <code>/dev/mpp_service</code>、<code>/dev/dri</code>，如果内核提供的话，再映射 <code>/dev/rga</code>；服务器在使用编码器之前，会先探测并测试它的性能。
@@ -3395,19 +3455,19 @@ Docker 会自动选择对应的架构。像 <code>beta-0.0.1</code> 这样的分
 <td><code>latest</code> 永远是最新的稳定版</td>
 </tr>
 <tr>
-<td><code>X.Y.Z-beta.N</code></td>
+<td>预发布标签（带连字符）</td>
 <td>预发布标签</td>
-<td>只发布它自己的标签，从不改动 <code>latest</code></td>
+<td>发布它自己的标签和 <code>sha-&lt;commit&gt;</code>，从不发布 <code>latest</code></td>
 </tr>
 <tr>
-<td><code>beta-0.0.1</code>, <code>sha-&lt;commit&gt;</code></td>
+<td>分支名，<code>sha-&lt;commit&gt;</code></td>
 <td>分支构建</td>
-<td>只有 amd64</td>
+<td>只有默认镜像，通常只有 amd64</td>
 </tr>
 </tbody>
 </table>
-<p>每个标签都有三种变体：默认的变体为插件带了 Python 3，<code>-nodejs</code> 加上了 Node.js，<code>-full</code> 再加上 PHP、Ruby 和 Lua
-（例如 <code>latest-full</code>）。只有插件需要时才使用变体：如果插件声明的语言在镜像里没有，安装程序会拒绝它，并在提示里写明该用哪个变体。</p>
+<p>发布标签和预发布标签都有三种变体（分支构建只发布默认镜像）：默认的变体带有全部插件运行时（Python 3、Node.js、PHP、Ruby 和 Lua），<code>-nodejs</code> 保留 Python 和 Node.js，<code>-lean</code> 只保留 Python
+（例如 <code>latest-lean</code>）。只有在镜像体积要紧时才选用更精简的变体：如果插件声明的语言在镜像里没有，安装程序会拒绝它，并在提示里写明该用默认镜像。</p>
 <p>发布的镜像带有所有受支持的 Intel 和 AMD 显卡世代的驱动。自己构建镜像时，可以只保留一个系列：
 <code>docker build --build-arg GPU=intel-legacy .</code>（Intel 第 9 代到第 11 代）、<code>GPU=intel</code>（第 12 代及更新）、<code>GPU=amd</code> 或 <code>GPU=none</code>。
 NVIDIA 不需要变体：NVIDIA Container Toolkit 会在运行时注入主机的驱动。</p>

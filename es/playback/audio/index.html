@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3230,8 +3290,9 @@ vuelve a codificar en AAC:</p>
 <li>con tantos canales como permitan la fuente, el dispositivo y el perfil,
   hasta 5.1 (una fuente 7.1 se reduce a 5.1, que descodifican todos los
   reproductores; las fuentes estéreo siguen en estéreo);</li>
-<li>sea cual sea la frecuencia de muestreo, que nunca es por sí sola un motivo
-  para volver a codificar.</li>
+<li>a 48 kHz como máximo: una pista por encima de 48 kHz se vuelve a codificar
+  solo por eso (<code>audio_samplerate_exceeded</code>); a 48 kHz o menos, la frecuencia
+  de muestreo no es un motivo.</li>
 </ul>
 <p>Una pista copiada dentro de un flujo transcodificado o en remux también tiene
 que estar en un formato que el reproductor acepte dentro de los segmentos del
@@ -3251,6 +3312,8 @@ hace probando el navegador, no reconociéndolo. Una pista envolvente solo se
 descodifica en la página cuando los <strong>Canales de audio máximos</strong> del perfil
 lo permiten: un perfil en estéreo recibe en su lugar la versión en AAC, que
 puede reducir los canales.</p>
+<p>Cómo la descodifica la página y qué pasa cuando no puede:
+<a href="../ac3go/">ac3go en Evey</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Un proxy inverso que pone su propia Content-Security-Policy debe
@@ -3279,7 +3342,7 @@ copy vs aac, channels: internal/app/transcoding/decision.go - evaluateAudio, app
 device channel ceiling: frontend/packages/client/src/native/outputChannels.ts - resolveMaxOutputChannels (STEREO_ONLY_TYPES, hdmi.maxChannelCount) ; frontend/packages/client/src/native/playSession.ts - playerDecodesCopiedAudio ; internal/adapters/driving/http/client_capabilities.go - maxAudioChannelsQuery
 passthrough in segments: internal/app/transcoding/decision.go - applyPackagedAudioPassthrough ; internal/app/transcoding/source_facts.go - AudioCopyCodecAllowedFor ; internal/domain/transcoding/playback_decision.go - ClientProfile.FMP4AudioPassthrough
 wasm: internal/app/transcoding/wasm_audio.go - WasmAudioCodecSupported, WasmAudioChannelsOK ; internal/app/transcoding/decision.go - wasmAudioApplies ; frontend/packages/client/src/web/codec.ts
-sample rate: internal/app/transcoding/decision.go - evaluateAudio (no sample-rate check)
+sample rate: internal/app/transcoding/decision.go - evaluateAudio (audio_samplerate_exceeded, maxCopiedAudioSampleRate) ; internal/app/transcoding/decision_samplerate_test.go
 resync: internal/app/transcoding/playback_plan_resolver.go - Decide (audio_resync_requested) ; frontend/apps/web/src/features/playback/HLSPlayer.tsx (audioOffsetAvailable=transcodeMode) ; frontend/apps/mobile/app/(auth)/player/[id].tsx (audioOffsetAvailable)
 media health: i18n admin.syncPreview.btn ; docs/runbooks/media-health.md
 labels: i18n auth.settings.playback.maxAudioChannels, channelsStereo, channels51, channels71, audioLanguage ; player.settings.audioSync, audioSyncHint, audioSyncUnavailable ; player.streamInfo.decisionWasm, reason.audio_passthrough_unsupported, reason.audio_resync_requested

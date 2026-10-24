@@ -10,7 +10,7 @@
         <link rel="canonical" href="https://eveyproject.org/zh/playback/hdr/">
       
       
-        <link rel="prev" href="../mkvgo/">
+        <link rel="prev" href="../ac3go/">
       
       
         <link rel="next" href="../audio/">
@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3191,7 +3251,7 @@
 <ul>
 <li><strong>HDR</strong> 是一种比普通画面（称为 <strong>SDR</strong>）高光更亮、色彩更丰富的画面。杜比视界是 HDR 的一种。HDR 需要一块能显示它的屏幕。</li>
 <li>在 HDR 屏幕上使用 Android 或 Android TV 应用时（设备还要能解码 HEVC），只要没有别的原因迫使转换，您看到的就是原始的 HDR 画面。</li>
-<li>在网页浏览器里，以及在任何不是 HDR 的屏幕上，服务器都会把画面转换成 SDR。这是有意为之：HDR 画面显示在 SDR 屏幕上，会显得灰暗、发白。</li>
+<li>在任何不是 HDR 的屏幕上，服务器都会把画面转换成 SDR。这是有意为之：HDR 画面显示在 SDR 屏幕上，会显得灰暗、发白。SDR 显示器上的网页浏览器得到 SDR；报告自己是 HDR 显示器并能解码 HEVC 的浏览器则保留 HDR10 和 HLG。杜比视界仍然会被转换。</li>
 <li>把 HDR 转换成 SDR，是处理器上开销最大的工作。显卡可以分担这项工作：见<a href="../../administration/hardware-acceleration/">硬件加速</a>。</li>
 </ul>
 <p>本页其余部分逐一说明每种情况：保留原始画面、重新编码但保留 HDR，或者转换成 SDR。播放的一般规则见 <a href="../how-playback-is-decided/">Evey 如何选择播放方式</a>。</p>
@@ -3210,7 +3270,7 @@
 </tr>
 <tr>
 <td>浏览器</td>
-<td>总是转换成 SDR：网页播放器不会声明自己有 HDR 屏幕，所以服务器会为它做色调映射。</td>
+<td>在 SDR 显示器上转换成 SDR。当浏览器报告 HDR 显示器（<code>dynamic-range: high</code>）并能解码 HEVC 时，保留 HDR10 和 HLG；杜比视界仍然会被转换。</td>
 </tr>
 <tr>
 <td>投屏接收端</td>
@@ -3276,7 +3336,7 @@ decision: internal/app/transcoding/decision.go - evaluateVideo (hdr_tonemapping_
 re-encode with HDR kept, copy unavailable: internal/app/transcoding/playback_plan_resolver.go - Decide (hdr_copy_unavailable) ; internal/app/transcoding/resolver_route.go - naturalRoute, passthroughWanted, hwTonemapWanted
 hdr signalling carried: internal/adapters/driven/ffmpeg/hls_args_hw.go - hwHDRPassthroughArgs (no HDR10+ metadata)
 dovi copy rule: internal/app/transcoding/copy_eligibility.go (dovi_profile, DoViBLCompat)
-who declares an HDR screen: frontend/packages/client/src/native/displayHdr.ts - probeDisplayHdr ; frontend/packages/client/src/native/playSession.ts (supportsHdr) ; frontend/apps/web/src/cast-receiver/receiverLogic.ts (hdr=1) ; the web player sends no hdr parameter
+who declares an HDR screen: frontend/packages/client/src/native/displayHdr.ts - probeDisplayHdr ; frontend/packages/client/src/native/playSession.ts (supportsHdr) ; frontend/apps/web/src/cast-receiver/receiverLogic.ts (hdr=1) ; frontend/packages/client/src/web/codec.ts - canDisplayHdr (dynamic-range: high)
 tonemapx, software HDR ceiling: internal/adapters/driven/ffmpeg/tonemapx.go ; internal/pkg/hdr/hdr.go ; docs/adr/0017-software-hdr-tonemap-delivery-resolution.md
 tests: internal/app/transcoding/route_golden_test.go ; internal/app/transcoding/route_tonemap_report_test.go
 labels: i18n player.streamInfo.reason.* ; admin.nowPlaying
@@ -3322,7 +3382,7 @@ plain opening: rules below ; tone mapping cost: internal/app/transcoding/calibra
       <nav class="md-footer__inner md-grid" aria-label="页脚">
         
           
-          <a href="../mkvgo/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Evey 中的 MKVGo">
+          <a href="../ac3go/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Evey 中的 ac3go">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3332,7 +3392,7 @@ plain opening: rules below ; tone mapping cost: internal/app/transcoding/calibra
                 上一页
               </span>
               <div class="md-ellipsis">
-                Evey 中的 MKVGo
+                Evey 中的 ac3go
               </div>
             </div>
           </a>

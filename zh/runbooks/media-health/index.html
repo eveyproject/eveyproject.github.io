@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3305,10 +3365,10 @@
 <p><strong>已看过，不再提示</strong>（一个文件）和<strong>全部标记为已看过</strong>（一组文件）会把一条信息类提示从<strong>待处理</strong>视图中移走。只有提示可以标记：可修复的缺陷应当修复。这个标记只对文件当前的样子有效：如果文件的大小或日期变了，下次扫描会重新诊断它。<strong>重新提示</strong>可以取消这个标记。</p>
 <p>表格上方的各个视图（<strong>待处理</strong>、<strong>可修复</strong>、<strong>信息</strong>、<strong>已看过</strong>、<strong>备份</strong>、<strong>全部</strong>）和搜索框，是您处理大型媒体库的工具：<strong>待处理</strong>就是待办清单。</p>
 <h2 id="scans">扫描<a class="headerlink" href="#scans" title="Permanent link">¶</a></h2>
-<p>一次扫描会读取每个文件的开头部分（几 KB），对于没有变化的文件，沿用上一次的结论。<strong>磁盘占用</strong>决定扫描的快慢：</p>
+<p>一次扫描会读取每个文件的三小块区域（开头、靠近末尾的索引和结尾），对于没有变化的文件，沿用上一次的结论。<strong>磁盘占用</strong>决定扫描的快慢：</p>
 <ul>
 <li><strong>轻量</strong>：一次一个文件，然后暂停，暂停的时间和读取花的时间一样长。磁盘大约有一半时间是空闲的，所以有人可以继续观看。</li>
-<li><strong>快速</strong>：同时处理多个文件，不暂停。对于分布在多块磁盘上的媒体库，大约快三倍，但扫描期间播放可能会卡顿。</li>
+<li><strong>快速</strong>：同时处理多个文件，不暂停。对于分布在多块磁盘上的媒体库，明显更快，但扫描期间播放可能会卡顿。</li>
 </ul>
 <p>有两种情况会让扫描把所有文件重新诊断一遍：文件有了变化，以及新版本的 Evey 改变了检查项目。所以在这样的更新之后，大型媒体库的第一次扫描耗时较长；之后的扫描会恢复为较快。</p>
 <h2 id="backups-history-and-undo">备份、历史和撤销<a class="headerlink" href="#backups-history-and-undo" title="Permanent link">¶</a></h2>

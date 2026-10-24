@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3223,12 +3283,12 @@ side is in <a href="../../backups/">Backups and updates</a> and
 <td><code>EVEY_LOG_LEVEL</code></td>
 <td><code>info</code></td>
 <td><code>debug</code>, <code>info</code>, <code>warn</code> or <code>error</code>.</td>
-<td>Server Config → Server Settings → <strong>Log Level</strong>, live</td>
+<td>Server Config → General → <strong>Log Level</strong>, live</td>
 </tr>
 <tr>
 <td><code>EVEY_LOG_DIR</code></td>
 <td><code>/data/logs</code></td>
-<td>Where the daily log file <code>evey-YYYY-MM-DD.log</code> is written. Set by the image. This file is the reference: <code>docker logs</code> shows the same stream, but Docker rotates it.</td>
+<td>Where the daily log file <code>evey-YYYY-MM-DD.log</code> is written (with an hour suffix once a file passes 50 MB). Set by the image. This file is the reference: <code>docker logs</code> shows the same stream, but Docker rotates it.</td>
 <td>none</td>
 </tr>
 <tr>
@@ -3247,7 +3307,7 @@ side is in <a href="../../backups/">Backups and updates</a> and
 </table>
 <h2 id="history-retention">History retention<a class="headerlink" href="#history-retention" title="Permanent link">¶</a></h2>
 <p>The retention windows are read again by each daily cleanup, so a value saved
-in <strong>Admin → Server Config → Server Settings</strong> applies at the next sweep.</p>
+in <strong>Admin → Server Config → Data &amp; retention</strong> applies at the next sweep.</p>
 <table>
 <thead>
 <tr>
@@ -3262,25 +3322,25 @@ in <strong>Admin → Server Config → Server Settings</strong> applies at the n
 <td><code>EVEY_PLAY_SESSION_RETENTION_DAYS</code></td>
 <td><code>0</code> (forever)</td>
 <td>Finished playback sessions in the history.</td>
-<td>Server Settings → <strong>Play session history retention</strong>, next sweep</td>
+<td>Server Config → Data &amp; retention → <strong>Play session history retention</strong>, next sweep</td>
 </tr>
 <tr>
 <td><code>EVEY_AUDIT_LOG_RETENTION_DAYS</code></td>
 <td><code>0</code> (forever)</td>
 <td>The audit log of administrative actions.</td>
-<td>Server Settings → <strong>Audit log retention</strong>, next sweep</td>
+<td>Server Config → Data &amp; retention → <strong>Audit log retention</strong>, next sweep</td>
 </tr>
 <tr>
 <td><code>EVEY_METRICS_RETENTION_DAYS</code></td>
 <td><code>90</code></td>
 <td>The server's resource samples (processor, memory, bandwidth).</td>
-<td>Server Settings → <strong>Server metrics retention</strong>, next sweep</td>
+<td>Server Config → Data &amp; retention → <strong>Server metrics retention</strong>, next sweep</td>
 </tr>
 <tr>
 <td><code>EVEY_QOE_RETENTION_DAYS</code></td>
 <td><code>30</code></td>
 <td>The streaming quality reports of the players.</td>
-<td>Server Settings → <strong>Playback quality (QoE) retention</strong>, next sweep</td>
+<td>Server Config → Data &amp; retention → <strong>Playback quality (QoE) retention</strong>, next sweep</td>
 </tr>
 <tr>
 <td><code>EVEY_METRICS_SAMPLE_INTERVAL_SEC</code></td>

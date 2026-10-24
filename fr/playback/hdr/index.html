@@ -10,7 +10,7 @@
         <link rel="canonical" href="https://eveyproject.org/fr/playback/hdr/">
       
       
-        <link rel="prev" href="../mkvgo/">
+        <link rel="prev" href="../ac3go/">
       
       
         <link rel="next" href="../audio/">
@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3195,9 +3255,11 @@
 <li>Sur un écran HDR avec l'application Android ou Android TV (et un appareil
   qui décode le HEVC), vous avez l'image HDR d'origine, tant que rien d'autre
   n'oblige à convertir.</li>
-<li>Dans un navigateur web, et sur tout écran qui n'est pas HDR, le serveur
-  convertit l'image en SDR. C'est voulu : du HDR affiché sur un écran SDR
-  paraît gris et délavé.</li>
+<li>Sur tout écran qui n'est pas HDR, le serveur convertit l'image en SDR.
+  C'est voulu : du HDR affiché sur un écran SDR paraît gris et délavé. Un
+  navigateur web sur un affichage SDR reçoit du SDR ; un navigateur qui
+  signale un affichage HDR et décode le HEVC garde le HDR10 et le HLG. Dolby
+  Vision est toujours converti.</li>
 <li>Convertir du HDR en SDR est le travail le plus lourd que puisse faire le
   processeur. Une carte graphique aide : voir
   <a href="../../administration/hardware-acceleration/">Accélération matérielle</a>.</li>
@@ -3221,7 +3283,7 @@ de lecture sont dans
 </tr>
 <tr>
 <td>Un navigateur</td>
-<td>Une conversion en SDR, toujours : le lecteur web ne déclare pas d'écran HDR, le serveur convertit donc pour lui.</td>
+<td>Une conversion en SDR sur un affichage SDR. Quand le navigateur signale un affichage HDR (<code>dynamic-range: high</code>) et décode le HEVC, le HDR10 et le HLG sont conservés ; Dolby Vision est toujours converti.</td>
 </tr>
 <tr>
 <td>Un récepteur de diffusion</td>
@@ -3356,7 +3418,7 @@ réellement utilisé.</p>
       <nav class="md-footer__inner md-grid" aria-label="Pied de page">
         
           
-          <a href="../mkvgo/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: MKVGo dans Evey">
+          <a href="../ac3go/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: ac3go dans Evey">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3366,7 +3428,7 @@ réellement utilisé.</p>
                 Précédent
               </span>
               <div class="md-ellipsis">
-                MKVGo dans Evey
+                ac3go dans Evey
               </div>
             </div>
           </a>

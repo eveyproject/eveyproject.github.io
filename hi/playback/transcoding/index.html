@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1402,6 +1434,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3198,14 +3258,13 @@
   है। नतीजा है हर एक का सबसे ऊँचा रिज़ॉल्यूशन जिसे वह रियल टाइम में लगातार दे
   सके, और हर तरह की स्ट्रीम की लागत।</li>
 <li><strong>दोबारा।</strong> हार्डवेयर बदलने के बाद, या <strong>एडमिन → ट्रांसकोडिंग → एनकोड
-  कैलिब्रेशन</strong> में <strong>फिर से कैलिब्रेट करें</strong> दबाने पर। यह बटन तब तक रुकता है
-  जब तक कोई देख न रहा हो।</li>
+  कैलिब्रेशन</strong> में <strong>फिर से कैलिब्रेट करें</strong> दबाने पर। जब कोई देख रहा हो तो यह बटन मना कर देता है; सिर्फ़ अपने-आप होने वाला दोबारा माप सर्वर के खाली होने का इंतज़ार करता है।</li>
 </ul>
 <p>जब माप चल रहा हो, तो जिस प्लेबैक को ट्रांसकोड की ज़रूरत है वह <strong>सर्वर खुद को
 कैलिब्रेट कर रहा है</strong> दिखाता है, और उससे थोड़ी देर बाद फिर कोशिश करने को कहा
 जाता है। सीधे प्लेबैक और रीमक्स पर कोई असर नहीं होता।</p>
 <p>अगर प्रोसेसर इनमें से कोई भी रिज़ॉल्यूशन लगातार नहीं दे पाता, तब भी सर्वर
-720p (SDR) और 480p (HDR) देता है, एक बार में एक स्ट्रीम।</p>
+720p (SDR) और 480p (HDR) देता है; एक साथ कितनी स्ट्रीम चलेंगी, यह वीडियो सेशन लिमिटर के बजट से तय होता है।</p>
 <p>माप के लिए इस क्रम में क्लिप ली जाती है: आपकी दी हुई क्लिप, या एक बार डाउनलोड
 की गई और SHA256 से जाँची गई एक संदर्भ क्लिप, या उसी समय बनाई गई एक नकली
 (सिंथेटिक) क्लिप। असली क्लिप ज़्यादा सटीक माप देती है। सिंथेटिक क्लिप लागत
@@ -3266,7 +3325,7 @@
 <tbody>
 <tr>
 <td>वीडियो कोडेक</td>
-<td>H.264। HEVC तब, जब प्लेयर उसे डिकोड करता हो और कोई ग्राफ़िक्स कार्ड उसे एन्कोड करता हो, या जब प्रोफ़ाइल का <strong>पसंदीदा वीडियो कोडेक</strong> यह माँगे; AV1 तब, जब यह चालू हो (<strong>AV1 आउटपुट</strong>, सिर्फ़ हार्डवेयर पर) और प्लेयर उसे डिकोड करता हो।</td>
+<td>H.264। HEVC आउटपुट तब, जब कोई नापा हुआ रूट इसे साबित करे और प्लेयर उसे डिकोड करता हो (HDR पासथ्रू रूट, या जब प्रोफ़ाइल का <strong>पसंदीदा वीडियो कोडेक</strong> यह माँगे); AV1 तब, जब यह चालू हो (<strong>AV1 आउटपुट</strong>, सिर्फ़ हार्डवेयर पर) और प्लेयर उसे डिकोड करता हो।</td>
 </tr>
 <tr>
 <td>रिज़ॉल्यूशन</td>
@@ -3295,8 +3354,7 @@
 <p>एन्कोड हुए सेगमेंट डिस्क पर <code>evey-cache</code> वॉल्यूम में रखे जाते हैं, और जब कोई
 दूसरा दर्शक, या वही दर्शक बाद में, वही टाइटल उसी फ़ैसले के साथ चलाता है तो
 दोबारा इस्तेमाल होते हैं। <strong>एडमिन → ट्रांसकोड कैश</strong> उसका साइज़ दिखाता है और उसे
-खाली करता है; <strong>ट्रांसकोड कैश बजट</strong> (<strong>एडमिन → सर्वर कॉन्फ़िग → सर्वर
-सेटिंग्स</strong>) उसकी सीमा तय करता है। <strong>सभी साफ़ करें</strong> आपकी फ़ाइलों से निकाले गए
+खाली करता है; <strong>ट्रांसकोड कैश बजट</strong> (<strong>एडमिन → ट्रांसकोडिंग</strong>) उसकी सीमा तय करता है। <strong>सभी साफ़ करें</strong> आपकी फ़ाइलों से निकाले गए
 उपशीर्षक भी हटा देता है, जो <code>./evey-data/subtitles</code> में रखे होते हैं: माँगने पर
 वे फिर से निकाले जाते हैं।</p>
 <p><strong>जब डिस्क भर जाए।</strong> सर्वर उस डिस्क पर, जिस पर कैश है, खाली जगह की एक गुंजाइश
@@ -3332,7 +3390,7 @@ clear all empties extracted subtitles: internal/app/transcoding/service.go - Wit
 calibration: internal/app/transcoding/calibration_service.go - EnsureCalibrated, Recalibrate, idleProbes, idleCPUPercent ; internal/domain/transcoding/capability.go - SafeFallback ; internal/adapters/driven/ffmpeg/benchmark.go - swBenchLadderSpecs (floors 720/480), sample order (path > url+sha256 > synthetic) ; docs/adr/0029-transcoding-routes-are-measured-not-assumed.md ; i18n player.calibrating, admin.calibration.contendedLine, transcodesActiveToast
 capacity: i18n admin.transcoding.livePlaybackTitle, maxVideoSessionsDesc, videoSessionsAutoAdjusts ; internal/app/transcoding/admission_shaper.go - VideoAdmissionShaper, StreamPlan ; internal/app/transcoding/video_session_limiter.go - VideoSessionLimiter (PoolCPU, PoolGPU) ; internal/app/transcoding/resolved_route.go - SpillPoolFull, SpillTitleBlocked ; internal/app/transcoding/hw_route_blocklist.go ; CalibrationService.DemoteCapability
 busy: i18n errors max_concurrent_reached
-output codec: internal/app/transcoding/resolver_route.go - outputCodecFor, codecWithPassthrough ; i18n admin.calibration.av1Label, av1Hint, maxBitrateLabel, maxBitrateRemoteLabel
+output codec: internal/app/transcoding/resolver_route.go ; internal/app/transcoding/decision.go ; internal/app/transcoding/testdata/route_golden.txt ; i18n admin.calibration.av1Label, av1Hint, maxBitrateLabel, maxBitrateRemoteLabel
 single variant: internal/config/config.go (EVEY_TRANSCODING_SINGLE_VARIANT, default on)
 bench samples: internal/config/config.go (EVEY_BENCH_{SDR,HDR}_SAMPLE{,_URL,_SHA256})
 cache budget, clear while live: i18n admin.serverSettings.transcodeCacheMaxGB, admin.transcodeCache.clearConfirmLiveSessions ; automatic limits: admin.qoe.overrides.*

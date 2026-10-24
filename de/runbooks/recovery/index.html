@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3210,7 +3270,7 @@ die seitdem geschrieben wurden, verloren gehen dürfen. Der Befehl spielt einen
 <code>.sql.gz</code>-Dump über <code>gunzip | psql</code> in die konfigurierte Datenbank ein.</p>
 <div class="admonition warning">
 <p class="admonition-title">Achtung</p>
-<p>Die Wiederherstellung überschreibt die aktuellen Zeilen. Legen Sie zuerst
+<p>Die Wiederherstellung löscht jede Tabelle und legt sie neu an, bevor sie sie lädt; die aktuellen Zeilen werden also ersetzt. Legen Sie zuerst
 eine Sicherung des aktuellen Stands an (<strong>Verwaltung → Sicherung &amp;
 Wiederherstellung → Jetzt ausführen</strong>), wenn Sie ihn vielleicht noch
 einmal brauchen.</p>
@@ -3236,8 +3296,9 @@ einmal brauchen.</p>
 <li>Der Dateiname muss auf <code>.sql.gz</code> enden. Die <code>.tar.gz</code>-Archive aus
   <strong>Verwaltung → Sicherung &amp; Wiederherstellung</strong> werden im Verwaltungsbereich
   wiederhergestellt, nicht mit diesem Befehl.</li>
-<li>Die Zieldatenbank muss existieren; der Dump löscht Tabellen und legt sie neu
-  an, nicht die Datenbank.</li>
+<li>Die Zieldatenbank muss existieren; der Dump löscht und legt jede Tabelle neu an, bevor er sie
+  lädt, kann also auf eine bereits gefüllte Datenbank eingespielt werden, legt
+  aber die Datenbank nicht an.</li>
 <li><code>psql</code> und <code>gunzip</code> müssen im PATH liegen. Das Image stellt das sicher.</li>
 </ul>
 <p>Dumps von vor einer Migration werden vor jeder Änderung des Schemas

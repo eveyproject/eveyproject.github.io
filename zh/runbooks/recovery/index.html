@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3184,7 +3244,7 @@
 <p>当某次更新必须撤销、而且之后写入的数据可以丢弃时使用。这条命令会把一个 <code>.sql.gz</code> 转储通过 <code>gunzip | psql</code> 导入到配置好的数据库里。</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>恢复会覆盖当前的数据。如果您有可能还需要当前的状态，请先给它做一次备份（<strong>管理 → 数据库备份 → 立即运行</strong>）。</p>
+<p>恢复会先删除并重建每张数据表再加载，因此当前的数据会被替换。如果您有可能还需要当前的状态，请先给它做一次备份（<strong>管理 → 数据库备份 → 立即运行</strong>）。</p>
 </div>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>stop<span class="w"> </span>evey
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>evey<span class="w"> </span>admin<span class="w"> </span>restore-backup<span class="w"> </span>/data/backups/pre-migration-152-20260418T220130Z.sql.gz
@@ -3200,7 +3260,7 @@
 <p>要求：</p>
 <ul>
 <li>文件名必须以 <code>.sql.gz</code> 结尾。<strong>管理 → 数据库备份</strong>生成的 <code>.tar.gz</code> 归档要在面板里恢复，不能用这条命令。</li>
-<li>目标数据库必须已经存在；转储会删除并重建数据表，但不会删除和重建数据库本身。</li>
+<li>目标数据库必须已经存在；转储会先删除并重建每张数据表再加载，所以可以恢复到已有数据的数据库上，但它不会创建数据库本身。</li>
 <li><code>psql</code> 和 <code>gunzip</code> 必须在 PATH 里，镜像已经保证了这一点。</li>
 </ul>
 <p>每次改变数据库结构之前，都会自动写入迁移前的转储，位于 <code>EVEY_BACKUP_DIR</code> 下（<code>/data/backups</code>，也就是主机上的 <code>./evey-data/backups</code>），文件名为 <code>pre-migration-&lt;schema version&gt;-&lt;UTC timestamp&gt;.sql.gz</code>。最近 3 个数据库结构版本中，每个版本保留最新的一份转储，其余的会被清理掉。什么时候应该恢复转储、而不是把数据库结构回退一步，见<a href="../migration-runbook/">数据库迁移</a>。</p>

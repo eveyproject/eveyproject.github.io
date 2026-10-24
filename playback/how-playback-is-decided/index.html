@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1446,6 +1478,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3332,7 +3392,7 @@ player decodes itself), and under <strong>Why not direct play</strong> the reaso
 </tr>
 <tr>
 <td>A setting or a decision already taken</td>
-<td>Direct Play turned off in the profile · Remux turned off in the profile · Preferred video codec (profile setting) · Choice pinned for this session</td>
+<td>Preferred video codec (profile setting) · Choice pinned for this session</td>
 </tr>
 </tbody>
 </table>
@@ -3405,14 +3465,13 @@ player never receives segments from two different encodings. Changing the
 audio or subtitle track in a way that needs it, or restarting the title, takes
 a new decision.</p>
 <h2 id="forcing-a-method">Forcing a method<a class="headerlink" href="#forcing-a-method" title="Permanent link">¶</a></h2>
-<p><strong>Settings → Playback</strong> has <strong>Allow direct play</strong>, <strong>Allow remux</strong> and <strong>Allow
-transcoding</strong> per profile. Turning one off makes the server skip that method,
-and Stream info shows why.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This is a diagnostic tool, not a quality setting: a forced transcode is
-never better than the original.</p>
-</div>
+<p>You cannot force a method: the server always picks it from the file and the
+player. What you can hold down is quality, per device, with <strong>Settings →
+Playback → Data saver (this device)</strong>. It caps the stream on that device only;
+the account's other devices keep their own setting. <strong>Off</strong> sets no cap.
+<strong>Saver</strong> asks for at most 720p, 3 Mbps and stereo sound. <strong>Travel / low data</strong>
+asks for at most 480p, 1 Mbps and stereo sound. A title above the cap is
+transcoded down to it, and Stream info shows the limit as the reason.</p>
 <p><strong>Quality</strong>, in the player's settings, is different: it chooses among the
 qualities of a transcoded stream. <strong>Auto</strong> follows the connection; a height
 (1080p, 720p...) holds that quality; <strong>Original</strong> removes the height limit
@@ -3426,7 +3485,8 @@ the player would otherwise ask for.</p>
 <li>The implementation: <a href="../../playback-serving/">Playback pipeline</a></li>
 </ul>
 <!-- sources
-decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels), applyDirectPlayPrefs
+decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels)
+
 session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked)
 remote cap: internal/adapters/driving/grpcapi/playback_handler.go - resolvePlaybackPrefs ; internal/config/config.go - RemoteBitrateCapKbps
 client caps: internal/domain/transcoding/playback_decision.go - ClientProfile ; frontend/packages/client/src/web/codec.ts ; frontend/packages/media-caps/src/castUrl.ts

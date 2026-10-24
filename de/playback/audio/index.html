@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3231,8 +3291,9 @@ wird sie in AAC neu kodiert:</p>
 <li>mit so vielen Kanälen, wie Quelle, Gerät und Profil erlauben, höchstens 5.1
   (eine 7.1-Quelle wird auf 5.1 heruntergemischt, das jeder Player dekodiert;
   Stereo-Quellen bleiben Stereo);</li>
-<li>unabhängig von der Abtastrate. Sie allein ist nie ein Grund für eine
-  Neukodierung.</li>
+<li>mit höchstens 48 kHz: Eine Spur über 48 kHz wird allein deshalb neu kodiert
+  (<code>audio_samplerate_exceeded</code>); bei 48 kHz oder weniger ist die Abtastrate
+  kein Grund.</li>
 </ul>
 <p>Eine kopierte Spur in einem transkodierten oder umverpackten Stream muss
 außerdem ein Format haben, das der Player in den Segmenten des Streams
@@ -3251,6 +3312,8 @@ mit Raumklang wird nur dann in der Seite dekodiert, wenn <strong>Maximale
 Audio-Kanäle</strong> im Profil es erlaubt: Ein Profil, das auf Stereo steht,
 bekommt stattdessen die Neukodierung in AAC, die die Kanäle heruntermischen
 kann.</p>
+<p>Wie die Seite sie dekodiert und was passiert, wenn sie es nicht kann:
+<a href="../ac3go/">ac3go in Evey</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Achtung</p>
 <p>Ein Reverse Proxy, der seine eigene Content-Security-Policy setzt, muss
@@ -3280,7 +3343,7 @@ copy vs aac, channels: internal/app/transcoding/decision.go - evaluateAudio, app
 device channel ceiling: frontend/packages/client/src/native/outputChannels.ts - resolveMaxOutputChannels (STEREO_ONLY_TYPES, hdmi.maxChannelCount) ; frontend/packages/client/src/native/playSession.ts - playerDecodesCopiedAudio ; internal/adapters/driving/http/client_capabilities.go - maxAudioChannelsQuery
 passthrough in segments: internal/app/transcoding/decision.go - applyPackagedAudioPassthrough ; internal/app/transcoding/source_facts.go - AudioCopyCodecAllowedFor ; internal/domain/transcoding/playback_decision.go - ClientProfile.FMP4AudioPassthrough
 wasm: internal/app/transcoding/wasm_audio.go - WasmAudioCodecSupported, WasmAudioChannelsOK ; internal/app/transcoding/decision.go - wasmAudioApplies ; frontend/packages/client/src/web/codec.ts
-sample rate: internal/app/transcoding/decision.go - evaluateAudio (no sample-rate check)
+sample rate: internal/app/transcoding/decision.go - evaluateAudio (audio_samplerate_exceeded, maxCopiedAudioSampleRate) ; internal/app/transcoding/decision_samplerate_test.go
 resync: internal/app/transcoding/playback_plan_resolver.go - Decide (audio_resync_requested) ; frontend/apps/web/src/features/playback/HLSPlayer.tsx (audioOffsetAvailable=transcodeMode) ; frontend/apps/mobile/app/(auth)/player/[id].tsx (audioOffsetAvailable)
 media health: i18n admin.syncPreview.btn ; docs/runbooks/media-health.md
 labels: i18n auth.settings.playback.maxAudioChannels, channelsStereo, channels51, channels71, audioLanguage ; player.settings.audioSync, audioSyncHint, audioSyncUnavailable ; player.streamInfo.decisionWasm, reason.audio_passthrough_unsupported, reason.audio_resync_requested

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3220,9 +3280,9 @@
    <code>#sha256:&lt;hash&gt;</code> जोड़ें।</li>
 <li><strong>पूर्वावलोकन और इंस्टॉल</strong> पैकेज को इंस्टॉल किए बिना जाँचता है।
    पूर्वावलोकन दिखाता है कि प्लगइन कौन सी <strong>अनुमतियां</strong> और <strong>क्षमताएँ</strong> माँगता
-   है, इंटरफ़ेस के किन स्लॉट में वह दिखना चाहता है, वह किन होस्ट से संपर्क
-   करेगा, <strong>स्थैतिक विश्लेषण</strong> का नतीजा, और जब सर्वर सिग्नेचर जाँचता है, तो यह
-   कि पैकेज <strong>हस्ताक्षरित</strong> है या नहीं।</li>
+   है, <strong>स्थैतिक विश्लेषण</strong> का नतीजा और, अगर सिग्नेचर दिया गया हो, प्रकाशक के साथ
+   <strong>सिग्नेचर</strong> का फ़ैसला। स्लॉट और होस्ट अपडेट के समय और <strong>सुरक्षा डैशबोर्ड</strong> पर
+   दिखते हैं।</li>
 <li>इस सूची को एक अनुबंध की तरह पढ़ें: प्लगइन सिर्फ़ यही चीज़ें कर पाएगा। पुष्टि
    करें, और प्लगइन शुरू हो जाता है।</li>
 </ol>
@@ -3234,21 +3294,22 @@
 <p>जिस पैकेज की जाँच में कोई गंभीर पैटर्न मिलता है, वह मना कर दिया जाता है, आप
 चाहे जो जवाब दें। चेतावनियाँ दिखाई जाती हैं और फ़ैसला आप पर छोड़ा जाता है।
 प्लगइन की भाषा सर्वर के <strong>उपलब्ध रनटाइम</strong> में होनी चाहिए: डिफ़ॉल्ट इमेज में
-सिर्फ़ Python है, <code>-nodejs</code> इमेज Node.js जोड़ती है और <code>-full</code> इमेज PHP, Ruby और
-Lua जोड़ती है।</p>
+Python, Node.js, PHP, Ruby और Lua हैं, <code>-nodejs</code> इमेज में Python और Node.js रहते हैं
+और <code>-lean</code> इमेज में सिर्फ़ Python रहता है।</p>
 <div class="admonition tip">
 <p class="admonition-title">सिग्नेचर वाले प्लगइन</p>
 <p>प्लगइन बनाने वाला ZIP पर <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>
-से सिग्नेचर कर सकता है, और आप तय करते हैं कि बिना सिग्नेचर या गलत सिग्नेचर
-वाले प्लगइन के साथ क्या हो। सिग्नेचर जाँचने के लिए सर्वर को बनाने वाले की
-public key दें और एक नीति चुनें:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (डिफ़ॉल्ट) | enforce</span>
+से सिग्नेचर कर सकता है; उसकी public key पैकेज के अंदर चलती है। Evey सिग्नेचर
+खुद जाँचता है (<code>cosign</code> binary नहीं चाहिए) और जब कुंजी आपकी <strong>भरोसेमंद
+प्रकाशक</strong> सूची में हो तो <strong>&lt;प्रकाशक&gt; द्वारा हस्ताक्षरित</strong> दिखाता है, नहीं तो
+fingerprint के साथ <strong>हस्ताक्षरित, अज्ञात कुंजी</strong> (एक क्लिक से उस पर भरोसा
+होता है), <strong>हस्ताक्षर रहित</strong> या <strong>अमान्य</strong>। जो अपडेट कुंजी बदलता है, या
+सिग्नेचर छोड़ देता है, वह आपकी साफ़ मंज़ूरी का इंतज़ार करता है। बाकी नीति
+तय करती है:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (डिफ़ॉल्ट) | enforce</span>
 </span></code></pre></div>
-<p><code>warn</code> के साथ, फ़ेल हुआ सिग्नेचर पूर्वावलोकन में और <strong>सुरक्षा डैशबोर्ड</strong> में
-दिखता है; <code>enforce</code> के साथ, इंस्टॉल या अपडेट मना कर दिया जाता है। public key
-के बिना कुछ भी जाँचा नहीं जाता, और सर्वर को <code>cosign</code> binary की ज़रूरत नहीं।
-प्लगइन बनाने वालों के लिए: देखें
+<p><code>warn</code> के साथ, फ़ैसला दिखता है और कुछ रोका नहीं जाता; <code>enforce</code> के साथ, सिर्फ़
+भरोसेमंद प्रकाशक इंस्टॉल होते हैं। प्लगइन बनाने वालों के लिए: देखें
 <a href="dev-setup/#7-sign-your-plugin">अपने प्लगइन पर सिग्नेचर करें</a>।</p>
 </div>
 <h2 id="update-a-plugin">प्लगइन अपडेट करें<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
@@ -3329,8 +3390,8 @@ URL) और वही पूर्वावलोकन दिखाता ह�
 </table>
 <p>मेमोरी, प्रोसेस और डिस्क की सीमाएँ निगरानी के अगले दौर में लागू होती हैं, जो इन्हें
 पार करने वाले प्लगइन को रोक देता है; CPU प्राथमिकता और सैंडबॉक्स मोड उसके बाद
-शुरू होने वाले प्लगइन पर लागू होते हैं। <code>0</code> मेमोरी, प्रोसेस या डिस्क की सीमा बंद
-कर देता है।</p>
+शुरू होने वाले प्लगइन पर लागू होते हैं। <code>0</code> मेमोरी और प्रोसेस के लिए डिफ़ॉल्ट
+वापस ला देता है; सिर्फ़ डिस्क की सीमा <code>0</code> को "बंद" मानती है।</p>
 <p><strong>सुरक्षा डैशबोर्ड</strong> हर प्लगइन के लिए जाँच में मिली बातें, सिग्नेचर का नतीजा
 और आखिरी त्रुटि रखता है। उसकी <strong>होस्ट सैंडबॉक्स</strong> वाली लाइन वह सैंडबॉक्स मोड
 दिखाती है जो इस मशीन पर असल में लागू है: अगर उसमें <code>basic</code> लिखा है, तो होस्ट

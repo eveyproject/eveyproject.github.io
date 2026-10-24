@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3213,12 +3273,12 @@ el servidor a un plugin, y lo que ese aislamiento no puede impedir, se explica e
   binarios compilados, los archivos comprimidos incrustados y el código nativo
   se rechazan salvo que el manifiesto declare <code>native-binary</code>.</li>
 </ul>
-<p>El análisis también lee los comentarios: una línea <code># pip install foo</code> en un
-comentario se señala igual que si fuera código real. Quita esas líneas antes
-de publicar. Las categorías están en
+<p>Los comentarios se eliminan antes del análisis, así que una línea comentada no
+se señala. Las categorías están en
 <a href="../../SECURITY/#static-analysis">Sandbox de plugins y modelo de amenazas</a>.</p>
-<p>Antes de instalar, el administrador ve los permisos, los slots y los hosts
-declarados, y lo que ha encontrado el análisis. Nada de lo que declara un
+<p>Antes de instalar, el administrador ve los permisos y las capacidades
+declarados, y lo que ha encontrado el análisis; los slots, los hosts y la
+firma se muestran al actualizar y en el Panel de seguridad. Nada de lo que declara un
 plugin se concede sin avisar.</p>
 <h2 id="what-the-plugin-runs-under">Las condiciones en las que funciona el plugin<a class="headerlink" href="#what-the-plugin-runs-under" title="Permanent link">¶</a></h2>
 <p>Declare lo que declare el manifiesto:</p>
@@ -3299,7 +3359,7 @@ metadatos (<code>metadata.provider</code>) son capacidades, que se declaran en
 </tr>
 <tr>
 <td><code>hardware.gpu</code></td>
-<td>El proceso recibe el nodo de renderizado DRM del servidor (el <code>renderD1xx</code> real, nunca un nodo card). Es una superficie de ataque del controlador del núcleo y una frontera de memoria de la GPU compartida con el transcodificador: una GPU bloqueada puede atascar la transcodificación. Sin él, los nodos de la GPU quedan totalmente fuera de la lista permitida de Landlock; con él, el lanzador añade una regla <code>IOCTL_DEV</code> limitada a ese único archivo (Landlock ABI 5 o posterior; en núcleos más antiguos, el acceso en lectura y escritura basta para enviar comandos). La vista previa muestra un aviso crítico. Concédelo solo a plugins que ejecutarías fuera de un sandbox.</td>
+<td>El proceso recibe el nodo de renderizado DRM del servidor (el <code>renderD1xx</code> real, nunca un nodo card). Es una superficie de ataque del controlador del núcleo y una frontera de memoria de la GPU compartida con el transcodificador: una GPU bloqueada puede atascar la transcodificación. Sin él, los nodos de la GPU quedan totalmente fuera de la lista permitida de Landlock; con él, el lanzador añade una regla <code>IOCTL_DEV</code> limitada a ese único archivo (Landlock ABI 5 o posterior; en núcleos más antiguos, el acceso en lectura y escritura basta para enviar comandos). El Panel de seguridad muestra un aviso crítico una vez instalado el plugin. Concédelo solo a plugins que ejecutarías fuera de un sandbox.</td>
 </tr>
 </tbody>
 </table>
@@ -3307,8 +3367,9 @@ metadatos (<code>metadata.provider</code>) son capacidades, que se declaran en
 <p>Se declaran en <code>external_fetch: [...]</code> y se comprueban al instalar
 (<code>validateExternalFetch</code>). Es todo o nada: una sola entrada no válida hace
 que se rechace toda la instalación.</p>
-<p>Una entrada es un <strong>nombre de host a secas</strong>. Un prefijo de esquema se
-tolera y se descarta; solo se guarda el nombre de host.</p>
+<p>Una entrada es un <strong>nombre de host</strong>. Un prefijo de esquema y una ruta final se
+descartan al analizar; solo se guarda el nombre de host. Los hosts coinciden
+exactamente, un comodín <code>*.example.com</code> se rechaza en la instalación y un sufijo de puerto se ignora.</p>
 <table>
 <thead>
 <tr>
@@ -3326,17 +3387,17 @@ tolera y se descarta; solo se guarda el nombre de host.</p>
 <tr>
 <td><code>https://api.tmdb.org</code></td>
 <td>Sí</td>
-<td>El esquema se lee y se descarta, se guarda el nombre de host</td>
+<td>El esquema y la ruta se descartan al analizar, se guarda el nombre de host</td>
 </tr>
 <tr>
 <td><code>*.tmdb.org</code></td>
 <td>No</td>
-<td>Los comodines se rechazan: enumera cada subdominio que necesites</td>
+<td>Los comodines se rechazan en la instalación; lista cada host</td>
 </tr>
 <tr>
 <td><code>*</code></td>
 <td>No</td>
-<td>La misma regla</td>
+<td>Un comodín solo se rechaza</td>
 </tr>
 <tr>
 <td><code>192.168.1.1</code>, <code>::1</code></td>
@@ -3436,13 +3497,17 @@ método que ese token no nombre.</p>
    subida, <code>accept_permission_changes=true</code>).</li>
 <li>El hash del paquete se toma en la vista previa y se comprueba al aplicar:
    el ZIP que se analizó es el ZIP que se instala.</li>
-<li>Con <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code>, un fallo de la firma en el paso
-   de aplicar bloquea la actualización aunque la vista previa haya pasado.</li>
+<li>Se comprueba la continuidad de la clave de firma: una actualización
+   firmada con otra clave distinta de la de la versión instalada, o que ya
+   no está firmada, se rechaza hasta que el administrador acepte al nuevo
+   editor. Con <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code>, una firma no fiable o no
+   válida en el paso de aplicar bloquea la actualización aunque la vista
+   previa haya pasado.</li>
 </ol>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
-analysis reads comments: docs/SECURITY.md (Static analysis)
+comments stripped before analysis: docs/SECURITY.md (Static analysis) ; internal/adapters/driven/pluginrunner/analyzer_normalize.go
 subprocess, deny-fork, deny-inet, render-dev: cmd/evey-plugin-launcher/main.go ; i18n admin.plugins.subprocessWarning
 resource defaults: internal/config/config.go - Plugins
 permission per RPC: internal/adapters/driving/grpcapi/plugin_interceptor.go ; served or not: internal/adapters/driving/pluginhost/host_server.go

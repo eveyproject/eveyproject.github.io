@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3210,11 +3270,11 @@
   binary, अंदर रखे आर्काइव और native code मना होते हैं, जब तक manifest
   <code>native-binary</code> न बताए।</li>
 </ul>
-<p>विश्लेषण comment भी पढ़ता है: comment में <code># pip install foo</code> वाली लाइन असली कोड
-की तरह दर्ज होती है। प्रकाशित करने से पहले ऐसी लाइनें हटा दें। श्रेणियों की सूची
+<p>विश्लेषण से पहले comment हटा दिए जाते हैं, इसलिए comment में बंद की गई लाइन दर्ज
+नहीं होती। श्रेणियों की सूची
 <a href="../../SECURITY/#static-analysis">प्लगइन सैंडबॉक्स और ख़तरा मॉडल</a> में है।</p>
-<p>इंस्टॉल करने से पहले एडमिन बताई गई अनुमतियाँ, स्लॉट और होस्ट देखता है, और यह भी
-कि विश्लेषण में क्या मिला। प्लगइन जो भी बताता है, उसमें से कुछ भी चुपचाप नहीं
+<p>इंस्टॉल करने से पहले एडमिन बताई गई अनुमतियाँ और क्षमताएँ देखता है, और यह भी
+कि विश्लेषण में क्या मिला; स्लॉट, होस्ट और सिग्नेचर अपडेट के समय और सुरक्षा डैशबोर्ड पर दिखते हैं। प्लगइन जो भी बताता है, उसमें से कुछ भी चुपचाप नहीं
 दिया जाता।</p>
 <h2 id="what-the-plugin-runs-under">प्लगइन किन सीमाओं में चलता है<a class="headerlink" href="#what-the-plugin-runs-under" title="Permanent link">¶</a></h2>
 <p>manifest कुछ भी बताए:</p>
@@ -3293,7 +3353,7 @@
 </tr>
 <tr>
 <td><code>hardware.gpu</code></td>
-<td>प्रोसेस को होस्ट का DRM render node मिलता है (असली <code>renderD1xx</code>, कभी card node नहीं)। यह kernel driver पर हमले का एक रास्ता है, और transcoder के साथ बँटी GPU मेमोरी की एक सीमा: अटका हुआ GPU ट्रांसकोडिंग रोक सकता है। इसके बिना GPU node Landlock की अनुमति सूची से पूरी तरह बाहर रहते हैं; इसके साथ launcher उसी एक फ़ाइल तक सीमित एक <code>IOCTL_DEV</code> नियम जोड़ता है (Landlock ABI 5 या नया; पुराने kernel पर सिर्फ़ पढ़ने और लिखने की पहुँच से ही command भेजे जा सकते हैं)। पूर्वावलोकन एक गंभीर चेतावनी दिखाता है। यह सिर्फ़ उन प्लगइन को दें जिन्हें आप सैंडबॉक्स के बाहर भी चला लेते।</td>
+<td>प्रोसेस को होस्ट का DRM render node मिलता है (असली <code>renderD1xx</code>, कभी card node नहीं)। यह kernel driver पर हमले का एक रास्ता है, और transcoder के साथ बँटी GPU मेमोरी की एक सीमा: अटका हुआ GPU ट्रांसकोडिंग रोक सकता है। इसके बिना GPU node Landlock की अनुमति सूची से पूरी तरह बाहर रहते हैं; इसके साथ launcher उसी एक फ़ाइल तक सीमित एक <code>IOCTL_DEV</code> नियम जोड़ता है (Landlock ABI 5 या नया; पुराने kernel पर सिर्फ़ पढ़ने और लिखने की पहुँच से ही command भेजे जा सकते हैं)। प्लगइन इंस्टॉल होने के बाद सुरक्षा डैशबोर्ड एक गंभीर चेतावनी दिखाता है। यह सिर्फ़ उन प्लगइन को दें जिन्हें आप सैंडबॉक्स के बाहर भी चला लेते।</td>
 </tr>
 </tbody>
 </table>
@@ -3301,8 +3361,9 @@
 <p><code>external_fetch: [...]</code> में बताए जाते हैं और इंस्टॉल के समय जाँचे जाते हैं
 (<code>validateExternalFetch</code>)। सब या कुछ नहीं: एक भी गलत एंट्री पूरा इंस्टॉल मना करवा
 देती है।</p>
-<p>एंट्री एक <strong>सिर्फ़ होस्ट का नाम</strong> है। आगे लगा scheme स्वीकार किया जाता है और हटा दिया
-जाता है; सिर्फ़ होस्ट का नाम रखा जाता है।</p>
+<p>एंट्री एक <strong>होस्ट का नाम</strong> है। आगे लगा scheme और अंत का path पार्स के समय हटा दिए
+जाते हैं; सिर्फ़ होस्ट का नाम रखा जाता है। होस्ट ठीक-ठीक मिलने चाहिए, <code>*.example.com</code>
+जैसा wildcard इंस्टॉल पर मना हो जाता है और port का suffix अनदेखा किया जाता है।</p>
 <table>
 <thead>
 <tr>
@@ -3320,17 +3381,17 @@
 <tr>
 <td><code>https://api.tmdb.org</code></td>
 <td>हाँ</td>
-<td>scheme पढ़कर हटा दिया जाता है, होस्ट का नाम रहता है</td>
+<td>scheme और path पार्स के समय हटा दिए जाते हैं, होस्ट का नाम रहता है</td>
 </tr>
 <tr>
 <td><code>*.tmdb.org</code></td>
 <td>नहीं</td>
-<td>wildcard मना हैं: हर ज़रूरी subdomain लिखें</td>
+<td>wildcard इंस्टॉल पर मना हो जाते हैं; हर होस्ट अलग से लिखें</td>
 </tr>
 <tr>
 <td><code>*</code></td>
 <td>नहीं</td>
-<td>वही नियम</td>
+<td>अकेला wildcard मना है</td>
 </tr>
 <tr>
 <td><code>192.168.1.1</code>, <code>::1</code></td>
@@ -3423,13 +3484,16 @@
    होता है (<code>requires_ack = true</code>; अपलोड route से, <code>accept_permission_changes=true</code>)।</li>
 <li>पैकेज का hash पूर्वावलोकन के समय लिया जाता है और लागू करते समय जाँचा जाता है:
    जिस ZIP का विश्लेषण हुआ, वही इंस्टॉल होता है।</li>
-<li><code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> में, लागू करने वाले कदम पर सिग्नेचर फ़ेल
-   हो तो अपडेट रुक जाता है, भले ही पूर्वावलोकन पास हो गया हो।</li>
+<li>साइनिंग कुंजी की निरंतरता जाँची जाती है: इंस्टॉल किए गए वर्ज़न से अलग कुंजी
+   से साइन किया हुआ, या अब साइन न किया हुआ अपडेट तब तक मना रहता है जब तक एडमिन
+   नया प्रकाशक स्वीकार नहीं करता। <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> में, लागू
+   करने वाले कदम पर भरोसे से बाहर या अमान्य सिग्नेचर अपडेट रोक देता है, भले ही
+   पूर्वावलोकन पास हो गया हो।</li>
 </ol>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
-analysis reads comments: docs/SECURITY.md (Static analysis)
+comments stripped before analysis: docs/SECURITY.md (Static analysis) ; internal/adapters/driven/pluginrunner/analyzer_normalize.go
 subprocess, deny-fork, deny-inet, render-dev: cmd/evey-plugin-launcher/main.go ; i18n admin.plugins.subprocessWarning
 resource defaults: internal/config/config.go - Plugins
 permission per RPC: internal/adapters/driving/grpcapi/plugin_interceptor.go ; served or not: internal/adapters/driving/pluginhost/host_server.go

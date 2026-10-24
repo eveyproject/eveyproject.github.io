@@ -10,7 +10,7 @@
         <link rel="canonical" href="https://eveyproject.org/privacy/">
       
       
-        <link rel="prev" href="../getting-started/faq/">
+        <link rel="prev" href="../getting-started/limitations/">
       
       
         <link rel="next" href="../administration/libraries/">
@@ -571,6 +571,8 @@
       
         
       
+        
+      
     
     
     
@@ -763,6 +765,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -863,6 +893,17 @@
     <span class="md-ellipsis">
       
         This website
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-party-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-party services
       
     </span>
   </a>
@@ -1297,6 +1338,8 @@
       
         
       
+        
+      
     
     
     
@@ -1413,6 +1456,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3142,6 +3213,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#third-party-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-party services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#children" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3202,7 +3284,7 @@ media player needs to work:</p>
 <li>what you browse, search, play, rate, favourite or request, and your playback
   position, so you can resume on another device;</li>
 <li>the name of the device (as Android reports it), so you can tell your devices
-  apart in <strong>Play On</strong> and in the server's list of sessions;</li>
+  apart in <strong>Play on</strong> and in the server's list of sessions;</li>
 <li>technical playback reports: which audio and video formats the device can
   decode, and errors met while playing, so the server can pick a stream the
   device can play;</li>
@@ -3231,8 +3313,7 @@ has no access to it.</p>
   may show content from an outside service (a weather plugin, for instance).</li>
 </ul>
 <h2 id="what-stays-on-the-device">What stays on the device<a class="headerlink" href="#what-stays-on-the-device" title="Permanent link">¶</a></h2>
-<p>The server address, your session token (in Android's encrypted storage), your
-preferences, and the films and music you download for offline viewing. Removing
+<p>The server address, your session token and, if you tick remember me, your username and password (in Android's encrypted storage, the Android keystore), your preferences, and the films and music you download for offline viewing. Removing
 the app removes them. Biometric unlock (fingerprint or face), when you turn it
 on, is handled by Android: the app only learns whether it succeeded.</p>
 <h2 id="permissions">Permissions<a class="headerlink" href="#permissions" title="Permanent link">¶</a></h2>
@@ -3260,6 +3341,22 @@ on, is handled by Android: the app only learns whether it succeeded.</p>
 <td>Biometrics</td>
 <td>Optional app lock.</td>
 </tr>
+<tr>
+<td>Modify audio settings</td>
+<td>Adjust playback audio (volume handling) while a film plays.</td>
+</tr>
+<tr>
+<td>Keep awake (wake lock)</td>
+<td>Keep the device from sleeping during playback.</td>
+</tr>
+<tr>
+<td>Vibrate</td>
+<td>Haptic feedback in the app.</td>
+</tr>
+<tr>
+<td>Read and write external storage (Android 12 and older only)</td>
+<td>Save and read your offline downloads on those Android versions.</td>
+</tr>
 </tbody>
 </table>
 <p>The phone app does not have the microphone permission.</p>
@@ -3267,6 +3364,8 @@ on, is handled by Android: the app only learns whether it succeeded.</p>
 <p><code>eveyproject.org</code> is hosted by GitHub Pages, which sees the visitor's IP
 address. The site serves its own fonts and scripts, so the browser contacts no
 other service. It sets no cookie of its own and has no analytics.</p>
+<h2 id="third-party-services">Third-party services<a class="headerlink" href="#third-party-services" title="Permanent link">¶</a></h2>
+<p>This product uses the TMDB API but is not endorsed or certified by TMDB. Artwork and metadata come from <a href="https://www.themoviedb.org/">TMDB</a>.</p>
 <h2 id="children">Children<a class="headerlink" href="#children" title="Permanent link">¶</a></h2>
 <p>The apps are not aimed at children. Kids profiles are set up by the server's
 operator, who holds that data.</p>
@@ -3324,7 +3423,7 @@ store page: frontend/apps/tv/src/lib/appUpdate.ts - openStorePage
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../getting-started/faq/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Common questions">
+          <a href="../getting-started/limitations/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Known limitations">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3334,7 +3433,7 @@ store page: frontend/apps/tv/src/lib/appUpdate.ts - openStorePage
                 Previous
               </span>
               <div class="md-ellipsis">
-                Common questions
+                Known limitations
               </div>
             </div>
           </a>

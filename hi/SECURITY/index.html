@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3788,8 +3848,8 @@
 <tbody>
 <tr>
 <td><code>shell_exec</code></td>
-<td>CRITICAL</td>
-<td><code>os.system</code>, <code>subprocess.run</code>, <code>child_process.exec</code>, PHP <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>, <code>preg_replace /e</code>, Ruby backticks, <code>open('\|cmd')</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>os.system</code>, <code>subprocess.run</code>, <code>child_process.exec</code>, PHP <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>, <code>preg_replace /e</code>, Ruby <code>Kernel.exec</code>/<code>system</code>, <code>open('\|cmd')</code> (CRITICAL); Ruby backticks (WARNING)</td>
 </tr>
 <tr>
 <td><code>network</code></td>
@@ -3803,8 +3863,8 @@
 </tr>
 <tr>
 <td><code>obfuscation</code></td>
-<td>CRITICAL</td>
-<td><code>eval</code>, base64 decoding, hex sequence, <code>__builtins__</code>, <code>base64 -d \| bash</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>eval</code>, <code>__builtins__</code>, <code>base64 -d \| bash</code> और shell में भेजे जाने वाले दूसरे decode (CRITICAL); base64 decoding, hex sequence (WARNING)</td>
 </tr>
 <tr>
 <td><code>privilege</code></td>
@@ -3877,16 +3937,29 @@
 <code>Function.constructor</code> से बच निकलना), हर एक के लिए
 <code>tests/fixtures/plugins/malicious/</code> में एक regression fixture के साथ, पर यह चलते
 समय होने वाले हर बदलाव के पीछे नहीं जा सकता (<code>strrev("metsys")</code>, किसी फ़ाइल से पढ़ा
-payload decode करना)। यह comment के अंदर भी मेल ढूँढता है: <code># pip install foo</code>
-वाला comment <code>runtime_install</code> चालू कर देता है। <strong>सुरक्षा चलते समय का सैंडबॉक्स लागू
+payload decode करना)। विश्लेषण से पहले comment हटा दिए जाते हैं। <strong>सुरक्षा चलते समय का सैंडबॉक्स लागू
 करता है, विश्लेषण नहीं</strong>: जो प्लगइन किसी पैटर्न को विश्लेषण से बचाकर निकाल ले, वह फिर भी
 सर्वर का डेटा नहीं पढ़ सकता, मना किया सिस्टम कॉल नहीं कर सकता, अपनी संसाधन सीमाएँ
 पार नहीं कर सकता, या ऐसा होस्ट method कॉल नहीं कर सकता जिसकी उसके पास अनुमति
 नहीं।</p>
 </div>
 <h3 id="signature">सिग्नेचर<a class="headerlink" href="#signature" title="Permanent link">¶</a></h3>
-<p>पैकेज पर cosign से सिग्नेचर किया जा सकता है। <code>EVEY_PLUGINS_COSIGN_POLICY</code> तय करता है
-कि जाँच फ़ेल होने पर क्या हो (<code>pluginrunner/cosign.go</code>):</p>
+<p>पैकेज पर cosign से सिग्नेचर किया जा सकता है (<code>cosign sign-blob --key</code>, ZIP के SHA-256
+पर ECDSA P-256)। बनाने वाले की public key पैकेज के अंदर <code>cosign.pub</code> नाम से चलती है;
+Evey उसी से अलग <code>.sig</code> को जाँचता है, अपने ही प्रोसेस में और offline
+(<code>pluginrunner/cosign.go</code>), और कुंजी का fingerprint निकालता है (DER public key पर
+<code>sha256:</code>)। इससे तीन बातें निकलती हैं:</p>
+<ul>
+<li><strong>भरोसा</strong>: fingerprint इंस्टेंस की <strong>भरोसेमंद प्रकाशक</strong> सूची में है या नहीं
+  (<code>एडमिन → प्लगइन</code>, या शुरू होते समय <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> से भरी
+  हुई)। भरोसेमंद कुंजी प्रकाशक का नाम दिखाती है; अनजानी कुंजी अपना fingerprint
+  और <strong>इस कुंजी पर भरोसा करें</strong> कार्रवाई दिखाती है।</li>
+<li><strong>निरंतरता</strong>: fingerprint इंस्टॉल के समय प्लगइन पर पिन हो जाता है। किसी और
+  कुंजी से साइन किया (<code>publisher-changed</code>) या अब साइन न किया हुआ
+  (<code>signature-lost</code>) अपडेट, नीति चाहे जो हो, तब तक मना रहता है जब तक एडमिन
+  अपडेट डायलॉग में नया प्रकाशक स्वीकार नहीं करता (<code>accept_new_publisher</code>)।</li>
+<li><strong>नीति</strong>: <code>EVEY_PLUGINS_COSIGN_POLICY</code> तय करती है कि फ़ैसले का क्या असर हो।</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -3897,23 +3970,25 @@ payload decode करना)। यह comment के अंदर भी मे
 <tbody>
 <tr>
 <td><code>off</code></td>
-<td>सिग्नेचर नहीं जाँचा जाता।</td>
+<td>सिग्नेचर नहीं जाँचा जाता और कुछ दर्ज नहीं होता।</td>
 </tr>
 <tr>
 <td><code>warn</code> (डिफ़ॉल्ट)</td>
-<td>विफलता दर्ज होती है और एडमिन को दिखाई जाती है, बिना रोके। public key सेट न हो, तो कुछ नहीं जाँचा जाता।</td>
+<td>फ़ैसला दर्ज होता है और दिखाया जाता है; बिना सिग्नेचर, भरोसे से बाहर और अमान्य पैकेज इंस्टॉल हो जाते हैं।</td>
 </tr>
 <tr>
 <td><code>enforce</code></td>
-<td>विफलता इंस्टॉल या अपडेट मना करवा देती है।</td>
+<td>सिर्फ़ भरोसेमंद प्रकाशक का साइन किया पैकेज इंस्टॉल या अपडेट होता है।</td>
 </tr>
 </tbody>
 </table>
-<p>public key <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> से दी जाती है।</p>
+<p>सिग्नेचर यह साबित करता है कि पैकेज वही है जो उसके प्रकाशक ने जारी किया, और कि
+अपडेट उसी प्रकाशक से आया है। कोड के बारे में यह कुछ नहीं कहता; उसे विश्लेषण,
+अनुमतियाँ और sandbox परखते हैं।</p>
 <h3 id="administrator-preview">एडमिन का पूर्वावलोकन<a class="headerlink" href="#administrator-preview" title="Permanent link">¶</a></h3>
 <p><code>POST /api/v1/admin/plugins/preview</code> बिना इंस्टॉल किए विश्लेषण चलाता है। एडमिन माँगी
 गई अनुमतियाँ, हर मिली बात उसकी फ़ाइल, लाइन और श्रेणी के साथ, कोड में मिले URL, और
-पैकेज का SHA256 देखता है; इंस्टॉल लागू करते समय वही hash जाँचा जाता है, इसलिए जिस
+पैकेज का SHA256 देखता है; एडमिन ने जिस hash को स्वीकार किया, वह अपडेट के समय जाँचा जाता है, और पहली बार का इंस्टॉल URL में <code>#sha256:</code> fragment से पक्का किया जा सकता है, इसलिए जिस
 पैकेज का विश्लेषण हुआ, वही इंस्टॉल होता है। अपडेट अनुमतियों, स्लॉट और होस्ट का फ़र्क
 दिखाता है, और नई अनुमति के लिए साफ़ स्वीकृति चाहिए।</p>
 <p>ऊँची अनुमतियों के लिए भरोसे का निर्णय एडमिन का है: Evey दिखाता है कि प्लगइन किन
@@ -3934,7 +4009,7 @@ namespace)। <code>network</code> अनुमति वाला प्लग�
 कॉल करता है। होस्ट, <code>internal/adapters/driving/pluginhost/fetch.go</code> में:</p>
 <ul>
 <li>लक्ष्य को प्लगइन की <code>external_fetch</code> सूची से मिलाता है (पूरे होस्ट नाम, बड़े-छोटे
-  अक्षर का फ़र्क किए बिना);</li>
+  अक्षर का फ़र्क किए बिना; <code>*.example.com</code> wildcard इंस्टॉल पर मना हो जाता है; port का suffix अनदेखा किया जाता है);</li>
 <li>सिर्फ़ <code>http</code> और <code>https</code>, और सिर्फ़ <code>GET</code> और <code>HEAD</code> की अनुमति देता है;</li>
 <li>एक SSRF से सुरक्षित client (<code>internal/pkg/ssrf</code>) से जुड़ता है, जो DNS से पता निकालने
   के बाद निजी, आरक्षित और link-local पते मना करता है, इसलिए DNS rebinding और redirect
@@ -4100,7 +4175,7 @@ capabilities के चलता है। launcher 1000 से नीचे क
 <tr>
 <td>प्रोसेस और thread</td>
 <td>64</td>
-<td>हर दौर में</td>
+<td>हर दौर में (सिर्फ़ मुख्य प्रोसेस के thread की गिनती)</td>
 </tr>
 <tr>
 <td>उसके फ़ोल्डर की डिस्क</td>
@@ -4116,8 +4191,8 @@ capabilities के चलता है। launcher 1000 से नीचे क
 </table>
 <p>वही दौर उस प्लगइन को चिह्नित करता है जो लगभग 30 s तक एक CPU का 90% से ज़्यादा उपयोग
 करता रहता है, और <code>hardware.gpu</code> वाले उस प्लगइन को रोक देता है जो किसी ग्राफ़िक्स इंजन
-का इसी तरह उपयोग करता रहता है। सीमाएँ हर प्लगइन के लिए <strong>एडमिन → प्लगइन → संसाधन सीमाएँ</strong> में तय होती
-हैं; environment वेरिएबल <code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>,
+का इसी तरह उपयोग करता रहता है। संसाधन सीमाओं का एक ही सेट, जो <strong>एडमिन → प्लगइन → संसाधन सीमाएँ</strong> में तय होता
+है, हर प्लगइन पर लागू होता है; environment वेरिएबल <code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>,
 <code>EVEY_PLUGINS_DISK_MAX_MB</code> और <code>EVEY_PLUGINS_CPU_NICE</code> शुरुआती डिफ़ॉल्ट तय करते हैं।</p>
 <h3 id="interface-isolation">इंटरफ़ेस का अलगाव<a class="headerlink" href="#interface-isolation" title="Permanent link">¶</a></h3>
 <p>प्लगइन का इंटरफ़ेस एक <code>&lt;iframe sandbox="allow-scripts"&gt;</code> में चलता है, बिना same-origin
@@ -4127,7 +4202,7 @@ capabilities के चलता है। launcher 1000 से नीचे क
 क्या माँग सकता है: <code>toast</code> एक सेकंड में ज़्यादा से ज़्यादा 3, 200 अक्षर, कोई HTML नहीं;
 <code>navigate</code> सिर्फ़ <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> और <code>/search</code>
 मानता है; <code>resize</code> 50 px (मोबाइल और टीवी पर 60) और 800 px के बीच। स्लॉट इंस्टॉल के
-समय और फिर दिखाते समय जाँचे जाते हैं।</p>
+समय जाँचे जाते हैं।</p>
 <h3 id="server-hardening">सर्वर को मज़बूत बनाना<a class="headerlink" href="#server-hardening" title="Permanent link">¶</a></h3>
 <p>शुरू होते समय सर्वर खुद को non-dumpable बनाता है (<code>PR_SET_DUMPABLE=0</code>,
 <a href="https://github.com/eveyproject/evey/blob/master/cmd/evey/hardening_linux.go"><code>hardening_linux.go</code></a>): उसी उपयोगकर्ता के रूप में चलने
@@ -4329,12 +4404,12 @@ capabilities के चलता है। launcher 1000 से नीचे क
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>कोई नहीं</td>
-<td>वह कुंजी जिससे सिग्नेचर जाँचे जाते हैं।</td>
+<td>वैकल्पिक: एक PEM public key, जो शुरू होते समय भरोसेमंद प्रकाशकों में जुड़ जाती है।</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>, <code>EVEY_PLUGINS_DISK_MAX_MB</code>, <code>EVEY_PLUGINS_CPU_NICE</code></td>
 <td>256, 64, 100, 10</td>
-<td>संसाधन सीमाओं के शुरुआती डिफ़ॉल्ट; पैनल इन्हें हर प्लगइन के लिए बदल देता है।</td>
+<td>संसाधन सीमाओं के शुरुआती डिफ़ॉल्ट; पैनल इन्हें सभी प्लगइन के लिए एक साथ बदल देता है।</td>
 </tr>
 </tbody>
 </table>
@@ -4359,8 +4434,8 @@ capabilities के चलता है। launcher 1000 से नीचे क
 </tr>
 <tr>
 <td>सभी प्लगइन उपयोगकर्ता 1001 साझा करते हैं</td>
-<td>प्लगइन अपने साथियों को signal भेज सकता है (सर्वर को signal भेजना मना है)</td>
-<td><code>PR_SET_DUMPABLE</code> <code>/proc</code> से दूसरे प्रोसेस पढ़ना रोकता है; Landlock और bubblewrap प्लगइन के फ़ोल्डर अलग रखते हैं</td>
+<td><code>basic</code> मोड में प्लगइन अपने साथियों की फ़ाइलें पढ़ सकता है</td>
+<td>दूसरे प्रोसेस को signal भेजना बंद है (seccomp, <code>LD_PRELOAD</code> और bubblewrap तीनों इसे रोकते हैं); <code>PR_SET_DUMPABLE</code> <code>/proc</code> से दूसरे प्रोसेस पढ़ना रोकता है; Landlock और bubblewrap प्लगइन के फ़ोल्डर अलग रखते हैं</td>
 </tr>
 <tr>
 <td>Seccomp एक मना-सूची है</td>

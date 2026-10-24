@@ -571,6 +571,8 @@
       
         
       
+        
+      
     
     
     
@@ -870,6 +872,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1308,6 +1338,8 @@
       
         
       
+        
+      
     
     
     
@@ -1424,6 +1456,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3233,7 +3293,7 @@
 <p>为 Evey 建一个文件夹，比如 <code>evey</code>，然后把下面的内容保存到里面，文件名为 <code>docker-compose.yml</code>。只需改一行：您媒体文件的路径（标着 5 的那一行）。比如您的电影在 <code>/srv/media</code>，这一行就改成 <code>- /srv/media:/media</code>。</p>
 <div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:beta-0.0.1</span><span class="w"> </span><span class="c1"># (1)!</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
@@ -3248,10 +3308,10 @@
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">evey-cache</span><span class="p">:</span>
 </span></code></pre></div>
 <ol>
-<li>Evey 的版本。Evey 还在测试阶段，所以还没有 <code>latest</code> 标签：<code>beta-0.0.1</code> 跟随开发分支，每次更新都会变。如果想始终使用完全相同的代码，请改用 <code>sha-&lt;commit&gt;</code> 标签：见<a href="../backups/#updating-evey">备份与更新</a>。</li>
+<li>Evey 的版本。<code>latest</code> 是最新的正式版本。如果想固定在某个版本，请使用 <code>0.1.0</code> 这样的版本标签，或 <code>sha-&lt;commit&gt;</code> 标签：见<a href="../backups/#updating-evey">备份与更新</a>。</li>
 <li>端口。左边的数字就是您以后在浏览器和应用里要输入的那个。除非已经有别的程序占用了 <code>9091</code>，否则保持不变。</li>
 <li>Evey 自己的数据：数据库、密钥、自动生成的密码、搜索索引、海报图片、日志、备份、插件。<strong>需要备份的就是这个文件夹。</strong></li>
-<li>缓存：转换过的视频、缩放过的照片和封面。随时可以删除，它会自动重新生成。</li>
+<li>缓存：转换过的视频、缩放过的照片和音乐封面。随时可以删除，它会自动重新生成。海报的各种尺寸不在其中，它们位于 <code>evey-data/artworks</code>。</li>
 <li>您的媒体。把 <code>/path/to/your/media</code> 换成真实的文件夹。在 Evey 里，这个文件夹叫 <code>/media</code>。它特意设成可写，这样您要求时，<a href="../runbooks/media-health/">媒体健康</a>才能修复文件。在末尾加上 <code>:ro</code> 就变成只读：Evey 就无法在其中写入，修复也会失败。</li>
 <li>容器停止时，给数据库留出时间正常关闭。Docker 默认只给 10 秒，对大型片库来说太短。</li>
 </ol>
@@ -3308,7 +3368,7 @@
 </tr>
 <tr>
 <td><code>evey-cache</code> 卷</td>
-<td>转换过的视频、缩放过的照片和封面</td>
+<td>转换过的视频、缩放过的照片和音乐封面（海报的各种尺寸位于 <code>evey-data/artworks</code>）</td>
 <td>能。它会自动重新生成。</td>
 </tr>
 <tr>
@@ -3327,9 +3387,42 @@
 <h2 id="common-variations">常见改动<a class="headerlink" href="#common-variations" title="Permanent link">¶</a></h2>
 <p>下面每一项都只是在同一个文件里改几行。</p>
 <p><strong>第二个媒体文件夹。</strong> 在 <code>volumes:</code> 下面加一行 <code>- /other/path:/media2</code>。第三个就是 <code>/media3</code>，以此类推。</p>
+<p><strong>同一台机器上再跑一个 Evey。</strong> 请给它另一个 <code>container_name</code> 和另外的主机端口，否则 <code>docker compose up</code> 会拒绝启动（名称已被占用）。</p>
 <p><strong>换个端口。</strong> 只改左边的数字，比如 <code>"8080:9091"</code>。之后在浏览器和应用里输入 <code>:8080</code>。</p>
 <p><strong>文件归谁所有。</strong> 默认情况下，Evey 会使用您媒体文件夹的所有者身份，这样修复时才能写入。如果想自己指定，就在 <code>environment:</code> 下面加上 <code>PUID</code> 和 <code>PGID</code>，值用 <code>id -u</code> 和 <code>id -g</code> 给出的数字。容器只是为了应用这个设置才以 root 启动；Evey 本身从不以 root 身份运行。</p>
 <p><strong>用显卡转换视频。</strong> 让容器能访问显卡：见<a href="../administration/hardware-acceleration/">硬件加速</a>。</p>
+<p><strong>您运行哪个版本。</strong> 由 <code>image:</code> 这一行决定：</p>
+<table>
+<thead>
+<tr>
+<th><code>image:</code></th>
+<th>您得到什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eveyproject/evey:latest</code></td>
+<td>最新的正式版本，每次 <code>docker compose pull</code> 都会升到下一个版本</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1</code></td>
+<td>该次版本线上的最新修复（0.1.0、0.1.1、...），不会升到新的次版本</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1.0</code></td>
+<td>恰好是这个版本，直到您修改这一行</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:sha-&lt;commit&gt;</code></td>
+<td>某一个确切的构建，是唯一永不变动的标签</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:master</code></td>
+<td>开发分支，每次推送都会重新构建：用于测试，不适合您依赖的服务器</td>
+</tr>
+</tbody>
+</table>
+<p>版本号遵循<a href="https://semver.org/">语义化版本</a>，从 <code>0.1.0</code> 开始；0.x 系列是公开测试版。要更换版本，修改这一行，然后运行 <code>docker compose pull &amp;&amp; docker compose up -d</code>；您的数据仍保存在 <code>./evey-data</code>。当前运行的版本可在 <strong>管理 → 仪表盘</strong>、<code>/healthz</code> 以及 <code>docker exec evey-server evey version</code> 中看到。每个镜像也有 <code>-nodejs</code> 和 <code>-lean</code> 版本，是插件运行时更少的精简构建（<a href="../operations/advanced-deployments/#image-tags-and-variants">详情</a>）。</p>
 <p><strong>您已经在用反向代理</strong>（一个在您的服务前面加上 HTTPS 的程序）：见<a href="../administration/remote-access/">远程访问与 HTTPS</a>。</p>
 <details class="note">
 <summary>在 NAS 上（Synology Container Manager、QNAP Container Station）</summary>

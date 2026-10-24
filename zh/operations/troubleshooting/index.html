@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3372,7 +3432,7 @@
 <details class="info">
 <summary>日志文件在哪里</summary>
 <ul>
-<li>文件位于 <code>./evey-data/logs/</code>，就在您的 compose 文件旁边（容器里是 <code>/data/logs/evey-YYYY-MM-DD.log</code>）。每天一个文件，JSON 格式，默认保留 90 天（<code>EVEY_LOG_RETENTION_DAYS</code>）。</li>
+<li>文件位于 <code>./evey-data/logs/</code>，就在您的 compose 文件旁边（容器里是 <code>/data/logs/evey-YYYY-MM-DD.log</code>）。每天一个文件，JSON 格式，当某个文件超过 50 MB（<code>EVEY_LOG_MAX_SIZE_MB</code>）时，还会有一个带小时后缀的文件（<code>evey-YYYY-MM-DD-HH.log</code>），默认保留 90 天（<code>EVEY_LOG_RETENTION_DAYS</code>）。</li>
 <li><code>docker compose logs evey</code> 显示的是另一类内容：容器在启动过程中输出的内容（启动脚本的 <code>evey:</code> 行、数据库、启动横幅）。服务器无法启动时，请查看它。服务器运行起来以后，日志就在文件和管理面板里。</li>
 </ul>
 </details>
@@ -3442,7 +3502,7 @@
 <li>只有在浏览器里没有声音，而且音轨是杜比数字（AC-3/E-AC-3）：自己设置 Content-Security-Policy 的反向代理，可能会拦截网页播放器所用的解码器。见<a href="../../playback/audio/#dolby-digital-in-a-browser">音频</a>。</li>
 <li>某个影片声音和画面不同步：<strong>管理 → 媒体健康</strong>能检测出比画面晚开始的音频，以及彼此不一致的音视频轨。</li>
 <li>字幕不显示：<a href="../../playback/subtitles/">字幕</a>一页说明了哪些格式由播放器绘制，哪些需要服务器内嵌到画面里。</li>
-<li>**字幕准备中…**持续好几分钟：文件里没有这条字幕轨的索引，服务器要把它从头到尾读一遍，只读一次。见<a href="../../playback/subtitles/#the-first-time-a-subtitle-is-shown">字幕第一次显示时</a>。</li>
+<li><strong>字幕准备中…</strong>持续好几分钟：文件里没有这条字幕轨的索引，服务器要把它从头到尾读一遍，只读一次。见<a href="../../playback/subtitles/#the-first-time-a-subtitle-is-shown">字幕第一次显示时</a>。</li>
 <li>需要转码的影片无法开始或卡住，而已经播放过的影片仍然正常，或者管理员收到<strong>字幕缓存已满</strong>：磁盘的剩余空间低于预留值。见<a href="../../playback/transcoding/#the-transcoding-cache">转码缓存</a>。</li>
 </ul>
 <h2 id="library-and-posters">媒体库和海报<a class="headerlink" href="#library-and-posters" title="Permanent link">¶</a></h2>

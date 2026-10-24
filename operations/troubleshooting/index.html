@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3380,7 +3440,9 @@ you.</p>
 <ul>
 <li>The files are in <code>./evey-data/logs/</code>, next to your compose file
   (<code>/data/logs/evey-YYYY-MM-DD.log</code> inside the container). One file per
-  day, in JSON, kept 90 days by default (<code>EVEY_LOG_RETENTION_DAYS</code>).</li>
+  day, in JSON, plus an hour-suffixed file (<code>evey-YYYY-MM-DD-HH.log</code>) when a
+  file passes 50 MB (<code>EVEY_LOG_MAX_SIZE_MB</code>), kept 90 days by default
+  (<code>EVEY_LOG_RETENTION_DAYS</code>).</li>
 <li><code>docker compose logs evey</code> shows something else: what the container
   prints while it starts (the start-up script's <code>evey:</code> lines, the
   database, the banner). Read it when the server does not come up. Once

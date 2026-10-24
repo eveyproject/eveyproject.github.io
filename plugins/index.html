@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3219,9 +3279,9 @@ when it has one, runs in an isolated frame of the page.</p>
    append <code>#sha256:&lt;hash&gt;</code> to the URL to have the download checked.</li>
 <li><strong>Preview &amp; Install</strong> analyses the package without installing it. The
    preview shows the <strong>Permissions</strong> and <strong>Capabilities</strong> the plugin asks for,
-   the slots of the interface it wants to appear in, the hosts it will
-   contact, the result of the <strong>Static Analysis</strong> and, when the server checks
-   signatures, whether the package is <strong>Signed</strong>.</li>
+   the result of the <strong>Static Analysis</strong> and, when a signature was given, the
+   <strong>Signature</strong> verdict with the publisher. The slots and the hosts are shown
+   at update and on the <strong>Security Dashboard</strong>.</li>
 <li>Read that list as the contract: those are the only things the plugin will
    be able to do. Confirm, and the plugin starts.</li>
 </ol>
@@ -3233,20 +3293,22 @@ when it has one, runs in an isolated frame of the page.</p>
 <p>A package whose analysis finds a critical pattern is refused, whatever you
 answer. Warnings are shown and left to you. The plugin's language must be
 among the <strong>Available Runtimes</strong> of the server: the default image ships
-Python only, the <code>-nodejs</code> image adds Node.js and the <code>-full</code> image adds PHP,
-Ruby and Lua.</p>
+Python, Node.js, PHP, Ruby and Lua; the <code>-nodejs</code> image keeps Python and
+Node.js and the <code>-lean</code> image keeps Python only.</p>
 <div class="admonition tip">
 <p class="admonition-title">Signed plugins</p>
-<p>A plugin author can sign the ZIP with <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>,
-and you decide what an unsigned or badly signed plugin does. To verify
-signatures, give the server the author's public key and pick a policy:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (default) | enforce</span>
+<p>A plugin author can sign the ZIP with <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>;
+the author's public key travels inside the package. Evey checks the
+signature on its own (no <code>cosign</code> binary) and tells you <strong>Signed by
+<publisher></publisher></strong> when the key is in your <strong>Trusted publishers</strong> list,
+<strong>Signed, unknown key</strong> with its fingerprint otherwise (one click trusts
+it), <strong>Unsigned</strong> or <strong>Invalid</strong>. An update that changes key, or drops the
+signature, waits for your explicit acceptance. The policy decides the
+rest:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (default) | enforce</span>
 </span></code></pre></div>
-<p>With <code>warn</code>, a failed signature is shown in the preview and in the
-<strong>Security Dashboard</strong>; with <code>enforce</code>, the install or the update is
-refused. Nothing is verified without a public key, and the server needs no
-<code>cosign</code> binary. Authors: see
+<p>With <code>warn</code>, the verdict is shown and nothing is blocked; with <code>enforce</code>,
+only trusted publishers install. Authors: see
 <a href="dev-setup/#7-sign-your-plugin">Sign your plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Update a plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
@@ -3326,7 +3388,8 @@ the panel has never been saved.</p>
 </table>
 <p>Memory, processes and disk apply at the next sweep of the monitor, which stops
 a plugin that exceeds them; the CPU priority and the sandbox mode apply to
-plugins started afterwards. <code>0</code> disables a memory, process or disk limit.</p>
+plugins started afterwards. <code>0</code> restores the default for memory and processes; only the disk limit treats
+<code>0</code> as off.</p>
 <p>The <strong>Security Dashboard</strong> keeps, per plugin, the findings of the analysis, the
 signature result and the last error. Its <strong>Host sandbox</strong> line shows the
 sandbox mode actually in force on this machine: if it reads <code>basic</code>, the host

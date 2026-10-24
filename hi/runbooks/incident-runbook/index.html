@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3399,7 +3459,7 @@ Meilisearch हैं। उनकी लाइनें सर्वर वा�
 </span></code></pre></div>
 <p><strong>लॉग।</strong> एक ही आउटपुट दो जगह मिलता है: रोज़ की फ़ाइल
 <code>./evey-data/logs/evey-YYYY-MM-DD.log</code> (<code>EVEY_LOG_DIR</code>, इमेज के अंदर
-<code>/data/logs</code>) और <code>docker logs evey-server</code>। फ़ाइल ही भरोसेमंद है: Docker का
+<code>/data/logs</code>; 50 MB से बड़ी फ़ाइल, <code>EVEY_LOG_MAX_SIZE_MB</code>, <code>evey-YYYY-MM-DD-HH.log</code> में जारी रहती है) और <code>docker logs evey-server</code>। फ़ाइल ही भरोसेमंद है: Docker का
 json-file ड्राइवर <code>docker logs</code> को रोटेट करता है, और रोटेशन के बाद यह कमांड
 कंटेनर से घंटों पहले ही रुक सकती है। जब दोनों में फ़र्क हो, तो फ़ाइल पढ़ें। एडमिन
 पैनल का <strong>लॉग और डीबग</strong> पेज इसी आउटपुट में खोजता है
@@ -3503,11 +3563,11 @@ json-file ड्राइवर <code>docker logs</code> को रोटेट 
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># किसी सेगमेंट की माँग ने पुराना एन्कोडर इस्तेमाल किया या नया शुरू किया, क्यों,</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># और प्लेयर को इसकी क्या कीमत पड़ी। सिर्फ़ तभी लॉग होता है जब कोई कीमत हो।</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># `over_client_patience: true` ही असली सुराग है।</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># खुद एन्कोडर: शुरू होना, बंद किया जाना, और उसकी वजह।</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"software: session (started|killed)"|per-hash cap'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span></code></pre></div>
 <p>ये लाइनें बताती हैं कि सर्वर ने क्या फ़ैसला किया। ffmpeg ने सेकंड-दर-सेकंड क्या
 हासिल किया, यह देखने के लिए हर एन्कोडर का प्रगति लॉग चालू करें (<code>$TOKEN</code> एक
@@ -3638,7 +3698,7 @@ unavailable, using SQL search fallback</code> दिखता है।</p>
 <li>Trickplay को फिर से बनाना ज़्यादा महँगा है; उसे सिर्फ़ ज़रूरत हो तभी हटाएँ:
   <div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'rm -rf /data/trickplay/*'</span>
 </span></code></pre></div></li>
-<li>अगर होस्ट का वॉल्यूम तंग है, तो <strong>एडमिन → सर्वर कॉन्फ़िग → सर्वर सेटिंग्स</strong>
+<li>अगर होस्ट का वॉल्यूम तंग है, तो <strong>एडमिन → ट्रांसकोडिंग</strong>
   में <strong>ट्रांसकोड कैश बजट (GB)</strong> कम करें (डिफ़ॉल्ट <code>10</code>)। बजट जो भी हो, सफ़ाई
   करने वाला काम कैश वॉल्यूम पर 2 GiB खाली रखता है।</li>
 </ul>
@@ -3676,7 +3736,7 @@ event reported</code> लाइन है, जिसमें <code>type=</code>
    मतलब है कि एक नया LOAD चल रहे LOAD की जगह ले रहा है (कुछ सेकंड पहले का
    <code>StartStream</code> खोजें), <code>reason=ERROR</code> में प्लेयर की गड़बड़ी होती है। आखिरी
    <code>alive</code> के बाद कोई <code>finished</code> न होने का मतलब है कि रिसीवर का प्रोसेस गायब हो
-   गया, अक्सर एक Chromecast HD जिसे 20+ Mbps वाले copy master पर मेमोरी के लिए
+   गया, अक्सर एक Chromecast HD जिसे ऊँचे bitrate वाले copy master (जैसा देखा गया) पर मेमोरी के लिए
    बंद कर दिया गया।</li>
 <li><strong>फ़ोन ने क्या देखा?</strong> <code>cast_sender_stall</code> खोजें: भेजने वाला
    <code>state=playing frozen=&lt;n&gt;s pos=&lt;p&gt;</code> भेजता है जब Cast SDK अब भी PLAYING कहता है
@@ -3692,7 +3752,7 @@ event reported</code> लाइन है, जिसमें <code>type=</code>
    rung</code> (copy master का सबसे ऊँचा बिटरेट) और <code>plan fitted to the client's
    line</code> खोजें (रिसीवर का <code>maxKbps</code> माप या उसका <code>abr=floor</code> बचाव; उसके बाद आने
    वाले ट्रांसकोड master में वजह <code>client_line_exceeded</code> या <code>abr_floor_requested</code>
-   होती है)। जो सेशन 20+ Mbps वाले copy master पर शुरू हुआ और कुछ सेकंड बाद
+   होती है)। जो सेशन ऊँचे bitrate वाले copy master पर शुरू हुआ और कुछ सेकंड बाद
    फ़िट किए गए 1080p rung पर आ गया, उसमें बचाव ठीक से काम कर रहा है; copy master पर
    फिर से शुरू होने वाला re-LOAD वह पैटर्न है जो Chromecast HD को बंद कर देता है।</li>
 <li><strong>सर्वर की तरफ़ कमी?</strong> <code>on-demand resource refused</code> खोजें: लगातार सेगमेंट पर

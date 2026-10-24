@@ -571,6 +571,8 @@
       
         
       
+        
+      
     
     
     
@@ -870,6 +872,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1308,6 +1338,8 @@
       
         
       
+        
+      
     
     
     
@@ -1424,6 +1456,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3249,7 +3309,7 @@ marked 5). For example, if your films are in <code>/srv/media</code>, the line b
 <code>- /srv/media:/media</code>.</p>
 <div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:beta-0.0.1</span><span class="w"> </span><span class="c1"># (1)!</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
@@ -3264,16 +3324,16 @@ marked 5). For example, if your films are in <code>/srv/media</code>, the line b
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">evey-cache</span><span class="p">:</span>
 </span></code></pre></div>
 <ol>
-<li>The version of Evey. Evey is in beta, so there is no <code>latest</code> tag yet:
-   <code>beta-0.0.1</code> follows the development branch and changes with every update.
-   To stay on exactly the same code, use a <code>sha-&lt;commit&gt;</code> tag instead: see
+<li>The version of Evey. <code>latest</code> is the newest release. To stay on a given
+   version, use a release tag such as <code>0.1.0</code>, or a <code>sha-&lt;commit&gt;</code> tag: see
    <a href="../backups/#updating-evey">Backups and updates</a>.</li>
 <li>The port. The number on the left is the one you will type in the browser
    and in the apps. Keep <code>9091</code> unless another program already uses it.</li>
 <li>Evey's own data: database, keys, generated passwords, search index,
    artwork, logs, backups, plugins. <strong>This is the folder to back up.</strong></li>
-<li>A cache of converted video, resized photos and covers. It can be deleted
-   at any time and fills up again by itself.</li>
+<li>A cache of converted video, resized photos and music covers. It can be
+   deleted at any time and fills up again by itself. The poster variants are
+   not in it: they live under <code>evey-data/artworks</code>.</li>
 <li>Your media. Replace <code>/path/to/your/media</code> with the real folder. Inside
    Evey, this folder is called <code>/media</code>. It is writable on purpose, so that
    <a href="../runbooks/media-health/">Media health</a> can repair a file when you ask.
@@ -3346,7 +3406,7 @@ exactly this address on their first screen, with <code>http://</code> and the po
 </tr>
 <tr>
 <td><code>evey-cache</code> volume</td>
-<td>Converted video, resized photos and covers</td>
+<td>Converted video, resized photos and music covers (poster variants are in <code>evey-data/artworks</code>)</td>
 <td>Yes. It fills up again by itself.</td>
 </tr>
 <tr>
@@ -3369,6 +3429,9 @@ exactly this address on their first screen, with <code>http://</code> and the po
 <p>Each of these is a few lines in the same file.</p>
 <p><strong>A second media folder.</strong> Add <code>- /other/path:/media2</code> under <code>volumes:</code>. A
 third one is <code>/media3</code>, and so on.</p>
+<p><strong>A second Evey on the same host.</strong> Give it another <code>container_name</code> and
+other host ports, otherwise <code>docker compose up</code> refuses to start (the name
+is already in use).</p>
 <p><strong>Another port.</strong> Change only the number on the left, for example
 <code>"8080:9091"</code>. Then type <code>:8080</code> in the browser and in the apps.</p>
 <p><strong>Who owns the files.</strong> By default, Evey adopts the owner of your media
@@ -3377,6 +3440,44 @@ under <code>environment:</code>, with the numbers given by <code>id -u</code> an
 container starts as root only to apply this; Evey itself never runs as root.</p>
 <p><strong>A graphics card for video conversion.</strong> Give the container access to the
 card: see <a href="../administration/hardware-acceleration/">Hardware acceleration</a>.</p>
+<p><strong>Which version you run.</strong> The <code>image:</code> line decides:</p>
+<table>
+<thead>
+<tr>
+<th><code>image:</code></th>
+<th>You get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eveyproject/evey:latest</code></td>
+<td>the newest release, each <code>docker compose pull</code> moves you to the next one</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1</code></td>
+<td>the newest fix of that minor line (0.1.0, 0.1.1, ...), never a new minor</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1.0</code></td>
+<td>exactly that release, until you change the line</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:sha-&lt;commit&gt;</code></td>
+<td>one exact build, the only tag that never moves</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:master</code></td>
+<td>the development branch, rebuilt at every push: for testing, not for a server you rely on</td>
+</tr>
+</tbody>
+</table>
+<p>Release numbers follow <a href="https://semver.org/">semantic versioning</a> and start
+at <code>0.1.0</code>; the 0.x line is the public beta. To change version, edit the
+line, then <code>docker compose pull &amp;&amp; docker compose up -d</code>; your data stays in
+<code>./evey-data</code>. The running version shows in <strong>Admin → Dashboard</strong>, at
+<code>/healthz</code>, and with <code>docker exec evey-server evey version</code>. Each image also
+exists as <code>-nodejs</code> and <code>-lean</code>, slimmer builds with fewer plugin runtimes
+(<a href="../operations/advanced-deployments/#image-tags-and-variants">details</a>).</p>
 <p><strong>You already run a reverse proxy</strong> (a program that puts HTTPS in front of
 your services): see <a href="../administration/remote-access/">Remote access and HTTPS</a>.</p>
 <details class="note">

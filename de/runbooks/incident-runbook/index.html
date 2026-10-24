@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3402,7 +3462,7 @@ Zeile <code>ports:</code> der Compose-Datei.</p>
 </span></code></pre></div>
 <p><strong>Protokolle.</strong> Dieselben Zeilen gibt es zweimal: in der Tagesdatei
 <code>./evey-data/logs/evey-YYYY-MM-DD.log</code> (<code>EVEY_LOG_DIR</code>, <code>/data/logs</code> im
-Image) und in <code>docker logs evey-server</code>. Maßgeblich ist die Datei: Der
+Image; eine Datei über 50 MB, <code>EVEY_LOG_MAX_SIZE_MB</code>, wird in <code>evey-YYYY-MM-DD-HH.log</code> fortgesetzt) und in <code>docker logs evey-server</code>. Maßgeblich ist die Datei: Der
 json-file-Treiber von Docker rotiert <code>docker logs</code>, und nach einer Rotation
 kann die Ausgabe des Befehls um Stunden hinter dem Container zurückliegen. Widersprechen sich die
 beiden, lesen Sie die Datei. Die Seite <strong>Protokolle &amp; Debug</strong> im
@@ -3519,11 +3579,11 @@ das erfordert keinen zusätzlichen Aufwand:</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Warum eine Segmentanfrage einen Encoder wiederverwendet oder einen neuen</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># gestartet hat, und was das den Player gekostet hat. Nur protokolliert, wenn</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># es etwas kostet. `over_client_patience: true` ist der klare Beweis.</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Die Encoder selbst: Starts, Abbrüche und ihr Grund.</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"software: session (started|killed)"|per-hash cap'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span></code></pre></div>
 <p>Diese Zeilen sagen, was der Server entschieden hat. Um Sekunde für Sekunde
 zu sehen, was ffmpeg geschafft hat, schalten Sie das Fortschrittsprotokoll
@@ -3664,8 +3724,7 @@ die Gesundheitsprüfung wechselt ständig zwischen Erfolg und Fehler.</p>
 <li>Trickplay ist aufwendiger neu zu erzeugen; leeren Sie es nur, wenn es sein muss:
   <div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'rm -rf /data/trickplay/*'</span>
 </span></code></pre></div></li>
-<li>Senken Sie <strong>Budget des Transkodierungs-Caches (GB)</strong> unter <strong>Verwaltung →
-  Serverkonfiguration → Servereinstellungen</strong> (Standard <code>10</code>), wenn das
+<li>Senken Sie <strong>Budget des Transkodierungs-Caches (GB)</strong> unter <strong>Verwaltung → Transkodierung</strong> (Standard <code>10</code>), wenn das
   Volume auf dem Rechner knapp ist. Unabhängig vom Budget hält die
   Aufräumfunktion 2 GiB auf dem Cache-Volume frei.</li>
 </ul>
@@ -3709,7 +3768,7 @@ Zeichenkette <code>details=</code>.</p>
    Sie nach einem <code>StartStream</code> einige Sekunden vorher), <code>reason=ERROR</code>
    enthält den Fehler des Players. Kein <code>finished</code> nach dem letzten <code>alive</code>
    heißt, dass der Prozess des Empfängers verschwunden ist, meist ein
-   Chromecast HD, der bei einem Kopie-Master mit über 20 Mbps wegen
+   Chromecast HD, der bei einem Kopie-Master mit hoher Bitrate (so beobachtet) wegen
    Speichermangels beendet wurde.</li>
 <li><strong>Was hat das Handy gesehen?</strong> Suchen Sie <code>cast_sender_stall</code>: Der Sender
    meldet <code>state=playing frozen=&lt;n&gt;s pos=&lt;p&gt;</code>, wenn das Cast-SDK noch
@@ -3728,7 +3787,7 @@ Zeichenkette <code>details=</code>.</p>
    the client's line</code> (die Messung <code>maxKbps</code> des Empfängers oder seine
    Rückfallstufe <code>abr=floor</code>; der Transkodierungs-Master, der folgt, trägt den
    Grund <code>client_line_exceeded</code> oder <code>abr_floor_requested</code>). Eine Sitzung,
-   die mit einem Kopie-Master über 20 Mbps begann und nach wenigen Sekunden
+   die mit einem Kopie-Master mit hoher Bitrate begann und nach wenigen Sekunden
    auf eine angepasste 1080p-Stufe wechselte, ist die Rückfallstufe, die wie
    vorgesehen greift; ein erneutes LOAD, das wieder mit dem Kopie-Master beginnt, ist das
    Muster, das einen Chromecast HD zum Absturz bringt.</li>

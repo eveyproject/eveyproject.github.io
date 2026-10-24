@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3795,8 +3855,8 @@ rückgängig macht (Aliase, verkettete Zeichenketten, f-Strings):</p>
 <tbody>
 <tr>
 <td><code>shell_exec</code></td>
-<td>CRITICAL</td>
-<td><code>os.system</code>, <code>subprocess.run</code>, <code>child_process.exec</code>, PHP <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>, <code>preg_replace /e</code>, Backticks in Ruby, <code>open('\|cmd')</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>os.system</code>, <code>subprocess.run</code>, <code>child_process.exec</code>, PHP <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>, <code>preg_replace /e</code>, Ruby <code>Kernel.exec</code>/<code>system</code>, <code>open('\|cmd')</code> (CRITICAL); Backticks in Ruby (WARNING)</td>
 </tr>
 <tr>
 <td><code>network</code></td>
@@ -3810,8 +3870,8 @@ rückgängig macht (Aliase, verkettete Zeichenketten, f-Strings):</p>
 </tr>
 <tr>
 <td><code>obfuscation</code></td>
-<td>CRITICAL</td>
-<td><code>eval</code>, Base64-Dekodierung, Hex-Folgen, <code>__builtins__</code>, <code>base64 -d \| bash</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>eval</code>, <code>__builtins__</code>, <code>base64 -d \| bash</code> und andere Dekodierungen, die in eine Shell geleitet werden (CRITICAL); Base64-Dekodierung, Hex-Folgen (WARNING)</td>
 </tr>
 <tr>
 <td><code>privilege</code></td>
@@ -3886,9 +3946,8 @@ werden, Zugriff auf eingebaute Funktionen über den Namen, Ausbrüche über
 <code>Function.constructor</code>), jede mit einem Regressionsbeispiel in
 <code>tests/fixtures/plugins/malicious/</code>. Sie kann aber nicht jede
 Umwandlung zur Laufzeit verfolgen (<code>strrev("metsys")</code>, eine Nutzlast,
-die aus einer Datei gelesen und dekodiert wird). Sie schlägt auch in
-Kommentaren an: Ein Kommentar <code># pip install foo</code> löst <code>runtime_install</code>
-aus. <strong>Die Grenze, die wirklich durchgesetzt wird, ist die Sandbox zur
+die aus einer Datei gelesen und dekodiert wird). Kommentare werden vor der Analyse
+entfernt. <strong>Die Grenze, die wirklich durchgesetzt wird, ist die Sandbox zur
 Laufzeit, nicht die Analyse</strong>: Ein Plugin, dessen Muster die Analyse
 nicht erkennt, kann trotzdem die Daten des Servers nicht lesen, keinen
 gesperrten Systemaufruf machen, seine Ressourcenlimits nicht
@@ -3896,8 +3955,25 @@ gesperrten Systemaufruf machen, seine Ressourcenlimits nicht
 Berechtigung hat.</p>
 </div>
 <h3 id="signature">Signatur<a class="headerlink" href="#signature" title="Permanent link">¶</a></h3>
-<p>Ein Paket kann mit cosign signiert werden. <code>EVEY_PLUGINS_COSIGN_POLICY</code>
-legt fest, was eine fehlgeschlagene Prüfung bewirkt (<code>pluginrunner/cosign.go</code>):</p>
+<p>Ein Paket kann mit cosign signiert werden (<code>cosign sign-blob --key</code>, ECDSA
+P-256 über den SHA-256 des ZIP). Der öffentliche Schlüssel des Autors reist im
+Paket als <code>cosign.pub</code>; Evey prüft damit die abgetrennte <code>.sig</code>, im eigenen
+Prozess und offline (<code>pluginrunner/cosign.go</code>), und berechnet den
+Fingerabdruck des Schlüssels (<code>sha256:</code> über den öffentlichen DER-Schlüssel).
+Daraus folgen drei Dinge:</p>
+<ul>
+<li><strong>Vertrauen</strong>: Der Fingerabdruck steht in der Liste der <strong>Vertrauenswürdigen
+  Herausgeber</strong> der Instanz oder nicht (<code>Verwaltung → Plugins</code>, oder beim
+  Start über <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> befüllt). Ein vertrauter
+  Schlüssel zeigt den Namen des Herausgebers; ein unbekannter zeigt seinen
+  Fingerabdruck und die Aktion <strong>Diesem Schlüssel vertrauen</strong>.</li>
+<li><strong>Kontinuität</strong>: Der Fingerabdruck wird bei der Installation am Plugin
+  festgehalten. Ein Update, das mit einem anderen Schlüssel signiert ist
+  (<code>publisher-changed</code>) oder nicht mehr signiert ist (<code>signature-lost</code>), wird
+  unabhängig von der Regel abgelehnt, bis der Administrator im Update-Dialog
+  den neuen Herausgeber akzeptiert (<code>accept_new_publisher</code>).</li>
+<li><strong>Regel</strong>: <code>EVEY_PLUGINS_COSIGN_POLICY</code> legt fest, was das Urteil bewirkt.</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -3908,26 +3984,28 @@ legt fest, was eine fehlgeschlagene Prüfung bewirkt (<code>pluginrunner/cosign.
 <tbody>
 <tr>
 <td><code>off</code></td>
-<td>Die Signatur wird nicht geprüft.</td>
+<td>Die Signatur wird nicht geprüft und nichts wird festgehalten.</td>
 </tr>
 <tr>
 <td><code>warn</code> (Standard)</td>
-<td>Ein Fehlschlag wird festgehalten und dem Administrator angezeigt, ohne zu blockieren. Ohne konfigurierten öffentlichen Schlüssel wird nichts geprüft.</td>
+<td>Das Urteil wird festgehalten und angezeigt; unsignierte, nicht vertraute und ungültige Pakete werden installiert.</td>
 </tr>
 <tr>
 <td><code>enforce</code></td>
-<td>Ein Fehlschlag lehnt die Installation oder das Update ab.</td>
+<td>Nur ein Paket, das von einem vertrauenswürdigen Herausgeber signiert ist, wird installiert oder aktualisiert.</td>
 </tr>
 </tbody>
 </table>
-<p>Der öffentliche Schlüssel wird mit <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>
-angegeben.</p>
+<p>Eine Signatur beweist, dass das Paket dasjenige ist, das sein Herausgeber
+veröffentlicht hat, und dass ein Update vom selben Herausgeber stammt. Über
+den Code sagt sie nichts; den beurteilen die Analyse, die Berechtigungen und
+die Sandbox.</p>
 <h3 id="administrator-preview">Vorschau für den Administrator<a class="headerlink" href="#administrator-preview" title="Permanent link">¶</a></h3>
 <p><code>POST /api/v1/admin/plugins/preview</code> führt die Analyse aus, ohne zu
 installieren. Der Administrator sieht die verlangten Berechtigungen, jeden
 Fund mit Datei, Zeile und Kategorie, die im Code gefundenen URLs und den
-SHA256 des Pakets. Derselbe Hash wird geprüft, wenn die Installation
-ausgeführt wird: Das analysierte Paket ist also das installierte. Ein Update
+SHA256 des Pakets. Der vom Administrator bestätigte Hash wird beim Update geprüft, und eine Erstinstallation lässt sich über ein <code>#sha256:</code>-Fragment in der URL festlegen:
+Das analysierte Paket ist also das installierte. Ein Update
 zeigt den Unterschied bei Berechtigungen, Slots und Hosts, und eine neue
 Berechtigung verlangt eine ausdrückliche Bestätigung.</p>
 <p>Für erhöhte Berechtigungen ist der Administrator die Vertrauensgrenze: Evey
@@ -3950,7 +4028,7 @@ Berechtigung <code>network</code> ruft die Methode <code>Fetch</code> des Hosts 
 Unix-Socket auf. Der Host, in
 <code>internal/adapters/driving/pluginhost/fetch.go</code>:</p>
 <ul>
-<li>prüft das Ziel gegen die Liste <code>external_fetch</code> des Plugins (genaue Hosts, ohne Beachtung von Groß- und Kleinschreibung);</li>
+<li>prüft das Ziel gegen die Liste <code>external_fetch</code> des Plugins (genaue Hosts, ohne Beachtung von Groß- und Kleinschreibung; ein Platzhalter <code>*.example.com</code> wird bei der Installation abgelehnt; ein Port-Suffix wird ignoriert);</li>
 <li>erlaubt nur <code>http</code> und <code>https</code> und nur <code>GET</code> und <code>HEAD</code>;</li>
 <li>verbindet sich über einen SSRF-sicheren Client (<code>internal/pkg/ssrf</code>), der
   private, reservierte und link-lokale Adressen nach der DNS-Auflösung
@@ -4128,7 +4206,7 @@ ein Plugin an, das ein Limit überschreitet
 <tr>
 <td>Prozesse und Threads</td>
 <td>64</td>
-<td>bei jedem Durchlauf</td>
+<td>bei jedem Durchlauf (nur die Thread-Anzahl des Hauptprozesses)</td>
 </tr>
 <tr>
 <td>Speicherplatz seines Verzeichnisses</td>
@@ -4144,8 +4222,8 @@ ein Plugin an, das ein Limit überschreitet
 </table>
 <p>Derselbe Durchlauf markiert ein Plugin, das einen CPU-Kern etwa 30 s lang
 über 90 % auslastet, und hält ein Plugin mit <code>hardware.gpu</code> an, das eine
-Grafikeinheit auf dieselbe Weise auslastet. Die Limits werden pro Plugin
-unter <strong>Verwaltung → Plugins → Ressourcenlimits</strong> gesetzt; die
+Grafikeinheit auf dieselbe Weise auslastet. Ein einziger Satz Ressourcenlimits, gesetzt
+unter <strong>Verwaltung → Plugins → Ressourcenlimits</strong>, gilt für jedes Plugin; die
 Umgebungsvariablen <code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>,
 <code>EVEY_PLUGINS_DISK_MAX_MB</code> und <code>EVEY_PLUGINS_CPU_NICE</code> legen die
 Standardwerte beim Start fest.</p>
@@ -4158,8 +4236,7 @@ Verbindungen nur zu seinen Hosts aus <code>external_fetch</code> erlaubt. Die Br
 von der Seite verlangen kann: <code>toast</code> höchstens 3 pro Sekunde, 200 Zeichen,
 kein HTML; <code>navigate</code> nimmt nur <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>,
 <code>/settings</code> und <code>/search</code> an; <code>resize</code> zwischen 50 px (60 auf Handy und
-Fernseher) und 800 px. Slots werden bei der Installation und erneut beim
-Darstellen geprüft.</p>
+Fernseher) und 800 px. Slots werden bei der Installation geprüft.</p>
 <h3 id="server-hardening">Härtung des Servers<a class="headerlink" href="#server-hardening" title="Permanent link">¶</a></h3>
 <p>Beim Start markiert sich der Server als nicht auslesbar
 (<code>PR_SET_DUMPABLE=0</code>,
@@ -4376,12 +4453,12 @@ Systemaufrufe werden abgelehnt, auch für kompilierte Binärdateien.</p>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>keiner</td>
-<td>Der Schlüssel, gegen den Signaturen geprüft werden.</td>
+<td>Optional: ein öffentlicher PEM-Schlüssel, der beim Start zu den vertrauenswürdigen Herausgebern hinzugefügt wird.</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>, <code>EVEY_PLUGINS_DISK_MAX_MB</code>, <code>EVEY_PLUGINS_CPU_NICE</code></td>
 <td>256, 64, 100, 10</td>
-<td>Standardwerte der Ressourcenlimits beim Start; der Verwaltungsbereich überschreibt sie pro Plugin.</td>
+<td>Standardwerte der Ressourcenlimits beim Start; der Verwaltungsbereich überschreibt sie, für alle Plugins zugleich.</td>
 </tr>
 </tbody>
 </table>
@@ -4407,8 +4484,8 @@ Maschine passt, in einfachen Worten:
 </tr>
 <tr>
 <td>Alle Plugins teilen sich den Benutzer 1001</td>
-<td>Ein Plugin kann den anderen Plugins Signale schicken (Signale an den Server werden abgelehnt)</td>
-<td><code>PR_SET_DUMPABLE</code> verhindert das Lesen anderer Prozesse über <code>/proc</code>; Landlock und bubblewrap trennen die Plugin-Verzeichnisse</td>
+<td>Im Modus <code>basic</code> kann ein Plugin Dateien lesen, die anderen Plugins gehören</td>
+<td>Signale an andere Prozesse sind blockiert (seccomp, <code>LD_PRELOAD</code> und bubblewrap blockieren sie alle); <code>PR_SET_DUMPABLE</code> verhindert das Lesen anderer Prozesse über <code>/proc</code>; Landlock und bubblewrap trennen die Plugin-Verzeichnisse</td>
 </tr>
 <tr>
 <td>Seccomp ist eine Sperrliste</td>

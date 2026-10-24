@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1402,6 +1434,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3203,14 +3263,14 @@ mide:</p>
   cada uno soporta en tiempo real, y lo que cuesta cada tipo de flujo.</li>
 <li><strong>Otra vez.</strong> Cuando cambia el hardware, o con <strong>Recalibrar</strong> en
   <strong>Administración → Transcodificación → Calibración de codificación</strong>. El
-  botón espera a que nadie esté viendo nada.</li>
+  botón se niega mientras alguien está viendo algo; solo la nueva medición automática espera a que el servidor esté libre.</li>
 </ul>
 <p>Mientras dura la medición, una reproducción que necesita transcodificar
 muestra <strong>El servidor se está calibrando</strong> y se le pide que lo vuelva a
 intentar en un momento. La Reproducción directa y el Remux no se ven
 afectados.</p>
 <p>En un procesador que no soporta ninguna de las resoluciones, el servidor
-sigue ofreciendo 720p (SDR) y 480p (HDR), un flujo cada vez.</p>
+sigue ofreciendo 720p (SDR) y 480p (HDR), cuántos flujos permite a la vez sale del presupuesto del limitador de sesiones de vídeo.</p>
 <p>La medición usa, por este orden, un clip que le des tú, un clip de referencia
 que se descarga una vez y se comprueba con su SHA256, o un clip sintético
 generado en el momento. Un clip real mide de forma más fiel que el
@@ -3275,7 +3335,7 @@ quita el límite por sí solo. Consulta
 <tbody>
 <tr>
 <td>Códec de vídeo</td>
-<td>H.264. HEVC cuando el reproductor lo descodifica y una tarjeta gráfica lo codifica, o cuando lo pide el <strong>Códec de vídeo preferido</strong> del perfil; AV1 cuando está activado (<strong>Salida AV1</strong>, solo por hardware) y el reproductor lo descodifica.</td>
+<td>H.264. Salida HEVC cuando una ruta medida lo demuestra y el reproductor lo descodifica (la ruta de passthrough HDR, o cuando lo pide el <strong>Códec de vídeo preferido</strong> del perfil); AV1 cuando está activado (<strong>Salida AV1</strong>, solo por hardware) y el reproductor lo descodifica.</td>
 </tr>
 <tr>
 <td>Resolución</td>
@@ -3305,8 +3365,7 @@ quita el límite por sí solo. Consulta
 se reutilizan cuando otro espectador, o el mismo más tarde, reproduce el
 mismo título con la misma decisión. <strong>Administración → Caché de
 transcodificación</strong> muestra su tamaño y la vacía; el <strong>Presupuesto de caché
-de transcodificación</strong> (<strong>Administración → Configuración del servidor →
-Configuración del servidor</strong>) le pone un límite. <strong>Borrar todo</strong> también
+de transcodificación</strong> (<strong>Administración → Transcodificación</strong>) le pone un límite. <strong>Borrar todo</strong> también
 borra los subtítulos extraídos de tus archivos, guardados en
 <code>./evey-data/subtitles</code>: se vuelven a extraer cuando se piden.</p>
 <p><strong>Cuando el disco se llena.</strong> El servidor mantiene un margen de espacio libre
@@ -3346,7 +3405,7 @@ clear all empties extracted subtitles: internal/app/transcoding/service.go - Wit
 calibration: internal/app/transcoding/calibration_service.go - EnsureCalibrated, Recalibrate, idleProbes, idleCPUPercent ; internal/domain/transcoding/capability.go - SafeFallback ; internal/adapters/driven/ffmpeg/benchmark.go - swBenchLadderSpecs (floors 720/480), sample order (path > url+sha256 > synthetic) ; docs/adr/0029-transcoding-routes-are-measured-not-assumed.md ; i18n player.calibrating, admin.calibration.contendedLine, transcodesActiveToast
 capacity: i18n admin.transcoding.livePlaybackTitle, maxVideoSessionsDesc, videoSessionsAutoAdjusts ; internal/app/transcoding/admission_shaper.go - VideoAdmissionShaper, StreamPlan ; internal/app/transcoding/video_session_limiter.go - VideoSessionLimiter (PoolCPU, PoolGPU) ; internal/app/transcoding/resolved_route.go - SpillPoolFull, SpillTitleBlocked ; internal/app/transcoding/hw_route_blocklist.go ; CalibrationService.DemoteCapability
 busy: i18n errors max_concurrent_reached
-output codec: internal/app/transcoding/resolver_route.go - outputCodecFor, codecWithPassthrough ; i18n admin.calibration.av1Label, av1Hint, maxBitrateLabel, maxBitrateRemoteLabel
+output codec: internal/app/transcoding/resolver_route.go ; internal/app/transcoding/decision.go ; internal/app/transcoding/testdata/route_golden.txt ; i18n admin.calibration.av1Label, av1Hint, maxBitrateLabel, maxBitrateRemoteLabel
 single variant: internal/config/config.go (EVEY_TRANSCODING_SINGLE_VARIANT, default on)
 bench samples: internal/config/config.go (EVEY_BENCH_{SDR,HDR}_SAMPLE{,_URL,_SHA256})
 cache budget, clear while live: i18n admin.serverSettings.transcodeCacheMaxGB, admin.transcodeCache.clearConfirmLiveSessions ; automatic limits: admin.qoe.overrides.*

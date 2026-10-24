@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1333,6 +1363,8 @@
       
         
       
+        
+      
     
     
     
@@ -1449,6 +1481,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3404,20 +3464,21 @@ la ligne de la bibliothèque :</p>
 <summary>Comment le serveur vérifie les dossiers</summary>
 <ul>
 <li>Le serveur lit chaque bibliothèque à chaque démarrage, puis toutes les
-  2 minutes (<strong>Administration → Configuration du serveur → Paramètres du
-  serveur → Intervalle d'analyse périodique</strong>, appliqué au
+  2 minutes (<strong>Administration → Configuration du serveur → Bibliothèques → Intervalle d'analyse périodique</strong>, appliqué au
   redémarrage). Pendant une lecture, il attend 15 minutes entre deux
   lectures des dossiers, pour ne pas ralentir la vidéo.</li>
 <li>Le système peut aussi le prévenir quand un fichier change
-  (<strong>Administration → Configuration du serveur → Paramètres du serveur →
+  (<strong>Administration → Configuration du serveur → Bibliothèques →
   Surveillance des fichiers de la bibliothèque</strong>), pour les
   bibliothèques dont la surveillance en temps réel est activée. Pour
   vérifier que cela fonctionne toujours, il écrit un petit fichier de test
   dans le dossier pendant quelques secondes. Une bibliothèque où cela
   fonctionne n'est lue qu'une fois par heure au lieu de toutes les
   2 minutes.</li>
-<li>Les bibliothèques créées depuis le panneau n'utilisent pas cette
-  surveillance : la lecture toutes les 2 minutes trouve leurs fichiers.</li>
+<li>Les bibliothèques créées depuis le panneau web n'utilisent pas cette
+  surveillance : la lecture toutes les 2 minutes trouve leurs fichiers.
+  Le formulaire d'administration de l'application mobile propose, pour une
+  bibliothèque, un interrupteur <strong>Surveillance en temps réel</strong>.</li>
 </ul>
 </details>
 <div class="admonition note">
@@ -3510,7 +3571,7 @@ fichiers. Un administrateur peut les ajuster à la main pour un titre, ou
 relancer la détection.</p>
 <p>Par défaut, les lecteurs affichent les boutons <strong>Passer l'intro</strong>, <strong>Passer
 le résumé</strong> et <strong>Passer le générique</strong>. <strong>Saut automatique des intros</strong>
-(<strong>Administration → Configuration du serveur → Paramètres du serveur</strong>,
+(<strong>Administration → Configuration du serveur → Bibliothèques</strong>,
 désactivé par défaut) fait passer automatiquement les intros dans tous
 les lecteurs.</p>
 

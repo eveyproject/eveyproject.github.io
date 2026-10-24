@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3383,9 +3443,9 @@ dump का अपना तरीका), उसे अपनी अलग स�
 है, कभी मिलाया नहीं जाता; import फ़ेल हो जाए, तो नया क्लस्टर हटा दिया जाता है
 ताकि अगली बार शुरू होने पर dump से फिर कोशिश हो।</p>
 <h2 id="arm-hosts">ARM होस्ट<a class="headerlink" href="#arm-hosts" title="Permanent link">¶</a></h2>
-<p>किसी release tag (<code>0.2.0</code>, <code>0.2.0-beta.1</code> जैसे pre-release भी) से बनी इमेज कई
+<p>किसी release tag (<code>0.1.0</code>, pre-release भी) से बनी इमेज कई
 आर्किटेक्चर के लिए होती हैं (<code>linux/amd64</code> और <code>linux/arm64</code>); Docker सही वाली
-चुन लेता है। <code>beta-0.0.1</code> जैसे branch tag सिर्फ़ amd64 के लिए हैं: ARM होस्ट पर
+चुन लेता है। branch tag सिर्फ़ amd64 के लिए हैं: ARM होस्ट पर
 कोई release tag पिन करें।</p>
 <ul>
 <li><strong>ARM पर हार्डवेयर ट्रांसकोडिंग</strong> RKMPP के ज़रिए सिर्फ़ Rockchip SoC (RK3588,
@@ -3416,22 +3476,22 @@ dump का अपना तरीका), उसे अपनी अलग स�
 <td><code>latest</code> हमेशा सबसे नई स्थिर release है</td>
 </tr>
 <tr>
-<td><code>X.Y.Z-beta.N</code></td>
+<td>एक pre-release tag (हाइफ़न वाला)</td>
 <td>एक pre-release tag</td>
-<td>सिर्फ़ अपना tag प्रकाशित करता है, <code>latest</code> को कभी नहीं बदलता</td>
+<td>अपना tag और <code>sha-&lt;commit&gt;</code> प्रकाशित करता है, <code>latest</code> कभी नहीं</td>
 </tr>
 <tr>
-<td><code>beta-0.0.1</code>, <code>sha-&lt;commit&gt;</code></td>
+<td>branch का नाम, <code>sha-&lt;commit&gt;</code></td>
 <td>branch से बनी इमेज</td>
-<td>सिर्फ़ amd64</td>
+<td>सिर्फ़ डिफ़ॉल्ट इमेज, सामान्यतः सिर्फ़ amd64</td>
 </tr>
 </tbody>
 </table>
-<p>हर tag तीन रूपों में आता है: डिफ़ॉल्ट रूप में प्लगइन के लिए Python 3 होता है,
-<code>-nodejs</code> में Node.js जुड़ता है, <code>-full</code> में PHP, Ruby और Lua जुड़ते हैं (जैसे
-<code>latest-full</code>)। कोई रूप सिर्फ़ तब इस्तेमाल करें जब किसी प्लगइन को उसकी ज़रूरत
-हो: installer उस प्लगइन को मना कर देता है जिसकी बताई गई भाषा इमेज में नहीं है,
-और संदेश में सही रूप का नाम बताता है।</p>
+<p>release और pre-release tag तीन रूपों में आते हैं (branch से बनी इमेज सिर्फ़ डिफ़ॉल्ट इमेज प्रकाशित करती है): डिफ़ॉल्ट रूप में प्लगइन के सभी रनटाइम होते हैं
+(Python 3, Node.js, PHP, Ruby और Lua), <code>-nodejs</code> में Python और Node.js रहते हैं,
+<code>-lean</code> में सिर्फ़ Python रहता है (जैसे <code>latest-lean</code>)। हल्का रूप सिर्फ़ तब चुनें
+जब इमेज का आकार मायने रखता हो: installer उस प्लगइन को मना कर देता है जिसकी
+बताई गई भाषा इमेज में नहीं है, और संदेश में डिफ़ॉल्ट इमेज का नाम बताता है।</p>
 <p>प्रकाशित इमेज में हर समर्थित Intel और AMD पीढ़ी के ड्राइवर होते हैं। खुद बनाई
 गई इमेज में एक ही परिवार रखा जा सकता है: <code>docker build
 --build-arg GPU=intel-legacy .</code> (Intel Gen9 से Gen11), <code>GPU=intel</code> (Gen12 और नए),

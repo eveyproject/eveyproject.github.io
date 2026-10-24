@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3208,7 +3268,7 @@ escritos desde entonces. El comando pasa una copia <code>.sql.gz</code> por
 <code>gunzip | psql</code> hacia la base de datos configurada.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>La restauración sobrescribe las filas actuales. Haz antes una copia de
+<p>La restauración borra y vuelve a crear cada tabla antes de cargarla, así que las filas actuales se sustituyen. Haz antes una copia de
 seguridad del estado actual (<strong>Administración → Copia de seguridad y
 restauración → Ejecutar ahora</strong>) si hay alguna posibilidad de que lo
 necesites.</p>
@@ -3234,7 +3294,8 @@ necesites.</p>
   <code>.tar.gz</code> de <strong>Administración → Copia de seguridad y restauración</strong> se
   restauran desde el panel, no con este comando.</li>
 <li>La base de datos de destino tiene que existir; la copia borra y vuelve a
-  crear las tablas, no la base de datos.</li>
+  crear cada tabla antes de cargarla, así que se puede restaurar sobre una base
+  de datos con datos, pero no crea la base de datos.</li>
 <li><code>psql</code> y <code>gunzip</code> tienen que estar en el PATH, cosa que garantiza la
   imagen.</li>
 </ul>

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3413,19 +3473,21 @@ aktuelle Liste.</p>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                                             Restore the database from a pg_dump.gz file, in a single
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>                                             transaction. The whole file is checked first: a truncated
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>                                             or corrupt dump is refused before anything is dropped.
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>                                             Existing rows are OVERWRITTEN; waits 5 s for a Ctrl-C
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>                                             before it starts. The .sql.gz suffix is required (not the
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                                             panel's .tar.gz backups).
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>evey admin reindex-search [--library &lt;id&gt;] [--purge]
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>                                             Rebuild the Meilisearch index from the database (no
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>                                             metadata fetch). --purge clears the index first, which
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>                                             drops orphan documents. If Meilisearch is down, search
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>                                             is served by the Postgres fallback: the command reports
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>                                             that and does nothing.
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>evey admin demo-seed [--apply] [--media]     Run the demo bootstrap by hand: the demo administrator,
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>                                             the visitor accounts, the four libraries, and with
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>                                             --media the freely licensed media (gigabytes). Refuses
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>                                             unless EVEY_DEMO=1. Dry-run by default.
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>                                             The dump drops and recreates each table before loading
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>                                             it, so it can be restored onto a populated database;
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                                             waits 5 s for a Ctrl-C
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>                                             before it starts. The .sql.gz suffix is required (not the
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>                                             panel's .tar.gz backups).
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>evey admin reindex-search [--library &lt;id&gt;] [--purge]
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>                                             Rebuild the Meilisearch index from the database (no
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>                                             metadata fetch). --purge clears the index first, which
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>                                             drops orphan documents. If Meilisearch is down, search
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>                                             is served by the Postgres fallback: the command reports
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>                                             that and does nothing.
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>evey admin demo-seed [--apply] [--media]     Run the demo bootstrap by hand: the demo administrator,
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>                                             the visitor accounts, the four libraries, and with
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>                                             --media the freely licensed media (gigabytes). Refuses
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>                                             unless EVEY_DEMO=1. Dry-run by default.
 </span></code></pre></div>
 <p><code>reset-password</code> und <code>rotate-jwt-key</code> beenden beide Sitzungen: der erste die
 des betroffenen Nutzers, der zweite die aller Nutzer. Offene Apps merken das
@@ -3493,14 +3555,20 @@ einfachere Weg, eine Bibliothek zu reparieren: siehe
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>evey admin route-bench [--backend nvenc|vaapi|qsv|none] [--heights 1080,2160] [--fps 24,30,50,60] [--out rows.csv] [--json run.json] [&lt;file&gt;...]
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                                             Measure what a session of each transcode route costs on
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                                             this host against the calibration and the cost model.
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                                             Minutes of full load; never while serving.
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>evey admin ladder-bench [--scenes 3] [--window 8] [--heights 1080,720] [--crf 18,23,28] [--out rows.csv] [--efficiency --mode full|fast|incremental] &lt;file&gt;...
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                                             Encode a few scenes of each title at fixed CRFs and
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                                             score encode cost against the ladder's complexity
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                                             features. Runs ffmpeg for minutes; never while serving.
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>evey admin ladder-probe [--window 8] [--cache &lt;dir&gt;] [--out &lt;dir&gt;] &lt;file&gt;...
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                                             Run the per-title probe on the given files: probe time,
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                                             early-stop rate and points. Reads and encodes only.
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                                             Minutes of full load; never while serving. More flags
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                                             (--device --routes --classes --duration --workdir
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                                             --capability): the full list is in
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                                             `evey admin route-bench --help`.
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>evey admin ladder-bench [--scenes 3] [--window 8] [--heights 1080,720] [--crf 18,23,28] [--out rows.csv] [--efficiency --mode full|fast|incremental] &lt;file&gt;...
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                                             Encode a few scenes of each title at fixed CRFs and
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                                             score encode cost against the ladder's complexity
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                                             features. Runs ffmpeg for minutes; never while serving.
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>                                             More flags (--preset --ref-height --ref-crf --cache
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>                                             --encoders --device): the full list is in
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>                                             `evey admin ladder-bench --help`.
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>evey admin ladder-probe [--window 8] [--cache &lt;dir&gt;] [--out &lt;dir&gt;] &lt;file&gt;...
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>                                             Run the per-title probe on the given files: probe time,
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>                                             early-stop rate and points. Reads and encodes only.
 </span></code></pre></div>
 <h3 id="capacity">Kapazität<a class="headerlink" href="#capacity" title="Permanent link">¶</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>evey admin load-test [minimal|standard|max] [--scenario &lt;s&gt;] [--mode &lt;m&gt;] [--max-viewers N] [--duration S] [--cold-cache]
@@ -3575,7 +3643,7 @@ dispatch and top-level commands: cmd/evey/cli.go - runCLI (version, help, comple
 subcommand table, groups, --help text: cmd/evey/admin_commands.go - adminCommands, adminGroups, printAdminUsage, adminUsage (exit 1 without subcommand) ; drift test cmd/evey/admin_cli_test.go
 sessions ended: cmd/evey/admin.go - adminResetPassword (DeleteByUserID + BumpTokenEpoch), adminRotateJWTKey, endAllSessions ; epoch cache TTL internal/app/user/token_epoch.go
 backup and restore: cmd/evey/admin_backup.go - adminBackup ; cmd/evey/admin.go - adminRestoreBackup, verifyDumpComplete
-container: Dockerfile (EVEY_DB_PASSWORD_FILE, EVEY_BACKUP_DIR=/data/backups, completion at build time) ; docker/evey-shell.sh - man()
+container: Dockerfile (EVEY_DB_PASSWORD_FILE, completion at build time) ; internal/config/config.go (EVEY_BACKUP_DIR default /data/backups) ; docker/evey-shell.sh - man()
 makefile: Makefile migrate-up / migrate-down / migrate-version
 standalone programs: cmd/intro-backfill, cmd/intro-diag, cmd/trickplay-verify
 -->

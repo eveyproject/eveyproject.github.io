@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3215,12 +3275,12 @@ diese Isolierung nicht verhindern kann, steht in
   Verschleierung). Kompilierte Binärdateien, eingebettete Archive und nativer
   Code werden abgelehnt, außer das Manifest gibt <code>native-binary</code> an.</li>
 </ul>
-<p>Die Analyse liest auch Kommentare: Eine Zeile <code># pip install foo</code> in einem
-Kommentar wird wie echter Code gemeldet. Entfernen Sie solche Zeilen vor der
-Veröffentlichung. Die Kategorien stehen in
+<p>Kommentare werden vor der Analyse entfernt, eine auskommentierte Zeile wird
+also nicht gemeldet. Die Kategorien stehen in
 <a href="../../SECURITY/#static-analysis">Plugin-Sandbox und Bedrohungsmodell</a>.</p>
 <p>Vor der Installation sieht der Administrator die angegebenen
-Berechtigungen, Slots und Hosts und was die Analyse gefunden hat. Nichts, was
+Berechtigungen und Fähigkeiten und was die Analyse gefunden hat; Slots, Hosts
+und Signatur zeigen sich beim Update und im Sicherheits-Dashboard. Nichts, was
 ein Plugin angibt, wird stillschweigend gewährt.</p>
 <h2 id="what-the-plugin-runs-under">Unter welchen Bedingungen das Plugin läuft<a class="headerlink" href="#what-the-plugin-runs-under" title="Permanent link">¶</a></h2>
 <p>Egal, was das Manifest angibt:</p>
@@ -3302,7 +3362,7 @@ unter <code>capabilities</code> angegeben: siehe
 </tr>
 <tr>
 <td><code>hardware.gpu</code></td>
-<td>Der Prozess bekommt den DRM-Render-Knoten des Hosts (den echten <code>renderD1xx</code>, nie einen Card-Knoten). Das ist eine Angriffsfläche auf den Kernel-Treiber und eine GPU-Speichergrenze, die er mit dem Transcoder teilt: Eine hängende GPU kann die Transkodierung blockieren. Ohne diese Berechtigung sind GPU-Knoten ganz aus der Landlock-Freigabeliste ausgeschlossen. Mit ihr fügt der Launcher eine <code>IOCTL_DEV</code>-Regel hinzu, die nur für diese eine Datei gilt (Landlock ABI 5 oder neuer; bei älteren Kerneln erlaubt schon der Lese- und Schreibzugriff, Befehle abzuschicken). Die Vorschau zeigt eine kritische Warnung. Gewähren Sie sie nur Plugins, die Sie auch ohne Sandbox laufen lassen würden.</td>
+<td>Der Prozess bekommt den DRM-Render-Knoten des Hosts (den echten <code>renderD1xx</code>, nie einen Card-Knoten). Das ist eine Angriffsfläche auf den Kernel-Treiber und eine GPU-Speichergrenze, die er mit dem Transcoder teilt: Eine hängende GPU kann die Transkodierung blockieren. Ohne diese Berechtigung sind GPU-Knoten ganz aus der Landlock-Freigabeliste ausgeschlossen. Mit ihr fügt der Launcher eine <code>IOCTL_DEV</code>-Regel hinzu, die nur für diese eine Datei gilt (Landlock ABI 5 oder neuer; bei älteren Kerneln erlaubt schon der Lese- und Schreibzugriff, Befehle abzuschicken). Das Sicherheits-Dashboard zeigt eine kritische Warnung, sobald das Plugin installiert ist. Gewähren Sie sie nur Plugins, die Sie auch ohne Sandbox laufen lassen würden.</td>
 </tr>
 </tbody>
 </table>
@@ -3310,8 +3370,10 @@ unter <code>capabilities</code> angegeben: siehe
 <p>Angegeben in <code>external_fetch: [...]</code> und bei der Installation geprüft
 (<code>validateExternalFetch</code>). Alles oder nichts: Ein ungültiger Eintrag lehnt
 die ganze Installation ab.</p>
-<p>Ein Eintrag ist ein <strong>reiner Hostname</strong>. Ein vorangestelltes Schema wird
-geduldet und verworfen; nur der Hostname bleibt.</p>
+<p>Ein Eintrag ist ein <strong>Hostname</strong>. Ein vorangestelltes Schema und ein
+abschließender Pfad werden beim Einlesen verworfen; nur der Hostname bleibt.
+Hosts müssen exakt passen, ein Platzhalter <code>*.example.com</code> wird bei der Installation abgelehnt
+und ein Port-Suffix wird ignoriert.</p>
 <table>
 <thead>
 <tr>
@@ -3329,17 +3391,17 @@ geduldet und verworfen; nur der Hostname bleibt.</p>
 <tr>
 <td><code>https://api.tmdb.org</code></td>
 <td>Ja</td>
-<td>Schema erkannt und verworfen, Hostname bleibt</td>
+<td>Schema und Pfad beim Einlesen verworfen, Hostname bleibt</td>
 </tr>
 <tr>
 <td><code>*.tmdb.org</code></td>
 <td>Nein</td>
-<td>Platzhalter werden abgelehnt: Listen Sie jede Subdomain auf, die Sie brauchen</td>
+<td>Platzhalter werden bei der Installation abgelehnt; jeden Host einzeln auflisten</td>
 </tr>
 <tr>
 <td><code>*</code></td>
 <td>Nein</td>
-<td>Dieselbe Regel</td>
+<td>Ein einzelner Platzhalter wird abgelehnt</td>
 </tr>
 <tr>
 <td><code>192.168.1.1</code>, <code>::1</code></td>
@@ -3438,13 +3500,17 @@ lehnt standardmäßig jede Methode ab, die dieser Token nicht nennt.</p>
    Upload-Route <code>accept_permission_changes=true</code>).</li>
 <li>Der Hash des Pakets wird bei der Vorschau festgehalten und beim Anwenden
    geprüft: Das analysierte ZIP ist genau das ZIP, das installiert wird.</li>
-<li>Mit <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> blockiert ein Signaturfehler beim
-   Anwenden das Update, auch wenn die Vorschau bestanden hat.</li>
+<li>Der Signaturschlüssel wird auf Kontinuität geprüft: Ein Update, das mit
+   einem anderen Schlüssel als die installierte Version signiert oder nicht
+   mehr signiert ist, wird abgelehnt, bis der Administrator den neuen
+   Herausgeber akzeptiert. Mit <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> blockiert
+   eine nicht vertraute oder ungültige Signatur beim Anwenden das Update,
+   auch wenn die Vorschau bestanden hat.</li>
 </ol>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
-analysis reads comments: docs/SECURITY.md (Static analysis)
+comments stripped before analysis: docs/SECURITY.md (Static analysis) ; internal/adapters/driven/pluginrunner/analyzer_normalize.go
 subprocess, deny-fork, deny-inet, render-dev: cmd/evey-plugin-launcher/main.go ; i18n admin.plugins.subprocessWarning
 resource defaults: internal/config/config.go - Plugins
 permission per RPC: internal/adapters/driving/grpcapi/plugin_interceptor.go ; served or not: internal/adapters/driving/pluginhost/host_server.go

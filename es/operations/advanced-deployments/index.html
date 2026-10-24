@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3391,10 +3451,10 @@ señala y se ignora, nunca se mezcla. Si la importación falla, el clúster nuev
 se descarta para que el siguiente arranque vuelva a intentarlo desde el
 volcado.</p>
 <h2 id="arm-hosts">Equipos ARM<a class="headerlink" href="#arm-hosts" title="Permanent link">¶</a></h2>
-<p>Las imágenes construidas a partir de una etiqueta de versión (<code>0.2.0</code>,
-incluidas las versiones previas como <code>0.2.0-beta.1</code>) son multiarquitectura
+<p>Las imágenes construidas a partir de una etiqueta de versión (<code>0.1.0</code>,
+incluidas las versiones previas) son multiarquitectura
 (<code>linux/amd64</code> y <code>linux/arm64</code>): Docker elige la adecuada. Las etiquetas de rama
-como <code>beta-0.0.1</code> son solo amd64: en un equipo ARM, fija una etiqueta de
+son solo amd64: en un equipo ARM, fija una etiqueta de
 versión.</p>
 <ul>
 <li><strong>La transcodificación por hardware en ARM</strong> se limita a los chips Rockchip
@@ -3426,22 +3486,23 @@ versión.</p>
 <td><code>latest</code> es siempre la versión estable más reciente</td>
 </tr>
 <tr>
-<td><code>X.Y.Z-beta.N</code></td>
+<td>una etiqueta de versión previa (con guion)</td>
 <td>una etiqueta de versión previa</td>
-<td>solo publica su propia etiqueta, nunca mueve <code>latest</code></td>
+<td>publica su propia etiqueta y <code>sha-&lt;commit&gt;</code>, nunca <code>latest</code></td>
 </tr>
 <tr>
-<td><code>beta-0.0.1</code>, <code>sha-&lt;commit&gt;</code></td>
+<td>un nombre de rama, <code>sha-&lt;commit&gt;</code></td>
 <td>una compilación de rama</td>
-<td>solo amd64</td>
+<td>solo la imagen por defecto, solo amd64 (normalmente)</td>
 </tr>
 </tbody>
 </table>
-<p>Cada etiqueta existe en tres variantes: la variante por defecto incluye
-Python 3 para los plugins, <code>-nodejs</code> añade Node.js y <code>-full</code> añade PHP, Ruby y
-Lua (por ejemplo <code>latest-full</code>). Usa una variante solo si un plugin la
-necesita: el instalador rechaza un plugin cuyo lenguaje declarado falta en la
-imagen, con un mensaje que indica la variante correcta.</p>
+<p>Las etiquetas de versión y de versión previa existen en tres variantes (una compilación de rama publica solo la imagen por defecto): la variante por defecto incluye
+todos los entornos de ejecución de plugins (Python 3, Node.js, PHP, Ruby y
+Lua), <code>-nodejs</code> conserva Python y Node.js y <code>-lean</code> solo Python (por ejemplo
+<code>latest-lean</code>). Elige una variante más ligera solo si el tamaño de la imagen
+importa: el instalador rechaza un plugin cuyo lenguaje declarado falta en la
+imagen, con un mensaje que indica la imagen por defecto.</p>
 <p>Las imágenes publicadas llevan los controladores de todas las generaciones
 Intel y AMD compatibles. Una imagen que construyas tú puede quedarse con una
 sola familia con <code>docker build --build-arg GPU=intel-legacy .</code> (Intel de Gen9

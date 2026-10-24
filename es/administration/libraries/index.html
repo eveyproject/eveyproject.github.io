@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1333,6 +1363,8 @@
       
         
       
+        
+      
     
     
     
@@ -1449,6 +1481,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3401,19 +3461,19 @@ biblioteca:</p>
 <summary>Cómo revisa el servidor las carpetas</summary>
 <ul>
 <li>El servidor lee todas las bibliotecas cada vez que arranca, y después
-  cada 2 minutos (<strong>Administración → Configuración del servidor →
-  Configuración del servidor → Intervalo de escaneo periódico</strong>, se
+  cada 2 minutos (<strong>Administración → Configuración del servidor → Bibliotecas → Intervalo de escaneo periódico</strong>, se
   aplica al reiniciar). Mientras se reproduce algo, espera 15 minutos
   entre lecturas para no ralentizar la reproducción.</li>
 <li>El sistema también puede avisar al servidor cuando cambia un archivo
-  (<strong>Administración → Configuración del servidor → Configuración del
-  servidor → Monitor de archivos de biblioteca</strong>), en las bibliotecas que
+  (<strong>Administración → Configuración del servidor → Bibliotecas → Monitor de archivos de biblioteca</strong>), en las bibliotecas que
   tienen activada la supervisión en tiempo real. Para comprobar que esto
   sigue funcionando, escribe un pequeño archivo de prueba en la carpeta
   durante unos segundos. Una biblioteca en la que se ha comprobado que
   funciona se lee una vez por hora en lugar de cada 2 minutos.</li>
-<li>Las bibliotecas creadas desde el panel no usan el monitor de archivos:
-  las lecturas cada 2 minutos encuentran sus archivos.</li>
+<li>Las bibliotecas creadas desde el panel web no usan el monitor de archivos:
+  las lecturas cada 2 minutos encuentran sus archivos. El formulario de
+  administración de la app del teléfono tiene, para una biblioteca, un
+  interruptor <strong>Monitoreo en tiempo real</strong>.</li>
 </ul>
 </details>
 <div class="admonition note">
@@ -3504,8 +3564,7 @@ Un administrador puede ajustarlos a mano para un título, o volver a lanzar
 la detección.</p>
 <p>Los reproductores muestran por defecto los botones <strong>Saltar intro</strong>,
 <strong>Saltar resumen</strong> y <strong>Saltar créditos</strong>. <strong>Saltar intros automáticamente</strong>
-(<strong>Administración → Configuración del servidor → Configuración del
-servidor</strong>, desactivado por defecto) hace que todos los reproductores las
+(<strong>Administración → Configuración del servidor → Bibliotecas</strong>, desactivado por defecto) hace que todos los reproductores las
 salten solos.</p>
 <!-- sources
 add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths only - no realtime/scan-on-startup toggles) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)

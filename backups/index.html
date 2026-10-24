@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1295,6 +1325,8 @@
       
         
       
+        
+      
     
     
     
@@ -1411,6 +1443,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3229,7 +3289,8 @@ audit logs.</p>
 <li>the video cache (it fills up again by itself);</li>
 <li>the search index (rebuilt from the database);</li>
 <li>the keys kept in <code>./evey-data</code>: <code>jwt.key</code>, which protects every sign-in,
-  and the <code>keys</code> folder (database password, search key);</li>
+  the <code>keys</code> folder (database password, search key), and <code>hls_aes.key</code>, the
+  key that encrypts streaming segments (created at first boot, mode 0600);</li>
 <li>the installed plugin files.</li>
 </ul>
 <p><strong>So keep a copy of the whole <code>./evey-data</code> folder too.</strong> A database backup
@@ -3280,11 +3341,12 @@ backups of this panel: see <a href="../runbooks/recovery/">Recovery</a>.</p>
 </ul>
 <details class="info">
 <summary>Pin the exact version you run</summary>
-<p>During the beta there is no numbered release and no <code>latest</code> tag. The tag
-<code>beta-0.0.1</code> changes with every update. For a server you rely on, put a
-fixed <code>sha-&lt;commit&gt;</code> tag on the <code>image:</code> line, so that two pulls a day
-apart run the same code. Once releases exist, <code>latest</code> will follow the
-most recent stable one, and a release tag (<code>0.2.0</code>) will pin it.</p>
+<p><code>latest</code> follows the newest release and changes with every update. For a
+server you rely on, put a release tag (<code>0.1.0</code>, or <code>0.1</code> to receive its
+fixes only) or a fixed <code>sha-&lt;commit&gt;</code> tag on the <code>image:</code> line, so that
+two pulls a day apart run the same code. The table in
+<a href="../installation/#common-variations">Installation</a> lists what each tag
+gives you.</p>
 </details>
 <h3 id="going-back">Going back<a class="headerlink" href="#going-back" title="Permanent link">¶</a></h3>
 <ol>
@@ -3304,7 +3366,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
-rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (beta-0.0.1 + sha-<short>, latest gated on vX.Y.Z)
+rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->
 

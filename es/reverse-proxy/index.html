@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1519,6 +1549,8 @@
       
         
       
+        
+      
     
     
     
@@ -1635,6 +1667,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3642,17 +3702,21 @@ que se encarga de TLS: las cookies llevan la marca <code>Secure</code>, se enví
 se acepta la cabecera <code>X-Forwarded-Proto</code> de un proxy de confianza. El
 interruptor de acceso remoto y la dirección real del cliente se explican en
 <a href="../administration/remote-access/">Acceso remoto y HTTPS</a>.</p>
-<p>Las mismas respuestas pueden venir del entorno, para una instalación descrita
-entera como código (el panel tiene prioridad cuando están las dos):</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>EVEY_SERVER_BASE_URL=https://media.example.com
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>EVEY_TRUSTED_PROXIES=172.16.0.0/12       # solo hace falta si el proxy es un contenedor; loopback siempre es de confianza
+<p>Las mismas respuestas pueden venir del entorno, bajo <code>environment:</code> en el
+archivo compose, para una instalación descrita entera como código (el panel
+tiene prioridad cuando están las dos):</p>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">EVEY_SERVER_BASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://media.example.com</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">EVEY_TRUSTED_PROXIES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.16.0.0/12</span><span class="w">   </span><span class="c1"># solo hace falta si el proxy es un contenedor; loopback siempre es de confianza</span>
 </span></code></pre></div>
 <p>La antigua <code>EVEY_FORWARDED_PROTO</code> todavía se acepta para forzar el valor,
 pero está obsoleta: basta con el esquema de la dirección.</p>
-<p>Todos los ejemplos incluidos leen el dominio de un solo sitio, <code>EVEY_DOMAIN</code>
-en tu <code>.env</code>. Ponlo una vez; Caddy, Nginx y Traefik lo usan los tres.</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>EVEY_DOMAIN=media.example.com
-</span></code></pre></div>
+<p>Todos los ejemplos incluidos leen el dominio de <code>EVEY_DOMAIN</code>, con un valor
+de ejemplo en el archivo que copias: cámbialo ahí por tu dominio, en la línea
+<code>EVEY_DOMAIN:</code> del servicio del proxy (Caddy, Nginx) o en la regla
+<code>Host(...)</code> (Traefik).</p>
 <h2 id="caddy-bundled">Caddy (incluido)<a class="headerlink" href="#caddy-bundled" title="Permanent link">¶</a></h2>
 <h3 id="files">Archivos<a class="headerlink" href="#files" title="Permanent link">¶</a></h3>
 <p><a href="https://github.com/eveyproject/evey/blob/master/docker/Caddyfile"><code>docker/Caddyfile</code></a>, convertido en imagen por
@@ -3660,8 +3724,9 @@ en tu <code>.env</code>. Ponlo una vez; Caddy, Nginx y Traefik lo usan los tres.
 del <a href="https://github.com/eveyproject/evey/blob/master/docker-compose.yml"><code>docker-compose.yml</code></a> del repositorio.</p>
 <h3 id="set-it-up">Configurarlo<a class="headerlink" href="#set-it-up" title="Permanent link">¶</a></h3>
 <ol>
-<li>Pon <code>EVEY_DOMAIN</code> en <code>.env</code> y comprueba que los puertos 80 y 443 de la
-   máquina llegan al contenedor de Caddy.</li>
+<li>Escribe tu dominio en la línea <code>EVEY_DOMAIN:</code> del servicio <code>caddy</code> y
+   comprueba que los puertos 80 y 443 de la máquina llegan al contenedor de
+   Caddy.</li>
 <li>Añade a tu archivo compose el servicio <code>caddy</code> del archivo compose del
    repositorio y ejecuta <code>docker compose up -d</code>. Caddy obtiene por sí solo un
    certificado de Let's Encrypt para <code>EVEY_DOMAIN</code>.</li>
@@ -3681,8 +3746,9 @@ y una capa compose lista para usar,
 <a href="https://github.com/eveyproject/evey/blob/master/examples/nginx/docker-compose.nginx.yml"><code>examples/nginx/docker-compose.nginx.yml</code></a>.</p>
 <h3 id="set-it-up">Configurarlo<a class="headerlink" href="#set-it-up" title="Permanent link">¶</a></h3>
 <ol>
-<li>Pon <code>EVEY_DOMAIN</code> en <code>.env</code>. La imagen de nginx genera la configuración a
-   partir de la plantilla al arrancar, sustituyendo <code>EVEY_DOMAIN</code>.</li>
+<li>Escribe tu dominio en la línea <code>EVEY_DOMAIN:</code> de la capa. La imagen de
+   nginx genera la configuración a partir de la plantilla al arrancar,
+   sustituyendo <code>EVEY_DOMAIN</code>.</li>
 <li>Pon el certificado y la clave donde los espera la plantilla, con los
    nombres de archivo que corresponden (<code>/etc/ssl/certs/&lt;domain&gt;.pem</code>,
    <code>/etc/ssl/private/&lt;domain&gt;.key</code> en el volumen <code>nginx-certs</code>): esta capa
@@ -3706,8 +3772,8 @@ seguridad y la CSP propias de la aplicación.</p>
    certificados <code>letsencrypt</code> y una red Docker externa llamada <code>proxy</code>; las
    etiquetas de la capa dan por hecho esos nombres.</li>
 <li>
-<p>Pon <code>EVEY_DOMAIN</code> en <code>.env</code> y después:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>examples/traefik/docker-compose.traefik.yml<span class="w"> </span>up<span class="w"> </span>-d
+<p>Escribe tu dominio en la regla <code>Host(...)</code> de la capa y después:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>examples/traefik/docker-compose.traefik.yml<span class="w"> </span>up<span class="w"> </span>-d
 </span></code></pre></div>
 </li>
 <li>
@@ -3748,37 +3814,37 @@ Evey. No hace falta nada más.</p>
 <p><strong>Opcional</strong> - evitar que NPM guarde en búfer, en su propio disco, los
 archivos en reproducción directa: <strong>Advanced</strong> → <em>Custom Nginx Configuration</em>
 (la pestaña <code>Custom Locations</code> no admite la expresión regular):</p>
-<div class="language-nginx highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Subida de plugins (hasta 100 MB) y restauración de copias de seguridad (hasta 2 GB).</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">client_max_body_size</span><span class="w"> </span><span class="s">2G</span><span class="p">;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Streaming - sin búfer, sin tiempo límite.</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/media/.+/(hls|stream)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="kn">proxy_request_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">}</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Los escaneos de biblioteca envían su progreso mientras dura el escaneo.</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/libraries/.+/scan</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="p">}</span>
+<div class="language-nginx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Subida de plugins (hasta 100 MB) y restauración de copias de seguridad (hasta 2 GB).</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">client_max_body_size</span><span class="w"> </span><span class="s">2G</span><span class="p">;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Streaming - sin búfer, sin tiempo límite.</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/media/.+/(hls|stream)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="kn">proxy_request_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Los escaneos de biblioteca envían su progreso mientras dura el escaneo.</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/libraries/.+/scan</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Todas las demás rutas (la interfaz web, el resto de la API, el WebSocket de
 SyncPlay) pasan por el bloque de proxy propio de NPM, que se configura en la
@@ -3793,17 +3859,17 @@ cliente. Un segundo proxy detrás no aporta nada.</p>
 <h3 id="set-it-up">Configurarlo<a class="headerlink" href="#set-it-up" title="Permanent link">¶</a></h3>
 <p>Pon el servicio evey en la red de ese proxy y apunta a <code>evey-server:9091</code>
 (el nombre del contenedor; el nombre del servicio <code>evey</code> también funciona):</p>
-<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">services</span><span class="p">:</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="c1"># sin puertos: el proxy es la única entrada</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">EVEY_SERVER_BASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://media.example.com</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">EVEY_TRUSTED_PROXIES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.16.0.0/12</span><span class="w">     </span><span class="c1"># redúcelo a la subred del proxy cuando la conozcas</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="c1"># ...</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nt">networks</span><span class="p">:</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nt">default</span><span class="p">:</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy-net</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="c1"># sin puertos: el proxy es la única entrada</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">EVEY_SERVER_BASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://media.example.com</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">EVEY_TRUSTED_PROXIES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.16.0.0/12</span><span class="w">     </span><span class="c1"># redúcelo a la subred del proxy cuando la conozcas</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="c1"># ...</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">networks</span><span class="p">:</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy-net</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
 <p>Después, en ese proxy, para la ruta hacia <code>evey-server:9091</code>: transmite
 <code>X-Forwarded-For</code> y <code>X-Forwarded-Proto</code>, activa el soporte de WebSocket, y
@@ -3817,8 +3883,8 @@ puestos los proxies de confianza.</p>
 <h2 id="streaming---what-a-proxys-defaults-do-to-it">Streaming - lo que le hacen los valores por defecto de un proxy<a class="headerlink" href="#streaming---what-a-proxys-defaults-do-to-it" title="Permanent link">¶</a></h2>
 <p>Evey funciona detrás de un proxy inverso con sus valores por defecto: cada
 respuesta larga o bien envía datos sin parar (segmentos HLS, reproducción
-directa, salida de la transcodificación), o bien envía una señal de actividad al
-cliente cada 30 s (los flujos de eventos), así que un tiempo límite de
+directa, salida de la transcodificación), o bien mantiene viva la conexión (los flujos de
+eventos envían una señal de actividad), así que un tiempo límite de
 lectura por defecto nunca salta. Aun así, conviene saber dos cosas:</p>
 <ul>
 <li><strong>El búfer.</strong> Un proxy que guarda las respuestas en búfer (nginx lo hace
@@ -3832,9 +3898,9 @@ lectura por defecto nunca salta. Aun así, conviene saber dos cosas:</p>
   antes. El escaneo sigue en el servidor de todos modos.</li>
 </ul>
 <p>Las rutas afectadas:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/api/v1/media/*/hls/*
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/api/v1/media/*/stream
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>/api/v1/libraries/*/scan
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/api/v1/media/*/hls/*
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/api/v1/media/*/stream
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/api/v1/libraries/*/scan
 </span></code></pre></div>
 <p>El Caddy incluido y el ejemplo de Nginx aplican las dos cosas (sin búfer, sin
 tiempo límite) en estas rutas. El ejemplo de Traefik y un proxy que se
@@ -3885,12 +3951,12 @@ funciones se rompen sin avisar:</p>
 </table>
 <p>Una política que funciona para un proxy que pone la suya, la que envía el
 Caddy incluido:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>default-src 'self'; base-uri 'self'; object-src 'none';
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>img-src 'self' https: data: blob:; media-src 'self' blob:;
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>style-src 'self' 'unsafe-inline';
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com;
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>connect-src 'self' https: wss:; worker-src 'self' blob:; font-src 'self' data:;
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>frame-src 'self' https://www.gstatic.com
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>default-src 'self'; base-uri 'self'; object-src 'none';
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>img-src 'self' https: data: blob:; media-src 'self' blob:;
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>style-src 'self' 'unsafe-inline';
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com;
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>connect-src 'self' https: wss:; worker-src 'self' blob:; font-src 'self' data:;
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>frame-src 'self' https://www.gstatic.com
 </span></code></pre></div>
 <p><code>base-uri</code> y <code>object-src</code> no recurren a <code>default-src</code> cuando faltan, así que
 una política que los omite deja sin restricción la inyección de
@@ -3912,7 +3978,7 @@ cabecera de la aplicación en esas dos rutas:</p>
   <code>www.gstatic.com</code>. Deja la cabecera de la aplicación en esa ruta, o aplica
   esta política solo a esa ruta:</li>
 </ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://www.gstatic.com; img-src 'self' data: https: blob:; media-src 'self' blob: https:; worker-src 'self' blob:; font-src 'self' data: https://www.gstatic.com; connect-src 'self' https: wss:; frame-src https://www.gstatic.com; base-uri 'self'; object-src 'none'
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://www.gstatic.com; img-src 'self' data: https: blob:; media-src 'self' blob: https:; worker-src 'self' blob:; font-src 'self' data: https://www.gstatic.com; connect-src 'self' https: wss:; frame-src https://www.gstatic.com; base-uri 'self'; object-src 'none'
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Al navegador tiene que llegar exactamente una cabecera CSP</p>
@@ -3960,7 +4026,7 @@ one port for API and UI, https mode from the scheme: internal/config/config.go (
 bundled Caddy: docker/Caddyfile (streaming matcher, @ownPolicy, header_down CSP) ; docker/Dockerfile.caddy ; docker-compose.yml caddy service
 nginx: examples/nginx/evey.conf.template ; examples/nginx/docker-compose.nginx.yml (nginx-certs volume, no ACME)
 traefik: examples/traefik/docker-compose.traefik.yml (labels + proxy network only)
-streaming paths: cmd/evey/gateway.go ; event streams ping 30 s ; scan progress stream
+streaming paths: cmd/evey/gateway.go ; event streams keep-alive ; scan progress stream
 csp and own-policy pages: internal/adapters/driving/http/helpers.go - securityHeadersMiddleware ; /plugin-frame.html ; /cast-receiver.html
 trusted proxies, catch-all refused, doctor: internal/config/trusted_proxies.go ; cmd/evey/admin_ops.go - checkTrustedProxies
 remote access inferred: docs/adr/0026-remote-access-inferred-from-a-published-url.md

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1402,6 +1434,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3202,13 +3262,13 @@ capacité, et ce que voit un spectateur quand elle est épuisée.</p>
   en temps réel, et le coût de chaque type de flux.</li>
 <li><strong>De nouveau.</strong> Après un changement de matériel, ou avec <strong>Recalibrer</strong>
   dans <strong>Administration → Configuration transcodage → Calibrage de l'encodage</strong>. Le
-  bouton attend que plus personne ne regarde.</li>
+  bouton refuse tant que quelqu'un regarde ; seul le nouveau calibrage automatique attend que le serveur soit au repos.</li>
 </ul>
 <p>Pendant la mesure, une lecture qui a besoin d'un transcodage affiche <strong>Le
 serveur se calibre</strong> et demande de réessayer un peu plus tard. La lecture
 directe et le remux ne sont pas concernés.</p>
 <p>Sur un processeur qui ne soutient aucune des résolutions, le serveur propose
-malgré tout du 720p (SDR) et du 480p (HDR), un flux à la fois.</p>
+malgré tout du 720p (SDR) et du 480p (HDR) ; le nombre de flux que cela permet en même temps vient du budget du limiteur de sessions vidéo.</p>
 <p>La mesure utilise, dans cet ordre, un extrait que vous fournissez, un extrait
 de référence téléchargé une fois et vérifié par son empreinte SHA256, ou un
 extrait synthétique généré sur place. Un extrait réel mesure plus fidèlement
@@ -3272,7 +3332,7 @@ cette limite de lui-même. Voir
 <tbody>
 <tr>
 <td>Codec vidéo</td>
-<td>H.264. HEVC quand le lecteur le décode et qu'une carte graphique l'encode, ou quand le <strong>Codec vidéo préféré</strong> du profil le demande ; AV1 quand il est activé (<strong>Sortie AV1</strong>, matériel uniquement) et que le lecteur le décode.</td>
+<td>H.264. Sortie HEVC quand une route mesurée le prouve et que le lecteur le décode (la route de passthrough HDR, ou quand le <strong>Codec vidéo préféré</strong> du profil le demande) ; AV1 quand il est activé (<strong>Sortie AV1</strong>, matériel uniquement) et que le lecteur le décode.</td>
 </tr>
 <tr>
 <td>Résolution</td>
@@ -3302,7 +3362,7 @@ cette limite de lui-même. Voir
 réutilisés quand un autre spectateur, ou le même plus tard, lit le même titre
 avec la même décision. <strong>Administration → Cache de transcodage</strong> affiche sa taille et
 permet de le vider ; le <strong>Budget du cache de transcodage</strong> (<strong>Administration →
-Configuration du serveur → Paramètres du serveur</strong>) le plafonne. <strong>Tout
+Transcodage</strong>) le plafonne. <strong>Tout
 vider</strong> supprime aussi les sous-titres extraits de vos fichiers, gardés dans
 <code>./evey-data/subtitles</code> : ils sont extraits de nouveau à la demande.</p>
 <p><strong>Quand le disque se remplit.</strong> Le serveur garde une marge d'espace libre sur

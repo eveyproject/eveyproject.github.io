@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1295,6 +1325,8 @@
       
         
       
+        
+      
     
     
     
@@ -1411,6 +1443,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3215,7 +3275,7 @@
 <li>您的媒体文件；</li>
 <li>视频缓存（它会自动重新生成）；</li>
 <li>搜索索引（会根据数据库重建）；</li>
-<li>保存在 <code>./evey-data</code> 里的密钥：保护每次登录的 <code>jwt.key</code>，以及 <code>keys</code> 文件夹（数据库密码、搜索密钥）；</li>
+<li>保存在 <code>./evey-data</code> 里的密钥：保护每次登录的 <code>jwt.key</code>，<code>keys</code> 文件夹（数据库密码、搜索密钥），以及 <code>hls_aes.key</code>（加密流媒体分段的密钥，首次启动时创建，权限 0600）；</li>
 <li>已安装的插件文件。</li>
 </ul>
 <p><strong>所以，也请保留整个 <code>./evey-data</code> 文件夹的副本。</strong> 数据库备份可以在同一套安装上恢复 Evey。要从零重建一台机器，您需要这个文件夹。</p>
@@ -3245,7 +3305,7 @@
 </ul>
 <details class="info">
 <summary>锁定您运行的确切版本</summary>
-<p>测试阶段没有带编号的正式版本，也没有 <code>latest</code> 标签。<code>beta-0.0.1</code> 标签每次更新都会变。对于您依赖的服务器，请在 <code>image:</code> 这一行使用固定的 <code>sha-&lt;commit&gt;</code> 标签，这样相隔一天的两次拉取运行的是同样的代码。以后有了正式版本，<code>latest</code> 会跟随最新的稳定版本，而版本标签（<code>0.2.0</code>）可以锁定它。</p>
+<p><code>latest</code> 跟随最新的正式版本，每次更新都会变。对于您依赖的服务器，请在 <code>image:</code> 这一行使用版本标签（<code>0.1.0</code>，或只接收其修复的 <code>0.1</code>）或固定的 <code>sha-&lt;commit&gt;</code> 标签，这样相隔一天的两次拉取运行的是同样的代码。<a href="../installation/#common-variations">安装</a>中的表格列出了每个标签能给您什么。</p>
 </details>
 <h3 id="going-back">退回旧版本<a class="headerlink" href="#going-back" title="Permanent link">¶</a></h3>
 <ol>
@@ -3262,7 +3322,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
-rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (beta-0.0.1 + sha-<short>, latest gated on vX.Y.Z)
+rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->
 

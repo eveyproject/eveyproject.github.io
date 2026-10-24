@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3253,7 +3313,8 @@
 <li>जो सेटिंग्स <strong>सर्वर शुरू होते समय पढ़ी जाती हैं</strong>, उन पर पैनल <em>रीस्टार्ट पर
   लागू</em> लिखता है: लाइब्रेरी फ़ाइल मॉनिटर और स्कैन का अंतराल, ट्रांसकोड कैश बजट,
   ट्रांसकोडिंग का <strong>उन्नत सीमाएँ</strong> कार्ड, इंट्रो प्रदाता, और <strong>कॉन्फ़िगरेशन
-  प्रविष्टियाँ</strong> की हर पंक्ति। सहेजने से आपकी पसंद रख ली जाती है, रीस्टार्ट से
+  प्रविष्टियाँ</strong> में जाने-पहचाने ऑपरेटर फ़्लैग (किसी और कुंजी की पंक्ति यह संकेत
+  नहीं दिखाती)। सहेजने से आपकी पसंद रख ली जाती है, रीस्टार्ट से
   लागू होती है।</li>
 </ul>
 <p>विषय वाले पेजों की हर टेबल में एक <strong>पैनल</strong> कॉलम है: फ़ील्ड तक का रास्ता
@@ -3363,7 +3424,7 @@
 </tr>
 <tr>
 <td><code>/dev/dri/card0</code> के लिए एक <code>group_add</code></td>
-<td>Evey सिर्फ़ <code>renderD128</code> ही खोलता है। <code>ls -ln /dev/dri</code> से जाँचें और सिर्फ़ उसी का ग्रुप जोड़ें।</td>
+<td>Evey सिर्फ़ render नोड (<code>/dev/dri/renderD*</code>, होस्ट पर जो भी हो) खोलता है, <code>card*</code> कभी नहीं। <code>ls -ln /dev/dri</code> से जाँचें और सिर्फ़ render नोड का ग्रुप जोड़ें।</td>
 </tr>
 </tbody>
 </table>
@@ -3376,16 +3437,21 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>evey: media mounts owned by 1026:100 (detected on /media) - running the
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>server as that user so write features (seek-index repair) work out of the box
 </span></code></pre></div>
+<p>केवल वास्तव में माउंट किया गया <code>/media*</code> ही गिना जाता है: इमेज का अपना खाली <code>/media</code> (हर Debian इमेज में एक होता है) अनदेखा किया जाता है, इसलिए कहीं और, जैसे <code>/data</code> के नीचे, रखी लाइब्रेरी बिना किसी स्वामित्व चेतावनी के शुरू होती है।</p>
 <p>जब मीडिया माउंट <strong>अलग-अलग उपयोगकर्ताओं</strong> के हों, तो Evey जितना हो सके उतना
 संभालता है: सर्वर उस उपयोगकर्ता को अपनाता है जिसके सबसे ज़्यादा माउंट हैं, और
 बाकी माउंट के ग्रुप में अतिरिक्त ग्रुप के रूप में जुड़ जाता है, ताकि उन माउंट
 पर मरम्मत तब काम करे जब उनकी फ़ाइलों में ग्रुप लिख सकता हो (शुरू होने की
 चेतावनी बताती है कि कौन से माउंट अब भी लिखने से मना कर सकते हैं)। अपने-आप
 पहचान पूरी तरह तभी छोड़ी जाती है (एक चेतावनी के साथ <code>1000:1000</code> लागू होता है)
-जब हर मीडिया माउंट root का या आरक्षित uid <code>1001</code> का हो - अपने मीडिया का मालिक
-किसी सामान्य उपयोगकर्ता को बनाएँ (chown), या <code>PUID</code>/<code>PGID</code> साफ़ तौर पर सेट करें:</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PUID=1026   # सर्वर को इस user id से चलाएँ  (होस्ट पर: `id -u &lt;media-owner&gt;`)
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PGID=100    # ...और इस group id से
+जब हर मीडिया माउंट root का हो, या प्लगइन चालू होने पर आरक्षित uid <code>1001</code> का हो - अपने मीडिया का मालिक
+किसी सामान्य उपयोगकर्ता को बनाएँ (chown), या compose फ़ाइल में <code>environment:</code> के
+नीचे <code>PUID</code>/<code>PGID</code> साफ़ तौर पर सेट करें:</p>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">PUID</span><span class="p">:</span><span class="w"> </span><span class="s">"1026"</span><span class="w">   </span><span class="c1"># सर्वर को इस user id से चलाएँ  (होस्ट पर: `id -u &lt;media-owner&gt;`)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">PGID</span><span class="p">:</span><span class="w"> </span><span class="s">"100"</span><span class="w">    </span><span class="c1"># ...और इस group id से</span>
 </span></code></pre></div>
 <p>साफ़ दिए गए मानों को हमेशा अपने-आप पहचान से ज़्यादा प्राथमिकता मिलती है।</p>
 <p>यह कैसे काम करता है: कंटेनर root के रूप में बस उतनी देर शुरू होता है जितनी देर
@@ -3402,7 +3468,7 @@ entrypoint देखता है कि वह root के बिना शु�
 रखना आपकी ज़िम्मेदारी है।</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code>PUID=1001</code> मना है: यह अंदर का <code>evey-plugin</code> उपयोगकर्ता है, जिसे अलग रखा
+<p>प्लगइन चालू होने पर <code>PUID=1001</code> मना है: यह अंदर का <code>evey-plugin</code> उपयोगकर्ता है, जिसे अलग रखा
 जाता है ताकि प्लगइन कभी सर्वर की पहचान न ले सकें। मीडिया डिफ़ॉल्ट रूप से
 पढ़ने-लिखने के लिए माउंट होता है ताकि मरम्मत सीधे काम करे; अगर आप सिर्फ़
 पढ़ने वाली लाइब्रेरी चाहते हैं, तो मीडिया volume के आगे <code>:ro</code> जोड़ें (तब
@@ -3413,7 +3479,8 @@ entrypoint देखता है कि वह root के बिना शु�
 <ul>
 <li><code>EVEY_HTTP_PORT</code>, <code>EVEY_DOMAIN</code>, <code>MEDIA_DIR</code>: इन्हें रिपॉज़िटरी की अपनी
   <code>docker-compose.yml</code> इस्तेमाल करती है (खुला पोर्ट, साथ आने वाले Caddy का
-  डोमेन, मीडिया का रास्ता), Evey नहीं। वहाँ <code>EVEY_VERSION</code> इमेज का tag है; सर्वर
+  डोमेन, मीडिया का रास्ता), Evey नहीं। <code>EVEY_HTTP_PORT</code> सिर्फ़ होस्ट का पोर्ट है: कंटेनर हमेशा
+  9091 पर सुनता है और compose <code>${EVEY_HTTP_PORT:-9091}:9091</code> जोड़ता है। वहाँ <code>EVEY_VERSION</code> इमेज का tag है; सर्वर
   इसे <code>/healthz</code> पर सिर्फ़ तब दिखाता है जब उसके binary में कोई वर्ज़न न हो।</li>
 <li><code>EVEY_WEB_DIR</code> (<code>/srv</code>, जहाँ वेब इंटरफ़ेस की फ़ाइलें हैं), और
   <code>EVEY_DB_PASSWORD_FILE</code>, <code>MEILI_MASTER_KEY_FILE</code>, <code>EVEY_IMAGE_REPO</code>,

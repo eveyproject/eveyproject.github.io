@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3204,7 +3264,8 @@ lost. The command feeds a <code>.sql.gz</code> dump through <code>gunzip | psql<
 configured database.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The restore overwrites the current rows. Take a backup of the current
+<p>The restore drops and recreates each table before loading it, so the
+current rows are replaced. Take a backup of the current
 state first (<strong>Admin -&gt; Database Backup -&gt; Run now</strong>) if there is any
 chance you need it back.</p>
 </div>
@@ -3227,8 +3288,9 @@ chance you need it back.</p>
 <ul>
 <li>The file name must end in <code>.sql.gz</code>. The <code>.tar.gz</code> archives of <strong>Admin -&gt;
   Database Backup</strong> are restored from the panel, not by this command.</li>
-<li>The target database must exist; the dump drops and recreates tables, not
-  the database.</li>
+<li>The target database must exist; the dump drops and recreates each table
+  before loading it, so it can be restored onto a populated database, but it
+  does not create the database.</li>
 <li><code>psql</code> and <code>gunzip</code> must be on the PATH, which the image guarantees.</li>
 </ul>
 <p>Pre-migration dumps are written automatically before each schema change,

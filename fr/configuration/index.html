@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3262,8 +3322,9 @@ indiquer qu'une clé personnalisée est en service.</p>
 <li>Le panneau signale par <em>appliqué au redémarrage</em> les réglages <strong>lus au
   démarrage</strong> : la surveillance des fichiers et l'intervalle d'analyse, le
   budget du cache de transcodage, la carte <strong>Limites avancées</strong> du
-  transcodage, les sources de détection des intros, et chaque ligne des
-  <strong>Entrées de configuration</strong>. Enregistrer conserve le choix, redémarrer
+  transcodage, les sources de détection des intros, et les options
+  d'opérateur connues parmi les lignes des <strong>Entrées de configuration</strong> (une
+  ligne pour toute autre clé n'affiche pas ce repère). Enregistrer conserve le choix, redémarrer
   l'applique.</li>
 </ul>
 <p>Chaque tableau des pages par thème a une colonne <strong>Panneau</strong> : le chemin du
@@ -3376,7 +3437,7 @@ changent rien :</p>
 </tr>
 <tr>
 <td>un <code>group_add</code> pour <code>/dev/dri/card0</code></td>
-<td>Evey n'ouvre que <code>renderD128</code>. Vérifiez avec <code>ls -ln /dev/dri</code> et n'ajoutez que ce groupe.</td>
+<td>Evey n'ouvre que des nœuds de rendu (<code>/dev/dri/renderD*</code>, quel que soit celui de l'hôte), jamais <code>card*</code>. Vérifiez avec <code>ls -ln /dev/dri</code> et n'ajoutez que le groupe du nœud de rendu.</td>
 </tr>
 </tbody>
 </table>
@@ -3390,6 +3451,10 @@ Le log de démarrage indique le choix fait :</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>evey: media mounts owned by 1026:100 (detected on /media) - running the
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>server as that user so write features (seek-index repair) work out of the box
 </span></code></pre></div>
+<p>Seul un <code>/media*</code> effectivement monté compte : le <code>/media</code> vide de l'image
+elle-même (toute image Debian en a un) est ignoré, donc une bibliothèque rangée
+ailleurs, sous <code>/data</code> par exemple, démarre sans aucun avertissement de
+propriété.</p>
 <p>Des montages appartenant à <strong>des utilisateurs différents</strong> sont gérés au
 mieux : le serveur adopte l'utilisateur propriétaire du plus grand nombre de
 montages et rejoint les groupes des autres en groupes secondaires, de sorte
@@ -3397,10 +3462,14 @@ que les réparations y fonctionnent si leurs fichiers sont modifiables par le
 groupe (l'avertissement de démarrage liste les montages qui pourraient encore
 refuser l'écriture). La détection automatique n'est abandonnée (repli sur
 <code>1000:1000</code> avec un avertissement) que si tous les montages appartiennent à
-root ou à l'uid réservé <code>1001</code> : attribuez vos médias à un utilisateur
-ordinaire, ou définissez <code>PUID</code>/<code>PGID</code> explicitement :</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PUID=1026   # lancer le serveur sous cet uid  (sur l'hôte : `id -u &lt;propriétaire-des-médias&gt;`)
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PGID=100    # ...et ce gid
+root, ou à l'uid réservé <code>1001</code> tant que les plugins sont activés : attribuez vos médias à un utilisateur
+ordinaire, ou définissez <code>PUID</code>/<code>PGID</code> explicitement, sous <code>environment:</code>
+dans le fichier compose :</p>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">PUID</span><span class="p">:</span><span class="w"> </span><span class="s">"1026"</span><span class="w">   </span><span class="c1"># lancer le serveur sous cet uid  (sur l'hôte : `id -u &lt;propriétaire-des-médias&gt;`)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">PGID</span><span class="p">:</span><span class="w"> </span><span class="s">"100"</span><span class="w">    </span><span class="c1"># ...et ce gid</span>
 </span></code></pre></div>
 <p>Des valeurs explicites l'emportent toujours sur la détection.</p>
 <p>Fonctionnement : le conteneur démarre en root le temps de remapper son
@@ -3416,7 +3485,7 @@ compris la détection du propriétaire des médias) : c'est alors à vous de
 garder <code>./evey-data</code> modifiable par cet uid.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code>PUID=1001</code> est refusé : c'est l'utilisateur interne <code>evey-plugin</code>,
+<p><code>PUID=1001</code> est refusé tant que les plugins sont activés : c'est l'utilisateur interne <code>evey-plugin</code>,
 séparé pour que les plugins ne partagent jamais l'identité du serveur.
 Les médias sont montés en lecture-écriture par défaut pour que les
 réparations fonctionnent ; ajoutez <code>:ro</code> au volume si vous préférez une
@@ -3429,7 +3498,9 @@ serveur :</p>
 <ul>
 <li><code>EVEY_HTTP_PORT</code>, <code>EVEY_DOMAIN</code>, <code>MEDIA_DIR</code> : utilisées par le
   <code>docker-compose.yml</code> du dépôt (port publié, domaine du Caddy intégré, chemin
-  des médias), pas par Evey. <code>EVEY_VERSION</code> y est le tag de l'image ; le
+  des médias), pas par Evey. <code>EVEY_HTTP_PORT</code> est uniquement le port de l'hôte :
+  le conteneur écoute toujours sur 9091 et le compose publie
+  <code>${EVEY_HTTP_PORT:-9091}:9091</code>. <code>EVEY_VERSION</code> y est le tag de l'image ; le
   serveur ne l'affiche sur <code>/healthz</code> que si son binaire ne porte pas de
   version.</li>
 <li><code>EVEY_WEB_DIR</code> (<code>/srv</code>, l'emplacement des fichiers de l'interface web), ainsi

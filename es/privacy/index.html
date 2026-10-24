@@ -10,7 +10,7 @@
         <link rel="canonical" href="https://eveyproject.org/es/privacy/">
       
       
-        <link rel="prev" href="../getting-started/faq/">
+        <link rel="prev" href="../getting-started/limitations/">
       
       
         <link rel="next" href="../administration/libraries/">
@@ -571,6 +571,8 @@
       
         
       
+        
+      
     
     
     
@@ -763,6 +765,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -863,6 +893,17 @@
     <span class="md-ellipsis">
       
         Este sitio web
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-party-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servicios de terceros
       
     </span>
   </a>
@@ -1297,6 +1338,8 @@
       
         
       
+        
+      
     
     
     
@@ -1413,6 +1456,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3142,6 +3213,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#third-party-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servicios de terceros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#children" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3237,8 +3319,7 @@ proyecto Evey no tiene acceso a ellos.</p>
   tiempo, por ejemplo).</li>
 </ul>
 <h2 id="what-stays-on-the-device">Lo que se queda en el dispositivo<a class="headerlink" href="#what-stays-on-the-device" title="Permanent link">¶</a></h2>
-<p>La dirección del servidor, tu token de sesión (en el almacenamiento cifrado
-de Android), tus preferencias, y las películas y la música que descargas para
+<p>La dirección del servidor, tu token de sesión y, si marcas recordarme, tu nombre de usuario y tu contraseña (en el almacenamiento cifrado de Android, el keystore de Android), tus preferencias, y las películas y la música que descargas para
 verlas o escucharlas sin conexión. Si desinstalas la app, se borran. El
 desbloqueo biométrico (huella o cara), cuando lo activas, lo gestiona
 Android: la app solo sabe si ha funcionado o no.</p>
@@ -3267,6 +3348,22 @@ Android: la app solo sabe si ha funcionado o no.</p>
 <td>Biometría</td>
 <td>Bloqueo opcional de la app.</td>
 </tr>
+<tr>
+<td>Modificar la configuración de audio</td>
+<td>Ajustar el audio de la reproducción (gestión del volumen) mientras se ve una película.</td>
+</tr>
+<tr>
+<td>Mantener activo (wake lock)</td>
+<td>Evitar que el dispositivo se suspenda durante la reproducción.</td>
+</tr>
+<tr>
+<td>Vibración</td>
+<td>Respuesta háptica en la app.</td>
+</tr>
+<tr>
+<td>Leer y escribir almacenamiento externo (solo Android 12 y anteriores)</td>
+<td>Guardar y leer tus descargas sin conexión en esas versiones de Android.</td>
+</tr>
 </tbody>
 </table>
 <p>La app para teléfono no tiene permiso para usar el micrófono.</p>
@@ -3275,6 +3372,8 @@ Android: la app solo sabe si ha funcionado o no.</p>
 visitante. El sitio sirve sus propias fuentes y scripts, así que el navegador
 no contacta con ningún otro servicio. No pone cookies propias ni tiene
 estadísticas de visitas.</p>
+<h2 id="third-party-services">Servicios de terceros<a class="headerlink" href="#third-party-services" title="Permanent link">¶</a></h2>
+<p>Este producto utiliza la API de TMDB, pero no está respaldado ni certificado por TMDB. Las imágenes y los metadatos provienen de <a href="https://www.themoviedb.org/">TMDB</a>.</p>
 <h2 id="children">Niños<a class="headerlink" href="#children" title="Permanent link">¶</a></h2>
 <p>Las apps no están dirigidas a niños. Los perfiles infantiles los crea quien
 gestiona el servidor, que es quien guarda esos datos.</p>
@@ -3333,7 +3432,7 @@ store page: frontend/apps/tv/src/lib/appUpdate.ts - openStorePage
       <nav class="md-footer__inner md-grid" aria-label="Pie">
         
           
-          <a href="../getting-started/faq/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Preguntas frecuentes">
+          <a href="../getting-started/limitations/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Limitaciones conocidas">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3343,7 +3442,7 @@ store page: frontend/apps/tv/src/lib/appUpdate.ts - openStorePage
                 Anterior
               </span>
               <div class="md-ellipsis">
-                Preguntas frecuentes
+                Limitaciones conocidas
               </div>
             </div>
           </a>

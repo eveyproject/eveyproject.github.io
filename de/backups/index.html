@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1295,6 +1325,8 @@
       
         
       
+        
+      
     
     
     
@@ -1411,6 +1443,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3235,7 +3295,9 @@ API-Schlüssel, Benachrichtigungen und Audit-Protokolle.</p>
 <li>den Video-Cache (er füllt sich von selbst wieder);</li>
 <li>den Suchindex (er wird aus der Datenbank neu aufgebaut);</li>
 <li>die Schlüssel in <code>./evey-data</code>: <code>jwt.key</code>, der jede Anmeldung schützt, und
-  den Ordner <code>keys</code> (Datenbankpasswort, Suchschlüssel);</li>
+  den Ordner <code>keys</code> (Datenbankpasswort, Suchschlüssel) und <code>hls_aes.key</code>, den
+  Schlüssel, der die Streaming-Segmente verschlüsselt (beim ersten Start
+  angelegt, Modus 0600);</li>
 <li>die Dateien der installierten Plugins.</li>
 </ul>
 <p><strong>Bewahren Sie deshalb auch eine Kopie des ganzen Ordners <code>./evey-data</code>
@@ -3289,12 +3351,11 @@ siehe <a href="../runbooks/recovery/">Wiederherstellung</a>.</p>
 </ul>
 <details class="info">
 <summary>Die genaue Version festlegen, die Sie betreiben</summary>
-<p>Während der Beta gibt es keine nummerierten Versionen und kein Tag
-<code>latest</code>. Das Tag <code>beta-0.0.1</code> ändert sich mit jedem Update. Für einen
-Server, auf den Sie sich verlassen, tragen Sie in der Zeile <code>image:</code> ein
-festes Tag <code>sha-&lt;commit&gt;</code> ein. So laufen zwei Pulls im Abstand eines Tages
-mit demselben Code. Sobald es Versionen gibt, folgt <code>latest</code> der neuesten
-stabilen Version, und ein Versions-Tag (<code>0.2.0</code>) legt sie fest.</p>
+<p><code>latest</code> folgt der neuesten Version und ändert sich mit jedem Update. Für
+einen Server, auf den Sie sich verlassen, tragen Sie in der Zeile <code>image:</code>
+ein Versions-Tag (<code>0.1.0</code>, oder <code>0.1</code>, um nur dessen Fixes zu erhalten) oder ein festes Tag <code>sha-&lt;commit&gt;</code> ein. So
+laufen zwei Pulls im Abstand eines Tages mit demselben Code.
+Die Tabelle unter <a href="../installation/#common-variations">Installation</a> zeigt, was jedes Tag bringt.</p>
 </details>
 <h3 id="going-back">Zurückkehren<a class="headerlink" href="#going-back" title="Permanent link">¶</a></h3>
 <ol>
@@ -3317,7 +3378,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
-rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (beta-0.0.1 + sha-<short>, latest gated on vX.Y.Z)
+rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->
 

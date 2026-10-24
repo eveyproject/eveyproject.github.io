@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3491,7 +3551,7 @@
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">           </span><span class="c1"># 可选</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">                </span><span class="c1"># 可选</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">min_evey_version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="w">    </span><span class="c1"># 可选；会被记录，目前不强制</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">min_evey_version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="w">    </span><span class="c1"># 可选；会被接受但被忽略</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">permissions</span><span class="p">:</span><span class="w">                 </span><span class="c1"># 后端和界面可以调用什么</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
@@ -3509,7 +3569,7 @@
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nt">config_schema</span><span class="p">:</span><span class="w">               </span><span class="c1"># 插件卡片上“配置”面板里的字段</span>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span><span class="nt">api_key</span><span class="p">:</span>
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span><span class="w">           </span><span class="c1"># 永远不会发回给任何客户端</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API key</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API key</span><span class="w">           </span><span class="c1"># 不会显示：面板用键名作为字段标签</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span><span class="nt">city</span><span class="p">:</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
@@ -3542,7 +3602,7 @@
 </tr>
 <tr>
 <td><code>external_fetch</code></td>
-<td>纯主机名。带协议前缀可以，但前缀会被丢弃；通配符或 IP 地址会导致安装被拒绝（<a href="../security-model/#external-fetch-rules">规则</a>）。</td>
+<td>主机名。协议前缀和末尾的路径在解析时会被丢弃；主机必须完全匹配，<code>*.example.com</code> 这样的通配符在安装时会被拒绝，端口后缀会被忽略；IP 地址会导致安装被拒绝（<a href="../security-model/#external-fetch-rules">规则</a>）。</td>
 </tr>
 <tr>
 <td><code>capabilities</code></td>
@@ -3558,7 +3618,7 @@
 </tr>
 <tr>
 <td><code>config_schema</code></td>
-<td>字段名到 <code>{type, label, description, required, default, min, max, options}</code> 的映射。类型：<code>string</code>、<code>text</code>、<code>password</code>、<code>boolean</code>、<code>integer</code>、<code>number</code>、<code>select</code>（配合 <code>options: [{value, label}]</code>）。</td>
+<td>字段名到 <code>{type, label, description, required, default, min, max, options}</code> 的映射；<code>label</code> 不会显示，面板用键名作为字段标签。类型：<code>string</code>、<code>text</code>、<code>password</code>、<code>boolean</code>、<code>integer</code>、<code>number</code>、<code>select</code>（配合 <code>options: [{value, label}]</code>）。</td>
 </tr>
 </tbody>
 </table>
@@ -3708,13 +3768,14 @@
 <h3 id="eveyoninitcallback"><code>evey.onInit(callback)</code><a class="headerlink" href="#eveyoninitcallback" title="Permanent link">¶</a></h3>
 <p>用宿主发来的上下文调用一次；如果回调是在上下文到达之后才注册的，会立即被调用。</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="c1">// data.context         - 插件的配置值（config_schema）</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="c1">// data.locale          - 当前语言区域，例如 "en-US"</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="c1">// data.theme           - 当前主题的 id</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// data.surface         - "web"、"mobile" 或 "tv"</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - 仅 home.section：宿主建议的高度（px）</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - 仅 tv：面板的高度，单位 dp</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">});</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="c1">// data.config          - 插件的配置值（config_schema）</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="c1">// data.context         - 宿主上下文</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="c1">// data.locale          - 当前语言区域，例如 "en-US"</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" 或 "light"</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web"、"mobile" 或 "tv"</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - 仅 home.section：宿主建议的高度（px）</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - 仅 tv：面板的高度，单位 dp</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">});</span>
 </span></code></pre></div>
 <h3 id="eveynavigatepath"><code>evey.navigate(path)</code><a class="headerlink" href="#eveynavigatepath" title="Permanent link">¶</a></h3>
 <p>让宿主应用跳转到 <code>path</code>。只有 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、<code>/settings</code> 和 <code>/search</code> 开头的路径会被执行；
@@ -3818,7 +3879,7 @@
 <h2 id="examples">示例<a class="headerlink" href="#examples" title="Permanent link">¶</a></h2>
 <p><code>examples/plugins/</code> 里有按当前清单格式编写、可以直接运行的插件：Node.js 和 Python 的入门示例（<code>nodejs-example</code>、<code>python-example</code>）、
 一个元数据提供方（<code>metadata-example</code>）、一个 Webhook 接收端（<code>webhook-receiver</code>）、一个带构建步骤的首页小组件（<code>weather</code>）、
-一个演示数据存储、<code>public</code> 和 <code>prefs</code> 权限以及 <code>admin.nav</code> 插槽的示例（<code>data-demo</code>）、一个展示所有 <code>config_schema</code> 字段类型的示例（<code>config-demo</code>），
+一个演示数据存储、<code>public</code> 和 <code>prefs</code> 权限以及 <code>admin.nav</code> 插槽的示例（<code>data-demo</code>）、一个展示所有 <code>config_schema</code> 字段类型的示例，带有一个 <code>admin.nav</code> 页面（<code>config-demo</code>），
 以及两个主题（<code>theme-dark-blue</code>、<code>open-workshop</code>）。<code>make plugin-zips</code> 会把它们全部打包。</p>
 <!-- sources
 manifest fields, validation: internal/domain/plugin/model.go - PluginManifest, Validate, validateWebRoot, validateSrcUnderWebRoot, IsSecretConfigField ; internal/adapters/driven/pluginrunner/manifest.go - Parse, validateManifest, validateExternalFetch ; capabilities.go - KnownCapabilities, KnownPermissions
@@ -3829,7 +3890,7 @@ env vars, Initialize call: internal/adapters/driven/pluginrunner/runner_start.go
 peer auth, rate limit: internal/adapters/driving/pluginhost/host_server.go - makePluginAuthInterceptor, pluginRPCRatePerMin ; peer_creds.go
 host RPCs and permissions: internal/adapters/driving/grpcapi/plugin_interceptor.go ; pluginhost/host_server.go - Log, GetConfig, SetConfig (maxConfigKeys, maxConfigKeyLen, maxConfigValueLen), EmitEvent (pluginEmittedEvent.EventName), GetMediaItem, ListMediaItems, mediaItemToProto, UpdateMetadata, GetUserPreferences (Unimplemented), UnimplementedHostServiceServer ; fetch.go - Fetch, maxFetchBytes, fetchTimeout
 proto: proto/plugin/v1/plugin_api.proto - PluginService, HostService, InitRequest, FetchRequest, FetchResponse, MediaItem
-frame policy: internal/adapters/driving/http/plugin_frame_handler.go - pluginFramePolicy ; frontend/packages/client/src/plugins/hostProtocol.ts - buildConnectSrc, ALLOWED_NAV_PREFIXES, SLOT_MAX_HEIGHT, clampSlotHeight, TOAST_MAX, TOAST_WINDOW_MS, TOAST_MAX_LENGTH ; web/PluginIframe.tsx - MIN_SLOT_HEIGHT, suggestedSlotHeight ; native/PluginWebView.tsx (surface)
+frame policy: internal/adapters/driving/http/plugin_frame_handler.go - pluginFramePolicy ; frontend/packages/client/src/plugins/hostProtocol.ts - buildConnectSrc, ALLOWED_NAV_PREFIXES, SLOT_MAX_HEIGHT, clampSlotHeight, TOAST_MAX, TOAST_WINDOW_MS, TOAST_MAX_LENGTH ; frontend/packages/client/src/web/PluginIframe.tsx - MIN_SLOT_HEIGHT, suggestedSlotHeight ; frontend/packages/client/src/native/PluginWebView.tsx (surface)
 bridge: frontend/packages/client/src/plugins/bridgeScript.ts - EveyBridge ; pluginRpc.ts - pluginRequestFor
 slots: internal/domain/plugin/slots.go - AllowedSlots
 token, deny by default: internal/app/plugin/token_service.go - PluginTokenTTL ; internal/pkg/auth/plugin_jwt.go - AllowedPluginScopes, forbiddenPrefix ; docs/adr/0003-plugin-scoped-tokens.md ; docs/adr/0012-plugin-token-deny-by-default.md

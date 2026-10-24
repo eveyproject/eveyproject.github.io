@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3384,9 +3444,9 @@ you have checked the server. A dump left next to an existing cluster is
 reported and ignored, never merged; a failed import discards the new cluster
 so that the next start retries from the dump.</p>
 <h2 id="arm-hosts">ARM hosts<a class="headerlink" href="#arm-hosts" title="Permanent link">¶</a></h2>
-<p>Images built from a release tag (<code>0.2.0</code>, pre-releases such as
-<code>0.2.0-beta.1</code> included) are multi-architecture (<code>linux/amd64</code> and
-<code>linux/arm64</code>); Docker picks the right one. Branch tags such as <code>beta-0.0.1</code>
+<p>Images built from a release tag (<code>0.1.0</code>, pre-releases
+included) are multi-architecture (<code>linux/amd64</code> and
+<code>linux/arm64</code>); Docker picks the right one. Branch tags
 are amd64 only: pin a release tag on an ARM host.</p>
 <ul>
 <li><strong>Hardware transcoding on ARM</strong> is limited to Rockchip SoCs (RK3588,
@@ -3417,22 +3477,23 @@ are amd64 only: pin a release tag on an ARM host.</p>
 <td><code>latest</code> is always the most recent stable release</td>
 </tr>
 <tr>
-<td><code>X.Y.Z-beta.N</code></td>
+<td>a pre-release tag (with a hyphen)</td>
 <td>a pre-release tag</td>
-<td>publishes only its own tag, never moves <code>latest</code></td>
+<td>publishes its own tag and <code>sha-&lt;commit&gt;</code>, never <code>latest</code></td>
 </tr>
 <tr>
-<td><code>beta-0.0.1</code>, <code>sha-&lt;commit&gt;</code></td>
+<td>a branch name, <code>sha-&lt;commit&gt;</code></td>
 <td>a branch build</td>
-<td>amd64 only</td>
+<td>the default image only, amd64 only (normally)</td>
 </tr>
 </tbody>
 </table>
-<p>Every tag exists in three variants: the default bundles Python 3 for
-plugins, <code>-nodejs</code> adds Node.js, <code>-full</code> adds PHP, Ruby and Lua (for example
-<code>latest-full</code>). Use a variant only when a plugin needs it: the installer
-refuses a plugin whose declared language is missing from the image, with a
-message naming the right variant.</p>
+<p>Release and pre-release tags come in three variants (a branch build publishes
+the default image only): the default ships every plugin runtime
+(Python 3, Node.js, PHP, Ruby and Lua), <code>-nodejs</code> keeps Python and Node.js,
+<code>-lean</code> keeps Python only (for example <code>latest-lean</code>). Pick a slimmer variant
+only when image size matters: the installer refuses a plugin whose declared
+language is missing from the image, with a message naming the default image.</p>
 <p>Published images carry the drivers for every supported Intel and AMD
 generation. A self-built image can keep one family with <code>docker build
 --build-arg GPU=intel-legacy .</code> (Intel Gen9 to Gen11), <code>GPU=intel</code> (Gen12 and

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1295,6 +1325,8 @@
       
         
       
+        
+      
     
     
     
@@ -1411,6 +1443,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3235,8 +3295,9 @@ plugins, webhooks, clés API, notifications et journaux d'audit.</p>
 <li>le cache vidéo (il se reconstitue automatiquement) ;</li>
 <li>l'index de recherche (reconstruit à partir de la base de données) ;</li>
 <li>les clés gardées dans <code>./evey-data</code> : <code>jwt.key</code>, qui protège toutes les
-  connexions, et le dossier <code>keys</code> (mot de passe de la base de données, clé
-  de recherche) ;</li>
+  connexions, le dossier <code>keys</code> (mot de passe de la base de données, clé de
+  recherche), et <code>hls_aes.key</code>, la clé qui chiffre les segments de diffusion
+  (créée au premier démarrage, droits 0600) ;</li>
 <li>les fichiers des plugins installés.</li>
 </ul>
 <p><strong>Gardez donc aussi une copie de tout le dossier <code>./evey-data</code>.</strong> Une
@@ -3293,12 +3354,11 @@ sauvegardes <code>.tar.gz</code> de ce panneau : voir <a href="../runbooks/recov
 </ul>
 <details class="info">
 <summary>Fixer exactement la version que vous faites tourner</summary>
-<p>Pendant la bêta, il n'y a ni version numérotée ni tag <code>latest</code>. Le tag
-<code>beta-0.0.1</code> change à chaque mise à jour. Pour un serveur sur lequel vous
-comptez, mettez un tag fixe <code>sha-&lt;commit&gt;</code> sur la ligne <code>image:</code>, pour
-que deux <code>pull</code> à un jour d'écart fassent tourner le même code. Quand des
-versions existeront, <code>latest</code> suivra la dernière version stable, et un
-tag de version (<code>0.2.0</code>) permettra de la fixer.</p>
+<p><code>latest</code> suit la dernière version publiée et change à chaque mise à jour.
+Pour un serveur sur lequel vous comptez, mettez un tag de version
+(<code>0.1.0</code>, ou <code>0.1</code> pour ne recevoir que ses correctifs) ou un tag fixe <code>sha-&lt;commit&gt;</code> sur la ligne <code>image:</code>, pour que
+deux <code>pull</code> à un jour d'écart fassent tourner le même code.
+Le tableau de <a href="../installation/#common-variations">Installation</a> indique ce que chaque tag vous apporte.</p>
 </details>
 <h3 id="going-back">Revenir en arrière<a class="headerlink" href="#going-back" title="Permanent link">¶</a></h3>
 <ol>
@@ -3320,7 +3380,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
-rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (beta-0.0.1 + sha-<short>, latest gated on vX.Y.Z)
+rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->
 

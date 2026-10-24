@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3208,11 +3268,31 @@ ist, nach Profil, und wie lange es her ist, dass sich jede App zuletzt
 gemeldet hat. Ein Chromecast, dessen Fernseher Eveys Empfänger geladen hält,
 bleibt in der Liste, auch wenn seine Wiedergabe beendet ist und aus
 <strong>Aktuelle Wiedergabe</strong> verschwunden ist; <strong>Diesen Chromecast stoppen</strong>
-schickt ihm einen Stopp-Befehl, den der Fernseher innerhalb von 30 Sekunden
+schickt ihm einen Stopp-Befehl, den der Fernseher in etwa 30 Sekunden
 ausführt.</p>
 <p><strong>Verwaltung → Systemzustand</strong> zeigt Prozessor, Arbeitsspeicher, Bandbreite
 und Speicherplatz und wie viel der Kapazität für die Transkodierung belegt
-ist.</p>
+ist. Außerdem listet die Seite die Datenträger der Maschine auf, jeden mit der
+mittleren Wartezeit einer Anfrage in der letzten Minute, seiner Auslastung und
+seinen Lese- und Schreibraten. Die Wartezeit ist die Zahl, auf die es ankommt:
+ein Datenträger kann zu 100 % ausgelastet sein und trotzdem mithalten, während
+einer, der jede Anfrage um ein Mehrfaches länger warten lässt als im
+Ruhezustand, die Wiedergabe ins Puffern treibt, selbst wenn der Prozessor
+untätig wirkt. Ein Datenträger gilt als <strong>Gesättigt</strong>, wenn seine Wartezeit
+mindestens 20 ms und mindestens das 2,5-Fache seiner Wartezeit im Ruhezustand
+erreicht und entweder der Datenträger ausgelastet ist oder der Prozessor auf
+ihn wartet. Die CPU-Karte nennt den Anteil der Prozessorzeit, der mit Warten
+auf Datenträger verging.</p>
+<p><strong>Trends</strong> unter den Live-Karten zeichnet die letzten 24 Stunden, 7 Tage oder
+30 Tage aus den Proben, die der Server jede Minute speichert: Prozessor und
+Datenträger-Wartezeit, Arbeitsspeicher, die Datenträger-Wartezeit mit ihrer
+Ruhe- und Sättigungslinie, Auslastung und Durchsatz der Datenträger,
+eingehendes und ausgehendes Netzwerk neben dem tatsächlich ausgelieferten
+Streaming, Streams und Transkodierungen sowie den Füllstand der
+Bibliotheksdatenträger. Prozessor, Datenträger und Netzwerk betreffen die
+gesamte Maschine: ein Kopiervorgang oder ein benachbarter Dienst, der dieselben
+Datenträger liest, erscheint dort ebenfalls. Das Dashboard trägt eine Kachel
+<strong>Datenträger</strong> mit dem Datenträger, der am längsten wartet.</p>
 <figure class="evey-shot">
   <a class="glightbox" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Verwaltung → Systemzustand auf dem Demo-Server" loading="lazy" src="../../../images/admin-system-health.webp"></a>
 <br>
@@ -3226,7 +3306,8 @@ Chromecast, Anmeldung, Infrastruktur...). Hier sehen Sie zuerst nach, wenn
 ein Benutzer ein Problem meldet.</p>
 <p>Dasselbe Protokoll liegt auf der Festplatte, eine JSON-Datei pro Tag in
 <code>./evey-data/logs/</code> (<code>/data/logs/evey-YYYY-MM-DD.log</code> im Container),
-standardmäßig 90 Tage aufbewahrt. <code>docker compose logs evey</code> zeigt nur, was
+dazu eine Datei mit Stundensuffix (<code>evey-YYYY-MM-DD-HH.log</code>), sobald eine Datei
+50 MB überschreitet (<code>EVEY_LOG_MAX_SIZE_MB</code>), standardmäßig 90 Tage aufbewahrt. <code>docker compose logs evey</code> zeigt nur, was
 der Container beim Start ausgibt. Das lesen Sie, wenn der Server nicht
 startet. Siehe <a href="../troubleshooting/#the-logs">Fehlerbehebung</a>.</p>
 <h2 id="how-playback-actually-went">Wie die Wiedergabe wirklich lief<a class="headerlink" href="#how-playback-actually-went" title="Permanent link">¶</a></h2>
@@ -3248,15 +3329,16 @@ hebt eine sofort auf.</p>
   Verwaltungsaktionen sowie die laufenden Hintergrundarbeiten.</li>
 </ul>
 <p>Wie lange jede Art von Verlauf aufbewahrt wird, legen Sie unter <strong>Verwaltung
-→ Serverkonfiguration → Servereinstellungen</strong> fest (Wiedergabesitzungen,
+→ Serverkonfiguration → Daten &amp; Aufbewahrung</strong> fest (Wiedergabesitzungen,
 Audit-Protokoll, Servermesswerte, Streaming-Qualität). Eine Änderung gilt ab
 der nächsten täglichen Bereinigung.</p>
 <h2 id="prometheus-metrics">Prometheus-Metriken<a class="headerlink" href="#prometheus-metrics" title="Permanent link">¶</a></h2>
 <p><code>GET /metrics</code> liefert die Zähler des Servers im Textformat von Prometheus,
-alle mit Namen <code>evey_...</code>. Es antwortet einer Administratorsitzung oder einem
-festen Token, das in <code>EVEY_METRICS_SCRAPE_TOKEN</code> gesetzt und als
-<code>Authorization: Bearer &lt;token&gt;</code> gesendet wird, damit Prometheus oder Grafana
-die Werte abrufen können, ohne sich neu anzumelden
+alle mit Namen <code>evey_...</code>. Es antwortet einem festen Token, das in
+<code>EVEY_METRICS_SCRAPE_TOKEN</code> gesetzt und als <code>Authorization: Bearer &lt;token&gt;</code>
+gesendet wird, damit Prometheus oder Grafana die Werte von überall abrufen
+können, ohne sich anzumelden; eine Administratorsitzung wird nur vom eigenen
+Loopback des Containers akzeptiert
 (<a href="../../environment/logs-monitoring/">Sicherungen, Protokolle und Überwachung</a>).
 Die Gruppen, die sich für ein erstes Diagramm lohnen:</p>
 <table>

@@ -571,6 +571,8 @@
       
         
       
+        
+      
     
     
     
@@ -870,6 +872,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1308,6 +1338,8 @@
       
         
       
+        
+      
     
     
     
@@ -1424,6 +1456,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3252,7 +3312,7 @@ médias (la ligne marquée 5). Par exemple, si vos films sont dans
 <code>/srv/media</code>, la ligne devient <code>- /srv/media:/media</code>.</p>
 <div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:beta-0.0.1</span><span class="w"> </span><span class="c1"># (1)!</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
@@ -3267,10 +3327,9 @@ médias (la ligne marquée 5). Par exemple, si vos films sont dans
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">evey-cache</span><span class="p">:</span>
 </span></code></pre></div>
 <ol>
-<li>La version d'Evey. Evey est en bêta, il n'y a donc pas encore de tag
-   <code>latest</code> : <code>beta-0.0.1</code> suit la branche de développement et change à
-   chaque mise à jour. Pour garder exactement le même code, utilisez plutôt
-   un tag <code>sha-&lt;commit&gt;</code> : voir
+<li>La version d'Evey. <code>latest</code> est la dernière version publiée. Pour rester
+   sur une version donnée, utilisez un tag de version comme <code>0.1.0</code>, ou un tag
+   <code>sha-&lt;commit&gt;</code> : voir
    <a href="../backups/#updating-evey">Sauvegardes et mises à jour</a>.</li>
 <li>Le port. Le nombre de gauche est celui que vous saisirez dans le navigateur
    et dans les applications. Gardez <code>9091</code>, sauf si un autre programme
@@ -3278,9 +3337,10 @@ médias (la ligne marquée 5). Par exemple, si vos films sont dans
 <li>Les données d'Evey : base de données, clés, mots de passe créés, index de
    recherche, images, journaux, sauvegardes, plugins. <strong>C'est le dossier à
    sauvegarder.</strong></li>
-<li>Un cache de vidéo convertie, de photos et de pochettes redimensionnées.
-   Vous pouvez le supprimer quand vous voulez : il se reconstitue
-   automatiquement.</li>
+<li>Un cache de vidéo convertie, de photos et de pochettes de musique
+   redimensionnées. Vous pouvez le supprimer quand vous voulez : il se
+   reconstitue automatiquement. Les variantes d'affiches n'y sont pas : elles
+   sont dans <code>evey-data/artworks</code>.</li>
 <li>Vos médias. Remplacez <code>/path/to/your/media</code> par le vrai dossier. Dans
    Evey, ce dossier s'appelle <code>/media</code>. Evey peut y écrire, et c'est voulu :
    ainsi, la <a href="../runbooks/media-health/">Santé des médias</a> peut réparer un
@@ -3357,7 +3417,7 @@ avec <code>http://</code> et le port :
 </tr>
 <tr>
 <td>Volume <code>evey-cache</code></td>
-<td>Vidéo convertie, photos et pochettes redimensionnées</td>
+<td>Vidéo convertie, photos et pochettes de musique redimensionnées (les variantes d'affiches sont dans <code>evey-data/artworks</code>)</td>
 <td>Oui. Il se reconstitue automatiquement.</td>
 </tr>
 <tr>
@@ -3380,6 +3440,9 @@ avec <code>http://</code> et le port :
 <p>Chacun tient en quelques lignes dans le même fichier.</p>
 <p><strong>Un deuxième dossier de médias.</strong> Ajoutez <code>- /other/path:/media2</code> sous
 <code>volumes:</code>. Un troisième devient <code>/media3</code>, et ainsi de suite.</p>
+<p><strong>Une deuxième instance d'Evey sur la même machine.</strong> Donnez-lui un autre
+<code>container_name</code> et d'autres ports côté hôte, sinon <code>docker compose up</code>
+refuse de démarrer (le nom est déjà utilisé).</p>
 <p><strong>Un autre port.</strong> Changez seulement le nombre de gauche, par exemple
 <code>"8080:9091"</code>. Saisissez ensuite <code>:8080</code> dans le navigateur et dans les
 applications.</p>
@@ -3390,6 +3453,45 @@ nombres donnés par <code>id -u</code> et <code>id -g</code>. Le conteneur déma
 seulement pour appliquer ce choix ; Evey lui-même ne tourne jamais en root.</p>
 <p><strong>Une carte graphique pour convertir la vidéo.</strong> Donnez au conteneur l'accès
 à la carte : voir <a href="../administration/hardware-acceleration/">Accélération matérielle</a>.</p>
+<p><strong>La version que vous faites tourner.</strong> La ligne <code>image:</code> en décide :</p>
+<table>
+<thead>
+<tr>
+<th><code>image:</code></th>
+<th>Ce que vous obtenez</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eveyproject/evey:latest</code></td>
+<td>la dernière version publiée ; chaque <code>docker compose pull</code> vous fait passer à la suivante</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1</code></td>
+<td>le dernier correctif de cette ligne mineure (0.1.0, 0.1.1, ...), jamais une nouvelle version mineure</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1.0</code></td>
+<td>exactement cette version, tant que vous ne changez pas la ligne</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:sha-&lt;commit&gt;</code></td>
+<td>un build précis, le seul tag qui ne bouge jamais</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:master</code></td>
+<td>la branche de développement, reconstruite à chaque push : pour tester, pas pour un serveur sur lequel vous comptez</td>
+</tr>
+</tbody>
+</table>
+<p>Les numéros de version suivent le <a href="https://semver.org/">versionnage sémantique</a> et commencent à
+<code>0.1.0</code> ; la ligne 0.x est la bêta publique. Pour changer de version, modifiez la
+ligne, puis <code>docker compose pull &amp;&amp; docker compose up -d</code> ; vos données restent
+dans <code>./evey-data</code>. La version en cours s'affiche dans <strong>Administration → Tableau de bord</strong>, sur
+<code>/healthz</code>, et avec <code>docker exec evey-server evey version</code>. Chaque image existe
+aussi en <code>-nodejs</code> et <code>-lean</code>, des builds plus légers avec moins d'environnements
+d'exécution de plugins
+(<a href="../operations/advanced-deployments/#image-tags-and-variants">détails</a>).</p>
 <p><strong>Vous avez déjà un reverse proxy</strong> (un programme qui ajoute le HTTPS devant
 vos services) : voir <a href="../administration/remote-access/">Accès distant et HTTPS</a>.</p>
 <details class="note">

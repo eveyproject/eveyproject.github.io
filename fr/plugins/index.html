@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3220,10 +3280,10 @@ de la page.</p>
    URL</strong> installe à partir d'un lien ; ajoutez <code>#sha256:&lt;empreinte&gt;</code> à l'URL
    pour faire vérifier le téléchargement.</li>
 <li><strong>Aperçu et installation</strong> analyse le paquet sans l'installer. L'aperçu
-   montre les <strong>Permissions</strong> et les <strong>Capacités</strong> que demande le plugin, les
-   emplacements de l'interface où il veut apparaître, les hôtes qu'il
-   contactera, le résultat de l'<strong>Analyse statique</strong> et, quand le serveur
-   vérifie les signatures, si le paquet est <strong>Signé</strong>.</li>
+   montre les <strong>Permissions</strong> et les <strong>Capacités</strong> que demande le plugin, le
+   résultat de l'<strong>Analyse statique</strong> et, quand une signature a été fournie,
+   le verdict <strong>Signature</strong> avec l'éditeur. Les emplacements et les hôtes sont
+   montrés à la mise à jour et dans le <strong>Tableau de bord sécurité</strong>.</li>
 <li>Lisez cette liste comme un contrat : ce sont les seules choses que le plugin
    pourra faire. Confirmez, et le plugin démarre.</li>
 </ol>
@@ -3235,22 +3295,23 @@ de la page.</p>
 <p>Un paquet dont l'analyse relève un motif critique est refusé, quelle que soit
 votre réponse. Les avertissements sont affichés et laissés à votre
 appréciation. Le langage du plugin doit figurer parmi les <strong>Environnements
-d'exécution disponibles</strong> du serveur : l'image par défaut n'embarque que
-Python, l'image <code>-nodejs</code> ajoute Node.js et l'image <code>-full</code> ajoute PHP, Ruby
-et Lua.</p>
+d'exécution disponibles</strong> du serveur : l'image par défaut embarque
+Python, Node.js, PHP, Ruby et Lua ; l'image <code>-nodejs</code> garde Python et
+Node.js et l'image <code>-lean</code> ne garde que Python.</p>
 <div class="admonition tip">
 <p class="admonition-title">Plugins signés</p>
-<p>L'auteur d'un plugin peut signer le ZIP avec <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>,
-et c'est vous qui décidez de ce que devient un plugin non signé ou mal
-signé. Pour vérifier les signatures, donnez au serveur la clé publique de
-l'auteur et choisissez une politique :</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (défaut) | enforce</span>
+<p>L'auteur d'un plugin peut signer le ZIP avec <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a> ;
+sa clé publique voyage dans le paquet. Evey vérifie la signature seul (pas
+de binaire <code>cosign</code>) et affiche <strong>Signé par &lt;éditeur&gt;</strong> quand la clé est
+dans votre liste d'<strong>Éditeurs de confiance</strong>, <strong>Signé, clé inconnue</strong> avec
+son empreinte sinon (un clic lui fait confiance), <strong>Non signé</strong> ou
+<strong>Invalide</strong>. Une mise à jour qui change de clé, ou qui abandonne la
+signature, attend votre acceptation explicite. La politique décide du
+reste :</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (défaut) | enforce</span>
 </span></code></pre></div>
-<p>Avec <code>warn</code>, une signature en échec s'affiche dans l'aperçu et dans le
-<strong>Tableau de bord sécurité</strong> ; avec <code>enforce</code>, l'installation ou la mise à
-jour est refusée. Rien n'est vérifié sans clé publique, et le serveur n'a
-pas besoin du binaire <code>cosign</code>. Auteurs : voir
+<p>Avec <code>warn</code>, le verdict est affiché et rien n'est bloqué ; avec
+<code>enforce</code>, seuls les éditeurs de confiance s'installent. Auteurs : voir
 <a href="dev-setup/#7-sign-your-plugin">Signer son plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Mettre à jour un plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
@@ -3331,8 +3392,8 @@ les fixe tant que le panneau n'a jamais été enregistré.</p>
 </table>
 <p>La mémoire, les processus et le disque s'appliquent au prochain balayage du
 moniteur, qui arrête un plugin qui les dépasse ; la priorité processeur et le
-mode sandbox s'appliquent aux plugins démarrés ensuite. <code>0</code> désactive une
-limite de mémoire, de processus ou de disque.</p>
+mode sandbox s'appliquent aux plugins démarrés ensuite. <code>0</code> rétablit la
+valeur par défaut pour la mémoire et les processus ; seule la limite de disque traite <code>0</code> comme « désactivée ».</p>
 <p>Le <strong>Tableau de bord sécurité</strong> conserve, par plugin, les constats de
 l'analyse, le résultat de la signature et la dernière erreur. Sa ligne
 <strong>Sandbox de l'hôte</strong> indique le mode de sandbox réellement appliqué sur cette

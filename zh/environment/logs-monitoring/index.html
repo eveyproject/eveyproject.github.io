@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3221,12 +3281,12 @@
 <td><code>EVEY_LOG_LEVEL</code></td>
 <td><code>info</code></td>
 <td><code>debug</code>、<code>info</code>、<code>warn</code> 或 <code>error</code>。</td>
-<td>服务器配置 → 服务器设置 → <strong>日志级别</strong>，实时生效</td>
+<td>服务器配置 → 常规 → <strong>日志级别</strong>，实时生效</td>
 </tr>
 <tr>
 <td><code>EVEY_LOG_DIR</code></td>
 <td><code>/data/logs</code></td>
-<td>每天的日志文件 <code>evey-YYYY-MM-DD.log</code> 写入的位置。由镜像设置。以这个文件为准：<code>docker logs</code> 显示的是同样的内容，但 Docker 会对其进行轮换。</td>
+<td>每天的日志文件 <code>evey-YYYY-MM-DD.log</code> 写入的位置。由镜像设置（文件超过 50 MB 时会带上小时后缀）。以这个文件为准：<code>docker logs</code> 显示的是同样的内容，但 Docker 会对其进行轮换。</td>
 <td>无</td>
 </tr>
 <tr>
@@ -3244,7 +3304,7 @@
 </tbody>
 </table>
 <h2 id="history-retention">历史记录保留<a class="headerlink" href="#history-retention" title="Permanent link">¶</a></h2>
-<p>每天的清理都会重新读取这些保留期限，所以在<strong>管理 → 服务器配置 → 服务器设置</strong>里保存的值，会在下一次清理时生效。</p>
+<p>每天的清理都会重新读取这些保留期限，所以在<strong>管理 → 服务器配置 → 数据与保留</strong>里保存的值，会在下一次清理时生效。</p>
 <table>
 <thead>
 <tr>
@@ -3259,25 +3319,25 @@
 <td><code>EVEY_PLAY_SESSION_RETENTION_DAYS</code></td>
 <td><code>0</code>（永久）</td>
 <td>历史记录里已结束的播放会话。</td>
-<td>服务器设置 → <strong>播放会话历史保留期</strong>，下次清理时生效</td>
+<td>服务器配置 → 数据与保留 → <strong>播放会话历史保留期</strong>，下次清理时生效</td>
 </tr>
 <tr>
 <td><code>EVEY_AUDIT_LOG_RETENTION_DAYS</code></td>
 <td><code>0</code>（永久）</td>
 <td>管理操作的审计日志。</td>
-<td>服务器设置 → <strong>审计日志保留期</strong>，下次清理时生效</td>
+<td>服务器配置 → 数据与保留 → <strong>审计日志保留期</strong>，下次清理时生效</td>
 </tr>
 <tr>
 <td><code>EVEY_METRICS_RETENTION_DAYS</code></td>
 <td><code>90</code></td>
 <td>服务器的资源采样数据（处理器、内存、带宽）。</td>
-<td>服务器设置 → <strong>服务器指标保留期</strong>，下次清理时生效</td>
+<td>服务器配置 → 数据与保留 → <strong>服务器指标保留期</strong>，下次清理时生效</td>
 </tr>
 <tr>
 <td><code>EVEY_QOE_RETENTION_DAYS</code></td>
 <td><code>30</code></td>
 <td>播放器上报的流媒体质量报告。</td>
-<td>服务器设置 → <strong>播放质量（QoE）保留期</strong>，下次清理时生效</td>
+<td>服务器配置 → 数据与保留 → <strong>播放质量（QoE）保留期</strong>，下次清理时生效</td>
 </tr>
 <tr>
 <td><code>EVEY_METRICS_SAMPLE_INTERVAL_SEC</code></td>

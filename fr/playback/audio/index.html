@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3230,8 +3290,9 @@ elle est réencodée en AAC :</p>
 <li>avec autant de canaux que la source, l'appareil et le profil le
   permettent, jusqu'à 5.1 (une source 7.1 est ramenée en 5.1, que tous les
   lecteurs décodent ; une source stéréo reste en stéréo) ;</li>
-<li>quelle que soit la fréquence d'échantillonnage, qui n'est jamais à elle
-  seule une raison de réencoder.</li>
+<li>à 48 kHz au plus : une piste au-dessus de 48 kHz est réencodée pour cette
+  seule raison (<code>audio_samplerate_exceeded</code>) ; à 48 kHz ou moins, la fréquence
+  d'échantillonnage n'est pas une raison.</li>
 </ul>
 <p>Une piste copiée à l'intérieur d'un flux transcodé ou remuxé doit aussi être
 dans un format que le lecteur accepte au sein des segments du flux. L'AAC,
@@ -3251,6 +3312,8 @@ navigateur, pas en le reconnaissant. Une piste surround n'est décodée dans la
 page que si les <strong>Canaux audio maximum</strong> du profil l'autorisent : un profil
 réglé en stéréo reçoit le réencodage AAC à la place, qui peut réduire le nombre
 de canaux.</p>
+<p>Comment la page décode le Dolby Digital, et ce qui se passe quand elle ne le peut pas :
+<a href="../ac3go/">ac3go dans Evey</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Un reverse proxy qui impose sa propre Content-Security-Policy doit

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3152,7 +3212,7 @@
 <p>为什么没有人观看时服务器也很忙，为什么新媒体库的缩略图需要数小时才能生成：除了播放，服务器还要做自己的工作（扫描媒体库、获取图片、生成进度条缩略图、检测片头和片尾、分析文件）。本页说明这些工作如何与观看的人共用这台机器，以及在哪里设置它们可使用的份额。</p>
 <h2 id="playback-comes-first">播放优先<a class="headerlink" href="#playback-comes-first" title="Permanent link">¶</a></h2>
 <p>后台任务只能使用处理器的一部分，也就是<strong>管理 → 服务器配置 → 处理能力</strong>里的<strong>全局份额</strong>：默认 <strong>25%</strong>；没有人使用服务器时，可以调到 <strong>50%</strong> 以加快处理。在<strong>重型任务</strong>下，可以给其中某一项（新媒体分析、Trickplay 缩略图、片头检测、复杂度分类）单独设定份额，它会取代这项任务的全局份额；份额永远不会叠加。修改从下一个处理的条目开始生效，无需重启。</p>
-<p>无论份额是多少，只要有人在观看，后台任务就会暂停，之后再继续。因此，如果服务器正在使用，新媒体库的缩略图和片头标记需要数小时才能全部生成，而不是几分钟。</p>
+<p>无论份额是多少，只要有人在观看，后台任务就会暂停，之后再继续。这是默认行为：<strong>服务器配置</strong>里<strong>后台工作</strong>卡片中的<strong>播放期间暂停后台任务</strong>开关可以关闭它（需要重启）。因此，如果服务器正在使用，新媒体库的缩略图和片头标记需要数小时才能全部生成，而不是几分钟。</p>
 <h2 id="what-runs-in-the-background">后台在运行什么<a class="headerlink" href="#what-runs-in-the-background" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3181,7 +3241,7 @@
 <tr>
 <td>片头和片尾检测</td>
 <td><strong>跳过</strong>按钮</td>
-<td>持续进行，针对社区数据库没有收录的影片</td>
+<td>持续进行，覆盖每一部剧集；社区时间戳只是提示，不是跳过某部影片的理由</td>
 </tr>
 <tr>
 <td>关键帧索引和编码级别</td>
@@ -3191,7 +3251,7 @@
 </tbody>
 </table>
 <h2 id="memory">内存<a class="headerlink" href="#memory" title="Permanent link">¶</a></h2>
-<p><strong>内存配置</strong>（<strong>管理 → 服务器配置</strong>）：<strong>低</strong>会挂起空闲的插件以节省内存，需要时再唤醒。**自动（推荐）**在内存少于 3 GB 的机器上会选择“低”。</p>
+<p><strong>内存配置</strong>（<strong>管理 → 服务器配置</strong>）：<strong>低</strong>会挂起空闲的插件以节省内存，需要时再唤醒。<strong>自动（推荐）</strong>在内存少于 3 GB 的机器上会选择“低”。</p>
 <h2 id="settings-read-at-startup">启动时读取的设置<a class="headerlink" href="#settings-read-at-startup" title="Permanent link">¶</a></h2>
 <p>有几项设置只在服务器启动时读取一次：保存时会记下您的选择，重启后才生效。面板会在这些设置旁边注明。它们是：<strong>后台工作</strong>卡片（关键帧和编码级别处理的暂停与节奏）、<strong>片头跳过提供商</strong>开关，以及转码的<strong>高级限制</strong>。</p>
 <!-- sources

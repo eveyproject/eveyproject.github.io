@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3348,17 +3408,18 @@ only through the server, to the hosts it declared.</p>
 <p>Pick the language of your plugin from the runtimes the server can start:
 <code>python</code>, <code>nodejs</code>, <code>php</code>, <code>ruby</code>, <code>lua</code>, <code>bash</code> and <code>sh</code> need their
 interpreter in the image, <code>go</code> ships a compiled binary and needs the
-<code>native-binary</code> permission. The default image carries Python only; the
-<code>-nodejs</code> image adds Node.js and the <code>-full</code> image adds PHP, Ruby and Lua. A
+<code>native-binary</code> permission. The default image carries Python, Node.js, PHP, Ruby and Lua; the
+<code>-nodejs</code> image keeps Python and Node.js and the <code>-lean</code> image keeps Python only. A
 manifest that names a runtime the image lacks is refused at install, with the
 list of the runtimes available.</p>
-<p>The gRPC contract is one file, <code>proto/plugin/v1/plugin_api.proto</code>. Stubs are
-generated for Python, Node.js, PHP, Ruby, Dart, Java and Swift under
-<code>sdk/&lt;language&gt;/</code>, and the server copies the stubs of your language next to
-your entrypoint when the plugin starts, so a Node.js or Python plugin has
-nothing to vendor: the image provides <code>@grpc/grpc-js</code> and <code>@grpc/proto-loader</code>
-to Node.js plugins and <code>grpcio</code> to Python ones. For another language, generate
-stubs with <code>protoc</code> and ship them in the ZIP:</p>
+<p>The gRPC contract is one file, <code>proto/plugin/v1/plugin_api.proto</code>. Only
+the Python SDK ships generated stubs; the other languages under
+<code>sdk/&lt;language&gt;/</code> hold the <code>.proto</code>. The server copies the files of your
+language next to your entrypoint when the plugin starts. The image provides
+<code>grpcio</code> to Python plugins, so a Python plugin has nothing to vendor. A
+Node.js plugin must vendor its <code>node_modules</code> (<code>@grpc/grpc-js</code> and
+<code>@grpc/proto-loader</code>) in the package. For another language, generate stubs
+with <code>protoc</code> and ship them in the ZIP:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span>proto/plugin/v1/plugin_api.proto
@@ -3419,7 +3480,7 @@ environment of the next step.</p>
 <li>
 <p><strong>Zip it.</strong> The manifest must sit at the root of the archive, not in a
    sub-directory:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span><span class="w"> </span><span class="s2">"node_modules/*"</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3481,7 +3542,8 @@ the frame. <code>examples/plugins/weather</code> is a complete widget with a bui
 The bridge and the slots are described in the
 <a href="../api-reference/#frontend-api">API reference</a>.</p>
 <h2 id="6-reach-the-outside-world">6. Reach the outside world<a class="headerlink" href="#6-reach-the-outside-world" title="Permanent link">¶</a></h2>
-<p>A plugin process can open no socket to the internet, in any sandbox mode. The
+<p>A plugin process can open no socket to the internet, in every mode where the
+launcher runs (<code>basic</code> without the launcher only denies <code>execve</code>). The
 only way out is the <code>Fetch</code> call of <code>HostService</code>: the server checks the
 target against the manifest, then performs the request itself.</p>
 <div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">permissions</span><span class="p">:</span>
@@ -3497,20 +3559,23 @@ redirect. The frame of the interface gets the same host list as its
 rules are in <a href="../security-model/#external-fetch-rules">Permissions and slots</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Hosts are a contract with the administrator</p>
-<p>The administrator sees the host list at install and must approve any
-addition at update. Keep it to what the plugin needs, and say in your
+<p>The administrator sees the host list at update and on the Security
+Dashboard, and must approve any addition at update. Keep it to what the plugin needs, and say in your
 README what each host receives.</p>
 </div>
 <h2 id="7-sign-your-plugin">7. Sign your plugin<a class="headerlink" href="#7-sign-your-plugin" title="Permanent link">¶</a></h2>
 <div class="admonition info">
 <p class="admonition-title">What a signature proves</p>
 <p>A signature says the ZIP the administrator installs is byte for byte the
-one <strong>you</strong> published, signed with the key they trust. It says nothing
-about what the plugin does: the permissions, the hosts and the analysis
-of the preview still apply. Evey checks it offline and in process (ECDSA
-P-256 over the SHA-256 of the ZIP, the format <code>cosign sign-blob --key</code>
-produces): no <code>cosign</code> binary on the server, no network, no transparency
-log.</p>
+one <strong>you</strong> published. Your public key travels inside the package
+(<code>cosign.pub</code> at the ZIP root), and Evey pins its fingerprint to the
+plugin at install: an update signed with another key, or no longer
+signed, is refused until the administrator accepts the change. It says
+nothing about what the plugin does: the permissions, the hosts and the
+analysis of the preview still apply. Evey checks it offline and in
+process (ECDSA P-256 over the SHA-256 of the ZIP, the format <code>cosign
+sign-blob --key</code> produces): no <code>cosign</code> binary on the server, no network,
+no transparency log.</p>
 </div>
 <p>You need <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a> on your
 machine only.</p>
@@ -3523,13 +3588,15 @@ machine only.</p>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>At each release: zip, then sign</strong> the exact file you will distribute.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>hello-plugin.zip
+<p><strong>At each release: put your public key at the root of the plugin, zip,
+   then sign</strong> the exact file you will distribute.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>hello-plugin.zip
 </span></code></pre></div>
 </li>
 <li>
@@ -3539,33 +3606,43 @@ machine only.</p>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>Publish three files together</strong>: <code>hello-plugin.zip</code>,
-   <code>hello-plugin.zip.sig</code> and <code>cosign.pub</code>. Put the public key's fingerprint
-   somewhere your users can compare it (README, release notes), so they know
-   <code>cosign.pub</code> was not swapped.</p>
+<p><strong>Publish the two files together</strong>: <code>hello-plugin.zip</code> (your public key is
+   inside) and <code>hello-plugin.zip.sig</code>, next to each other, so an install by
+   URL finds the signature at <code>&lt;url&gt;.sig</code>. Put the key's fingerprint
+   (<code>sha256:...</code>, shown by Evey on the plugin card) in your README and release
+   notes, so administrators can compare it before trusting the key.</p>
 </li>
 </ol>
-<p>On the instance that installs it, the administrator sets the key and a policy
-and restarts the server:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">   </span><span class="c1"># or "enforce" to refuse what does not verify</span>
-</span></code></pre></div>
-<p>Then, in <strong>Admin → Plugins</strong>, they choose the ZIP and, in <strong>Signature file
-(.zip.sig, optional)</strong>, its <code>.zip.sig</code>; through the API, the signature is the
-<code>sig</code> field of the upload. The preview shows <strong>Signed</strong> or an invalid
-signature, and the Security Dashboard keeps the result.</p>
+<p>On the instance that installs it, the administrator chooses the ZIP in
+<strong>Admin → Plugins</strong> and, in <strong>Signature file (.zip.sig, optional)</strong>, its
+<code>.zip.sig</code>; through the API, the signature is the <code>sig</code> field of the upload.
+Evey verifies the package against the key it carries and shows one of:</p>
+<ul>
+<li><strong>Signed by <publisher></publisher></strong>: the key is in the instance's <strong>Trusted
+  publishers</strong> list.</li>
+<li><strong>Signed, unknown key sha256:...</strong>: the signature is good, the key is not
+  trusted yet. One click, <strong>Trust this key</strong>, adds it to the list under a name.</li>
+<li><strong>Unsigned</strong>, or <strong>Invalid signature</strong>.</li>
+</ul>
+<p>The policy decides what happens: <code>EVEY_PLUGINS_COSIGN_POLICY=warn</code> (default)
+records the verdict and lets every install through; <code>enforce</code> admits trusted
+keys only. Whatever the policy, an update whose key differs from the installed
+version, or that drops the signature, is refused until the administrator
+ticks <strong>The publisher changed, I accept the new key</strong> in the update dialog.
+<code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> is optional: it seeds the trusted list with
+one key at boot (marked as the server operator's).</p>
 <p>Things that trip people up:</p>
 <ul>
 <li><strong>Any change to the ZIP breaks the signature</strong>, even re-zipping the same
   files. Sign the file you distribute, and sign again for every version.</li>
+<li><strong>Keep the same key</strong> from one version to the next. A new key is a new
+  publisher for every administrator who installed you: they will be asked to
+  accept it. Rotate on purpose, and say so in your release notes.</li>
 <li><strong>Only ECDSA P-256 keys are accepted</strong>, which is what <code>cosign
   generate-key-pair</code> makes. Keyless signing and KMS references are not
   verified.</li>
-<li>The key is read from a PEM file at startup: a missing or malformed file
-  stops the server instead of failing the first install. With <code>enforce</code> and
-  no key, the server refuses to start.</li>
-<li>With the default <code>warn</code> and no public key configured, <strong>nothing is
-  verified</strong>; the server only logs a warning at startup.</li>
+<li>A <code>.sig</code> without <code>cosign.pub</code> in the ZIP, or the other way round, counts as
+  <strong>Unsigned</strong>.</li>
 <li>A wrong key, a tampered ZIP and a missing <code>.sig</code> all read as a failed
   signature: under <code>enforce</code>, the install or the update is refused.</li>
 </ul>
@@ -3599,8 +3676,8 @@ server log carries the detail.</p>
    row is written, and the process is started.</li>
 </ol>
 <p>What the analysis looks for is listed in
-<a href="../../SECURITY/#static-analysis">Plugin sandbox and threat model</a>. It also
-reads comments: a <code># pip install foo</code> line in a comment is reported like code.</p>
+<a href="../../SECURITY/#static-analysis">Plugin sandbox and threat model</a>. Comments
+are stripped before the analysis, so a commented-out line is not reported.</p>
 <h2 id="9-what-your-process-runs-under">9. What your process runs under<a class="headerlink" href="#9-what-your-process-runs-under" title="Permanent link">¶</a></h2>
 <p>The server starts the process under a lower CPU priority, with a memory
 ceiling, a limit on processes and threads, and a size limit on its directory;
@@ -3608,8 +3685,9 @@ a monitor stops a plugin that exceeds them. The defaults are 256 MiB, 64
 processes and 100 MiB, adjustable by the administrator in <strong>Admin → Plugins →
 Resource limits</strong>. Without the <code>subprocess</code> permission, the process cannot
 spawn children, whatever the language; threads work.</p>
-<p>The sandbox confines the filesystem to the plugin's directory and cuts every
-network socket, unconditionally. Which mode is in force depends on the host,
+<p>In every mode where the launcher runs, the sandbox confines the filesystem to
+the plugin's directory and cuts every network socket (<code>basic</code> without the
+launcher only denies <code>execve</code>). Which mode is in force depends on the host,
 not on the plugin: <a href="../../SECURITY/#sandbox-modes">Plugin sandbox and threat model</a>
 describes them, and <a href="../sandbox-deployment/">Plugin sandbox setup</a> tells an
 administrator which to pick.</p>
@@ -3620,7 +3698,8 @@ on a forge, your own site).</p>
 <ul>
 <li>Ship the ZIP, its <code>.sig</code> and your <code>cosign.pub</code> together (section 7).</li>
 <li>State the permissions and the <code>external_fetch</code> hosts in your README: the
-  administrator sees them at install and has to approve them; a surprise
+  administrator sees the permissions at install and the hosts at update and on
+  the Security Dashboard, and has to approve them; a surprise
   there is the first reason an install is refused.</li>
 <li>To have your plugin listed with the bundled examples, open a pull request
   against <code>examples/plugins/</code> with the source and a README. Examples are
@@ -3640,7 +3719,7 @@ on a forge, your own site).</p>
 <tr>
 <td><code>plugin requires "nodejs" runtime which is not installed in this image</code></td>
 <td>The image variant lacks the interpreter.</td>
-<td>Use the <code>-nodejs</code> or <code>-full</code> image, or write the plugin in Python.</td>
+<td>Use the default or <code>-nodejs</code> image, or write the plugin in Python.</td>
 </tr>
 <tr>
 <td><code>manifest: external_fetch entry "*.tmdb.org" is a wildcard - use explicit hostnames</code></td>

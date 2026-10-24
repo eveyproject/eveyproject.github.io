@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1278,6 +1308,8 @@
       
         
       
+        
+      
     
     
     
@@ -1394,6 +1426,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3223,13 +3283,17 @@ the values below.</p>
 you send yourself.</p>
 <details class="info">
 <summary>Setting e-mail in the environment instead</summary>
-<p>The <code>EVEY_SMTP_*</code> variables are used only while the card has no host:</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>EVEY_SMTP_HOST=smtp.example.com
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>EVEY_SMTP_PORT=587
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>EVEY_SMTP_USERNAME=notifications@example.com
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>EVEY_SMTP_PASSWORD=your-smtp-password
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>EVEY_SMTP_FROM=noreply@example.com
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>EVEY_SMTP_TLS=starttls
+<p>The <code>EVEY_SMTP_*</code> variables, under <code>environment:</code> in the compose file,
+are used only while the card has no host:</p>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">EVEY_SMTP_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smtp.example.com</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">EVEY_SMTP_PORT</span><span class="p">:</span><span class="w"> </span><span class="s">"587"</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">EVEY_SMTP_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notifications@example.com</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">EVEY_SMTP_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-smtp-password</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">EVEY_SMTP_FROM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">noreply@example.com</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">EVEY_SMTP_TLS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starttls</span>
 </span></code></pre></div>
 <p>As soon as a host is saved in the card, every field comes from the card
 and the variables are ignored. So the server never sends the variables'
@@ -3274,8 +3338,8 @@ was just announced.</p>
 <h2 id="let-people-reset-their-password">Let people reset their password<a class="headerlink" href="#let-people-reset-their-password" title="Permanent link">¶</a></h2>
 <ol>
 <li>Set up e-mail (above).</li>
-<li>Turn on <strong>Password recovery</strong> in <strong>Admin → Server Config → Server
-   Settings</strong>. It applies immediately.</li>
+<li>Turn on <strong>Password recovery</strong> in <strong>Admin → Server Config →
+   Accounts &amp; security → Sign-in and protection</strong>. It applies immediately.</li>
 <li>The sign-in page now shows <strong>Forgot your password?</strong>. It e-mails a link to
    choose a new password.</li>
 </ol>
@@ -3287,7 +3351,7 @@ retention 30 d: internal/app/notification/service.go defaultRetentionDays ; grou
 list filtered by library access: internal/adapters/driving/grpcapi/notification_handler.go allowedLibraryIDs
 bell on TV and mobile: frontend/apps/tv/src/components/TopHeader.tsx ; frontend/apps/mobile/app/(auth)/settings/notifications.tsx
 levels: batching.go shouldNotify (relevant == highly_relevant) + fetchFavoriteGenres (GetFavoriteGenresBatch minCount 3, window 200 sessions: watch_history_analyzer.go)
-defaults all: migrations/000005_notifications.up.sql (notification_settings_global) ; UI: frontend/apps/web/src/features/user/NotificationSettings.tsx ; i18n notificationSettings.level*
+defaults all: internal/adapters/driven/postgres/migrations/000005_notifications.up.sql (notification_settings_global) ; UI: frontend/apps/web/src/features/user/NotificationSettings.tsx ; i18n notificationSettings.level*
 email: internal/adapters/driven/email/notification_emailer.go (push title key, recipient locale, one per account per FanoutID, base URL link)
 SMTP live from the card, env fallback, panel host = panel only, defaults 587/starttls: internal/app/config/smtp.go (ResolveSMTPSettings, LiveSMTP) ; test send: internal/adapters/driving/http/smtp_test_handler.go
 labels: i18n admin.serverConfig emailSmtp, smtpHost, port, smtpUsername, smtpPassword, fromAddress, tlsMode, saveSmtp, sendTestEmail

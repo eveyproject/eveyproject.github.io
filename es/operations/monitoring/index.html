@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3208,11 +3268,28 @@ conectado ahora mismo, por perfil, con el tiempo que ha pasado desde la
 última señal de cada app. Un Chromecast cuya televisión mantiene cargado el
 receptor de Evey sigue en la lista después de que su reproducción haya
 terminado y haya salido de <strong>Reproduciendo ahora</strong>; <strong>Detener este
-Chromecast</strong> le envía una orden de parada, que la televisión aplica en 30
-segundos como mucho.</p>
+Chromecast</strong> le envía una orden de parada, que la televisión aplica en unos 30
+segundos.</p>
 <p><strong>Administración → Estado del sistema</strong> muestra el procesador, la memoria,
 el ancho de banda y el almacenamiento, y qué parte de la capacidad de
-transcodificación está en uso.</p>
+transcodificación está en uso. También lista los discos de la máquina, cada
+uno con el tiempo medio que esperó una petición durante el último minuto, su
+ocupación y sus caudales de lectura y escritura. La espera es la cifra que hay
+que vigilar: un disco puede estar ocupado al 100 % y seguir el ritmo, mientras
+que uno que hace esperar a cada petición varias veces más que en reposo
+convierte la reproducción en almacenamiento en búfer, aunque el procesador
+parezca libre. Un disco se marca como <strong>Saturado</strong> cuando su espera alcanza al
+menos 20 ms y al menos 2,5 veces su espera en reposo, con el disco ocupado o el
+procesador esperándolo. La tarjeta de CPU indica qué parte del tiempo del
+procesador se pasó esperando a los discos.</p>
+<p><strong>Tendencias</strong>, bajo las tarjetas en directo, dibuja las últimas 24 horas,
+7 días o 30 días a partir de las muestras que el servidor registra cada minuto:
+procesador y espera de disco, memoria, la espera de disco con sus líneas de
+reposo y de saturación, ocupación y caudal de los discos, red entrante y
+saliente junto al streaming realmente servido, flujos y transcodificaciones, y
+el llenado de los discos de las bibliotecas. Procesador, discos y red son de
+toda la máquina: una copia u otro servicio que lea los mismos discos aparece
+ahí también. El panel lleva una tarjeta <strong>Discos</strong> con el disco que más espera.</p>
 <figure class="evey-shot">
   <a class="glightbox" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Administración → Estado del sistema en el servidor de demostración" loading="lazy" src="../../../images/admin-system-health.webp"></a>
 <br>
@@ -3225,8 +3302,9 @@ lo sigue en directo (<strong>En vivo</strong>), filtrado con <strong>Zona</stron
 detección de intros, Chromecast, autenticación, infraestructura...). Es el
 primer sitio donde mirar cuando un usuario informa de un problema.</p>
 <p>El mismo registro está en el disco, un archivo JSON por día en
-<code>./evey-data/logs/</code> (<code>/data/logs/evey-YYYY-MM-DD.log</code> en el contenedor), y
-se guarda 90 días por defecto. <code>docker compose logs evey</code> solo muestra lo
+<code>./evey-data/logs/</code> (<code>/data/logs/evey-YYYY-MM-DD.log</code> en el contenedor), más
+un archivo con sufijo de hora (<code>evey-YYYY-MM-DD-HH.log</code>) cuando un archivo pasa de
+50 MB (<code>EVEY_LOG_MAX_SIZE_MB</code>), y se guarda 90 días por defecto. <code>docker compose logs evey</code> solo muestra lo
 que el contenedor escribe mientras arranca, que es lo que hay que leer
 cuando el servidor no llega a arrancar. Ver
 <a href="../troubleshooting/#the-logs">Solución de problemas</a>.</p>
@@ -3250,15 +3328,16 @@ después quita el límite por sí solo. Los límites activos aparecen en
   acciones de administración, y el trabajo en segundo plano en curso.</li>
 </ul>
 <p>El tiempo que se guarda cada tipo de historial se fija en <strong>Administración
-→ Configuración del servidor → Ajustes del servidor</strong> (sesiones de
+→ Configuración del servidor → Datos y conservación</strong> (sesiones de
 reproducción, registro de auditoría, métricas del servidor, calidad de
 streaming). Un cambio se aplica en la siguiente limpieza diaria.</p>
 <h2 id="prometheus-metrics">Métricas de Prometheus<a class="headerlink" href="#prometheus-metrics" title="Permanent link">¶</a></h2>
 <p><code>GET /metrics</code> sirve los contadores del servidor en el formato de texto de
-Prometheus, todos con nombres <code>evey_...</code>. Responde a una sesión de
-administrador, o a un token fijo puesto en <code>EVEY_METRICS_SCRAPE_TOKEN</code> y
-enviado como <code>Authorization: Bearer &lt;token&gt;</code>, para que Prometheus o Grafana
-puedan recogerlas sin volver a iniciar sesión
+Prometheus, todos con nombres <code>evey_...</code>. Responde a un token fijo puesto
+en <code>EVEY_METRICS_SCRAPE_TOKEN</code> y enviado como <code>Authorization: Bearer &lt;token&gt;</code>,
+para que Prometheus o Grafana puedan recogerlas desde cualquier sitio sin iniciar
+sesión; una sesión de administrador solo se acepta desde el propio loopback del
+contenedor
 (<a href="../../environment/logs-monitoring/">Copias de seguridad, registros y supervisión</a>).
 Las familias con las que conviene empezar los gráficos:</p>
 <table>

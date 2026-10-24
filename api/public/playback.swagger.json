@@ -489,6 +489,25 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "maxAudioChannels",
+            "description": "max_audio_channels: the channel ceiling of the device's OUTPUT chain (a\nstereo TV, a 2.0 cast target), not of its decoder. Same meaning as\n?maxAudioChannels= on the HLS master, so the stream-info verdict describes\nthe audio the segments will carry: without it the panel announced a 6ch\ncopy while the master, asked with the ceiling, re-encoded to stereo.\n0 (older clients, or a browser that cannot probe its output) keeps the\nprofile default.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "supportedPixelFormats",
+            "description": "supported_pixel_formats: the pixel formats the device decodes, as ffmpeg\nnames them without endianness (\"yuv420p\", \"yuv420p10\", \"yuv422p10\"), or\nqualified with one codec (\"hevc:yuv420p10\") when only that decoder takes\nit. Same meaning as ?pixelFormats= on the HLS master. When present the\ndecision judges the source's pixel format against it (a TV that decodes\n4:2:2 is not transcoded for it, a device without 10-bit is); empty (older\nclients) keeps the built-in browser rule: 8-bit 4:2:0 H.264, up to 10-bit\n4:2:0 HEVC/VP9/AV1.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [
@@ -872,6 +891,11 @@
         },
         "seasonTitle": {
           "type": "string"
+        },
+        "seasonIndexNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Season number of an episode's season (0 elsewhere), so a client can build\nthe S01E03 code without fetching the season."
         }
       }
     },

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3205,9 +3265,9 @@
 <li>静态分析发现了严重的模式，或者安装程序按严重处理的警告（不安全的反序列化、代码混淆）。
   编译好的二进制文件、内嵌的压缩包和原生代码都会被拒绝，除非清单声明了 <code>native-binary</code>。</li>
 </ul>
-<p>分析也会读注释：注释里的一行 <code># pip install foo</code> 会和真正的代码一样被报告出来。发布之前请删掉这类行。
+<p>分析之前会先去掉注释，所以被注释掉的行不会被报告。
 各个类别列在<a href="../../SECURITY/#static-analysis">插件沙箱与威胁模型</a>里。</p>
-<p>安装之前，管理员会看到插件声明的权限、插槽和主机，以及分析发现了什么。插件声明的任何内容都不会在管理员不知情的情况下被授予。</p>
+<p>安装之前，管理员会看到插件声明的权限和能力，以及分析发现了什么；插槽、主机和签名会在更新时以及安全仪表板里显示。插件声明的任何内容都不会在管理员不知情的情况下被授予。</p>
 <h2 id="what-the-plugin-runs-under">插件在什么条件下运行<a class="headerlink" href="#what-the-plugin-runs-under" title="Permanent link">¶</a></h2>
 <p>无论清单里声明了什么：</p>
 <ul>
@@ -3278,13 +3338,13 @@
 </tr>
 <tr>
 <td><code>hardware.gpu</code></td>
-<td>进程会拿到宿主的 DRM 渲染节点（真实的 <code>renderD1xx</code>，绝不会是 card 节点）。这会暴露内核驱动的攻击面，而且显存的边界和转码器共用：GPU 一旦挂起，转码也可能停滞。没有这个权限时，GPU 节点完全不在 Landlock 允许列表里；有了它，启动器会添加一条只针对这一个文件的 <code>IOCTL_DEV</code> 规则（需要 Landlock ABI 5 或更高；在更旧的内核上，仅有读写权限就足以提交命令）。预览会显示一条严重警告。只把它授予那些您愿意在沙箱外运行的插件。</td>
+<td>进程会拿到宿主的 DRM 渲染节点（真实的 <code>renderD1xx</code>，绝不会是 card 节点）。这会暴露内核驱动的攻击面，而且显存的边界和转码器共用：GPU 一旦挂起，转码也可能停滞。没有这个权限时，GPU 节点完全不在 Landlock 允许列表里；有了它，启动器会添加一条只针对这一个文件的 <code>IOCTL_DEV</code> 规则（需要 Landlock ABI 5 或更高；在更旧的内核上，仅有读写权限就足以提交命令）。插件安装后，安全仪表板会显示一条严重警告。只把它授予那些您愿意在沙箱外运行的插件。</td>
 </tr>
 </tbody>
 </table>
 <h2 id="external-fetch-rules">外部请求规则<a class="headerlink" href="#external-fetch-rules" title="Permanent link">¶</a></h2>
 <p>写在 <code>external_fetch: [...]</code> 里，安装时检查（<code>validateExternalFetch</code>）。要么全部通过，要么全部不通过：只要有一条无效，整个安装就会被拒绝。</p>
-<p>每一条是一个<strong>纯主机名</strong>。带上协议前缀也可以，但前缀会被丢弃，只保留主机名。</p>
+<p>每一条是一个<strong>主机名</strong>。协议前缀和末尾的路径在解析时会被丢弃，只保留主机名。主机必须完全匹配，<code>*.example.com</code> 这样的通配符在安装时会被拒绝，端口后缀会被忽略。</p>
 <table>
 <thead>
 <tr>
@@ -3302,17 +3362,17 @@
 <tr>
 <td><code>https://api.tmdb.org</code></td>
 <td>是</td>
-<td>协议被解析后丢弃，保留主机名</td>
+<td>协议和路径在解析时被丢弃，保留主机名</td>
 </tr>
 <tr>
 <td><code>*.tmdb.org</code></td>
 <td>否</td>
-<td>不接受通配符：请把需要的每个子域名都列出来</td>
+<td>通配符在安装时会被拒绝；请逐个列出主机</td>
 </tr>
 <tr>
 <td><code>*</code></td>
 <td>否</td>
-<td>同一条规则</td>
+<td>单独的通配符会被拒绝</td>
 </tr>
 <tr>
 <td><code>192.168.1.1</code>、<code>::1</code></td>
@@ -3392,12 +3452,12 @@
    权限、能力、插槽和 <code>external_fetch</code> 有哪些不同。</li>
 <li>如果有不同，管理员必须先确认，更新才会应用（<code>requires_ack = true</code>；通过上传路由时为 <code>accept_permission_changes=true</code>）。</li>
 <li>包的哈希值在预览时记下，在应用时核对：被分析的 ZIP，就是被安装的那个 ZIP。</li>
-<li>在 <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> 下，即使预览通过了，只要应用这一步签名检查失败，更新就会被阻止。</li>
+<li>签名密钥要检查连续性：用与已安装版本不同的密钥签名、或不再签名的更新会被拒绝，直到管理员接受新的发布者。在 <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> 下，即使预览通过了，只要应用这一步的签名不受信任或无效，更新就会被阻止。</li>
 </ol>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
-analysis reads comments: docs/SECURITY.md (Static analysis)
+comments stripped before analysis: docs/SECURITY.md (Static analysis) ; internal/adapters/driven/pluginrunner/analyzer_normalize.go
 subprocess, deny-fork, deny-inet, render-dev: cmd/evey-plugin-launcher/main.go ; i18n admin.plugins.subprocessWarning
 resource defaults: internal/config/config.go - Plugins
 permission per RPC: internal/adapters/driving/grpcapi/plugin_interceptor.go ; served or not: internal/adapters/driving/pluginhost/host_server.go

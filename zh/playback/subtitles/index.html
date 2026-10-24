@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3212,7 +3272,7 @@
 </tbody>
 </table>
 <h2 id="the-first-time-a-subtitle-is-shown">字幕第一次显示时<a class="headerlink" href="#the-first-time-a-subtitle-is-shown" title="Permanent link">¶</a></h2>
-<p>封装在文件里的字幕（文字或 PGS），会在第一次有人选中时由服务器提取出来，然后保存下来：以后无论谁再看，都能马上显示。如果文件自带的索引覆盖了这条字幕，服务器只需读取字幕所在的数据块，只需几秒钟。没有这个索引的话，就要读完整个文件：大电影需要好几分钟（本地硬盘上一部 85 GB 的 UHD 原盘重封装（Remux）文件大约要五分钟；如果服务器同时还在播放视频，时间会更长）。</p>
+<p>封装在文件里的字幕（文字或 PGS），会在第一次有人选中时由服务器提取出来，然后保存下来：以后无论谁再看，都能马上显示。如果文件自带的索引覆盖了这条字幕，服务器只需读取字幕所在的数据块，只需几秒钟。没有这个索引的话，就要读完整个文件：大电影需要好几分钟（非常大的文件需要几分钟；如果服务器同时还在播放视频，时间会更长）。</p>
 <p>在此期间，播放器会在字幕的位置显示<strong>字幕准备中…</strong>，并自动定期检查，字幕一准备好就显示出来；视频照常播放。换选别的字幕不会中断提取：服务器会完成提取，供下次使用。</p>
 <p>服务器无法提取的字幕会保持为空。这次失败会被记录，所以再次选择它不会重新读取整个文件；等负责提取的程序库 MKVGo 更新后，会再试一次。读取什么、什么时候读，见 <a href="../mkvgo/#what-mkvgo-does">Evey 中的 MKVGo</a>。</p>
 <h2 id="choosing-and-adjusting">选择和调整<a class="headerlink" href="#choosing-and-adjusting" title="Permanent link">¶</a></h2>

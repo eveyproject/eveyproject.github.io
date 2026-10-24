@@ -571,6 +571,8 @@
       
         
       
+        
+      
     
     
     
@@ -870,6 +872,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1308,6 +1338,8 @@
       
         
       
+        
+      
     
     
     
@@ -1424,6 +1456,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3250,7 +3310,7 @@ CPU की कोई सेटिंग नहीं।</p>
 तो लाइन <code>- /srv/media:/media</code> हो जाएगी।</p>
 <div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:beta-0.0.1</span><span class="w"> </span><span class="c1"># (1)!</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
@@ -3265,17 +3325,17 @@ CPU की कोई सेटिंग नहीं।</p>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">evey-cache</span><span class="p">:</span>
 </span></code></pre></div>
 <ol>
-<li>Evey का वर्ज़न। Evey अभी बीटा में है, इसलिए अभी कोई <code>latest</code> टैग नहीं है:
-   <code>beta-0.0.1</code> डेवलपमेंट ब्रांच के नवीनतम कोड को दर्शाता है और हर अपडेट के साथ बदलता है।
-   ठीक वही कोड बनाए रखने के लिए, इसकी जगह <code>sha-&lt;commit&gt;</code> टैग इस्तेमाल करें:
+<li>Evey का वर्ज़न। <code>latest</code> सबसे नई रिलीज़ है। किसी तय वर्ज़न पर बने रहने के
+   लिए <code>0.1.0</code> जैसा रिलीज़ टैग या <code>sha-&lt;commit&gt;</code> टैग इस्तेमाल करें:
    देखें <a href="../backups/#updating-evey">बैकअप और अपडेट</a>।</li>
 <li>पोर्ट। बाईं तरफ़ वाला नंबर वह है जो आप ब्राउज़र में और ऐप में टाइप करेंगे।
    <code>9091</code> ही रहने दें, जब तक कोई दूसरा प्रोग्राम उसे पहले से इस्तेमाल न कर रहा
    हो।</li>
 <li>Evey का अपना डेटा: डेटाबेस, कुंजियाँ, अपने-आप बने पासवर्ड, सर्च इंडेक्स,
    पोस्टर और इमेज, लॉग, बैकअप, प्लगइन। <strong>इसी फ़ोल्डर का बैकअप लेना है।</strong></li>
-<li>बदले हुए वीडियो, छोटे किए गए फ़ोटो और कवर का कैश। इसे कभी भी मिटाया जा
-   सकता है, यह अपने-आप फिर से भर जाता है।</li>
+<li>बदले हुए वीडियो, छोटे किए गए फ़ोटो और संगीत के कवर का कैश। इसे कभी भी मिटाया जा
+   सकता है, यह अपने-आप फिर से भर जाता है। पोस्टर के रूप इसमें नहीं हैं: वे
+   <code>evey-data/artworks</code> में रहते हैं।</li>
 <li>आपका मीडिया। <code>/path/to/your/media</code> की जगह असली फ़ोल्डर लिखें। Evey के अंदर
    इस फ़ोल्डर का नाम <code>/media</code> है। Evey इसमें लिख सकता है, और यह जान-बूझकर है,
    ताकि आपके कहने पर <a href="../runbooks/media-health/">मीडिया स्वास्थ्य</a> किसी फ़ाइल
@@ -3348,7 +3408,7 @@ Evey चलता रहेगा।</p>
 </tr>
 <tr>
 <td><code>evey-cache</code> वॉल्यूम</td>
-<td>बदले हुए वीडियो, छोटे किए गए फ़ोटो और कवर</td>
+<td>बदले हुए वीडियो, छोटे किए गए फ़ोटो और संगीत के कवर (पोस्टर के रूप <code>evey-data/artworks</code> में हैं)</td>
 <td>हाँ। यह अपने-आप फिर से भर जाता है।</td>
 </tr>
 <tr>
@@ -3371,6 +3431,8 @@ Evey चलता रहेगा।</p>
 <p>इनमें से हर बदलाव उसी फ़ाइल में बस कुछ लाइनों का है।</p>
 <p><strong>दूसरा मीडिया फ़ोल्डर।</strong> <code>volumes:</code> के नीचे <code>- /other/path:/media2</code> जोड़ें।
 तीसरा <code>/media3</code> होगा, और इसी तरह आगे।</p>
+<p><strong>एक ही मशीन पर दूसरा Evey।</strong> उसे दूसरा <code>container_name</code> और दूसरे होस्ट पोर्ट दें,
+वरना <code>docker compose up</code> शुरू होने से मना कर देता है (नाम पहले से इस्तेमाल में है)।</p>
 <p><strong>दूसरा पोर्ट।</strong> सिर्फ़ बाईं तरफ़ वाला नंबर बदलें, जैसे <code>"8080:9091"</code>। फिर
 ब्राउज़र में और ऐप में <code>:8080</code> टाइप करें।</p>
 <p><strong>फ़ाइलों का मालिक कौन है।</strong> Evey अपने-आप आपके मीडिया फ़ोल्डर के मालिक को
@@ -3380,6 +3442,44 @@ Evey चलता रहेगा।</p>
 होता है; Evey खुद कभी root के रूप में नहीं चलता।</p>
 <p><strong>वीडियो बदलने के लिए ग्राफ़िक्स कार्ड।</strong> कंटेनर को कार्ड का एक्सेस दें: देखें
 <a href="../administration/hardware-acceleration/">हार्डवेयर एक्सेलेरेशन</a>।</p>
+<p><strong>आप कौन-सा वर्ज़न चलाते हैं।</strong> यह <code>image:</code> लाइन तय करती है:</p>
+<table>
+<thead>
+<tr>
+<th><code>image:</code></th>
+<th>आपको क्या मिलता है</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eveyproject/evey:latest</code></td>
+<td>सबसे नई रिलीज़; हर <code>docker compose pull</code> आपको अगली रिलीज़ पर ले जाता है</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1</code></td>
+<td>उस माइनर लाइन का सबसे नया फ़िक्स (0.1.0, 0.1.1, ...), कभी नया माइनर वर्ज़न नहीं</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:0.1.0</code></td>
+<td>ठीक वही रिलीज़, जब तक आप लाइन नहीं बदलते</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:sha-&lt;commit&gt;</code></td>
+<td>एक सटीक बिल्ड, यही अकेला टैग है जो कभी नहीं हिलता</td>
+</tr>
+<tr>
+<td><code>eveyproject/evey:master</code></td>
+<td>डेवलपमेंट ब्रांच, हर push पर दोबारा बनती है: परीक्षण के लिए, उस सर्वर के लिए नहीं जिस पर आप निर्भर हैं</td>
+</tr>
+</tbody>
+</table>
+<p>रिलीज़ नंबर <a href="https://semver.org/">सेमांटिक वर्ज़निंग</a> का पालन करते हैं और <code>0.1.0</code> से
+शुरू होते हैं; 0.x लाइन पब्लिक बीटा है। वर्ज़न बदलने के लिए लाइन बदलें, फिर
+<code>docker compose pull &amp;&amp; docker compose up -d</code> चलाएँ; आपका डेटा <code>./evey-data</code> में
+ही रहता है। चल रहा वर्ज़न <strong>एडमिन → डैशबोर्ड</strong> में, <code>/healthz</code> पर, और
+<code>docker exec evey-server evey version</code> से दिखता है। हर इमेज <code>-nodejs</code> और <code>-lean</code>
+रूप में भी मिलती है, जो कम प्लगइन रनटाइम वाले हल्के बिल्ड हैं
+(<a href="../operations/advanced-deployments/#image-tags-and-variants">विवरण</a>)।</p>
 <p><strong>आप पहले से रिवर्स प्रॉक्सी चलाते हैं</strong> (एक प्रोग्राम जो आपकी सर्विसों के आगे
 HTTPS लगाता है): देखें <a href="../administration/remote-access/">रिमोट एक्सेस और HTTPS</a>।</p>
 <details class="note">

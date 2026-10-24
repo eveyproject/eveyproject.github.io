@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1446,6 +1478,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3334,7 +3394,7 @@
 </tr>
 <tr>
 <td>कोई सेटिंग, या पहले से लिया गया फ़ैसला</td>
-<td>प्रोफ़ाइल में सीधा प्लेबैक बंद है · प्रोफ़ाइल में रीमक्स बंद है · पसंदीदा वीडियो कोडेक (प्रोफ़ाइल सेटिंग) · इस सत्र के लिए चुनाव स्थिर किया गया</td>
+<td>पसंदीदा वीडियो कोडेक (प्रोफ़ाइल सेटिंग) · इस सत्र के लिए चुनाव स्थिर किया गया</td>
 </tr>
 </tbody>
 </table>
@@ -3411,15 +3471,14 @@ H.264, और 4:2:2, 4:4:4 या 12-बिट में कोई भी वी
 ट्रैक को ऐसे बदलने पर जिसके लिए यह ज़रूरी हो, या टाइटल को फिर से शुरू करने पर, एक
 नया फ़ैसला लिया जाता है।</p>
 <h2 id="forcing-a-method">कोई तरीका ज़बरदस्ती चुनना<a class="headerlink" href="#forcing-a-method" title="Permanent link">¶</a></h2>
-<p><strong>सेटिंग्स → प्लेबैक</strong> में हर प्रोफ़ाइल के लिए <strong>डायरेक्ट प्ले की अनुमति
-दें</strong>, <strong>रीमक्स की अनुमति दें</strong> और <strong>ट्रांसकोडिंग की अनुमति दें</strong> हैं। इनमें
-से किसी को बंद करने पर सर्वर वह तरीका छोड़ देता है, और स्ट्रीम जानकारी इसकी
-वजह दिखाती है।</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>यह जाँच का एक औज़ार है, क्वालिटी की सेटिंग नहीं: ज़बरदस्ती किया गया
-ट्रांसकोड असली फ़ाइल से कभी बेहतर नहीं होता।</p>
-</div>
+<p>कोई तरीका ज़बरदस्ती नहीं चुना जा सकता: सर्वर उसे हमेशा फ़ाइल और प्लेयर को देखकर
+चुनता है। जो आप सीमित कर सकते हैं वह क्वालिटी है, हर डिवाइस के लिए अलग, <strong>सेटिंग्स →
+प्लेबैक → डेटा बचत (यह डिवाइस)</strong> से। यह सिर्फ़ उसी डिवाइस की स्ट्रीम सीमित करता
+है; खाते के बाकी डिवाइस अपनी सेटिंग रखते हैं। <strong>बंद</strong> कोई सीमा नहीं लगाता।
+<strong>बचत</strong> ज़्यादा से ज़्यादा 720p, 3 Mbps और स्टीरियो आवाज़ माँगता है। <strong>यात्रा / कम
+डेटा</strong> ज़्यादा से ज़्यादा 480p, 1 Mbps और स्टीरियो आवाज़ माँगता है। सीमा से ऊपर के
+टाइटल को उस सीमा तक ट्रांसकोड किया जाता है, और स्ट्रीम जानकारी वजह के तौर पर वह
+सीमा दिखाती है।</p>
 <p>प्लेयर की सेटिंग्स में <strong>गुणवत्ता</strong> अलग चीज़ है: वह ट्रांसकोड की हुई स्ट्रीम
 की क्वालिटी में से चुनती है। <strong>स्वचालित</strong> कनेक्शन के हिसाब से चलता है; कोई
 ऊँचाई (1080p, 720p...) उसी क्वालिटी पर टिकी रहती है; <strong>मूल</strong> ऊँचाई की वह सीमा
@@ -3433,7 +3492,8 @@ H.264, और 4:2:2, 4:4:4 या 12-बिट में कोई भी वी
 <li>अंदर का काम: <a href="../../playback-serving/">प्लेबैक पाइपलाइन</a></li>
 </ul>
 <!-- sources
-decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels), applyDirectPlayPrefs
+decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels)
+
 session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked)
 remote cap: internal/adapters/driving/grpcapi/playback_handler.go - resolvePlaybackPrefs ; internal/config/config.go - RemoteBitrateCapKbps
 client caps: internal/domain/transcoding/playback_decision.go - ClientProfile ; frontend/packages/client/src/web/codec.ts ; frontend/packages/media-caps/src/castUrl.ts

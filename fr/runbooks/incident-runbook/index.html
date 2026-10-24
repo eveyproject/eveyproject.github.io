@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3401,8 +3461,7 @@ publie.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="s1">'PGPASSWORD=$(cat /data/keys/postgres.password) psql -h 127.0.0.1 -U evey evey'</span>
 </span></code></pre></div>
 <p><strong>Journaux.</strong> Le même flux existe en deux exemplaires : le fichier quotidien
-<code>./evey-data/logs/evey-AAAA-MM-JJ.log</code> (<code>EVEY_LOG_DIR</code>, <code>/data/logs</code> dans
-l'image) et <code>docker logs evey-server</code>. Le fichier fait foi : le pilote
+<code>./evey-data/logs/evey-AAAA-MM-JJ.log</code> (<code>EVEY_LOG_DIR</code>, <code>/data/logs</code> dans l'image ; un fichier qui dépasse 50 Mo, <code>EVEY_LOG_MAX_SIZE_MB</code>, continue dans <code>evey-AAAA-MM-JJ-HH.log</code>) et <code>docker logs evey-server</code>. Le fichier fait foi : le pilote
 json-file de Docker fait tourner <code>docker logs</code>, et après une rotation la
 commande peut s'arrêter des heures avant le conteneur. Quand les deux
 divergent, lisez le fichier. La page <strong>Logs &amp; Debug</strong> du panneau d'admin
@@ -3514,11 +3573,11 @@ ne coûte rien :</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pourquoi une requête de segment a réutilisé un encodeur ou en a lancé un,</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># et ce que cela a coûté au lecteur. Journalisé seulement quand cela coûte</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># quelque chose. `over_client_patience: true` est la preuve flagrante.</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Les encodeurs eux-mêmes : lancements, arrêts et leur raison.</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"software: session (started|killed)"|per-hash cap'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span></code></pre></div>
 <p>Ces lignes indiquent ce que le serveur a décidé. Pour voir ce que ffmpeg a
 réellement produit seconde par seconde, activez le journal de progression par
@@ -3654,7 +3713,7 @@ healthcheck oscille.</p>
   <div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'rm -rf /data/trickplay/*'</span>
 </span></code></pre></div></li>
 <li>Baissez le <strong>Budget du cache de transcodage (Go)</strong> dans <strong>Administration →
-  Configuration du serveur → Paramètres du serveur</strong> (<code>10</code> par défaut) si
+  Transcodage</strong> (<code>10</code> par défaut) si
   le volume de l'hôte manque de place. Quel que soit le budget, le balayeur garde
   2 Gio libres sur le volume de cache.</li>
 </ul>
@@ -3697,7 +3756,7 @@ machine n'est nécessaire. Les heures sont en UTC. Chaque balise est une ligne
    (cherchez un <code>StartStream</code> quelques secondes avant), <code>reason=ERROR</code> porte
    l'erreur du lecteur. Aucun <code>finished</code> après le dernier <code>alive</code> signifie
    que le processus du récepteur a disparu, le plus souvent un Chromecast HD
-   arrêté faute de mémoire sur un master copie à 20 Mbps ou plus.</li>
+   arrêté faute de mémoire sur un master copie à haut débit (constaté).</li>
 <li><strong>Qu'a vu le téléphone ?</strong> Cherchez <code>cast_sender_stall</code> : l'émetteur
    envoie <code>state=playing frozen=&lt;n&gt;s pos=&lt;p&gt;</code> quand le SDK Cast indique encore
    PLAYING mais que la position n'a pas bougé depuis 20 s, et <code>state=idle
@@ -3714,7 +3773,7 @@ machine n'est nécessaire. Les heures sont en UTC. Chaque balise est une ligne
    client's line</code> (la mesure <code>maxKbps</code> du récepteur ou son repli
    <code>abr=floor</code> ; le master transcodé qui suit porte la raison
    <code>client_line_exceeded</code> ou <code>abr_floor_requested</code>). Une session partie sur un
-   master copie à 20 Mbps ou plus et retombée sur un palier 1080p ajusté
+   master copie à haut débit et retombée sur un palier 1080p ajusté
    après quelques secondes est le repli qui fonctionne comme prévu ; un re-LOAD
    qui repart sur le master copie est le scénario qui fait planter un Chromecast HD.</li>
 <li><strong>Manque de ressources côté serveur ?</strong> Cherchez <code>on-demand resource refused</code> : une

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1333,6 +1363,8 @@
       
         
       
+        
+      
     
     
     
@@ -1449,6 +1481,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3391,17 +3451,18 @@ Evey within a few minutes.</p>
 <summary>How the server checks the folders</summary>
 <ul>
 <li>The server reads every library at each start, then every 2 minutes
-  (<strong>Admin → Server Config → Server Settings → Periodic scan interval</strong>,
+  (<strong>Admin → Server Config → Libraries → Periodic scan interval</strong>,
   applied on restart). While something is playing, it waits 15 minutes
   between reads, so that it does not slow playback down.</li>
 <li>It can also be told by the system when a file changes (<strong>Admin →
-  Server Config → Server Settings → Library file watcher</strong>), for the
+  Server Config → Libraries → Library file watcher</strong>), for the
   libraries whose realtime monitoring is on. To check that this still
   works, it writes a small test file into the folder for a few seconds.
   A library where this is proven to work is read once an hour instead of
   every 2 minutes.</li>
-<li>Libraries created from the panel do not use the file watcher: the
-  reads every 2 minutes pick up their files.</li>
+<li>Libraries created from the web panel do not use the file watcher: the
+  reads every 2 minutes pick up their files. The phone app's admin form
+  for a library has a <strong>Realtime monitoring</strong> switch.</li>
 </ul>
 </details>
 <div class="admonition note">
@@ -3483,7 +3544,7 @@ databases (TheIntroDB, then IntroDB) when they know the title. Otherwise,
 the server works them out by analysing the files. An administrator can
 adjust them by hand for a title, or run the detection again.</p>
 <p>Players show <strong>Skip Intro</strong>, <strong>Skip Recap</strong> and <strong>Skip Credits</strong> buttons by
-default. <strong>Auto-skip intros</strong> (<strong>Admin → Server Config → Server Settings</strong>, off
+default. <strong>Auto-skip intros</strong> (<strong>Admin → Server Config → Libraries</strong>, off
 by default) makes every player skip them on its own.</p>
 <!-- sources
 add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths only - no realtime/scan-on-startup toggles) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3792,8 +3852,8 @@ après une passe de normalisation qui défait les obscurcissements courants
 <tbody>
 <tr>
 <td><code>shell_exec</code></td>
-<td>CRITICAL</td>
-<td><code>os.system</code>, <code>subprocess.run</code>, <code>child_process.exec</code>, PHP <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>, <code>preg_replace /e</code>, accents graves Ruby, <code>open('\|cmd')</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>os.system</code>, <code>subprocess.run</code>, <code>child_process.exec</code>, PHP <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>, <code>preg_replace /e</code>, Ruby <code>Kernel.exec</code>/<code>system</code>, <code>open('\|cmd')</code> (CRITICAL) ; accents graves Ruby (WARNING)</td>
 </tr>
 <tr>
 <td><code>network</code></td>
@@ -3807,8 +3867,8 @@ après une passe de normalisation qui défait les obscurcissements courants
 </tr>
 <tr>
 <td><code>obfuscation</code></td>
-<td>CRITICAL</td>
-<td><code>eval</code>, décodage base64, séquences hexadécimales, <code>__builtins__</code>, <code>base64 -d \| bash</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>eval</code>, <code>__builtins__</code>, <code>base64 -d \| bash</code> et autres décodages redirigés vers un shell (CRITICAL) ; décodage base64, séquences hexadécimales (WARNING)</td>
 </tr>
 <tr>
 <td><code>privilege</code></td>
@@ -3883,17 +3943,33 @@ recherche d'un builtin par son nom, échappements par
 <code>Function.constructor</code>), chacune avec un cas de non-régression dans
 <code>tests/fixtures/plugins/malicious/</code>, mais elle ne peut pas suivre toutes
 les transformations faites à l'exécution (<code>strrev("metsys")</code>, décodage
-d'une charge lue depuis un fichier). Elle reconnaît aussi les motifs dans
-les commentaires : un commentaire <code># pip install foo</code> déclenche
-<code>runtime_install</code>. <strong>La frontière d'application est la sandbox à
+d'une charge lue depuis un fichier). Les commentaires sont retirés avant
+l'analyse. <strong>La frontière d'application est la sandbox à
 l'exécution, pas l'analyse</strong> : un plugin qui fait passer un motif inaperçu
 ne peut toujours pas lire les données du serveur, appeler un appel système
 refusé, dépasser ses limites de ressources, ni appeler une méthode de
 l'hôte pour laquelle il n'a pas la permission.</p>
 </div>
 <h3 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">¶</a></h3>
-<p>Un paquet peut être signé avec cosign. <code>EVEY_PLUGINS_COSIGN_POLICY</code> fixe ce
-que fait une vérification en échec (<code>pluginrunner/cosign.go</code>) :</p>
+<p>Un paquet peut être signé avec cosign (<code>cosign sign-blob --key</code>, ECDSA P-256
+sur le SHA-256 du ZIP). La clé publique de l'auteur voyage dans le paquet sous
+le nom <code>cosign.pub</code> ; Evey vérifie la <code>.sig</code> détachée avec elle, dans son
+propre processus et hors ligne (<code>pluginrunner/cosign.go</code>), et calcule
+l'empreinte de la clé (<code>sha256:</code> sur la clé publique DER). Trois faits en
+découlent :</p>
+<ul>
+<li><strong>Confiance</strong> : l'empreinte figure, ou non, dans la liste des <strong>Éditeurs de
+  confiance</strong> de l'instance (<code>Administration → Plugins</code>, ou alimentée au
+  démarrage par <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>). Une clé de confiance
+  affiche le nom de l'éditeur ; une clé inconnue affiche son empreinte et une
+  action <strong>Faire confiance à cette clé</strong>.</li>
+<li><strong>Continuité</strong> : l'empreinte est épinglée sur le plugin à l'installation.
+  Une mise à jour signée par une autre clé (<code>publisher-changed</code>) ou qui n'est
+  plus signée (<code>signature-lost</code>) est refusée, quelle que soit la politique,
+  tant que l'administrateur n'a pas accepté le nouvel éditeur dans la fenêtre
+  de mise à jour (<code>accept_new_publisher</code>).</li>
+<li><strong>Politique</strong> : <code>EVEY_PLUGINS_COSIGN_POLICY</code> fixe ce que fait le verdict.</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -3904,24 +3980,26 @@ que fait une vérification en échec (<code>pluginrunner/cosign.go</code>) :</p>
 <tbody>
 <tr>
 <td><code>off</code></td>
-<td>La signature n'est pas vérifiée.</td>
+<td>La signature n'est pas vérifiée et rien n'est enregistré.</td>
 </tr>
 <tr>
 <td><code>warn</code> (défaut)</td>
-<td>Un échec est enregistré et montré à l'administrateur, sans bloquer. Sans clé publique configurée, rien n'est vérifié.</td>
+<td>Le verdict est enregistré et montré ; les paquets non signés, non fiables et invalides s'installent.</td>
 </tr>
 <tr>
 <td><code>enforce</code></td>
-<td>Un échec refuse l'installation ou la mise à jour.</td>
+<td>Seul un paquet signé par un éditeur de confiance s'installe ou se met à jour.</td>
 </tr>
 </tbody>
 </table>
-<p>La clé publique est donnée par <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>.</p>
+<p>Une signature prouve que le paquet est bien celui que son éditeur a publié, et
+qu'une mise à jour vient du même éditeur. Elle ne dit rien du code, que
+l'analyse, les permissions et le bac à sable jugent.</p>
 <h3 id="administrator-preview">Aperçu administrateur<a class="headerlink" href="#administrator-preview" title="Permanent link">¶</a></h3>
 <p><code>POST /api/v1/admin/plugins/preview</code> lance l'analyse sans installer.
 L'administrateur voit les permissions demandées, chaque résultat avec son
 fichier, sa ligne et sa catégorie, les URL trouvées dans le code, et le SHA256
-du paquet ; le même hachage est vérifié quand l'installation est appliquée,
+du paquet ; le hachage que l'administrateur a validé est vérifié à la mise à jour, et une première installation peut être épinglée par un fragment <code>#sha256:</code> dans l'URL,
 de sorte que le paquet analysé est le paquet installé. Une mise à jour montre
 la différence de permissions, de slots et d'hôtes, et une nouvelle permission
 exige un accord explicite.</p>
@@ -3944,7 +4022,7 @@ réseau en <code>bubblewrap</code> et <code>strict</code>). Un plugin doté de l
 <code>network</code> appelle la méthode <code>Fetch</code> de l'hôte via sa socket Unix. L'hôte,
 dans <code>internal/adapters/driving/pluginhost/fetch.go</code> :</p>
 <ul>
-<li>compare la cible à la liste <code>external_fetch</code> du plugin (hôtes exacts, sans distinction de casse) ;</li>
+<li>compare la cible à la liste <code>external_fetch</code> du plugin (hôtes exacts, sans distinction de casse ; un joker <code>*.example.com</code> est refusé à l'installation ; un suffixe de port est ignoré) ;</li>
 <li>n'autorise que <code>http</code> et <code>https</code>, et seulement <code>GET</code> et <code>HEAD</code> ;</li>
 <li>se connecte par un client protégé contre le SSRF (<code>internal/pkg/ssrf</code>) qui
   refuse les adresses privées, réservées et de lien local après résolution
@@ -4121,7 +4199,7 @@ un plugin qui dépasse une limite
 <tr>
 <td>processus et threads</td>
 <td>64</td>
-<td>à chaque passage</td>
+<td>à chaque passage (seulement le nombre de threads du processus principal)</td>
 </tr>
 <tr>
 <td>disque utilisé par son dossier</td>
@@ -4137,8 +4215,8 @@ un plugin qui dépasse une limite
 </table>
 <p>Le même passage signale un plugin qui maintient un CPU au-dessus de 90 %
 pendant environ 30 s, et arrête un plugin doté de <code>hardware.gpu</code> qui sature
-un moteur graphique de la même façon. Les limites se règlent par plugin dans
-<strong>Administration → Plugins → Limites de ressources</strong> ; les variables d'environnement
+un moteur graphique de la même façon. Un seul jeu de limites de ressources, réglé dans
+<strong>Administration → Plugins → Limites de ressources</strong>, s'applique à chaque plugin ; les variables d'environnement
 <code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>, <code>EVEY_PLUGINS_DISK_MAX_MB</code>
 et <code>EVEY_PLUGINS_CPU_NICE</code> fixent les valeurs par défaut au démarrage.</p>
 <h3 id="interface-isolation">Isolation de l'interface<a class="headerlink" href="#interface-isolation" title="Permanent link">¶</a></h3>
@@ -4150,8 +4228,7 @@ Content-Security-Policy qui n'autorise les connexions que vers ses hôtes
 peut demander à la page : <code>toast</code> au plus 3 par seconde, 200 caractères,
 sans HTML ; <code>navigate</code> n'accepte que <code>/home</code>, <code>/library</code>, <code>/media</code>,
 <code>/player</code>, <code>/settings</code> et <code>/search</code> ; <code>resize</code> entre 50 px (60 sur mobile et
-TV) et 800 px. Les slots sont vérifiés à l'installation et de nouveau au
-rendu.</p>
+TV) et 800 px. Les slots sont vérifiés à l'installation.</p>
 <h3 id="server-hardening">Durcissement du serveur<a class="headerlink" href="#server-hardening" title="Permanent link">¶</a></h3>
 <p>Au démarrage, le serveur se marque non vidable (<code>PR_SET_DUMPABLE=0</code>,
 <a href="https://github.com/eveyproject/evey/blob/master/cmd/evey/hardening_linux.go"><code>hardening_linux.go</code></a>) : un processus
@@ -4366,12 +4443,12 @@ refusés, binaires compilés inclus.</p>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>aucune</td>
-<td>La clé contre laquelle les signatures sont vérifiées.</td>
+<td>Facultatif : une clé publique PEM ajoutée aux éditeurs de confiance au démarrage.</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_MEMORY_MB</code>, <code>EVEY_PLUGINS_PIDS_MAX</code>, <code>EVEY_PLUGINS_DISK_MAX_MB</code>, <code>EVEY_PLUGINS_CPU_NICE</code></td>
 <td>256, 64, 100, 10</td>
-<td>Valeurs par défaut au démarrage des limites de ressources ; le panneau les remplace par plugin.</td>
+<td>Valeurs par défaut au démarrage des limites de ressources ; le panneau les remplace, pour tous les plugins à la fois.</td>
 </tr>
 </tbody>
 </table>
@@ -4397,8 +4474,8 @@ quelle machine, en termes simples :
 </tr>
 <tr>
 <td>Tous les plugins partagent l'utilisateur 1001</td>
-<td>Un plugin peut signaler ses voisins (signaler le serveur est refusé)</td>
-<td><code>PR_SET_DUMPABLE</code> empêche de lire les autres processus via <code>/proc</code> ; Landlock et bubblewrap isolent les dossiers des plugins</td>
+<td>En mode <code>basic</code>, un plugin peut lire les fichiers que possèdent ses voisins</td>
+<td>Signaler d'autres processus est bloqué (seccomp, <code>LD_PRELOAD</code> et bubblewrap le bloquent tous) ; <code>PR_SET_DUMPABLE</code> empêche de lire les autres processus via <code>/proc</code> ; Landlock et bubblewrap isolent les dossiers des plugins</td>
 </tr>
 <tr>
 <td>Seccomp est une liste de refus</td>

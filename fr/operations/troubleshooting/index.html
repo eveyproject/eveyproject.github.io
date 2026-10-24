@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3383,7 +3443,9 @@ donne.</p>
 <ul>
 <li>Les fichiers sont dans <code>./evey-data/logs/</code>, à côté de votre fichier
   compose (<code>/data/logs/evey-YYYY-MM-DD.log</code> dans le conteneur). Un
-  fichier par jour, en JSON, gardé 90 jours par défaut
+  fichier par jour, en JSON, plus un fichier suffixé par l'heure
+  (<code>evey-YYYY-MM-DD-HH.log</code>) quand un fichier dépasse 50 Mo
+  (<code>EVEY_LOG_MAX_SIZE_MB</code>), gardé 90 jours par défaut
   (<code>EVEY_LOG_RETENTION_DAYS</code>).</li>
 <li><code>docker compose logs evey</code> montre autre chose : ce que le conteneur
   affiche pendant qu'il démarre (les lignes <code>evey:</code> du script de

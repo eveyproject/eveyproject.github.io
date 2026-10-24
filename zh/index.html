@@ -682,6 +682,8 @@
       
         
       
+        
+      
     
     
     
@@ -854,6 +856,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1292,6 +1322,8 @@
       
         
       
+        
+      
     
     
     
@@ -1408,6 +1440,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3190,14 +3250,14 @@
 <p><a class="md-button md-button--primary" href="installation/">安装 Evey</a>
 <a class="md-button" href="https://demo.eveyproject.org">试用演示</a></p>
 <p class="evey-status">
-<span>测试版，还没有正式版本号</span>
+<span>公开测试版，0.x 版本</span>
 <span>自由软件，AGPL-3.0</span>
 <span>演示站会自动登录（<code>demo</code> / <code>demo</code>）</span>
 </p>
 
 <p class="evey-platforms">
 <strong>您需要：</strong>一台装了 Docker 的 x86-64 电脑或 NAS，以及一个放着您媒体文件的文件夹。安装只要一个文件和一条命令。<br>
-<strong>观看方式：</strong>网页浏览器、Android 手机和平板、Android TV、电视的网页浏览器，以及 Chromecast。Android 和 Android TV 应用还在测试中，暂时没有上架 Google Play。
+<strong>观看方式：</strong>网页浏览器、Android 手机和平板、Android TV、电视的网页浏览器，以及 Chromecast。Android 和 Android TV 应用已在 [Google Play](https://play.google.com/store/apps/details?id=com.evey.app) 上架；网页应用随服务器一起提供，电视浏览器版应用位于 `/tv`。
 </p>
 
 <div class="grid cards">
@@ -3275,9 +3335,9 @@
 <a href="operations/advanced-deployments/">高级部署</a>。
 <a href="playback/transcoding/">转码与服务器容量</a></p>
 <h2 id="what-evey-does-with-your-files-and-your-data">Evey 如何对待您的文件和数据<a class="headerlink" href="#what-evey-does-with-your-files-and-your-data" title="Permanent link">¶</a></h2>
-<p><strong>您的文件。</strong> 在 Evey 里删除一部影片或一个媒体库，只是从 Evey 里移除，绝不会从硬盘上删除。Evey 只在三种情况下向您的媒体文件夹写入内容：您要求的修复、通过 API 下载的字幕，以及一个用来确认 Evey 还能发现新文件的小测试文件。如果把媒体文件夹以只读方式挂载，这些都不会发生。<strong>媒体健康</strong>会检查您的 MKV 和 WebM 文件，并列出发现的问题。只有您要求时，它才会修复文件。修复在副本上进行，副本完整检查通过后才替换原文件；默认保留原文件，每一处改动都有记录。无法修复的文件会被报告，不会被改动。
+<p><strong>您的文件。</strong> 在 Evey 里删除一部影片或一个媒体库，只是从 Evey 里移除，绝不会从硬盘上删除。Evey 只在三种情况下向您的媒体文件夹写入内容：您要求的修复、通过 API 下载的字幕，以及一个用来确认 Evey 还能发现新文件的小测试文件。如果把媒体文件夹以只读方式挂载，这些都不会发生。<strong>媒体健康</strong>会检查您的 MKV 和 WebM 文件，并列出发现的问题。只有您要求时，它才会修复文件。修复在副本上进行，副本检查通过后才替换原文件（您要求时会完整读取，未保留备份时则一律完整读取）；默认保留原文件，每一处改动都有记录。无法修复的文件会被报告，不会被改动。
 <a href="runbooks/media-health/">媒体健康</a></p>
-<p><strong>您的数据。</strong> 本项目不运行任何接收您数据的服务：不需要在我们这里注册账户，没有使用统计，也没有崩溃报告。应用只和您的服务器通信，不连接我们运营的任何其他服务。会离开您网络的内容只有这些：服务器会从外部服务获取海报和简介（The Movie Database，以及音乐的封面来源），还会不时检查有没有新版本，这一项可以关闭。每次会改动数据库的更新之前，数据库都会先备份。
+<p><strong>您的数据。</strong> 本项目不运行任何接收您数据的服务：不需要在我们这里注册账户，没有使用统计，也没有崩溃报告。应用只和您的服务器通信，不连接我们运营的任何其他服务。会离开您网络的内容只有这些：服务器会从外部服务获取海报和简介（The Movie Database、TVmaze、一个 IMDb API、设置了密钥时的 OMDb、MusicBrainz，以及音乐的封面来源），还会不时检查有没有新版本，这一项可以关闭。每次会改动数据库的更新之前，数据库都会先备份。
 <a href="privacy/">隐私政策</a> · <a href="backups/">备份与更新</a></p>
 <h2 id="plugins-run-isolated-and-controlled">插件隔离运行，权限受控<a class="headerlink" href="#plugins-run-isolated-and-controlled" title="Permanent link">¶</a></h2>
 <p>插件可以添加元数据来源、通知渠道、首页栏目和播放器上的叠加内容。主题用来改变外观。安装插件之前，管理员能看到系统检查出它会做哪些事，以及它申请了哪些权限；新的权限必须明确同意才行。每个插件作为独立的进程运行，使用单独的系统用户，没有直接的网络访问；一旦超出内存、进程数或磁盘的限制，就会被停止。它的文件访问受到多严格的限制，取决于这台机器，<strong>安全仪表板</strong>会显示当前使用的模式。插件的小组件会显示在网页、Android 和电视上；在电视上只能看，不能操作。
@@ -3327,7 +3387,7 @@
 <p class="evey-meta">
 本文档跟随开发分支更新。 ·
 <a href="https://github.com/eveyproject/evey">GitHub 上的源代码</a> ·
-安全问题报告：security@eveyproject.org ·
+安全问题报告： security@eveyproject.org ·
 <a href="privacy/">隐私政策</a>
 </p>
 

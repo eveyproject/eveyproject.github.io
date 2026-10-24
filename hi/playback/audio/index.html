@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3227,7 +3287,7 @@
 <li>उतने चैनलों के साथ जितने सोर्स, डिवाइस और प्रोफ़ाइल अनुमति दें, 5.1 तक
   (7.1 सोर्स को 5.1 में मिलाया जाता है, जिसे हर प्लेयर डिकोड करता है; स्टीरियो
   सोर्स स्टीरियो ही रहते हैं);</li>
-<li>सैंपल रेट चाहे जो हो, अकेले वह कभी दोबारा एन्कोड की वजह नहीं होता।</li>
+<li>अधिकतम 48 kHz पर: 48 kHz से ऊपर का ट्रैक सिर्फ़ इसी वजह से दोबारा एन्कोड होता है (<code>audio_samplerate_exceeded</code>); 48 kHz या उससे कम पर सैंपल रेट कोई वजह नहीं होती।</li>
 </ul>
 <p>ट्रांसकोड या रीमक्स हुई स्ट्रीम के अंदर कॉपी हुआ ट्रैक ऐसे फ़ॉर्मेट में भी होना
 चाहिए जिसे प्लेयर स्ट्रीम के सेगमेंट के अंदर स्वीकार करे। AAC, AC-3 और E-AC-3
@@ -3244,6 +3304,8 @@ Safari, उन्हें यह एक आम ट्रैक की तरह
 जाता है, उसे पहचानकर नहीं। सराउंड ट्रैक पेज में तभी डिकोड होता है जब प्रोफ़ाइल का
 <strong>अधिकतम ऑडियो चैनल</strong> इसकी अनुमति दे: स्टीरियो पर सेट प्रोफ़ाइल को इसके बजाय AAC
 में दोबारा एन्कोड मिलता है, जो चैनलों को मिला सकता है।</p>
+<p>पेज इसे कैसे डिकोड करता है, और जब नहीं कर पाता तब क्या होता है:
+<a href="../ac3go/">Evey में ac3go</a>।</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>जो रिवर्स प्रॉक्सी अपनी Content-Security-Policy लगाता है, उसे <code>script-src</code>
@@ -3272,7 +3334,7 @@ copy vs aac, channels: internal/app/transcoding/decision.go - evaluateAudio, app
 device channel ceiling: frontend/packages/client/src/native/outputChannels.ts - resolveMaxOutputChannels (STEREO_ONLY_TYPES, hdmi.maxChannelCount) ; frontend/packages/client/src/native/playSession.ts - playerDecodesCopiedAudio ; internal/adapters/driving/http/client_capabilities.go - maxAudioChannelsQuery
 passthrough in segments: internal/app/transcoding/decision.go - applyPackagedAudioPassthrough ; internal/app/transcoding/source_facts.go - AudioCopyCodecAllowedFor ; internal/domain/transcoding/playback_decision.go - ClientProfile.FMP4AudioPassthrough
 wasm: internal/app/transcoding/wasm_audio.go - WasmAudioCodecSupported, WasmAudioChannelsOK ; internal/app/transcoding/decision.go - wasmAudioApplies ; frontend/packages/client/src/web/codec.ts
-sample rate: internal/app/transcoding/decision.go - evaluateAudio (no sample-rate check)
+sample rate: internal/app/transcoding/decision.go - evaluateAudio (audio_samplerate_exceeded, maxCopiedAudioSampleRate) ; internal/app/transcoding/decision_samplerate_test.go
 resync: internal/app/transcoding/playback_plan_resolver.go - Decide (audio_resync_requested) ; frontend/apps/web/src/features/playback/HLSPlayer.tsx (audioOffsetAvailable=transcodeMode) ; frontend/apps/mobile/app/(auth)/player/[id].tsx (audioOffsetAvailable)
 media health: i18n admin.syncPreview.btn ; docs/runbooks/media-health.md
 labels: i18n auth.settings.playback.maxAudioChannels, channelsStereo, channels51, channels71, audioLanguage ; player.settings.audioSync, audioSyncHint, audioSyncUnavailable ; player.streamInfo.decisionWasm, reason.audio_passthrough_unsupported, reason.audio_resync_requested

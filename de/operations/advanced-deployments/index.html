@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3390,9 +3450,9 @@ Cluster liegt, wird gemeldet und ignoriert, nie zusammengeführt. Ein
 fehlgeschlagener Import verwirft den neuen Cluster, damit der nächste Start
 es erneut mit dem Dump versucht.</p>
 <h2 id="arm-hosts">ARM-Hosts<a class="headerlink" href="#arm-hosts" title="Permanent link">¶</a></h2>
-<p>Images, die aus einem Release-Tag gebaut werden (<code>0.2.0</code>, auch Vorabversionen
-wie <code>0.2.0-beta.1</code>), gibt es für mehrere Architekturen (<code>linux/amd64</code> und
-<code>linux/arm64</code>); Docker wählt die passende. Branch-Tags wie <code>beta-0.0.1</code> gibt es
+<p>Images, die aus einem Release-Tag gebaut werden (<code>0.1.0</code>, auch Vorabversionen),
+gibt es für mehrere Architekturen (<code>linux/amd64</code> und
+<code>linux/arm64</code>); Docker wählt die passende. Branch-Tags gibt es
 nur für amd64: Legen Sie auf einem ARM-Host ein Release-Tag fest.</p>
 <ul>
 <li><strong>Hardware-Transkodierung auf ARM</strong> ist auf Rockchip-SoCs (Klasse RK3588,
@@ -3424,23 +3484,23 @@ nur für amd64: Legen Sie auf einem ARM-Host ein Release-Tag fest.</p>
 <td><code>latest</code> ist immer die neueste stabile Version</td>
 </tr>
 <tr>
-<td><code>X.Y.Z-beta.N</code></td>
+<td>ein Vorabversions-Tag (mit Bindestrich)</td>
 <td>ein Vorabversions-Tag</td>
-<td>veröffentlicht nur sein eigenes Tag, verschiebt nie <code>latest</code></td>
+<td>veröffentlicht sein eigenes Tag und <code>sha-&lt;commit&gt;</code>, nie <code>latest</code></td>
 </tr>
 <tr>
-<td><code>beta-0.0.1</code>, <code>sha-&lt;commit&gt;</code></td>
+<td>ein Branch-Name, <code>sha-&lt;commit&gt;</code></td>
 <td>ein Branch-Build</td>
-<td>nur amd64</td>
+<td>nur das Standard-Image, nur amd64 (normalerweise)</td>
 </tr>
 </tbody>
 </table>
-<p>Jedes Tag gibt es in drei Varianten: Die Standardvariante bringt Python 3 für
-Plugins mit, <code>-nodejs</code> fügt Node.js hinzu, <code>-full</code> fügt PHP, Ruby und Lua
-hinzu (zum Beispiel <code>latest-full</code>). Nehmen Sie eine Variante nur, wenn ein
-Plugin sie braucht: Das Installationsprogramm lehnt ein Plugin ab, dessen
-angegebene Sprache im Image fehlt, und nennt in der Meldung die richtige
-Variante.</p>
+<p>Release- und Vorabversions-Tags gibt es in drei Varianten (ein Branch-Build veröffentlicht nur das Standard-Image): Die Standardvariante bringt alle
+Plugin-Laufzeiten mit (Python 3, Node.js, PHP, Ruby und Lua), <code>-nodejs</code> behält
+Python und Node.js, <code>-lean</code> nur Python (zum Beispiel <code>latest-lean</code>). Nehmen Sie
+eine schlankere Variante nur, wenn die Image-Größe zählt: Das
+Installationsprogramm lehnt ein Plugin ab, dessen angegebene Sprache im Image
+fehlt, und nennt in der Meldung das Standard-Image.</p>
 <p>Die veröffentlichten Images enthalten die Treiber für jede unterstützte
 Intel- und AMD-Generation. Ein selbst gebautes Image kann nur eine Familie
 behalten, mit <code>docker build --build-arg GPU=intel-legacy .</code> (Intel Gen9 bis

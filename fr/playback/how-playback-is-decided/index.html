@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1446,6 +1478,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3335,7 +3395,7 @@ lecteur ; sur la TV, dans le menu d'options du lecteur) affichent la
 </tr>
 <tr>
 <td>Un réglage, ou une décision déjà prise</td>
-<td>Lecture directe désactivée dans le profil · Remux désactivé dans le profil · Codec vidéo préféré (réglage du profil) · Choix figé pour cette session</td>
+<td>Codec vidéo préféré (réglage du profil) · Choix figé pour cette session</td>
 </tr>
 </tbody>
 </table>
@@ -3415,16 +3475,14 @@ que le lecteur ne reçoive jamais des segments issus de deux encodages
 différents. Une nouvelle décision n'intervient que si vous changez de piste
 audio ou de sous-titres d'une façon qui l'exige, ou si vous relancez le titre.</p>
 <h2 id="forcing-a-method">Imposer un mode de lecture<a class="headerlink" href="#forcing-a-method" title="Permanent link">¶</a></h2>
-<p><strong>Paramètres → Lecture</strong> propose, pour chaque profil, <strong>Autoriser la lecture
-directe</strong>, <strong>Autoriser le remux</strong> et <strong>Autoriser le transcodage</strong>. Désactiver
-l'une de ces options interdit ce mode au serveur, et les Infos du flux
-indiquent pourquoi.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>C'est un outil de diagnostic, pas un réglage de qualité : un transcodage
-imposé n'est jamais meilleur que l'original.</p>
-</div>
-<p>La <strong>Qualité</strong>, dans les réglages du lecteur, joue un autre rôle : elle choisit
+<p>Vous ne pouvez pas imposer un mode : le serveur le choisit toujours d'après le
+fichier et le lecteur. Ce que vous pouvez plafonner, c'est la qualité, appareil
+par appareil, avec <strong>Paramètres → Lecture → Économie de données (cet appareil)</strong>. Il limite le flux sur cet appareil seulement ; les autres appareils
+du compte gardent leur propre réglage. <strong>Désactivée</strong> ne pose aucun plafond.
+<strong>Économe</strong> demande au plus 720p, 3 Mbit/s et un son stéréo. <strong>Voyage / bas débit</strong> demande au plus 480p, 1 Mbit/s et un son stéréo. Un titre au-dessus du
+plafond est transcodé jusqu'à lui, et les Infos du flux indiquent la limite comme
+raison.</p>
+<p><strong>Qualité</strong>, dans les réglages du lecteur, joue un autre rôle : elle choisit
 parmi les qualités d'un flux transcodé. <strong>Auto</strong> s'adapte à la connexion ; une
 résolution (1080p, 720p...) fixe cette qualité ; <strong>Original</strong> lève le plafond
 de résolution que le lecteur demanderait sinon.</p>

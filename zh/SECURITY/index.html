@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3772,8 +3832,8 @@
 <tbody>
 <tr>
 <td><code>shell_exec</code></td>
-<td>CRITICAL</td>
-<td><code>os.system</code>、<code>subprocess.run</code>、<code>child_process.exec</code>、PHP 的 <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>、<code>preg_replace /e</code>、Ruby 的反引号、<code>open('\|cmd')</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>os.system</code>、<code>subprocess.run</code>、<code>child_process.exec</code>、PHP 的 <code>system()</code>/<code>shell_exec()</code>/<code>proc_open()</code>、<code>preg_replace /e</code>、Ruby 的 <code>Kernel.exec</code>/<code>system</code>、<code>open('\|cmd')</code>（CRITICAL）；Ruby 的反引号（WARNING）</td>
 </tr>
 <tr>
 <td><code>network</code></td>
@@ -3787,8 +3847,8 @@
 </tr>
 <tr>
 <td><code>obfuscation</code></td>
-<td>CRITICAL</td>
-<td><code>eval</code>、base64 解码、十六进制序列、<code>__builtins__</code>、<code>base64 -d \| bash</code></td>
+<td>WARNING / CRITICAL</td>
+<td><code>eval</code>、<code>__builtins__</code>、<code>base64 -d \| bash</code> 和其他把解码结果送入 shell 的写法（CRITICAL）；base64 解码、十六进制序列（WARNING）</td>
 </tr>
 <tr>
 <td><code>privilege</code></td>
@@ -3857,12 +3917,17 @@
 <p class="admonition-title">分析无法保证的事情</p>
 <p>它是按模式工作的。它能还原已知的几类混淆（分好几步把字符串拼接成可调用对象、按名称查找内置函数、<code>Function.constructor</code> 逃逸），
 每一类在 <code>tests/fixtures/plugins/malicious/</code> 里都有一个回归测试样例；但它无法跟踪运行时进行的每一种变换
-（<code>strrev("metsys")</code>、解码从文件里读出的载荷）。它也会匹配注释里的内容：一行 <code># pip install foo</code> 注释会触发 <code>runtime_install</code>。
+（<code>strrev("metsys")</code>、解码从文件里读出的载荷）。分析之前会先去掉注释。
 <strong>实际执行限制的是运行时的沙箱，而不是分析</strong>：即使插件中的某个模式未被分析发现，该插件仍然无法读取服务器的数据，
 无法调用被拒绝的系统调用，无法超出资源限制，也无法调用它没有权限的宿主方法。</p>
 </div>
 <h3 id="signature">签名<a class="headerlink" href="#signature" title="Permanent link">¶</a></h3>
-<p>插件包可以用 cosign 签名。<code>EVEY_PLUGINS_COSIGN_POLICY</code> 决定验证失败时怎么处理（<code>pluginrunner/cosign.go</code>）：</p>
+<p>插件包可以用 cosign 签名（<code>cosign sign-blob --key</code>，对 ZIP 的 SHA-256 做 ECDSA P-256）。作者的公钥以 <code>cosign.pub</code> 的名字随包一起分发；Evey 用它在进程内离线验证分离的 <code>.sig</code>（<code>pluginrunner/cosign.go</code>），并计算该密钥的指纹（对 DER 公钥取 <code>sha256:</code>）。由此得到三件事：</p>
+<ul>
+<li><strong>信任</strong>：该指纹在不在本实例的<strong>受信任的发布者</strong>列表里（<code>管理 → 插件</code>，或由 <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> 在启动时预置）。受信任的密钥会显示发布者的名字；未知的密钥显示它的指纹和<strong>信任此密钥</strong>操作。</li>
+<li><strong>连续性</strong>：指纹在安装时固定在插件上。用另一把密钥签名的更新（<code>publisher-changed</code>）或不再签名的更新（<code>signature-lost</code>），无论策略如何都会被拒绝，直到管理员在更新对话框里接受新的发布者（<code>accept_new_publisher</code>）。</li>
+<li><strong>策略</strong>：<code>EVEY_PLUGINS_COSIGN_POLICY</code> 决定这个结论会带来什么后果。</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -3873,22 +3938,22 @@
 <tbody>
 <tr>
 <td><code>off</code></td>
-<td>不检查签名。</td>
+<td>不检查签名，也不记录任何东西。</td>
 </tr>
 <tr>
 <td><code>warn</code>（默认）</td>
-<td>失败会被记录并展示给管理员，但不阻止安装。没有配置公钥时，什么都不验证。</td>
+<td>记录并展示结论；未签名、不受信任和无效的包照常安装。</td>
 </tr>
 <tr>
 <td><code>enforce</code></td>
-<td>失败会拒绝安装或更新。</td>
+<td>只有受信任的发布者签名的包才能安装或更新。</td>
 </tr>
 </tbody>
 </table>
-<p>公钥由 <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> 指定。</p>
+<p>签名证明的是：这个包就是其发布者发布的那个包，并且更新来自同一个发布者。它不说明代码本身如何，那由分析、权限和沙箱来判断。</p>
 <h3 id="administrator-preview">管理员预览<a class="headerlink" href="#administrator-preview" title="Permanent link">¶</a></h3>
 <p><code>POST /api/v1/admin/plugins/preview</code> 只运行分析，不安装。管理员会看到申请的权限、每一项发现及其文件、行号和类别、代码里找到的 URL，
-以及包的 SHA256；应用安装时会再核对同一个哈希，所以被分析的包就是被安装的包。更新会显示权限、插槽和主机方面的差异，
+以及包的 SHA256；管理员确认过的哈希会在更新时核对，首次安装也可以用 URL 里的 <code>#sha256:</code> 片段来固定，所以被分析的包就是被安装的包。更新会显示权限、插槽和主机方面的差异，
 新增的权限需要明确确认。</p>
 <p>对于较高的权限，管理员就是信任的边界：Evey 把暴露面展示出来，由管理员决定接受还是拒绝。</p>
 <h2 id="at-run-time">运行时<a class="headerlink" href="#at-run-time" title="Permanent link">¶</a></h2>
@@ -3900,7 +3965,7 @@
 <p>无论声明了什么，插件都<strong>没有直接的网络访问</strong>：所有 IP 套接字都会被拒绝（<code>landlock</code> 和 <code>basic</code> 下用 <code>-deny-inet</code>，<code>bubblewrap</code> 和 <code>strict</code> 下用网络命名空间）。
 带 <code>network</code> 权限的插件通过自己的 Unix 套接字调用宿主的 <code>Fetch</code> 方法。宿主在 <code>internal/adapters/driving/pluginhost/fetch.go</code> 里：</p>
 <ul>
-<li>按插件的 <code>external_fetch</code> 列表检查目标（精确的主机名，不区分大小写）；</li>
+<li>按插件的 <code>external_fetch</code> 列表检查目标（精确的主机名，不区分大小写；<code>*.example.com</code> 通配符在安装时会被拒绝；端口后缀会被忽略）；</li>
 <li>只允许 <code>http</code> 和 <code>https</code>，只允许 <code>GET</code> 和 <code>HEAD</code>；</li>
 <li>通过一个防 SSRF 的客户端（<code>internal/pkg/ssrf</code>）连接，它在 DNS 解析之后拒绝私有、保留和链路本地地址，
   所以 DNS 重绑定和重定向都会被再次检查（重定向到列表之外的主机会被拒绝）；</li>
@@ -4044,7 +4109,7 @@
 <tr>
 <td>进程和线程</td>
 <td>64</td>
-<td>每轮检查</td>
+<td>每轮检查（只统计主进程的线程数）</td>
 </tr>
 <tr>
 <td>插件目录占用的磁盘</td>
@@ -4059,13 +4124,13 @@
 </tbody>
 </table>
 <p>同一轮检查还会标记让 CPU 持续高于 90% 大约 30 秒的插件，并停止以同样方式让图形引擎持续满载的、获得了 <code>hardware.gpu</code> 权限的插件。
-这些限制可以在<strong>管理 → 插件 → 资源限制</strong>里按插件设置；环境变量 <code>EVEY_PLUGINS_MEMORY_MB</code>、<code>EVEY_PLUGINS_PIDS_MAX</code>、<code>EVEY_PLUGINS_DISK_MAX_MB</code>
+同一组资源限制在<strong>管理 → 插件 → 资源限制</strong>里设置，对每个插件都生效；环境变量 <code>EVEY_PLUGINS_MEMORY_MB</code>、<code>EVEY_PLUGINS_PIDS_MAX</code>、<code>EVEY_PLUGINS_DISK_MAX_MB</code>
 和 <code>EVEY_PLUGINS_CPU_NICE</code> 设置启动时的默认值。</p>
 <h3 id="interface-isolation">界面隔离<a class="headerlink" href="#interface-isolation" title="Permanent link">¶</a></h3>
 <p>插件的界面运行在一个 <code>&lt;iframe sandbox="allow-scripts"&gt;</code> 里，没有同源访问，不能用表单，不能弹出窗口，
 其 Content-Security-Policy 只允许连接到它的 <code>external_fetch</code> 主机。桥接层（<code>frontend/packages/client/src/plugins/hostProtocol.ts</code>）
 限制它能向页面提出的请求：<code>toast</code> 每秒最多 3 条，每条 200 个字符，不能含 HTML；<code>navigate</code> 只接受 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、
-<code>/settings</code> 和 <code>/search</code>；<code>resize</code> 在 50 px（移动和电视端为 60）到 800 px 之间。插槽在安装时检查一次，渲染时再检查一次。</p>
+<code>/settings</code> 和 <code>/search</code>；<code>resize</code> 在 50 px（移动和电视端为 60）到 800 px 之间。插槽在安装时检查。</p>
 <h3 id="server-hardening">服务器加固<a class="headerlink" href="#server-hardening" title="Permanent link">¶</a></h3>
 <p>服务器启动时把自己标记为不可转储（<code>PR_SET_DUMPABLE=0</code>，<a href="https://github.com/eveyproject/evey/blob/master/cmd/evey/hardening_linux.go"><code>hardening_linux.go</code></a>）：
 以同一用户运行的进程无法通过 <code>/proc</code> 读取它的内存或环境变量，这样即使在没有 Landlock 的内核上，也能保护内存里的签名密钥以及数据库和搜索服务的密码。</p>
@@ -4247,12 +4312,12 @@
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>无</td>
-<td>用来核对签名的公钥。</td>
+<td>可选：一把 PEM 公钥，启动时加入受信任的发布者。</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_MEMORY_MB</code>、<code>EVEY_PLUGINS_PIDS_MAX</code>、<code>EVEY_PLUGINS_DISK_MAX_MB</code>、<code>EVEY_PLUGINS_CPU_NICE</code></td>
 <td>256、64、100、10</td>
-<td>资源限制在启动时的默认值；面板里可以按插件覆盖。</td>
+<td>资源限制在启动时的默认值；面板里可以覆盖，对所有插件一起生效。</td>
 </tr>
 </tbody>
 </table>
@@ -4275,8 +4340,8 @@
 </tr>
 <tr>
 <td>所有插件共用用户 1001</td>
-<td>插件可以向其他插件发信号（向服务器发信号会被拒绝）</td>
-<td><code>PR_SET_DUMPABLE</code> 阻止通过 <code>/proc</code> 读取其他进程；Landlock 和 bubblewrap 隔离各个插件的目录</td>
+<td>在 <code>basic</code> 模式下，插件可以读取其他插件拥有的文件</td>
+<td>向其他进程发信号会被阻止（seccomp、<code>LD_PRELOAD</code> 和 bubblewrap 都会阻止）；<code>PR_SET_DUMPABLE</code> 阻止通过 <code>/proc</code> 读取其他进程；Landlock 和 bubblewrap 隔离各个插件的目录</td>
 </tr>
 <tr>
 <td>seccomp 是黑名单</td>

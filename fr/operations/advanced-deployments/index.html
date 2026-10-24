@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Questions fréquentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limites connues
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo dans Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go dans Evey
   
 
     
@@ -3388,10 +3448,10 @@ avoir vérifié le serveur. Un dump laissé à côté d'un cluster existant est
 signalé et ignoré, jamais fusionné ; un import échoué supprime le nouveau cluster
 pour que le démarrage suivant réessaie depuis le dump.</p>
 <h2 id="arm-hosts">Hôtes ARM<a class="headerlink" href="#arm-hosts" title="Permanent link">¶</a></h2>
-<p>Les images construites depuis un tag de version (<code>0.2.0</code>, préversions comme
-<code>0.2.0-beta.1</code> comprises) sont multi-architectures (<code>linux/amd64</code> et
-<code>linux/arm64</code>) ; Docker choisit la bonne. Les tags de branche comme
-<code>beta-0.0.1</code> sont amd64 uniquement : sur un hôte ARM, utilisez un tag de
+<p>Les images construites depuis un tag de version (<code>0.1.0</code>, préversions
+comprises) sont multi-architectures (<code>linux/amd64</code> et
+<code>linux/arm64</code>) ; Docker choisit la bonne. Les tags de branche
+sont amd64 uniquement : sur un hôte ARM, utilisez un tag de
 version.</p>
 <ul>
 <li><strong>Le transcodage matériel sur ARM</strong> se limite aux SoC Rockchip (classe
@@ -3422,22 +3482,23 @@ version.</p>
 <td><code>latest</code> est toujours la version stable la plus récente</td>
 </tr>
 <tr>
-<td><code>X.Y.Z-beta.N</code></td>
+<td>un tag de préversion (avec un tiret)</td>
 <td>un tag de préversion</td>
-<td>ne publie que son propre tag, ne déplace jamais <code>latest</code></td>
+<td>publie son propre tag et <code>sha-&lt;commit&gt;</code>, jamais <code>latest</code></td>
 </tr>
 <tr>
-<td><code>beta-0.0.1</code>, <code>sha-&lt;commit&gt;</code></td>
+<td>un nom de branche, <code>sha-&lt;commit&gt;</code></td>
 <td>une construction de branche</td>
-<td>amd64 uniquement</td>
+<td>l'image par défaut uniquement, amd64 uniquement (normalement)</td>
 </tr>
 </tbody>
 </table>
-<p>Chaque tag existe en trois variantes : celle par défaut embarque Python 3
-pour les plugins, <code>-nodejs</code> ajoute Node.js, <code>-full</code> ajoute PHP, Ruby et Lua
-(par exemple <code>latest-full</code>). N'utilisez une variante que si un plugin en a
-besoin : l'installateur refuse un plugin dont le langage déclaré manque à
-l'image, avec un message qui nomme la bonne variante.</p>
+<p>Les tags de version et de préversion existent en trois variantes (une construction de branche ne publie que l'image par défaut) : celle par défaut embarque tous les
+environnements d'exécution de plugins (Python 3, Node.js, PHP, Ruby et Lua),
+<code>-nodejs</code> garde Python et Node.js, <code>-lean</code> ne garde que Python (par exemple
+<code>latest-lean</code>). Ne choisissez une variante plus légère que si la taille de
+l'image compte : l'installateur refuse un plugin dont le langage déclaré manque
+à l'image, avec un message qui nomme l'image par défaut.</p>
 <p>Les images publiées embarquent les pilotes de chaque génération Intel et AMD
 prise en charge. Une image construite soi-même peut ne garder qu'une famille
 avec <code>docker build --build-arg GPU=intel-legacy .</code> (Intel Gen9 à Gen11),

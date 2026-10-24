@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3344,12 +3404,12 @@ the mark.</p>
 <strong>Backups</strong>, <strong>All</strong>) and the search box are how you work through a large
 library: <strong>Awaiting</strong> is the to-do list.</p>
 <h2 id="scans">Scans<a class="headerlink" href="#scans" title="Permanent link">¶</a></h2>
-<p>A scan reads the head of each file (a few kilobytes) and reuses the previous
+<p>A scan reads three small zones of each file (the head, the index near the end and the tail) and reuses the previous
 answer for a file that has not changed. <strong>Disk use</strong> sets the pace:</p>
 <ul>
 <li><strong>Discreet</strong>: one file at a time, then a pause as long as the read took. The
   disks stay free about half the time, so someone can keep watching.</li>
-<li><strong>Fast</strong>: several files at once, no pause. About three times quicker on a
+<li><strong>Fast</strong>: several files at once, no pause. Noticeably quicker on a
   library spread over several disks, but playback may stutter meanwhile.</li>
 </ul>
 <p>Two things make a scan diagnose everything again: a file that changed, and a

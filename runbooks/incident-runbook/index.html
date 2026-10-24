@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Common questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known limitations
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3399,7 +3459,8 @@ as the server's (<code>postgres:</code> prefix for the database). The repository
 </span></code></pre></div>
 <p><strong>Logs.</strong> The same stream exists twice: the daily file
 <code>./evey-data/logs/evey-YYYY-MM-DD.log</code> (<code>EVEY_LOG_DIR</code>, <code>/data/logs</code> inside
-the image) and <code>docker logs evey-server</code>. The file is authoritative: Docker's
+the image; a file past 50 MB, <code>EVEY_LOG_MAX_SIZE_MB</code>, continues in
+<code>evey-YYYY-MM-DD-HH.log</code>) and <code>docker logs evey-server</code>. The file is authoritative: Docker's
 json-file driver rotates <code>docker logs</code>, and after a rotation the command can
 stop hours before the container did. When the two disagree, read the file.
 The admin panel's <strong>Logs &amp; Debug</strong> page searches the same stream
@@ -3504,11 +3565,11 @@ client hung up, not that the server timed out.</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Why a segment request reused an encoder or spawned one, and what it cost</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># the player. Logged only when it costs something. `over_client_patience:</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># true` is the smoking gun.</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># The encoders themselves: spawns, kills and their reason.</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"software: session (started|killed)"|per-hash cap'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span></code></pre></div>
 <p>Those lines say what the server decided. To see what ffmpeg achieved second
 by second, turn on the per-encoder progress log (<code>$TOKEN</code> is an admin JWT):</p>
@@ -3636,8 +3697,8 @@ flaps.</p>
 <li>Trickplay is more expensive to regenerate; purge it only if necessary:
   <div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'rm -rf /data/trickplay/*'</span>
 </span></code></pre></div></li>
-<li>Lower the <strong>Transcode cache budget (GB)</strong> in <strong>Admin -&gt; Server Config -&gt;
-  Server Settings</strong> (default <code>10</code>) if the host volume is tight. Whatever the
+<li>Lower the <strong>Transcode cache budget (GB)</strong> in <strong>Admin -&gt;
+  Transcoding</strong> (default <code>10</code>) if the host volume is tight. Whatever the
   budget, the sweeper keeps 2 GiB free on the cache volume.</li>
 </ul>
 <h2 id="a-plugin-crashed">A plugin crashed<a class="headerlink" href="#a-plugin-crashed" title="Permanent link">¶</a></h2>
@@ -3675,7 +3736,7 @@ event reported</code> line with <code>type=</code> and a <code>details=</code> s
    is a new LOAD replacing the running one (look for a <code>StartStream</code> a few
    seconds earlier), <code>reason=ERROR</code> carries the player error. No <code>finished</code>
    after the last <code>alive</code> means the receiver process disappeared, most often
-   a Chromecast HD killed for memory on a 20+ Mbps copy master.</li>
+   a Chromecast HD killed for memory on a high-bitrate copy master (as observed).</li>
 <li><strong>What did the phone see?</strong> Search <code>cast_sender_stall</code>: the sender posts
    <code>state=playing frozen=&lt;n&gt;s pos=&lt;p&gt;</code> when the Cast SDK still says PLAYING
    but the position has not moved for 20 s, and <code>state=idle reason=&lt;r&gt;</code> when
@@ -3691,7 +3752,7 @@ event reported</code> line with <code>type=</code> and a <code>details=</code> s
    rung</code> (the copy master's peak bitrate) and <code>plan fitted to the client's
    line</code> (the receiver's <code>maxKbps</code> measure or its <code>abr=floor</code> rescue; the
    transcode master that follows carries the reason <code>client_line_exceeded</code>
-   or <code>abr_floor_requested</code>). A session that started on a 20+ Mbps copy
+   or <code>abr_floor_requested</code>). A session that started on a high-bitrate copy
    master and fell to a fitted 1080p rung after a few seconds is the rescue
    doing its job; a re-LOAD that starts again on the copy master is the
    pattern that kills a Chromecast HD.</li>

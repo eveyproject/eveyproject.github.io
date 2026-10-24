@@ -10,7 +10,7 @@
         <link rel="canonical" href="https://eveyproject.org/hi/playback/hdr/">
       
       
-        <link rel="prev" href="../mkvgo/">
+        <link rel="prev" href="../ac3go/">
       
       
         <link rel="next" href="../audio/">
@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1300,6 +1332,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3195,9 +3255,10 @@
 <li>HDR स्क्रीन पर, Android या Android TV ऐप के साथ (और ऐसे डिवाइस पर जो HEVC
   डिकोड करता हो), आपको असली HDR तस्वीर मिलती है, जब तक कोई और चीज़ बदलाव को
   मजबूर न करे।</li>
-<li>वेब ब्राउज़र में, और किसी भी ऐसी स्क्रीन पर जो HDR नहीं है, सर्वर तस्वीर को
-  SDR में बदल देता है। यह जानबूझकर है: SDR स्क्रीन पर दिखाया गया HDR धूसर और
-  फीका दिखता है।</li>
+<li>किसी भी ऐसी स्क्रीन पर जो HDR नहीं है, सर्वर तस्वीर को SDR में बदल देता है। यह
+  जानबूझकर है: SDR स्क्रीन पर दिखाया गया HDR धूसर और फीका दिखता है। SDR डिस्प्ले
+  पर वेब ब्राउज़र को SDR मिलता है; जो ब्राउज़र HDR डिस्प्ले बताता है और HEVC डिकोड
+  करता है, वह HDR10 और HLG रखता है। Dolby Vision अब भी बदला जाता है।</li>
 <li>HDR को SDR में बदलना वह सबसे भारी काम है जो प्रोसेसर कर सकता है। ग्राफ़िक्स
   कार्ड मदद करता है: देखें
   <a href="../../administration/hardware-acceleration/">हार्डवेयर एक्सेलेरेशन</a>।</li>
@@ -3220,7 +3281,7 @@ HDR रखता है, या SDR में बदलाव। प्लेब
 </tr>
 <tr>
 <td>एक ब्राउज़र</td>
-<td>हमेशा SDR में बदली हुई तस्वीर: वेब प्लेयर HDR स्क्रीन होने की बात नहीं बताता, इसलिए सर्वर उसके लिए टोन-मैप करता है।</td>
+<td>SDR डिस्प्ले पर SDR में बदली हुई तस्वीर। जब ब्राउज़र HDR डिस्प्ले बताता है (<code>dynamic-range: high</code>) और HEVC डिकोड करता है, तो HDR10 और HLG रखे जाते हैं; Dolby Vision अब भी बदला जाता है।</td>
 </tr>
 <tr>
 <td>एक कास्ट रिसीवर</td>
@@ -3315,7 +3376,7 @@ decision: internal/app/transcoding/decision.go - evaluateVideo (hdr_tonemapping_
 re-encode with HDR kept, copy unavailable: internal/app/transcoding/playback_plan_resolver.go - Decide (hdr_copy_unavailable) ; internal/app/transcoding/resolver_route.go - naturalRoute, passthroughWanted, hwTonemapWanted
 hdr signalling carried: internal/adapters/driven/ffmpeg/hls_args_hw.go - hwHDRPassthroughArgs (no HDR10+ metadata)
 dovi copy rule: internal/app/transcoding/copy_eligibility.go (dovi_profile, DoViBLCompat)
-who declares an HDR screen: frontend/packages/client/src/native/displayHdr.ts - probeDisplayHdr ; frontend/packages/client/src/native/playSession.ts (supportsHdr) ; frontend/apps/web/src/cast-receiver/receiverLogic.ts (hdr=1) ; the web player sends no hdr parameter
+who declares an HDR screen: frontend/packages/client/src/native/displayHdr.ts - probeDisplayHdr ; frontend/packages/client/src/native/playSession.ts (supportsHdr) ; frontend/apps/web/src/cast-receiver/receiverLogic.ts (hdr=1) ; frontend/packages/client/src/web/codec.ts - canDisplayHdr (dynamic-range: high)
 tonemapx, software HDR ceiling: internal/adapters/driven/ffmpeg/tonemapx.go ; internal/pkg/hdr/hdr.go ; docs/adr/0017-software-hdr-tonemap-delivery-resolution.md
 tests: internal/app/transcoding/route_golden_test.go ; internal/app/transcoding/route_tonemap_report_test.go
 labels: i18n player.streamInfo.reason.* ; admin.nowPlaying
@@ -3361,7 +3422,7 @@ plain opening: rules below ; tone mapping cost: internal/app/transcoding/calibra
       <nav class="md-footer__inner md-grid" aria-label="फुटर">
         
           
-          <a href="../mkvgo/" class="md-footer__link md-footer__link--prev" aria-label="पिछला: Evey में MKVGo">
+          <a href="../ac3go/" class="md-footer__link md-footer__link--prev" aria-label="पिछला: Evey में ac3go">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3371,7 +3432,7 @@ plain opening: rules below ; tone mapping cost: internal/app/transcoding/calibra
                 पिछला
               </span>
               <div class="md-ellipsis">
-                Evey में MKVGo
+                Evey में ac3go
               </div>
             </div>
           </a>

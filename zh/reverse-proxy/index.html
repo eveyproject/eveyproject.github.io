@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1519,6 +1549,8 @@
       
         
       
+        
+      
     
     
     
@@ -1635,6 +1667,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3629,20 +3689,21 @@
 <p>Evey 在端口 <strong>9091</strong> 上用普通 HTTP 同时提供 API 和网页界面；反向代理只需要终止 TLS，然后把所有请求转发到 <code>evey:9091</code>。请在下面选择您的代理（自带的 Caddy、Nginx、Traefik、Nginx Proxy Manager，或者您已经在运行的代理）。如果您要调整流媒体传输，或者自己设置安全头，请再读一读最后两节。</p>
 <h2 id="tell-evey-about-the-proxy">在 Evey 里登记代理<a class="headerlink" href="#tell-evey-about-the-proxy" title="Permanent link">¶</a></h2>
 <p>无论用哪种代理，Evey 都需要知道它的公网地址，以及该信任哪个代理。这两项都在<strong>管理 → 远程访问</strong>里设置：一个 <code>https://</code> 开头的<strong>外部 URL</strong>；如果代理是一个容器，再把它的网络填进<strong>受信任的代理</strong>。两项都无需重启就会生效。正是 <code>https://</code> 地址告诉 Evey 前面有代理在终止 TLS：Cookie 会带上 <code>Secure</code> 标记，会发送 HSTS，并且会相信受信任代理发来的 <code>X-Forwarded-Proto</code>。远程访问开关和客户端真实地址的说明见<a href="../administration/remote-access/">远程访问和 HTTPS</a>。</p>
-<p>如果您的整套安装都用代码描述，同样的设置也可以来自环境变量（两边都设置时，以管理面板为准）：</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>EVEY_SERVER_BASE_URL=https://media.example.com
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>EVEY_TRUSTED_PROXIES=172.16.0.0/12       # 只有代理是容器时才需要；环回地址始终受信任
+<p>如果您的整套安装都用代码描述，同样的设置也可以来自环境变量，写在 compose 文件的 <code>environment:</code> 下（两边都设置时，以管理面板为准）：</p>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">EVEY_SERVER_BASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://media.example.com</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">EVEY_TRUSTED_PROXIES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.16.0.0/12</span><span class="w">   </span><span class="c1"># 只有代理是容器时才需要；环回地址始终受信任</span>
 </span></code></pre></div>
 <p>以前的 <code>EVEY_FORWARDED_PROTO</code> 仍然可以用来强制指定，但已经弃用：地址里的协议就足够了。</p>
-<p>每个自带的示例都从同一个地方读取域名，即 <code>.env</code> 里的 <code>EVEY_DOMAIN</code>。只需设置一次，Caddy、Nginx 和 Traefik 都会读取它。</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>EVEY_DOMAIN=media.example.com
-</span></code></pre></div>
+<p>每个自带的示例都从 <code>EVEY_DOMAIN</code> 读取域名，您复制的文件里放的是一个占位值：请就在那里把它换成您的域名，写在代理服务（Caddy、Nginx）的 <code>EVEY_DOMAIN:</code> 那一行，或者写在 <code>Host(...)</code> 规则里（Traefik）。</p>
 <h2 id="caddy-bundled">Caddy（自带）<a class="headerlink" href="#caddy-bundled" title="Permanent link">¶</a></h2>
 <h3 id="files">文件<a class="headerlink" href="#files" title="Permanent link">¶</a></h3>
 <p><a href="https://github.com/eveyproject/evey/blob/master/docker/Caddyfile"><code>docker/Caddyfile</code></a>，由 <a href="https://github.com/eveyproject/evey/blob/master/docker/Dockerfile.caddy"><code>docker/Dockerfile.caddy</code></a> 构建成镜像；对应仓库 <a href="https://github.com/eveyproject/evey/blob/master/docker-compose.yml"><code>docker-compose.yml</code></a> 里的 <code>caddy</code> 服务。</p>
 <h3 id="set-it-up">设置<a class="headerlink" href="#set-it-up" title="Permanent link">¶</a></h3>
 <ol>
-<li>在 <code>.env</code> 里设置 <code>EVEY_DOMAIN</code>，并确保主机的 80 和 443 端口能到达 Caddy 容器。</li>
+<li>在 <code>caddy</code> 服务的 <code>EVEY_DOMAIN:</code> 那一行写上您的域名，并确保主机的 80 和 443 端口能到达 Caddy 容器。</li>
 <li>把仓库 compose 文件里的 <code>caddy</code> 服务加到您的 compose 文件里，然后运行 <code>docker compose up -d</code>。Caddy 会自己为 <code>EVEY_DOMAIN</code> 申请 Let's Encrypt 证书。</li>
 <li>在<strong>管理 → 远程访问</strong>里，设置 <code>https://</code> 开头的<strong>外部 URL</strong>，并在<strong>受信任的代理</strong>里填入 <code>172.16.0.0/12</code>。</li>
 </ol>
@@ -3653,7 +3714,7 @@
 <p><a href="https://github.com/eveyproject/evey/blob/master/examples/nginx/evey.conf.template"><code>examples/nginx/evey.conf.template</code></a>，以及一个现成的 compose 叠加文件 <a href="https://github.com/eveyproject/evey/blob/master/examples/nginx/docker-compose.nginx.yml"><code>examples/nginx/docker-compose.nginx.yml</code></a>。</p>
 <h3 id="set-it-up">设置<a class="headerlink" href="#set-it-up" title="Permanent link">¶</a></h3>
 <ol>
-<li>在 <code>.env</code> 里设置 <code>EVEY_DOMAIN</code>。nginx 镜像在启动时会根据模板生成配置，并替换其中的 <code>EVEY_DOMAIN</code>。</li>
+<li>在叠加文件的 <code>EVEY_DOMAIN:</code> 那一行写上您的域名。nginx 镜像在启动时会根据模板生成配置，并替换其中的 <code>EVEY_DOMAIN</code>。</li>
 <li>把证书和密钥放到模板期望的位置，用对应的文件名（<code>nginx-certs</code> 卷里的 <code>/etc/ssl/certs/&lt;domain&gt;.pem</code> 和 <code>/etc/ssl/private/&lt;domain&gt;.key</code>）：这个叠加文件不会替您申请证书。</li>
 <li><code>docker compose -f docker-compose.yml -f examples/nginx/docker-compose.nginx.yml up -d</code>。</li>
 <li>在<strong>管理 → 远程访问</strong>里，设置 <code>https://</code> 开头的<strong>外部 URL</strong>，并在<strong>受信任的代理</strong>里填入 <code>172.16.0.0/12</code>。</li>
@@ -3667,8 +3728,8 @@
 <ol>
 <li>运行 Traefik，并配置一个 <code>websecure</code> 入口点、一个 <code>letsencrypt</code> 证书解析器，以及一个名为 <code>proxy</code> 的外部 Docker 网络；叠加文件里的标签默认使用这些名字。</li>
 <li>
-<p>在 <code>.env</code> 里设置 <code>EVEY_DOMAIN</code>，然后运行：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>examples/traefik/docker-compose.traefik.yml<span class="w"> </span>up<span class="w"> </span>-d
+<p>在叠加文件的 <code>Host(...)</code> 规则里写上您的域名，然后运行：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>examples/traefik/docker-compose.traefik.yml<span class="w"> </span>up<span class="w"> </span>-d
 </span></code></pre></div>
 </li>
 <li>
@@ -3690,68 +3751,68 @@
 <h3 id="what-it-already-handles">它已经处理好的事情<a class="headerlink" href="#what-it-already-handles" title="Permanent link">¶</a></h3>
 <p>NPM 会自己转发 <code>X-Forwarded-For</code>、<code>X-Forwarded-Proto</code> 和 Host 头，它的默认超时也永远不会在 Evey 的流上触发。不需要其他设置。</p>
 <p><strong>可选</strong>：不让 NPM 用自己的磁盘来缓冲直接播放的文件。在 <strong>Advanced</strong> → <em>Custom Nginx Configuration</em> 里设置（<code>Custom Locations</code> 标签页无法写正则表达式）：</p>
-<div class="language-nginx highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 插件上传（最多 100 MB）和备份恢复（最多 2 GB）。</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">client_max_body_size</span><span class="w"> </span><span class="s">2G</span><span class="p">;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 流媒体：不缓冲，不超时。</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/media/.+/(hls|stream)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="kn">proxy_request_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">}</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># 媒体库扫描在整个扫描期间持续发送进度。</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/libraries/.+/scan</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="p">}</span>
+<div class="language-nginx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 插件上传（最多 100 MB）和备份恢复（最多 2 GB）。</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">client_max_body_size</span><span class="w"> </span><span class="s">2G</span><span class="p">;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 流媒体：不缓冲，不超时。</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/media/.+/(hls|stream)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="kn">proxy_request_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># 媒体库扫描在整个扫描期间持续发送进度。</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">location</span><span class="w"> </span><span class="p">~</span><span class="w"> </span><span class="sr">^/api/v1/libraries/.+/scan</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://evey-server:9091</span><span class="p">;</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="kn">proxy_buffering</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="kn">proxy_read_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="kn">proxy_send_timeout</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="kn">proxy_http_version</span><span class="w"> </span><span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Connection</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>其他所有路径（网页界面、API 的其余部分、SyncPlay 的 WebSocket）都经过 NPM 自己的代理块，也就是 Details 标签页配置的那部分。不加这段配置也不会出问题，它只是改变大文件在哪里缓冲。</p>
 <h2 id="a-proxy-you-already-run-tls-terminated-upstream">您已经在运行的代理（TLS 在上游终止）<a class="headerlink" href="#a-proxy-you-already-run-tls-terminated-upstream" title="Permanent link">¶</a></h2>
 <p>如果 NAS 上已经有反向代理（厂商自带的、Nginx Proxy Manager，或者共享 Docker 网络上的 Traefik），就不需要 Caddy：Evey 会自己发出安全头和完整的 CSP，而流媒体规则无论如何也只能由直接面向客户端的代理来执行。在它后面再加一个代理没有任何好处。</p>
 <h3 id="set-it-up">设置<a class="headerlink" href="#set-it-up" title="Permanent link">¶</a></h3>
 <p>把 evey 服务放到那个代理的网络上，目标设为 <code>evey-server:9091</code>（容器名；服务名 <code>evey</code> 也能解析）：</p>
-<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">services</span><span class="p">:</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="c1"># 不暴露端口：代理是唯一的入口</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">EVEY_SERVER_BASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://media.example.com</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">EVEY_TRUSTED_PROXIES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.16.0.0/12</span><span class="w">     </span><span class="c1"># 知道代理的子网后，改成更窄的范围</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="c1"># ...</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nt">networks</span><span class="p">:</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nt">default</span><span class="p">:</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy-net</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="c1"># 不暴露端口：代理是唯一的入口</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">EVEY_SERVER_BASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://media.example.com</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">EVEY_TRUSTED_PROXIES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.16.0.0/12</span><span class="w">     </span><span class="c1"># 知道代理的子网后，改成更窄的范围</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="c1"># ...</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">networks</span><span class="p">:</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">proxy-net</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
 <p>然后，在那个代理里，为通往 <code>evey-server:9091</code> 的路由：转发 <code>X-Forwarded-For</code> 和 <code>X-Forwarded-Proto</code>，开启 WebSocket 支持，并在流媒体路径上应用下面的流媒体规则。上面 Nginx 和 Nginx Proxy Manager 两节给出了具体的配置行。</p>
 <h3 id="what-it-already-handles">它已经处理好的事情<a class="headerlink" href="#what-it-already-handles" title="Permanent link">¶</a></h3>
 <p>这取决于代理本身：请检查到达浏览器的 CSP 头恰好只有一个（见后面几节），并在设置好受信任的代理后运行一次 <code>evey admin doctor</code>。</p>
 <h2 id="streaming---what-a-proxys-defaults-do-to-it">流媒体：代理的默认设置会对它产生什么影响<a class="headerlink" href="#streaming---what-a-proxys-defaults-do-to-it" title="Permanent link">¶</a></h2>
-<p>即使反向代理保持默认设置，Evey 也能正常工作：每个长时间的响应要么连续发送数据（HLS 片段、直接播放、转码输出），要么每 30 秒向客户端发一次心跳（事件流），所以默认的读取超时永远不会触发。不过还有两点值得了解：</p>
+<p>即使反向代理保持默认设置，Evey 也能正常工作：每个长时间的响应要么连续发送数据（HLS 片段、直接播放、转码输出），要么保持连接存活（事件流会发送 keep-alive），所以默认的读取超时永远不会触发。不过还有两点值得了解：</p>
 <ul>
 <li><strong>缓冲。</strong> 会缓冲响应的代理（nginx 默认如此）会先把直接播放的文件读进自己的缓冲区和临时文件，客户端才能收到。这样能用，但一部几 GB 的电影就会经过代理主机的磁盘。在流媒体路径上设置 <code>proxy_buffering off</code> 可以避免这种情况。</li>
 <li><strong>扫描。</strong> <code>/api/v1/libraries/*/scan</code> 在整个扫描期间持续发送进度；如果代理限制响应的总时长（这种情况很少见，nginx、Caddy 和 Traefik 默认都不限制），就会把它提前切断。不过扫描本身仍然会在服务器端继续进行。</li>
 </ul>
 <p>涉及的路径：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/api/v1/media/*/hls/*
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/api/v1/media/*/stream
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>/api/v1/libraries/*/scan
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/api/v1/media/*/hls/*
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/api/v1/media/*/stream
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/api/v1/libraries/*/scan
 </span></code></pre></div>
 <p>自带的 Caddy 和 Nginx 示例都在这些路径上做了这两项设置（不缓冲、不超时）。Traefik 示例和 Nginx Proxy Manager 这类通过界面配置的代理保持默认设置，这样也没有问题；上面 NPM 的那段配置是可选的。</p>
 <h2 id="security-headers--csp---read-this-if-your-proxy-sets-its-own">安全头和 CSP：如果您的代理自己设置安全头，请读这一节<a class="headerlink" href="#security-headers--csp---read-this-if-your-proxy-sets-its-own" title="Permanent link">¶</a></h2>
@@ -3794,12 +3855,12 @@
 </tbody>
 </table>
 <p>对于自行编写策略的代理，这是一份确认可用的策略，也就是自带的 Caddy 发送的那一份：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>default-src 'self'; base-uri 'self'; object-src 'none';
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>img-src 'self' https: data: blob:; media-src 'self' blob:;
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>style-src 'self' 'unsafe-inline';
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com;
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>connect-src 'self' https: wss:; worker-src 'self' blob:; font-src 'self' data:;
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>frame-src 'self' https://www.gstatic.com
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>default-src 'self'; base-uri 'self'; object-src 'none';
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>img-src 'self' https: data: blob:; media-src 'self' blob:;
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>style-src 'self' 'unsafe-inline';
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com;
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>connect-src 'self' https: wss:; worker-src 'self' blob:; font-src 'self' data:;
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>frame-src 'self' https://www.gstatic.com
 </span></code></pre></div>
 <p><code>base-uri</code> 和 <code>object-src</code> 不会退回到 <code>default-src</code>，所以省略它们的策略对 <code>&lt;base href&gt;</code> 注入和 <code>&lt;object&gt;</code>/<code>&lt;embed&gt;</code> 嵌入毫无限制。如果您自行编写策略，请保留它们。<code>script-src</code> 里没有 <code>'unsafe-inline'</code>：注入到页面里的脚本不会运行。请不要把它加回去，应用里没有任何地方需要它。</p>
 <p>有两个页面带有自己的策略，由应用发送；请在这两个路径上保留应用的头：</p>
@@ -3807,7 +3868,7 @@
 <li><code>/plugin-frame.html</code>：插件界面和主题脚本运行的页面。它的策略把它放进沙箱（即使在 iframe 以外打开也是如此），把它的网络访问限制在插件清单声明的主机内，并且只允许应用用框架嵌入它，所以它还会发送 <code>X-Frame-Options: SAMEORIGIN</code>：不要在这个路径上用 <code>DENY</code> 覆盖它，否则所有插件界面都会显示为空白。</li>
 <li><code>/cast-receiver.html</code>：Chromecast 从 Evey 播放时加载的页面。Cast 播放器会往里面注入来自 <code>www.gstatic.com</code> 的样式、字体和图片。请在这个路径上保留应用的头，或者只对这个路径应用下面的策略：</li>
 </ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://www.gstatic.com; img-src 'self' data: https: blob:; media-src 'self' blob: https:; worker-src 'self' blob:; font-src 'self' data: https://www.gstatic.com; connect-src 'self' https: wss:; frame-src https://www.gstatic.com; base-uri 'self'; object-src 'none'
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://www.gstatic.com; img-src 'self' data: https: blob:; media-src 'self' blob: https:; worker-src 'self' blob:; font-src 'self' data: https://www.gstatic.com; connect-src 'self' https: wss:; frame-src https://www.gstatic.com; base-uri 'self'; object-src 'none'
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">到达浏览器的 CSP 头必须恰好只有一个</p>
@@ -3830,7 +3891,7 @@ one port for API and UI, https mode from the scheme: internal/config/config.go (
 bundled Caddy: docker/Caddyfile (streaming matcher, @ownPolicy, header_down CSP) ; docker/Dockerfile.caddy ; docker-compose.yml caddy service
 nginx: examples/nginx/evey.conf.template ; examples/nginx/docker-compose.nginx.yml (nginx-certs volume, no ACME)
 traefik: examples/traefik/docker-compose.traefik.yml (labels + proxy network only)
-streaming paths: cmd/evey/gateway.go ; event streams ping 30 s ; scan progress stream
+streaming paths: cmd/evey/gateway.go ; event streams keep-alive ; scan progress stream
 csp and own-policy pages: internal/adapters/driving/http/helpers.go - securityHeadersMiddleware ; /plugin-frame.html ; /cast-receiver.html
 trusted proxies, catch-all refused, doctor: internal/config/trusted_proxies.go ; cmd/evey/admin_ops.go - checkTrustedProxies
 remote access inferred: docs/adr/0026-remote-access-inferred-from-a-published-url.md

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1333,6 +1363,8 @@
       
         
       
+        
+      
     
     
     
@@ -1449,6 +1481,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3402,21 +3462,22 @@ nutzen Sie die Zeile der Bibliothek:</p>
 <summary>Wie der Server die Ordner prüft</summary>
 <ul>
 <li>Der Server liest jede Bibliothek bei jedem Start, danach alle 2 Minuten
-  (<strong>Verwaltung → Serverkonfiguration → Servereinstellungen → Intervall
+  (<strong>Verwaltung → Serverkonfiguration → Bibliotheken → Intervall
   für periodischen Scan</strong>, wirksam nach einem Neustart). Solange etwas
   abgespielt wird, wartet er 15 Minuten zwischen zwei Durchgängen, damit
   er die Wiedergabe nicht bremst.</li>
 <li>Das System kann ihm auch melden, wenn sich eine Datei ändert
-  (<strong>Verwaltung → Serverkonfiguration → Servereinstellungen →
+  (<strong>Verwaltung → Serverkonfiguration → Bibliotheken →
   Bibliotheks-Dateiüberwachung</strong>), und zwar für die Bibliotheken, bei
   denen die Echtzeitüberwachung eingeschaltet ist. Um zu prüfen, dass das
   noch funktioniert, schreibt er für ein paar Sekunden eine kleine
   Testdatei in den Ordner. Eine Bibliothek, bei der das nachweislich
   funktioniert, wird nur noch einmal pro Stunde gelesen statt alle
   2 Minuten.</li>
-<li>Bibliotheken, die im Verwaltungsbereich angelegt wurden, nutzen die
+<li>Bibliotheken, die im Web-Verwaltungsbereich angelegt wurden, nutzen die
   Dateiüberwachung nicht: Die Durchgänge alle 2 Minuten finden ihre
-  Dateien.</li>
+  Dateien. Das Verwaltungsformular der Handy-App hat für eine Bibliothek
+  einen Schalter <strong>Echtzeit-Überwachung</strong>.</li>
 </ul>
 </details>
 <div class="admonition note">
@@ -3510,7 +3571,7 @@ Administrator kann sie für einen Titel von Hand anpassen oder die Erkennung neu
 starten.</p>
 <p>Die Player zeigen standardmäßig die Schaltflächen <strong>Intro überspringen</strong>,
 <strong>Rückblick überspringen</strong> und <strong>Abspann überspringen</strong>. <strong>Intros automatisch
-überspringen</strong> (<strong>Verwaltung → Serverkonfiguration → Servereinstellungen</strong>,
+überspringen</strong> (<strong>Verwaltung → Serverkonfiguration → Bibliotheken</strong>,
 standardmäßig aus) lässt jeden Player sie von selbst überspringen.</p>
 <!-- sources
 add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths only - no realtime/scan-on-startup toggles) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)

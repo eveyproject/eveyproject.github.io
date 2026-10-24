@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1181,6 +1211,8 @@
       
         
       
+        
+      
     
     
     
@@ -1446,6 +1478,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3320,7 +3380,7 @@
 </tr>
 <tr>
 <td>某项设置，或者已经做出的决定</td>
-<td>个人资料中已关闭直接播放 · 个人资料中已关闭重封装 · 首选视频编码（个人资料设置） · 本次会话已固定该选择</td>
+<td>首选视频编码（个人资料设置） · 本次会话已固定该选择</td>
 </tr>
 </tbody>
 </table>
@@ -3353,11 +3413,7 @@
 <h2 id="why-the-method-rarely-changes-mid-film">为什么播放方式很少在中途改变<a class="headerlink" href="#why-the-method-rarely-changes-mid-film" title="Permanent link">¶</a></h2>
 <p>决定在播放开始时做出，并在整个会话中保持不变，这样播放器就不会收到来自两种不同编码的片段。如果切换音轨或字幕需要改变处理方式，或者重新开始播放该影片，就会重新做一次决定。</p>
 <h2 id="forcing-a-method">强制使用某种方式<a class="headerlink" href="#forcing-a-method" title="Permanent link">¶</a></h2>
-<p>在<strong>设置 → 播放</strong>里，每个个人资料都有<strong>允许直接播放</strong>、<strong>允许重封装</strong>和<strong>允许转码</strong>。关掉其中一项，服务器就会跳过这种方式，流信息会显示原因。</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>这是一个诊断工具，不是画质设置：强制转码的效果永远不会比原始文件更好。</p>
-</div>
+<p>无法强制使用某种方式：服务器总是根据文件和播放器来选择。您能限制的是画质，按设备分别设置，位置在<strong>设置 → 播放 → 省流量模式（本设备）</strong>。它只限制这台设备上的流，账户下的其他设备保留各自的设置。<strong>关闭</strong>表示不设上限。<strong>省流</strong>最高要求 720p、3 Mbps 和立体声。<strong>旅行 / 低流量</strong>最高要求 480p、1 Mbps 和立体声。超过上限的片源会被转码到上限以内，流信息会把这个上限显示为原因。</p>
 <p>播放器设置里的<strong>画质</strong>与此不同：它是在转码后的视频流的几种画质之间做选择。<strong>自动</strong>会根据网络情况调整；选一个高度（1080p、720p...）就固定在这个画质；<strong>原画质</strong>会取消播放器本来会要求的高度限制。</p>
 <h2 id="going-further">深入了解<a class="headerlink" href="#going-further" title="Permanent link">¶</a></h2>
 <ul>
@@ -3367,7 +3423,8 @@
 <li>具体实现：<a href="../../playback-serving/">播放链路</a></li>
 </ul>
 <!-- sources
-decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels), applyDirectPlayPrefs
+decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels)
+
 session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked)
 remote cap: internal/adapters/driving/grpcapi/playback_handler.go - resolvePlaybackPrefs ; internal/config/config.go - RemoteBitrateCapKbps
 client caps: internal/domain/transcoding/playback_decision.go - ClientProfile ; frontend/packages/client/src/web/codec.ts ; frontend/packages/media-caps/src/castUrl.ts

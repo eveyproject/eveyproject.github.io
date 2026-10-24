@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Preguntas frecuentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitaciones conocidas
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo en Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go en Evey
   
 
     
@@ -3401,7 +3461,7 @@ publica.</p>
 </span></code></pre></div>
 <p><strong>Registros.</strong> El mismo flujo existe dos veces: el archivo diario
 <code>./evey-data/logs/evey-YYYY-MM-DD.log</code> (<code>EVEY_LOG_DIR</code>, <code>/data/logs</code> dentro
-de la imagen) y <code>docker logs evey-server</code>. La referencia es el archivo: el
+de la imagen; un archivo de más de 50 MB, <code>EVEY_LOG_MAX_SIZE_MB</code>, continúa en <code>evey-YYYY-MM-DD-HH.log</code>) y <code>docker logs evey-server</code>. La referencia es el archivo: el
 driver json-file de Docker rota <code>docker logs</code>, y después de una rotación el
 comando puede dejar de mostrar líneas horas antes de que se parara el
 contenedor. Cuando los dos no coinciden, lee el archivo. La página
@@ -3521,11 +3581,11 @@ nada:</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Por qué una petición de segmento ha reutilizado un codificador o ha lanzado</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># uno, y lo que le ha costado al reproductor. Solo se registra cuando cuesta</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># algo. `over_client_patience: true` es la prueba definitiva.</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span><span class="s1">'"software: reach decision"'</span><span class="w"> </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Los propios codificadores: lanzamientos, cierres y su motivo.</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'"software: session (started|killed)"|per-hash cap'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>/data/logs/evey-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </span></code></pre></div>
 <p>Esas líneas dicen lo que ha decidido el servidor. Para ver lo que ha
 conseguido ffmpeg segundo a segundo, activa el registro de progreso de cada
@@ -3669,8 +3729,7 @@ la comprobación de salud cambia de estado una y otra vez.</p>
   <div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'rm -rf /data/trickplay/*'</span>
 </span></code></pre></div></li>
 <li>Baja el <strong>Presupuesto de caché de transcodificación (GB)</strong> en
-  <strong>Administración → Configuración del servidor → Configuración del
-  servidor</strong> (por defecto <code>10</code>) si el volumen del equipo tiene poco espacio. Sea cual
+  <strong>Administración → Transcodificación</strong> (por defecto <code>10</code>) si el volumen del equipo tiene poco espacio. Sea cual
   sea el presupuesto, la limpieza automática mantiene 2 GiB libres en el
   volumen de la caché.</li>
 </ul>
@@ -3713,7 +3772,7 @@ línea <code>player-client: playback event reported</code> con <code>type=</code
    el error del reproductor. Si no hay ningún <code>finished</code> después del último
    <code>alive</code>, el proceso del receptor ha desaparecido; casi siempre es un
    Chromecast HD que el sistema ha cerrado por falta de memoria con una lista maestra
-   de copia de más de 20 Mbps.</li>
+   de copia de alto bitrate (según lo observado).</li>
 <li><strong>¿Qué ha visto el teléfono?</strong> Busca <code>cast_sender_stall</code>: el emisor envía
    <code>state=playing frozen=&lt;n&gt;s pos=&lt;p&gt;</code> cuando el SDK de Cast sigue diciendo
    PLAYING pero la posición no se ha movido en 20 s, y
@@ -3732,7 +3791,7 @@ línea <code>player-client: playback event reported</code> con <code>type=</code
    receptor o su mecanismo de rescate <code>abr=floor</code>; la lista maestra transcodificada que
    viene después lleva el motivo <code>client_line_exceeded</code> o
    <code>abr_floor_requested</code>). Una sesión que empezó con una lista maestra de
-   copia de más de 20 Mbps y bajó a un escalón 1080p ajustado al cabo de
+   copia de alto bitrate y bajó a un escalón 1080p ajustado al cabo de
    unos segundos es el mecanismo de rescate funcionando como debe; un nuevo LOAD que vuelve
    a empezar con la lista maestra de copia es lo que hace fallar a un
    Chromecast HD.</li>

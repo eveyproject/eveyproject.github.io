@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1295,6 +1325,8 @@
       
         
       
+        
+      
     
     
     
@@ -1411,6 +1443,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3227,7 +3287,8 @@
 <li>वीडियो कैश (वह अपने-आप फिर भर जाता है);</li>
 <li>सर्च इंडेक्स (डेटाबेस से फिर बन जाता है);</li>
 <li><code>./evey-data</code> में रखी कुंजियाँ: <code>jwt.key</code>, जो हर साइन-इन की रक्षा करती है,
-  और <code>keys</code> फ़ोल्डर (डेटाबेस का पासवर्ड, सर्च की कुंजी);</li>
+  <code>keys</code> फ़ोल्डर (डेटाबेस का पासवर्ड, सर्च की कुंजी), और <code>hls_aes.key</code>, वह कुंजी जो
+  स्ट्रीमिंग सेगमेंट को एन्क्रिप्ट करती है (पहली बार शुरू होने पर बनती है, मोड 0600);</li>
 <li>इंस्टॉल किए गए प्लगइन की फ़ाइलें।</li>
 </ul>
 <p><strong>इसलिए पूरे <code>./evey-data</code> फ़ोल्डर की कॉपी भी रखें।</strong> डेटाबेस बैकअप उसी
@@ -3277,11 +3338,11 @@
 </ul>
 <details class="info">
 <summary>जो वर्ज़न आप चलाते हैं, उसे ठीक-ठीक पिन करें</summary>
-<p>बीटा के दौरान कोई नंबर वाली रिलीज़ नहीं है और कोई <code>latest</code> टैग नहीं है।
-<code>beta-0.0.1</code> टैग हर अपडेट के साथ बदलता है। जिस सर्वर पर आप निर्भर हैं,
-उसके लिए <code>image:</code> लाइन पर एक तय <code>sha-&lt;commit&gt;</code> टैग लगाएँ, ताकि एक दिन के
-अंतर पर किए गए दो pull वही कोड चलाएँ। रिलीज़ आने के बाद <code>latest</code> सबसे हाल
-की स्थिर रिलीज़ को दर्शाएगा, और रिलीज़ का टैग (<code>0.2.0</code>) उसे पिन करेगा।</p>
+<p><code>latest</code> सबसे नई रिलीज़ को दर्शाता है और हर अपडेट के साथ बदलता है। जिस सर्वर
+पर आप निर्भर हैं, उसके लिए <code>image:</code> लाइन पर रिलीज़ का टैग (<code>0.1.0</code>, या सिर्फ़ उसके फ़िक्स पाने के लिए <code>0.1</code>) या एक
+तय <code>sha-&lt;commit&gt;</code> टैग लगाएँ, ताकि एक दिन के अंतर पर किए गए दो pull वही कोड
+चलाएँ।
+<a href="../installation/#common-variations">इंस्टॉलेशन</a> की तालिका बताती है कि हर टैग से आपको क्या मिलता है।</p>
 </details>
 <h3 id="going-back">वापस लौटना<a class="headerlink" href="#going-back" title="Permanent link">¶</a></h3>
 <ol>
@@ -3302,7 +3363,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
-rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (beta-0.0.1 + sha-<short>, latest gated on vX.Y.Z)
+rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->
 

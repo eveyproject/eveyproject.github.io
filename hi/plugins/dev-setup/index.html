@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     अक्सर पूछे जाने वाले सवाल
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ज्ञात सीमाएँ
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey में MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey में ac3go
   
 
     
@@ -3349,16 +3409,16 @@ gRPC सर्विस देता है और दूसरे socket पर
 <p>अपने प्लगइन की भाषा उन runtime में से चुनें जिन्हें सर्वर शुरू कर सकता है:
 <code>python</code>, <code>nodejs</code>, <code>php</code>, <code>ruby</code>, <code>lua</code>, <code>bash</code> और <code>sh</code> को इमेज में अपना
 interpreter चाहिए; <code>go</code> एक compiled binary लाता है और उसे <code>native-binary</code>
-अनुमति चाहिए। डिफ़ॉल्ट इमेज में सिर्फ़ Python है; <code>-nodejs</code> इमेज Node.js जोड़ती
-है और <code>-full</code> इमेज PHP, Ruby और Lua जोड़ती है। जो manifest ऐसा runtime बताता है
+अनुमति चाहिए। डिफ़ॉल्ट इमेज में Python, Node.js, PHP, Ruby और Lua हैं; <code>-nodejs</code> इमेज में
+Python और Node.js रहते हैं और <code>-lean</code> इमेज में सिर्फ़ Python रहता है। जो manifest ऐसा runtime बताता है
 जो इमेज में नहीं है, वह इंस्टॉल के समय मना कर दिया जाता है, और उपलब्ध runtime की
 सूची दिखाई जाती है।</p>
-<p>gRPC अनुबंध एक ही फ़ाइल है: <code>proto/plugin/v1/plugin_api.proto</code>। Python, Node.js,
-PHP, Ruby, Dart, Java और Swift के stub <code>sdk/&lt;language&gt;/</code> में बनाए जाते हैं। प्लगइन
-शुरू होने पर सर्वर आपकी भाषा के stub आपके entrypoint के बगल में कॉपी कर देता है,
-इसलिए Node.js या Python प्लगइन को कुछ भी साथ पैक नहीं करना पड़ता: इमेज Node.js
-प्लगइन को <code>@grpc/grpc-js</code> और <code>@grpc/proto-loader</code> देती है, और Python प्लगइन को
-<code>grpcio</code>। किसी और भाषा के लिए <code>protoc</code> से stub बनाएँ और उन्हें ZIP में रखें:</p>
+<p>gRPC अनुबंध एक ही फ़ाइल है: <code>proto/plugin/v1/plugin_api.proto</code>। सिर्फ़ Python SDK
+जनरेट किए हुए stub के साथ आता है; <code>sdk/&lt;language&gt;/</code> में बाकी भाषाओं के पास <code>.proto</code> है। प्लगइन
+शुरू होने पर सर्वर आपकी भाषा की फ़ाइलें आपके entrypoint के बगल में कॉपी कर देता है।
+इमेज Python प्लगइन को <code>grpcio</code> देती है, इसलिए उन्हें कुछ पैक नहीं करना पड़ता। Node.js
+प्लगइन को अपना <code>node_modules</code> (<code>@grpc/grpc-js</code> और <code>@grpc/proto-loader</code>) पैकेज में
+साथ रखना होगा। किसी और भाषा के लिए <code>protoc</code> से stub बनाएँ और उन्हें ZIP में रखें:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span>proto/plugin/v1/plugin_api.proto
@@ -3420,7 +3480,7 @@ PHP, Ruby, Dart, Java और Swift के stub <code>sdk/&lt;language&gt;/</code
 <li>
 <p><strong>ZIP बनाएँ।</strong> manifest आर्काइव के root में होना चाहिए, किसी सब-फ़ोल्डर में
    नहीं:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span><span class="w"> </span><span class="s2">"node_modules/*"</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3481,8 +3541,8 @@ manifest <code>prefs</code> या <code>public</code> बताता है, �
 <code>examples/plugins/data-demo</code> <code>prefs</code>, <code>public</code> और <code>admin.nav</code> स्लॉट दिखाता है। bridge
 और स्लॉट <a href="../api-reference/#frontend-api">प्लगइन API संदर्भ</a> में बताए गए हैं।</p>
 <h2 id="6-reach-the-outside-world">6. इंटरनेट तक पहुँचें<a class="headerlink" href="#6-reach-the-outside-world" title="Permanent link">¶</a></h2>
-<p>प्लगइन का प्रोसेस किसी भी सैंडबॉक्स मोड में इंटरनेट की ओर कोई socket नहीं खोल
-सकता। इंटरनेट तक पहुँचने का एकमात्र तरीका <code>HostService</code> का <code>Fetch</code> कॉल है: सर्वर लक्ष्य को
+<p>प्लगइन का प्रोसेस हर उस मोड में इंटरनेट की ओर कोई socket नहीं खोल
+सकता जिसमें लॉन्चर चलता है (लॉन्चर के बिना <code>basic</code> सिर्फ़ <code>execve</code> को रोकता है)। इंटरनेट तक पहुँचने का एकमात्र तरीका <code>HostService</code> का <code>Fetch</code> कॉल है: सर्वर लक्ष्य को
 manifest से मिलाकर जाँचता है, फिर request खुद भेजता है।</p>
 <div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">permissions</span><span class="p">:</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
@@ -3497,7 +3557,7 @@ broker <code>http</code> और <code>https</code>, <code>GET</code> और <cod
 <a href="../security-model/#external-fetch-rules">अनुमतियाँ और स्लॉट</a> में हैं।</p>
 <div class="admonition note">
 <p class="admonition-title">होस्ट एडमिन के साथ एक अनुबंध हैं</p>
-<p>एडमिन इंस्टॉल के समय होस्ट की सूची देखता है, और अपडेट पर हर नए होस्ट को
+<p>एडमिन अपडेट के समय और सुरक्षा डैशबोर्ड पर होस्ट की सूची देखता है, और अपडेट पर हर नए होस्ट को
 मंज़ूरी देनी होती है। सूची में सिर्फ़ वही रखें जिसकी प्लगइन को ज़रूरत है, और
 अपनी README में बताएँ कि हर होस्ट को क्या मिलता है।</p>
 </div>
@@ -3505,8 +3565,11 @@ broker <code>http</code> और <code>https</code>, <code>GET</code> और <cod
 <div class="admonition info">
 <p class="admonition-title">सिग्नेचर क्या साबित करता है</p>
 <p>सिग्नेचर बताता है कि एडमिन जो ZIP इंस्टॉल करता है, वह बाइट-दर-बाइट वही है
-जो <strong>आपने</strong> प्रकाशित किया, उस कुंजी से साइन किया हुआ जिस पर एडमिन भरोसा
-करता है। यह इस बारे में कुछ नहीं कहता कि प्लगइन क्या करता है: अनुमतियाँ, होस्ट
+जो <strong>आपने</strong> प्रकाशित किया। आपकी public key पैकेज के अंदर चलती है (ZIP की जड़ में
+<code>cosign.pub</code>), और Evey इंस्टॉल के समय उसका fingerprint प्लगइन पर पिन कर देता
+है: किसी और कुंजी से साइन किया हुआ, या अब साइन न किया हुआ अपडेट तब तक मना
+रहता है जब तक एडमिन बदलाव स्वीकार नहीं करता। यह इस बारे में कुछ नहीं कहता कि
+प्लगइन क्या करता है: अनुमतियाँ, होस्ट
 और पूर्वावलोकन का विश्लेषण फिर भी लागू होते हैं। Evey इसे offline और अपने
 प्रोसेस के अंदर जाँचता है (ZIP के SHA-256 पर ECDSA P-256, वही फ़ॉर्मैट जो
 <code>cosign sign-blob --key</code> बनाता है): सर्वर पर न <code>cosign</code> binary, न नेटवर्क, न
@@ -3523,13 +3586,15 @@ transparency log।</p>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>हर रिलीज़ पर: ZIP बनाएँ, फिर साइन करें</strong>, ठीक उसी फ़ाइल पर जो आप बाँटेंगे।</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>hello-plugin.zip
+<p><strong>हर रिलीज़ पर: अपनी public key प्लगइन की जड़ में रखें, ZIP बनाएँ, फिर
+   साइन करें</strong>, ठीक उसी फ़ाइल पर जो आप बाँटेंगे।</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>hello-plugin.zip
 </span></code></pre></div>
 </li>
 <li>
@@ -3539,32 +3604,42 @@ transparency log।</p>
 </span></code></pre></div>
 </li>
 <li>
-<p><strong>तीन फ़ाइलें एक साथ प्रकाशित करें</strong>: <code>hello-plugin.zip</code>,
-   <code>hello-plugin.zip.sig</code> और <code>cosign.pub</code>। public key का fingerprint ऐसी जगह
-   रखें जहाँ आपके उपयोगकर्ता उसे मिला सकें (README, रिलीज़ नोट), ताकि उन्हें पता
-   रहे कि <code>cosign.pub</code> बदली नहीं गई।</p>
+<p><strong>दोनों फ़ाइलें एक साथ प्रकाशित करें</strong>: <code>hello-plugin.zip</code> (आपकी public key
+   उसके अंदर है) और <code>hello-plugin.zip.sig</code>, एक-दूसरे के बगल में, ताकि URL से
+   इंस्टॉल करने पर सिग्नेचर <code>&lt;url&gt;.sig</code> पर मिल जाए। कुंजी का fingerprint
+   (<code>sha256:...</code>, जिसे Evey प्लगइन के कार्ड पर दिखाता है) अपने README और रिलीज़
+   नोट में रखें, ताकि एडमिन कुंजी पर भरोसा करने से पहले उसे मिला सकें।</p>
 </li>
 </ol>
-<p>जिस सर्वर पर प्लगइन इंस्टॉल होता है, वहाँ एडमिन कुंजी और एक नीति सेट करता है और
-सर्वर को फिर से शुरू करता है:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">   </span><span class="c1"># या "enforce", ताकि जो जाँच में फ़ेल हो वह मना हो</span>
-</span></code></pre></div>
-<p>फिर <strong>एडमिन → प्लगइन</strong> में वह ZIP चुनता है और <strong>हस्ताक्षर फ़ाइल (.zip.sig,
-वैकल्पिक)</strong> में उसकी <code>.zip.sig</code>; API से, सिग्नेचर अपलोड का <code>sig</code> फ़ील्ड है।
-पूर्वावलोकन <strong>हस्ताक्षरित</strong> या एक अमान्य सिग्नेचर दिखाता है, और सुरक्षा डैशबोर्ड
-नतीजा रखता है।</p>
+<p>जिस सर्वर पर प्लगइन इंस्टॉल होता है, वहाँ एडमिन <strong>एडमिन → प्लगइन</strong> में ZIP चुनता है
+और <strong>हस्ताक्षर फ़ाइल (.zip.sig, वैकल्पिक)</strong> में उसकी <code>.zip.sig</code>; API से, सिग्नेचर
+अपलोड का <code>sig</code> फ़ील्ड है। Evey पैकेज को उसी कुंजी से जाँचता है जो वह साथ लाता है
+और इनमें से एक दिखाता है:</p>
+<ul>
+<li><strong>&lt;प्रकाशक&gt; द्वारा हस्ताक्षरित</strong>: कुंजी इंस्टेंस की <strong>भरोसेमंद प्रकाशक</strong> सूची में
+  है।</li>
+<li><strong>हस्ताक्षरित - अज्ञात कुंजी sha256:...</strong>: सिग्नेचर सही है, पर कुंजी पर अभी
+  भरोसा नहीं किया गया। एक क्लिक, <strong>इस कुंजी पर भरोसा करें</strong>, उसे एक नाम के साथ
+  सूची में जोड़ देता है।</li>
+<li><strong>हस्ताक्षर रहित</strong>, या <strong>अमान्य हस्ताक्षर</strong>।</li>
+</ul>
+<p>आगे क्या हो, यह नीति तय करती है: <code>EVEY_PLUGINS_COSIGN_POLICY=warn</code> (डिफ़ॉल्ट)
+फ़ैसला दर्ज करती है और हर इंस्टॉल को जाने देती है; <code>enforce</code> सिर्फ़ भरोसेमंद
+कुंजियाँ मानती है। नीति चाहे जो हो, जिस अपडेट की कुंजी इंस्टॉल किए गए वर्ज़न से
+अलग है, या जो सिग्नेचर छोड़ देता है, वह तब तक मना रहता है जब तक एडमिन अपडेट
+डायलॉग में <strong>प्रकाशक बदल गया है, मैं नई कुंजी स्वीकार करता हूँ</strong> पर टिक नहीं
+करता। <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> वैकल्पिक है: वह शुरू होते समय भरोसे की सूची
+में एक कुंजी जोड़ती है (सर्वर संचालक की कुंजी के रूप में चिह्नित)।</p>
 <p>आम गलतियाँ:</p>
 <ul>
 <li><strong>ZIP में कोई भी बदलाव सिग्नेचर को अमान्य कर देता है</strong>, वही फ़ाइलें दोबारा ZIP करने से
   भी। वही फ़ाइल साइन करें जो आप बाँटते हैं, और हर वर्ज़न पर फिर से साइन करें।</li>
+<li><strong>एक वर्ज़न से अगले तक वही कुंजी रखें।</strong> नई कुंजी, आपको इंस्टॉल कर चुके हर
+  एडमिन के लिए, एक नया प्रकाशक है: उससे उसे स्वीकार करने को कहा जाएगा। कुंजी
+  जानबूझकर बदलें, और रिलीज़ नोट में बताएँ।</li>
 <li><strong>सिर्फ़ ECDSA P-256 कुंजियाँ मानी जाती हैं</strong>, जो <code>cosign
   generate-key-pair</code> बनाता है। keyless signing और KMS reference नहीं जाँचे जाते।</li>
-<li>कुंजी शुरू होते समय एक PEM फ़ाइल से पढ़ी जाती है: फ़ाइल न हो या ख़राब हो, तो
-  पहला इंस्टॉल फ़ेल होने के बजाय सर्वर ही रुक जाता है। <code>enforce</code> के साथ और बिना
-  कुंजी के, सर्वर शुरू होने से मना कर देता है।</li>
-<li>डिफ़ॉल्ट <code>warn</code> के साथ और बिना public key के, <strong>कुछ भी नहीं जाँचा जाता</strong>; सर्वर
-  शुरू होते समय सिर्फ़ एक चेतावनी लॉग करता है।</li>
+<li>ZIP में <code>cosign.pub</code> के बिना <code>.sig</code>, या इसका उल्टा, <strong>हस्ताक्षर रहित</strong> गिना जाता है।</li>
 <li>गलत कुंजी, छेड़ा गया ZIP और न मिलने वाली <code>.sig</code>, तीनों फ़ेल सिग्नेचर माने जाते
   हैं: <code>enforce</code> में इंस्टॉल या अपडेट मना कर दिया जाता है।</li>
 </ul>
@@ -3597,9 +3672,8 @@ transparency log।</p>
    में लाइन लिखी जाती है, और प्रोसेस शुरू होता है।</li>
 </ol>
 <p>विश्लेषण किन चीज़ों को खोजता है, इसकी सूची
-<a href="../../SECURITY/#static-analysis">प्लगइन सैंडबॉक्स और ख़तरा मॉडल</a> में है। यह
-comment भी पढ़ता है: comment में <code># pip install foo</code> वाली लाइन को कोड की तरह ही
-दर्ज किया जाता है।</p>
+<a href="../../SECURITY/#static-analysis">प्लगइन सैंडबॉक्स और ख़तरा मॉडल</a> में है। विश्लेषण से
+पहले comment हटा दिए जाते हैं, इसलिए comment में बंद की गई लाइन दर्ज नहीं होती।</p>
 <h2 id="9-what-your-process-runs-under">9. आपका प्रोसेस किन सीमाओं में चलता है<a class="headerlink" href="#9-what-your-process-runs-under" title="Permanent link">¶</a></h2>
 <p>सर्वर प्रोसेस को कम CPU प्राथमिकता के साथ शुरू करता है, मेमोरी की सीमा, प्रोसेस
 और thread की संख्या की सीमा, और उसके फ़ोल्डर के आकार की सीमा के साथ; एक
@@ -3607,8 +3681,8 @@ comment भी पढ़ता है: comment में <code># pip install foo
 256 MiB, 64 प्रोसेस और 100 MiB हैं, जिन्हें एडमिन <strong>एडमिन → प्लगइन → संसाधन
 सीमाएँ</strong> में बदल सकता है। <code>subprocess</code> अनुमति के बिना प्रोसेस child process शुरू
 नहीं कर सकता, भाषा कोई भी हो; thread काम करते हैं।</p>
-<p>सैंडबॉक्स फ़ाइल सिस्टम को प्लगइन के फ़ोल्डर तक सीमित रखता है और हर नेटवर्क socket
-बंद रखता है, बिना किसी शर्त के। कौन सा मोड लागू है, यह होस्ट पर निर्भर है, प्लगइन
+<p>हर उस मोड में जिसमें लॉन्चर चलता है, सैंडबॉक्स फ़ाइल सिस्टम को प्लगइन के फ़ोल्डर तक सीमित रखता है और हर नेटवर्क socket
+बंद रखता है (लॉन्चर के बिना <code>basic</code> सिर्फ़ <code>execve</code> को रोकता है)। कौन सा मोड लागू है, यह होस्ट पर निर्भर है, प्लगइन
 पर नहीं: <a href="../../SECURITY/#sandbox-modes">प्लगइन सैंडबॉक्स और ख़तरा मॉडल</a> इन्हें
 बताता है, और <a href="../sandbox-deployment/">प्लगइन सैंडबॉक्स सेटअप</a> एडमिन को बताता है कि
 कौन सा चुनें।</p>
@@ -3618,8 +3692,7 @@ comment भी पढ़ता है: comment में <code># pip install foo
 रिलीज़, आपकी अपनी साइट)।</p>
 <ul>
 <li>ZIP, उसकी <code>.sig</code> और अपनी <code>cosign.pub</code> एक साथ दें (सेक्शन 7)।</li>
-<li>अपनी README में अनुमतियाँ और <code>external_fetch</code> के होस्ट बताएँ: एडमिन इन्हें
-  इंस्टॉल के समय देखता है और इन्हें मंज़ूर करना होता है; यहाँ कोई अनपेक्षित चीज़
+<li>अपनी README में अनुमतियाँ और <code>external_fetch</code> के होस्ट बताएँ: एडमिन अनुमतियाँ इंस्टॉल के समय और होस्ट अपडेट के समय व सुरक्षा डैशबोर्ड पर देखता है, और इन्हें मंज़ूर करना होता है; यहाँ कोई अनपेक्षित चीज़
   इंस्टॉल मना होने का सबसे पहला कारण है।</li>
 <li>अपने प्लगइन को साथ आने वाले उदाहरणों के साथ सूची में लाने के लिए,
   <code>examples/plugins/</code> पर स्रोत कोड और एक README के साथ pull request खोलें।
@@ -3639,7 +3712,7 @@ comment भी पढ़ता है: comment में <code># pip install foo
 <tr>
 <td><code>plugin requires "nodejs" runtime which is not installed in this image</code></td>
 <td>इमेज के इस रूप में interpreter नहीं है।</td>
-<td><code>-nodejs</code> या <code>-full</code> इमेज इस्तेमाल करें, या प्लगइन Python में लिखें।</td>
+<td>डिफ़ॉल्ट या <code>-nodejs</code> इमेज इस्तेमाल करें, या प्लगइन Python में लिखें।</td>
 </tr>
 <tr>
 <td><code>manifest: external_fetch entry "*.tmdb.org" is a wildcard - use explicit hostnames</code></td>

@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     Häufige Fragen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bekannte Einschränkungen
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     MKVGo in Evey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ac3go in Evey
   
 
     
@@ -3222,10 +3282,10 @@ läuft in einem isolierten Rahmen der Seite.</p>
    geprüft wird.</li>
 <li><strong>Vorschau &amp; Installieren</strong> analysiert das Paket, ohne es zu installieren.
    Die Vorschau zeigt die <strong>Berechtigungen</strong> und <strong>Fähigkeiten</strong>, die das
-   Plugin verlangt, die Stellen der Oberfläche (Slots), an denen es erscheinen
-   will, die Hosts, die es kontaktieren wird, das Ergebnis der <strong>Statischen
-   Analyse</strong> und, wenn der Server Signaturen prüft, ob das Paket
-   <strong>Signiert</strong> ist.</li>
+   Plugin anfordert, das Ergebnis der <strong>Statischen Analyse</strong> und, wenn eine
+   Signatur mitgegeben wurde, das <strong>Signatur</strong>-Urteil mit dem Herausgeber. Die
+   Slots und die Hosts werden beim Update und im <strong>Sicherheits-Dashboard</strong>
+   angezeigt.</li>
 <li>Diese Liste ist verbindlich: Das ist alles, was das Plugin tun
    können wird. Bestätigen Sie, und das Plugin startet.</li>
 </ol>
@@ -3237,21 +3297,23 @@ läuft in einem isolierten Rahmen der Seite.</p>
 <p>Ein Paket, in dem die Analyse ein kritisches Muster findet, wird abgelehnt,
 egal was Sie antworten. Warnungen werden angezeigt, die Entscheidung liegt bei
 Ihnen. Die Sprache des Plugins muss zu den <strong>Verfügbaren Laufzeiten</strong> des
-Servers gehören: Das Standard-Image bringt nur Python mit, das Image
-<code>-nodejs</code> fügt Node.js hinzu und das Image <code>-full</code> PHP, Ruby und Lua.</p>
+Servers gehören: Das Standard-Image bringt Python, Node.js, PHP, Ruby und Lua mit, das Image
+<code>-nodejs</code> behält Python und Node.js und das Image <code>-lean</code> nur Python.</p>
 <div class="admonition tip">
 <p class="admonition-title">Signierte Plugins</p>
 <p>Ein Plugin-Autor kann das ZIP mit <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>
-signieren, und Sie entscheiden, was mit einem unsignierten oder falsch
-signierten Plugin geschieht. Um Signaturen zu prüfen, geben Sie dem
-Server den öffentlichen Schlüssel des Autors und wählen eine Richtlinie:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_PUBLIC_KEY</span><span class="o">=</span>/etc/evey/cosign.pub
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (Standard) | enforce</span>
+signieren; sein öffentlicher Schlüssel reist im Paket. Evey prüft die
+Signatur selbst (kein <code>cosign</code>-Programm) und zeigt <strong>Signiert von
+<herausgeber></herausgeber></strong>, wenn der Schlüssel in Ihrer Liste der <strong>Vertrauenswürdigen
+Herausgeber</strong> steht, sonst <strong>Signiert, unbekannter Schlüssel</strong> mit seinem
+Fingerabdruck (ein Klick vertraut ihm), <strong>Nicht signiert</strong> oder
+<strong>Ungültig</strong>. Ein Update, das den Schlüssel wechselt oder die Signatur
+weglässt, wartet auf Ihre ausdrückliche Zustimmung. Die Regel entscheidet
+den Rest:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (Standard) | enforce</span>
 </span></code></pre></div>
-<p>Mit <code>warn</code> wird eine fehlgeschlagene Signatur in der Vorschau und im
-<strong>Sicherheits-Dashboard</strong> angezeigt; mit <code>enforce</code> wird die Installation
-oder das Update abgelehnt. Ohne öffentlichen Schlüssel wird nichts
-geprüft, und der Server braucht kein <code>cosign</code>-Programm. Für Autoren: siehe
+<p>Mit <code>warn</code> wird das Urteil angezeigt und nichts blockiert; mit <code>enforce</code>
+werden nur vertrauenswürdige Herausgeber installiert. Für Autoren: siehe
 <a href="dev-setup/#7-sign-your-plugin">Ihr Plugin signieren</a>.</p>
 </div>
 <h2 id="update-a-plugin">Ein Plugin aktualisieren<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
@@ -3333,8 +3395,8 @@ legt sie fest, solange im Verwaltungsbereich noch nie gespeichert wurde.</p>
 </table>
 <p>Arbeitsspeicher, Prozesse und Festplatte gelten beim nächsten Durchlauf der
 Überwachung, die ein Plugin stoppt, das sie überschreitet. CPU-Priorität und
-Sandbox-Modus gelten für danach gestartete Plugins. <code>0</code> schaltet eine Grenze
-für Arbeitsspeicher, Prozesse oder Festplatte ab.</p>
+Sandbox-Modus gelten für danach gestartete Plugins. <code>0</code> stellt für
+Arbeitsspeicher und Prozesse den Standardwert wieder her; nur die Festplattengrenze behandelt <code>0</code> als „aus“.</p>
 <p>Das <strong>Sicherheits-Dashboard</strong> hält pro Plugin die Befunde der Analyse, das
 Ergebnis der Signaturprüfung und den letzten Fehler fest. Seine Zeile
 <strong>Host-Sandbox</strong> zeigt den Sandbox-Modus, der auf dieser Maschine wirklich

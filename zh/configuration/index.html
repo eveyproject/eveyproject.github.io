@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    已知限制
   
 
     
@@ -1179,6 +1209,8 @@
       
         
       
+        
+      
     
     
     
@@ -1295,6 +1327,34 @@
     
   
     Evey 中的 MKVGo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playback/ac3go/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evey 中的 ac3go
   
 
     
@@ -3240,7 +3300,7 @@
 <li>在<strong>面板</strong>里修改，大多数设置会实时生效（服务器名称、日志级别、速率限制、硬件加速、SMTP、单点登录、
   远程访问、插件限制；保留期限在下一次每日清理时生效）。</li>
 <li>面板会把<strong>启动时读取</strong>的设置标上<em>重启后生效</em>：媒体库文件监视和扫描间隔、转码缓存预算、
-  转码页面的<strong>高级限制</strong>卡片、片头跳过提供商，以及<strong>配置条目</strong>里的每一行。保存会记录您的选择，重启才会生效。</li>
+  转码页面的<strong>高级限制</strong>卡片、片头跳过提供商，以及<strong>配置条目</strong>里已知的运维开关（其他键的行不显示该提示）。保存会记录您的选择，重启才会生效。</li>
 </ul>
 <p>各个主题页面里的每张表格都有一列<strong>面板</strong>：写着字段的位置（从<strong>管理</strong>开始），以及它是实时生效还是重启后生效；
 如果变量在面板里没有对应的设置，就写“无”。</p>
@@ -3343,7 +3403,7 @@
 </tr>
 <tr>
 <td>为 <code>/dev/dri/card0</code> 添加的 <code>group_add</code></td>
-<td>Evey 只会打开 <code>renderD128</code>。用 <code>ls -ln /dev/dri</code> 查看，只添加那一个组。</td>
+<td>Evey 只会打开渲染节点（<code>/dev/dri/renderD*</code>，主机上有哪个就是哪个），从不打开 <code>card*</code>。用 <code>ls -ln /dev/dri</code> 查看，只添加渲染节点所属的组。</td>
 </tr>
 </tbody>
 </table>
@@ -3354,13 +3414,17 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>evey: media mounts owned by 1026:100 (detected on /media) - running the
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>server as that user so write features (seek-index repair) work out of the box
 </span></code></pre></div>
+<p>只有真正挂载的 <code>/media*</code> 才算数：镜像自带的空 <code>/media</code>（每个 Debian 镜像都有一个）会被忽略，所以放在别处（比如 <code>/data</code> 下）的媒体库启动时不会有任何所有权警告。</p>
 <p>如果媒体挂载目录属于<strong>不同的用户</strong>，服务器会尽力处理：它采用拥有挂载目录最多的那个用户，
 并把其他挂载目录的组加为附加组，这样，只要那些挂载目录里的文件允许组写入，修复就能进行
 （启动时的警告会列出哪些挂载目录仍可能拒绝写入）。只有当所有媒体挂载目录都属于 root，
-或者属于保留的 uid <code>1001</code> 时，自动检测才会完全不生效（改用 <code>1000:1000</code>，并给出警告）。
-这时，请把您的媒体 chown 给一个普通用户，或者明确设置 <code>PUID</code>/<code>PGID</code>：</p>
-<div class="language-text highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PUID=1026   # 以这个用户 id 运行服务器（在主机上查看：`id -u &lt;media-owner&gt;`）
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PGID=100    # ……以及这个组 id
+或者在启用插件时属于保留的 uid <code>1001</code> 时，自动检测才会完全不生效（改用 <code>1000:1000</code>，并给出警告）。
+这时，请把您的媒体 chown 给一个普通用户，或者在 compose 文件的 <code>environment:</code> 下明确设置 <code>PUID</code>/<code>PGID</code>：</p>
+<div class="language-yaml highlight"><span class="filename">docker-compose.yml</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">PUID</span><span class="p">:</span><span class="w"> </span><span class="s">"1026"</span><span class="w">   </span><span class="c1"># 以这个用户 id 运行服务器（在主机上查看：`id -u &lt;media-owner&gt;`）</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">PGID</span><span class="p">:</span><span class="w"> </span><span class="s">"100"</span><span class="w">    </span><span class="c1"># ……以及这个组 id</span>
 </span></code></pre></div>
 <p>明确设置的值永远优先于自动检测。</p>
 <p>工作原理：容器以 root 身份启动，仅用于重新映射它内部的用户
@@ -3372,7 +3436,7 @@
 这时，需要由您自己保证 <code>./evey-data</code> 对这个 UID 可写。</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code>PUID=1001</code> 会被拒绝：它是内部的 <code>evey-plugin</code> 用户，单独留出来，是为了让插件永远不会和服务器使用同一个身份。
+<p>启用插件时，<code>PUID=1001</code> 会被拒绝：它是内部的 <code>evey-plugin</code> 用户，单独留出来，是为了让插件永远不会和服务器使用同一个身份。
 媒体默认以读写方式挂载，这样修复可以直接进行；如果您希望媒体库只读，请在媒体卷后面加上 <code>:ro</code>
 （这时修复会失败，并给出明确的错误）。</p>
 </div>
@@ -3380,7 +3444,7 @@
 <p>有些变量出现在 compose 文件里，但服务器并不读取：</p>
 <ul>
 <li><code>EVEY_HTTP_PORT</code>、<code>EVEY_DOMAIN</code>、<code>MEDIA_DIR</code>：由代码仓库自带的 <code>docker-compose.yml</code> 使用
-  （对外发布的端口、随附的 Caddy 使用的域名、媒体路径），不是由 Evey 使用。<code>EVEY_VERSION</code> 在那里是镜像标签；
+  （对外发布的端口、随附的 Caddy 使用的域名、媒体路径），不是由 Evey 使用。<code>EVEY_HTTP_PORT</code> 只是主机端口：容器始终监听 9091，compose 映射为 <code>${EVEY_HTTP_PORT:-9091}:9091</code>。<code>EVEY_VERSION</code> 在那里是镜像标签；
   只有当服务器的程序本身不带版本号时，服务器才会在 <code>/healthz</code> 上显示它。</li>
 <li><code>EVEY_WEB_DIR</code>（<code>/srv</code>，网页界面文件所在的位置），以及 <code>EVEY_DB_PASSWORD_FILE</code>、<code>MEILI_MASTER_KEY_FILE</code>、
   <code>EVEY_IMAGE_REPO</code>、<code>EVEY_IMAGE_RUNTIMES</code>：与镜像的目录结构相对应。不支持修改它们。</li>
