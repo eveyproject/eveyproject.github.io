@@ -3475,8 +3475,9 @@ card: see <a href="../administration/hardware-acceleration/">Hardware accelerati
 at <code>0.1.0</code>; the 0.x line is the public beta. To change version, edit the
 line, then <code>docker compose pull &amp;&amp; docker compose up -d</code>; your data stays in
 <code>./evey-data</code>. The running version shows in <strong>Admin → Dashboard</strong>, at
-<code>/healthz</code>, and with <code>docker exec evey-server evey version</code>. Each image also
-exists as <code>-nodejs</code> and <code>-lean</code>, slimmer builds with fewer plugin runtimes
+<code>/healthz</code>, and with <code>docker exec evey-server evey version</code>. A tag without a
+suffix is the full image, with every plugin runtime (Python, Node.js, PHP,
+Ruby and Lua); <code>-nodejs</code> and <code>-lean</code> are slimmer builds with fewer of them
 (<a href="../operations/advanced-deployments/#image-tags-and-variants">details</a>).</p>
 <p><strong>You already run a reverse proxy</strong> (a program that puts HTTPS in front of
 your services): see <a href="../administration/remote-access/">Remote access and HTTPS</a>.</p>

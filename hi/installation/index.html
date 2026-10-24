@@ -3477,8 +3477,9 @@ Evey चलता रहेगा।</p>
 शुरू होते हैं; 0.x लाइन पब्लिक बीटा है। वर्ज़न बदलने के लिए लाइन बदलें, फिर
 <code>docker compose pull &amp;&amp; docker compose up -d</code> चलाएँ; आपका डेटा <code>./evey-data</code> में
 ही रहता है। चल रहा वर्ज़न <strong>एडमिन → डैशबोर्ड</strong> में, <code>/healthz</code> पर, और
-<code>docker exec evey-server evey version</code> से दिखता है। हर इमेज <code>-nodejs</code> और <code>-lean</code>
-रूप में भी मिलती है, जो कम प्लगइन रनटाइम वाले हल्के बिल्ड हैं
+<code>docker exec evey-server evey version</code> से दिखता है। बिना प्रत्यय वाला टैग पूरी इमेज है, जिसमें सभी प्लगइन रनटाइम
+(Python, Node.js, PHP, Ruby और Lua) होते हैं; <code>-nodejs</code> और <code>-lean</code> हल्के बिल्ड हैं
+जिनमें इनमें से कम रनटाइम होते हैं
 (<a href="../operations/advanced-deployments/#image-tags-and-variants">विवरण</a>)।</p>
 <p><strong>आप पहले से रिवर्स प्रॉक्सी चलाते हैं</strong> (एक प्रोग्राम जो आपकी सर्विसों के आगे
 HTTPS लगाता है): देखें <a href="../administration/remote-access/">रिमोट एक्सेस और HTTPS</a>।</p>

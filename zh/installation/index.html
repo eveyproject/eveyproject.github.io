@@ -3422,7 +3422,7 @@
 </tr>
 </tbody>
 </table>
-<p>版本号遵循<a href="https://semver.org/">语义化版本</a>，从 <code>0.1.0</code> 开始；0.x 系列是公开测试版。要更换版本，修改这一行，然后运行 <code>docker compose pull &amp;&amp; docker compose up -d</code>；您的数据仍保存在 <code>./evey-data</code>。当前运行的版本可在 <strong>管理 → 仪表盘</strong>、<code>/healthz</code> 以及 <code>docker exec evey-server evey version</code> 中看到。每个镜像也有 <code>-nodejs</code> 和 <code>-lean</code> 版本，是插件运行时更少的精简构建（<a href="../operations/advanced-deployments/#image-tags-and-variants">详情</a>）。</p>
+<p>版本号遵循<a href="https://semver.org/">语义化版本</a>，从 <code>0.1.0</code> 开始；0.x 系列是公开测试版。要更换版本，修改这一行，然后运行 <code>docker compose pull &amp;&amp; docker compose up -d</code>；您的数据仍保存在 <code>./evey-data</code>。当前运行的版本可在 <strong>管理 → 仪表盘</strong>、<code>/healthz</code> 以及 <code>docker exec evey-server evey version</code> 中看到。不带后缀的标签是完整镜像，包含全部插件运行时（Python、Node.js、PHP、Ruby 和 Lua）；<code>-nodejs</code> 和 <code>-lean</code> 是精简构建，包含的运行时更少（<a href="../operations/advanced-deployments/#image-tags-and-variants">详情</a>）。</p>
 <p><strong>您已经在用反向代理</strong>（一个在您的服务前面加上 HTTPS 的程序）：见<a href="../administration/remote-access/">远程访问与 HTTPS</a>。</p>
 <details class="note">
 <summary>在 NAS 上（Synology Container Manager、QNAP Container Station）</summary>

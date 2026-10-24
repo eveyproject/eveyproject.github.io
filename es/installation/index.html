@@ -3488,9 +3488,10 @@ tarjeta: consulta <a href="../administration/hardware-acceleration/">Aceleració
 <code>0.1.0</code>; la línea 0.x es la beta pública. Para cambiar de versión, edita la
 línea y luego <code>docker compose pull &amp;&amp; docker compose up -d</code>; tus datos siguen en
 <code>./evey-data</code>. La versión en ejecución aparece en <strong>Administración → Panel</strong>, en
-<code>/healthz</code> y con <code>docker exec evey-server evey version</code>. Cada imagen existe
-también como <code>-nodejs</code> y <code>-lean</code>, compilaciones más ligeras con menos entornos
-de ejecución de plugins
+<code>/healthz</code> y con <code>docker exec evey-server evey version</code>. Una etiqueta sin
+sufijo es la imagen completa, con todos los entornos de ejecución de plugins
+(Python, Node.js, PHP, Ruby y Lua); <code>-nodejs</code> y <code>-lean</code> son compilaciones más
+ligeras con menos de ellos
 (<a href="../operations/advanced-deployments/#image-tags-and-variants">detalles</a>).</p>
 <p><strong>Ya tienes un proxy inverso</strong> (un programa que pone HTTPS delante de tus
 servicios): consulta <a href="../administration/remote-access/">Acceso remoto y HTTPS</a>.</p>
