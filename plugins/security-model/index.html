@@ -3363,9 +3363,9 @@ install. Receiving webhooks (<code>webhook.receiver</code>) and providing metada
 (<code>validateExternalFetch</code>). All-or-nothing: one invalid entry refuses the
 whole install.</p>
 <p>An entry is a <strong>hostname</strong>. A scheme prefix and a trailing path are dropped at
-parse; only the hostname is kept. Hosts match exactly, a <code>*.example.com</code>
-wildcard is refused at install and a port suffix is
-ignored.</p>
+parse; only the hostname is kept. Hosts match exactly and a <code>*.example.com</code>
+wildcard is refused at install. An entry without a port allows ports 80 and
+443 only; <code>host:port</code> allows that port only.</p>
 <table>
 <thead>
 <tr>
@@ -3386,6 +3386,11 @@ ignored.</p>
 <td>Scheme and path dropped at parse, hostname kept</td>
 </tr>
 <tr>
+<td><code>api.example.com:8443</code></td>
+<td>Yes</td>
+<td>That host on port 8443 only</td>
+</tr>
+<tr>
 <td><code>*.tmdb.org</code></td>
 <td>No</td>
 <td>Wildcards are refused at install; list each host</td>
@@ -3404,10 +3409,10 @@ ignored.</p>
 </table>
 <p>At run time the host broker adds its own limits, which the manifest cannot
 widen: <code>http</code> and <code>https</code> only, <code>GET</code> and <code>HEAD</code> only, the target host matched
-case-insensitively against your list (a <code>:port</code> suffix in an entry is
-ignored), private or reserved addresses refused after DNS resolution, a body
+case-insensitively against your list, the target port matched against the
+entry (80 or 443 without a declared port), private or reserved addresses refused after DNS resolution, a body
 capped at 8 MiB and a request at 20 seconds. Redirects are re-checked against
-both the list and the address rule.</p>
+the list, the port rule and the address rule.</p>
 <p>The same host list is the <code>connect-src</code> of the plugin's frame, prefixed with
 <code>https://</code>: a widget may call those hosts directly, over <code>https</code> only.</p>
 <h2 id="slot-whitelist">Slot whitelist<a class="headerlink" href="#slot-whitelist" title="Permanent link">¶</a></h2>

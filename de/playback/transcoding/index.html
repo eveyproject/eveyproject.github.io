@@ -1410,6 +1410,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lasttest
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3201,6 +3212,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lasttest
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3397,6 +3419,35 @@ weiter.</p>
 <li><strong>Lasttest</strong> (<strong>Verwaltung → Transkodierung</strong>): simuliert Zuschauer, um zu
   messen, was der Server schafft. Er startet nicht, solange jemand schaut.</li>
 </ul>
+<h2 id="load-test">Lasttest<a class="headerlink" href="#load-test" title="Permanent link">¶</a></h2>
+<p>Der Lasttest spielt Titel aus Ihren Bibliotheken für simulierte Zuschauer ab,
+fügt weitere hinzu, bis etwas nachgibt, und nennt, was zuerst nachgegeben hat:
+den Prozessor, den Arbeitsspeicher, eine Festplatte, den Server selbst oder das
+Netzwerk davor.</p>
+<p><strong>Der Weg.</strong> Die Zuschauer erreichen den Server über seine öffentliche Adresse,
+so wie entfernte Zuschauer. Führt diese Adresse zu einem Reverse Proxy in Ihrem
+lokalen Netzwerk, verbindet sich der Test mit dem Proxy über dessen lokale
+Adresse, unter demselben Namen und mit demselben Zertifikat. Sonst ginge jedes
+Byte hinauf zum Router und zurück zum Proxy, ein Umweg, den der Datenverkehr
+keines Zuschauers von außen nimmt, und der Test würde den Router messen. Der
+Bericht nennt dann die verwendete lokale Adresse. Ein Proxy außerhalb Ihres
+Netzwerks (ein gemieteter Server, ein Tunnel) liegt auf dem Weg echter
+Zuschauer und bleibt erhalten.</p>
+<p><strong>Der Upload der Verbindung.</strong> Zuschauer in Ihrem Netzwerk nutzen nie den
+Upload Ihrer Internetverbindung, deshalb können die simulierten Zuschauer ihn
+nicht messen. Bevor sie starten, misst der Server ihn selbst: etwa zehn
+Sekunden lang lädt er mit Nullen gefüllte Daten zu <code>speed.cloudflare.com</code> hoch,
+einem Geschwindigkeitstest, den der nächstgelegene Punkt des
+Cloudflare-Netzwerks beantwortet. Nichts aus Ihren Bibliotheken oder Konten
+wird gesendet. Cloudflare sieht die öffentliche IP-Adresse des Servers, wie
+jede Website, die der Server kontaktiert.</p>
+<p><strong>Von außen.</strong> Mit beiden Werten nennt der Bericht, wie viele Zuschauer
+außerhalb Ihres Netzwerks bedient werden können: so viele, wie der Server
+gehalten hat, oder so viele, wie der Upload bei der Rate eines Testzuschauers
+trägt, wobei ein Fünftel des Uploads frei bleibt, je nachdem, was kleiner ist.
+Er sagt, welcher der beiden Werte die Grenze ist. Antwortet der
+Geschwindigkeitstest nicht, meldet der Bericht, dass der Upload nicht gemessen
+werden konnte, und nennt keine Zahl für Zuschauer von außen.</p>
 <!-- sources
 disk floor: cmd/evey/wire.go (EVEY_TRANSCODE_CACHE_MIN_FREE_MB, DefaultMinFreeBytes, SetWriteFloor, SetSubtitleCacheWriteFloor, OnSubtitleCacheFloorHit) ; internal/app/transcoding/segment_cache_admit.go - AdmitWrite, tryOnDemandEvict, ErrCacheFull ; internal/adapters/driving/http/transcode_vod_admission.go (503 + Retry-After) ; internal/domain/transcoding/events.go - DerivedCacheFull ; i18n notifications.cache_full
 clear all empties extracted subtitles: internal/app/transcoding/service.go - WithDerivedCachePurge ; internal/adapters/driving/http/subtitle_cache.go - SubtitleCachePurger (/data/subtitles)

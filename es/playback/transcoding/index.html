@@ -1410,6 +1410,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prueba de carga
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3201,6 +3212,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prueba de carga
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3399,6 +3421,33 @@ una vez y luego sigue.</p>
   espectadores para medir lo que soporta el servidor. No se ejecuta mientras
   alguien esté viendo algo.</li>
 </ul>
+<h2 id="load-test">Prueba de carga<a class="headerlink" href="#load-test" title="Permanent link">¶</a></h2>
+<p>La prueba de carga reproduce títulos de tus bibliotecas para espectadores
+simulados, añade más hasta que algo cede y nombra lo que cedió primero: el
+procesador, la memoria, un disco, el propio servidor o la red que tiene
+delante.</p>
+<p><strong>El camino que sigue.</strong> Los espectadores llegan al servidor por su dirección
+pública, como los espectadores remotos. Cuando esa dirección lleva a un proxy
+inverso de tu red local, la prueba se conecta al proxy por su dirección local,
+con el mismo nombre y el mismo certificado. Si no, cada byte subiría hasta el
+router y volvería al proxy, un rodeo que el tráfico de ningún espectador de
+fuera hace, y la prueba mediría el router. El informe indica entonces la
+dirección local usada. Un proxy fuera de tu red (un servidor alquilado, un
+túnel) está en el camino de los espectadores reales y se mantiene.</p>
+<p><strong>La subida de la conexión.</strong> Los espectadores de tu red nunca usan la subida
+de tu conexión a internet, así que los espectadores simulados no pueden
+medirla. Antes de que empiecen, el servidor la mide por su cuenta: durante unos
+diez segundos sube datos rellenos de ceros a <code>speed.cloudflare.com</code>, un
+servicio de test de velocidad que responde desde el punto más cercano de la
+red de Cloudflare. No se envía nada de tus bibliotecas ni de tus cuentas.
+Cloudflare ve la dirección IP pública del servidor, como cualquier sitio que el
+servidor contacte.</p>
+<p><strong>Desde fuera.</strong> Con las dos cifras, el informe da el número de espectadores
+fuera de tu red que se pueden servir: tantos como aguantó el servidor, o tantos
+como la subida lleva al ritmo de un espectador de la prueba, dejando libre una
+quinta parte de la subida, lo que sea menor. Dice cuál de los dos es el
+límite. Si el test de velocidad no responde, el informe indica que no se pudo
+medir la subida y no da ninguna cifra para los espectadores de fuera.</p>
 <!-- sources
 disk floor: cmd/evey/wire.go (EVEY_TRANSCODE_CACHE_MIN_FREE_MB, DefaultMinFreeBytes, SetWriteFloor, SetSubtitleCacheWriteFloor, OnSubtitleCacheFloorHit) ; internal/app/transcoding/segment_cache_admit.go - AdmitWrite, tryOnDemandEvict, ErrCacheFull ; internal/adapters/driving/http/transcode_vod_admission.go (503 + Retry-After) ; internal/domain/transcoding/events.go - DerivedCacheFull ; i18n notifications.cache_full
 clear all empties extracted subtitles: internal/app/transcoding/service.go - WithDerivedCachePurge ; internal/adapters/driving/http/subtitle_cache.go - SubtitleCachePurger (/data/subtitles)

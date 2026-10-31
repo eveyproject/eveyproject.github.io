@@ -3217,6 +3217,18 @@ dans <a href="../../administration/libraries/">Bibliothèques et métadonnées</
 <td>Configuration du serveur → Bibliothèques → <strong>Intervalle d'analyse périodique</strong>, redémarrage</td>
 </tr>
 <tr>
+<td><code>EVEY_LIBRARY_PRUNE_MAX_MISSING_PERCENT</code></td>
+<td><code>5</code></td>
+<td>Part des éléments d'un dossier qui peuvent avoir disparu lors d'un scan. Au-delà (et au-delà du minimum ci-dessous), rien n'est supprimé sous ce dossier tant qu'un administrateur n'a pas confirmé, ce qui protège d'un pool qui a perdu un disque.</td>
+<td>aucun</td>
+</tr>
+<tr>
+<td><code>EVEY_LIBRARY_PRUNE_MIN_MISSING</code></td>
+<td><code>20</code></td>
+<td>Plus petit nombre de fichiers manquants pouvant suspendre les suppressions d'un dossier, pour qu'une petite bibliothèque puisse encore perdre quelques titres.</td>
+<td>aucun</td>
+</tr>
+<tr>
 <td><code>EVEY_LIBRARY_SCAN_WORKERS</code></td>
 <td>selon la part CPU</td>
 <td>Fichiers analysés en parallèle pendant un scan. Définie à la main, elle remplace la <strong>Puissance allouée</strong> pour les scans.</td>

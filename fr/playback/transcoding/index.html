@@ -1410,6 +1410,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test de charge
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3201,6 +3212,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test de charge
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3396,6 +3418,35 @@ flux en mémoire tampon une fois, puis la lecture reprend.</p>
   spectateurs pour mesurer ce que le serveur supporte. Il refuse de démarrer tant
   que quelqu'un regarde.</li>
 </ul>
+<h2 id="load-test">Test de charge<a class="headerlink" href="#load-test" title="Permanent link">¶</a></h2>
+<p>Le test de charge lit des titres de vos bibliothèques pour des spectateurs
+simulés, en ajoute jusqu'à ce que quelque chose cède, et nomme ce qui a cédé en
+premier : le processeur, la mémoire, un disque, le serveur lui-même ou le
+réseau devant lui.</p>
+<p><strong>Le chemin emprunté.</strong> Les spectateurs joignent le serveur par son adresse
+publique, comme les spectateurs distants. Quand cette adresse mène à un proxy
+inverse sur votre réseau local, le test se connecte au proxy à son adresse
+locale, sous le même nom et avec le même certificat. Sinon chaque octet
+monterait jusqu'au routeur pour redescendre vers le proxy, un détour que le
+trafic d'aucun spectateur extérieur ne fait, et le test mesurerait le routeur.
+Le rapport indique alors l'adresse locale utilisée. Un proxy hors de votre
+réseau (un serveur loué, un tunnel) est sur le chemin des vrais spectateurs et
+il est conservé.</p>
+<p><strong>Le débit montant de la connexion.</strong> Les spectateurs de votre réseau
+n'utilisent jamais le débit montant de votre connexion internet : les
+spectateurs simulés ne peuvent donc pas le mesurer. Avant leur démarrage, le
+serveur le mesure lui-même : pendant une dizaine de secondes, il envoie des
+données remplies de zéros à <code>speed.cloudflare.com</code>, un service de test de débit
+servi par le point du réseau Cloudflare le plus proche. Rien de vos
+bibliothèques ni de vos comptes n'est envoyé. Cloudflare voit l'adresse IP
+publique du serveur, comme tout site que le serveur contacte.</p>
+<p><strong>Depuis l'extérieur.</strong> Avec ces deux mesures, le rapport donne le nombre de
+spectateurs hors de votre réseau qui peuvent être servis : autant que le
+serveur en a tenu, ou autant que le débit montant en porte au débit d'un
+spectateur du test, en gardant un cinquième du débit montant libre, le plus
+petit des deux. Il dit lequel des deux limite. Si le test de débit ne répond
+pas, le rapport indique que le débit montant n'a pas pu être mesuré et ne
+donne aucun chiffre pour l'extérieur.</p>
 
 
 

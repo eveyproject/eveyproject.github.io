@@ -3189,7 +3189,7 @@ entre ellos:</p>
 <tbody>
 <tr>
 <td>Biblioteca</td>
-<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
+<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>library.prune.suspended</code> (una raíz perdió demasiados archivos de golpe, borrados retenidos hasta que un administrador confirme), <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
 </tr>
 <tr>
 <td>Reproducción</td>
@@ -3211,15 +3211,27 @@ entre ellos:</p>
 </table>
 <p>Un plugin que llama a <code>EmitEvent</code> publica <code>plugin.event.&lt;type&gt;</code>, que también
 recibe un webhook suscrito a <strong>Todos los eventos</strong>.</p>
-<p><strong>Envío.</strong> Cada evento es un <code>POST</code> en JSON, con dos cabeceras:</p>
+<p><strong>Envío.</strong> Cada evento es un <code>POST</code> en JSON, con estas cabeceras:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: un identificador que no cambia entre los reintentos de
   un mismo envío, para que tu receptor pueda ignorar un duplicado;</li>
 <li><code>X-Evey-Signature</code>: <code>sha256=</code> seguido del HMAC-SHA256 del cuerpo,
   calculado con el secreto del webhook. Compruébalo con el mismo secreto para
   saber que la petición viene de tu servidor. Sin secreto, la firma no
-  demuestra nada.</li>
+  demuestra nada. Solo cubre el cuerpo, así que no impide que una petición
+  interceptada se vuelva a enviar: prefiere las dos cabeceras siguientes;</li>
+<li><code>X-Evey-Timestamp</code>: la hora del intento, en segundos Unix. Cada reintento
+  lleva una nueva;</li>
+<li><code>X-Evey-Signature-V2</code>: <code>sha256=</code> seguido del HMAC-SHA256, calculado con el
+  secreto del webhook, del texto <code>&lt;timestamp&gt;.&lt;delivery id&gt;.&lt;body&gt;</code> (el valor
+  de <code>X-Evey-Timestamp</code>, un punto, el valor de <code>X-Evey-Delivery</code>, un punto y
+  después el cuerpo sin procesar).</li>
 </ul>
+<p>Para comprobar un envío, recalcula la firma V2 a partir del cuerpo sin
+procesar y compárala en tiempo constante; luego rechaza la petición si la marca
+de tiempo se aleja más de 5 minutos de tu reloj (en cualquier sentido). Si tu
+receptor además recuerda los identificadores de envío vistos durante esa
+ventana, una petición interceptada no se puede reproducir.</p>
 <p>Cada intento espera una respuesta durante 30 segundos como máximo. Un envío
 que falla se reintenta después de 1, 5 y 30 segundos. Cada intento queda
 registrado; el historial se consulta por la API (<code>ListWebhookDeliveries</code> en

@@ -3190,7 +3190,7 @@ veröffentlicht, unter anderem:</p>
 <tbody>
 <tr>
 <td>Bibliothek</td>
-<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
+<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>library.prune.suspended</code> (ein Stammordner hat auf einmal zu viele Dateien verloren, Löschungen werden gehalten, bis ein Administrator bestätigt), <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
 </tr>
 <tr>
 <td>Wiedergabe</td>
@@ -3212,15 +3212,29 @@ veröffentlicht, unter anderem:</p>
 </table>
 <p>Ein Plugin, das <code>EmitEvent</code> aufruft, veröffentlicht <code>plugin.event.&lt;type&gt;</code>.
 Ein Webhook auf <strong>Alle Ereignisse</strong> empfängt auch das.</p>
-<p><strong>Zustellung.</strong> Jedes Ereignis ist ein JSON-<code>POST</code> mit zwei Headern:</p>
+<p><strong>Zustellung.</strong> Jedes Ereignis ist ein JSON-<code>POST</code> mit diesen Headern:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: eine Kennung, die über alle Wiederholungen einer
   Zustellung gleich bleibt. So kann Ihr Empfänger ein Duplikat ignorieren.</li>
 <li><code>X-Evey-Signature</code>: <code>sha256=</code>, gefolgt vom HMAC-SHA256 des Inhalts,
   berechnet mit dem Secret des Webhooks. Prüfen Sie ihn mit demselben Secret,
   dann wissen Sie, dass die Anfrage von Ihrem Server kommt. Ohne Secret
-  beweist die Signatur nichts.</li>
+  beweist die Signatur nichts. Sie deckt nur den Inhalt ab und verhindert daher
+  nicht, dass eine abgefangene Anfrage erneut gesendet wird: Nutzen Sie lieber
+  die zwei folgenden Header.</li>
+<li><code>X-Evey-Timestamp</code>: der Zeitpunkt des Versuchs in Unix-Sekunden. Jede
+  Wiederholung trägt einen neuen Wert.</li>
+<li><code>X-Evey-Signature-V2</code>: <code>sha256=</code>, gefolgt vom HMAC-SHA256, berechnet mit dem
+  Secret des Webhooks, über den Text <code>&lt;timestamp&gt;.&lt;delivery id&gt;.&lt;body&gt;</code> (der
+  Wert von <code>X-Evey-Timestamp</code>, ein Punkt, der Wert von <code>X-Evey-Delivery</code>, ein
+  Punkt, dann der rohe Inhalt).</li>
 </ul>
+<p>Um eine Zustellung zu prüfen, berechnen Sie die V2-Signatur aus dem rohen
+Inhalt neu und vergleichen sie in konstanter Zeit. Lehnen Sie die Anfrage dann
+ab, wenn der Zeitstempel mehr als 5 Minuten von Ihrer Uhr abweicht (in beide
+Richtungen). Merkt sich Ihr Empfänger zusätzlich die in diesem Zeitfenster
+gesehenen Zustellungskennungen, lässt sich eine abgefangene Anfrage nicht
+erneut einspielen.</p>
 <p>Jeder Versuch wartet bis zu 30 Sekunden auf eine Antwort. Eine
 fehlgeschlagene Zustellung wird nach 1, 5 und 30 Sekunden wiederholt. Jeder
 Versuch wird festgehalten. Den Verlauf lesen Sie über die API

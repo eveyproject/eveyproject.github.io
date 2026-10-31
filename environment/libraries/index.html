@@ -3217,6 +3217,18 @@ there; the panel side is described in
 <td>Server Config → Libraries → <strong>Periodic scan interval</strong>, restart</td>
 </tr>
 <tr>
+<td><code>EVEY_LIBRARY_PRUNE_MAX_MISSING_PERCENT</code></td>
+<td><code>5</code></td>
+<td>Share of a folder's items that may be gone in one scan. Above it (and past the minimum below), nothing under that folder is deleted until an admin confirms, which protects against a pool that lost a disk.</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>EVEY_LIBRARY_PRUNE_MIN_MISSING</code></td>
+<td><code>20</code></td>
+<td>Fewest missing files that can hold a folder's deletions, so a small library can still lose a few titles.</td>
+<td>none</td>
+</tr>
+<tr>
 <td><code>EVEY_LIBRARY_SCAN_WORKERS</code></td>
 <td>from the CPU share</td>
 <td>Files analysed in parallel during a scan. Set by hand, it bypasses the <strong>Processing power</strong> share for scans.</td>

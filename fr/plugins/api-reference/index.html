@@ -2605,6 +2605,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#metadata-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requêtes de métadonnées
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-store" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3350,6 +3361,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#metadata-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requêtes de métadonnées
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-store" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3606,7 +3628,7 @@ plus.</p>
 </tr>
 <tr>
 <td><code>external_fetch</code></td>
-<td>Des noms d'hôte. Un schéma et un chemin final sont retirés à l'analyse ; les hôtes correspondent exactement, un joker <code>*.example.com</code> est refusé à l'installation et un suffixe de port est ignoré ; une adresse IP fait refuser l'installation (<a href="../security-model/#external-fetch-rules">règles</a>).</td>
+<td>Des noms d'hôte. Un schéma et un chemin final sont retirés à l'analyse ; les hôtes correspondent exactement, un joker <code>*.example.com</code> est refusé à l'installation ; une entrée sans port n'autorise que les ports 80 et 443, <code>host:port</code> n'autorise que ce port ; une adresse IP fait refuser l'installation (<a href="../security-model/#external-fetch-rules">règles</a>).</td>
 </tr>
 <tr>
 <td><code>capabilities</code></td>
@@ -3668,7 +3690,7 @@ d'entrée au démarrage du plugin (<a href="../dev-setup/#1-prerequisites">prér
 </tr>
 <tr>
 <td><code>OnEvent(event_type, payload, source)</code></td>
-<td>Défini dans le contrat, mais le serveur ne livre aucun événement aux plugins aujourd'hui : implémentez-le pour répondre <code>handled: true</code>, et n'attendez aucun appel.</td>
+<td>Uniquement <code>metadata.request</code>, vers un plugin doté de la capacité <code>metadata.provider</code> (<a href="#metadata-requests">requêtes de métadonnées</a> plus bas). Tout autre plugin ne reçoit aucun événement : répondez <code>handled: false</code>.</td>
 </tr>
 <tr>
 <td><code>GetCapabilities()</code></td>
@@ -3726,9 +3748,9 @@ sont listées pour qu'un stub ne vous induise pas en erreur.</p>
 <td><em>Non servie.</em></td>
 </tr>
 <tr>
-<td><code>UpdateMetadata</code></td>
-<td><code>api.metadata</code> ou <code>media.write</code></td>
-<td><em>Non servie.</em></td>
+<td><code>UpdateMetadata(media_item_id, fields, provider_ids)</code></td>
+<td><code>api.metadata</code> ou <code>media.write</code>, et la capacité <code>metadata.provider</code></td>
+<td>Fournit votre texte pour un film ou une série sans qu'on vous le demande, comme le ferait une <a href="#metadata-requests">réponse de métadonnées</a>. <code>fields</code> porte <code>locale</code> (obligatoire) et tout ou partie de <code>title</code>, <code>overview</code>, <code>tagline</code> ; le texte remplace ce que vous aviez fourni pour cette langue, et un <code>fields</code> qui ne porte que <code>locale</code> retire ce que vous aviez fourni pour cette langue. <code>provider_ids</code> est refusé : c'est TMDB qui identifie l'élément. Ce qu'un plugin stocke est borné : 16 langues par élément, 200 000 textes et 128 Mio en tout. Au-delà, l'appel répond <code>RESOURCE_EXHAUSTED</code> ; remplacer ou retirer un texte déjà fourni reste possible.</td>
 </tr>
 <tr>
 <td><code>GetUserPreferences</code></td>
@@ -3742,6 +3764,72 @@ sont listées pour qu'un stub ne vous induise pas en erreur.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="metadata-requests">Requêtes de métadonnées<a class="headerlink" href="#metadata-requests" title="Permanent link">¶</a></h3>
+<p>Chaque fois que le serveur identifie ou actualise un film ou une série depuis
+TMDB, il envoie à chaque plugin <code>metadata.provider</code> activé un <code>OnEvent</code> dont
+l'<code>event_type</code> est <code>metadata.request</code>, un plugin après l'autre, et attend
+jusqu'à 15 secondes chacun. Le contenu :</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>media_item_id</code></td>
+<td>L'identifiant de l'élément, pour un <code>UpdateMetadata</code> ultérieur.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>movie</code> ou <code>series</code>.</td>
+</tr>
+<tr>
+<td><code>title</code>, <code>original_title</code></td>
+<td>Le titre TMDB dans la langue du serveur, et le titre original.</td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>Absent quand il est inconnu.</td>
+</tr>
+<tr>
+<td><code>provider_ids</code></td>
+<td><code>tmdb</code>, <code>imdb</code> et les autres identifiants connus de l'élément.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>La langue du texte TMDB, par exemple <code>fr</code>.</td>
+</tr>
+<tr>
+<td><code>locales</code></td>
+<td>Toutes les langues que le serveur affiche.</td>
+</tr>
+</tbody>
+</table>
+<p>Répondez <code>handled: true</code> avec un <code>result</code> de la forme :</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fr"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"overview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">"tagline"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">"translations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">"de"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"overview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Les champs de premier niveau sont dans la langue <code>locale</code>, ou dans la
+<code>language</code> de la requête quand <code>locale</code> est absent ; <code>translations</code> ajoute
+d'autres langues. Omettez un champ que vous ne couvrez pas. Les étiquettes de
+langue sont ramenées à leur langue (<code>fr-FR</code> se lit <code>fr</code>), et un champ de plus
+de 8 Kio est ignoré. Une réponse remplace tout ce que vous aviez fourni pour
+l'élément ; <code>handled: false</code>, ou une réponse sans texte, signifie que vous ne
+connaissez pas l'élément et efface ce que vous aviez fourni. Une erreur ou un délai dépassé conserve
+ce que vous aviez fourni.</p>
+<p>L'administrateur choisit lesquels de <code>title</code>, <code>overview</code> et <code>tagline</code> votre
+texte remplace, et peut vous interroger sur toute la bibliothèque d'un coup
+(<a href="../#metadata-plugins">Plugins de métadonnées</a>). Les saisons et les
+épisodes ne sont pas envoyés.</p>
 <h3 id="data-store">Stockage de données<a class="headerlink" href="#data-store" title="Permanent link">¶</a></h3>
 <p>Chaque plugin possède un stockage clé/valeur persistant, sans permission à
 déclarer : curseurs, caches, horodatage de la dernière synchronisation, tout
@@ -3789,15 +3877,15 @@ mobile et télévision.</p>
 <h3 id="eveyoninitcallback"><code>evey.onInit(callback)</code><a class="headerlink" href="#eveyoninitcallback" title="Permanent link">¶</a></h3>
 <p>Appelé une fois avec le contexte qu'envoie l'hôte ; un callback enregistré
 après l'arrivée du contexte est appelé immédiatement.</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="c1">// data.config          - les valeurs de configuration du plugin (config_schema)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="c1">// data.context         - le contexte de l'hôte</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="c1">// data.locale          - la langue active, par ex. "fr-FR"</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" ou "light"</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web", "mobile" ou "tv"</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - home.section seulement : la hauteur (px) que l'hôte recommande</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - tv seulement : la hauteur du panneau en dp</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">});</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="c1">// data.config          - les valeurs de configuration du plugin (config_schema)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="c1">// data.context         - le contexte de l'hôte</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="c1">// data.locale          - la langue active, par ex. "fr-FR"</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" ou "light"</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web", "mobile" ou "tv"</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - home.section seulement : la hauteur (px) que l'hôte recommande</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - tv seulement : la hauteur du panneau en dp</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">});</span>
 </span></code></pre></div>
 <h3 id="eveynavigatepath"><code>evey.navigate(path)</code><a class="headerlink" href="#eveynavigatepath" title="Permanent link">¶</a></h3>
 <p>Déplace l'application hôte vers <code>path</code>. Seuls les préfixes <code>/home</code>,
@@ -3819,18 +3907,18 @@ même taille. Ne redimensionnez que si vous avez une raison précise de le faire
 <p>Les préférences de l'utilisateur courant dans l'espace propre du plugin,
 liées à (ce plugin, cet utilisateur) par le jeton que l'hôte détient pour le
 cadre. Chaque appel renvoie une promesse ; une permission absente la rejette.</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">);</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span><span class="w">        </span><span class="c1">// [{ key, value }]</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">);</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span><span class="w">        </span><span class="c1">// [{ key, value }]</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code> (permission <code>public</code>)<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>Une projection sûre des médias : identifiant, titre, type, année, résumé, URL
 d'affiche. Jamais un chemin de fichier, une taille, un identifiant de
 fournisseur ni un flux.</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// l'affiche en URL data:</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// l'affiche en URL data:</span>
 </span></code></pre></div>
 <p><code>poster</code> renvoie une URL <code>data:</code> parce que la politique du cadre interdit de
 charger une image depuis le serveur directement ; utilisez-la comme source
@@ -3911,8 +3999,9 @@ soumise au consentement. Tout autre emplacement <code>admin.*</code>, <code>logi
 <code>media.read</code>, <code>media.write</code>, <code>webhook.receiver</code> ou <code>notification.sender</code>.
 L'installateur vérifie le nom, l'administrateur voit la liste dans l'aperçu
 et tout ajout à la mise à jour, et le Tableau de bord sécurité l'enregistre.
-Le serveur n'oriente aujourd'hui aucun appel en fonction d'une capacité : un
-<code>metadata.provider</code> ne reçoit aucun appel d'enrichissement, un
+Le serveur oriente les appels selon l'une d'elles : un <code>metadata.provider</code>
+reçoit les <a href="#metadata-requests">requêtes de métadonnées</a> et peut appeler
+<code>UpdateMetadata</code>. Les autres n'orientent rien aujourd'hui ; un
 <code>webhook.receiver</code> ne reçoit aucune requête entrante. Ce qu'un plugin peut
 réellement faire est décidé par ses <strong>permissions</strong>.</p>
 <h2 id="permissions-of-the-interface">Permissions de l'interface<a class="headerlink" href="#permissions-of-the-interface" title="Permanent link">¶</a></h2>

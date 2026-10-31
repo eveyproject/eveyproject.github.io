@@ -3243,7 +3243,13 @@ de esas decisiones.</p>
    de los commits, búsqueda de secretos, comprobación de cambios
    incompatibles en los proto, una compilación desde una copia limpia, las
    puertas de integración del repositorio y de la transcodificación, y la
-   auditoría de TV.</li>
+   auditoría de TV.
+   Un push a <code>dev</code> o a una rama de trabajo ejecuta <code>make pre-push-dev</code> en su
+   lugar: la misma puerta de control sin las suites largas que la CI de la
+   pull request vuelve a ejecutar sobre los mismos commits (análisis de
+   vulnerabilidades, tests y compilación del frontend, suite del
+   repositorio, auditoría de TV); un push a <code>master</code> ejecuta la puerta
+   completa.</li>
 <li>Añade tests para cada comportamiento nuevo y para cada corrección de un
    error.</li>
 <li>Si contribuyes desde fuera, acepta una vez el

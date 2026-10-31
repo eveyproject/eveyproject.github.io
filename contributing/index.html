@@ -3240,7 +3240,11 @@ start before proposing to change one of those choices.</p>
    <a href="../ARCHITECTURE/#architecture-guards">architecture guards</a>, commit
    hygiene, secret scan, proto breaking-change check, a build from a clean
    checkout, the repository and transcoding integration gates, and the TV
-   audit.</li>
+   audit.
+   A push to <code>dev</code> or to a work branch runs <code>make pre-push-dev</code> instead: the
+   same gate without the long suites that the pull request's CI runs again
+   on the same commits (vulnerability scan, frontend tests and build, the
+   repository suite, the TV audit); a push to <code>master</code> runs the full gate.</li>
 <li>Add tests for new behaviour and for every bug fix.</li>
 <li>For an external contribution, accept the
    <a href="https://github.com/eveyproject/evey/blob/master/CLA.md">contributor licence agreement</a> once: Evey is AGPL-3.0-or-later
@@ -3256,7 +3260,7 @@ pushing.</p>
 <p>Security issues are not reported in public: write to
 <code>security@eveyproject.org</code> (see <a href="https://github.com/eveyproject/evey/blob/master/SECURITY.md">SECURITY.md</a>).</p>
 <!-- sources
-gate: Makefile - pre-push, ci-fast-vet, ci-fast-vuln, ci-fast-build, ci-fast-unit, ci-fast-frontend, ci-fast-sec, ci-local-lint, ci-arch, ci-hygiene, ci-secrets, ci-proto-breaking, ci-clean-checkout, repo-itest-gate, transcode-itest-gate, tv-audit
+gate: Makefile - pre-push, pre-push-dev, ci-fast-vet, ci-fast-frontend-static, ci-fast-vuln, ci-fast-build, ci-fast-unit, ci-fast-frontend, ci-fast-sec, ci-local-lint, ci-arch, ci-hygiene, ci-secrets, ci-proto-breaking, ci-clean-checkout, repo-itest-gate, transcode-itest-gate, tv-audit
 documents: DEV.md ; CONTRIBUTING.md ; CLA.md ; SECURITY.md ; docs/CODEBASE_MAP.md ; docs/code-conventions.md ; docs/frontend-design-system.md ; docs/adr/README.md ; docs/runbooks/release.md
 -->
 

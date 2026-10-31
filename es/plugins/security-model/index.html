@@ -3369,7 +3369,8 @@ metadatos (<code>metadata.provider</code>) son capacidades, que se declaran en
 que se rechace toda la instalación.</p>
 <p>Una entrada es un <strong>nombre de host</strong>. Un prefijo de esquema y una ruta final se
 descartan al analizar; solo se guarda el nombre de host. Los hosts coinciden
-exactamente, un comodín <code>*.example.com</code> se rechaza en la instalación y un sufijo de puerto se ignora.</p>
+exactamente y un comodín <code>*.example.com</code> se rechaza en la instalación. Una entrada
+sin puerto solo permite los puertos 80 y 443; <code>host:port</code> solo permite ese puerto.</p>
 <table>
 <thead>
 <tr>
@@ -3388,6 +3389,11 @@ exactamente, un comodín <code>*.example.com</code> se rechaza en la instalació
 <td><code>https://api.tmdb.org</code></td>
 <td>Sí</td>
 <td>El esquema y la ruta se descartan al analizar, se guarda el nombre de host</td>
+</tr>
+<tr>
+<td><code>api.example.com:8443</code></td>
+<td>Sí</td>
+<td>Ese host solo en el puerto 8443</td>
 </tr>
 <tr>
 <td><code>*.tmdb.org</code></td>
@@ -3409,10 +3415,11 @@ exactamente, un comodín <code>*.example.com</code> se rechaza en la instalació
 <p>Mientras funciona, el intermediario del servidor añade sus propios límites,
 que el manifiesto no puede ampliar: solo <code>http</code> y <code>https</code>, solo <code>GET</code> y
 <code>HEAD</code>, el host de destino se compara con tu lista sin distinguir mayúsculas
-de minúsculas (un sufijo <code>:port</code> en una entrada se ignora), las direcciones
+de minúsculas, el puerto de destino se compara con la entrada (80 o 443 si no
+declara puerto), las direcciones
 privadas o reservadas se rechazan después de la resolución DNS, el cuerpo se
 limita a 8 MiB y la petición a 20 segundos. Las redirecciones se vuelven a
-comprobar con la lista y con la regla de direcciones.</p>
+comprobar con la lista, con la regla de puertos y con la regla de direcciones.</p>
 <p>La misma lista de hosts es el <code>connect-src</code> del marco del plugin, con el
 prefijo <code>https://</code>: un widget puede llamar directamente a esos hosts, solo por
 <code>https</code>.</p>

@@ -3402,7 +3402,7 @@ valor guardado en <strong>Administración → Configuración del servidor → Da
 <tr>
 <td><code>EVEY_LOG_DEV_MODE</code></td>
 <td><code>false</code></td>
-<td>Modo desarrollador: las comprobaciones de seguridad al arrancar solo avisan, y los plugins pueden ejecutarse sin la biblioteca del sandbox. Nunca en un servidor real; con <code>EVEY_ENV=production</code> el servidor se niega a arrancar.</td>
+<td>Modo desarrollador: las comprobaciones de seguridad al arrancar solo avisan, y los plugins pueden ejecutarse sin la biblioteca del sandbox. Solo surte efecto junto con <code>EVEY_ENV=dev</code>; por sí sola se ignora con un aviso. Nunca en un servidor real.</td>
 <td>ninguno</td>
 </tr>
 </tbody>

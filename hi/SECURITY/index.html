@@ -4009,7 +4009,7 @@ namespace)। <code>network</code> अनुमति वाला प्लग�
 कॉल करता है। होस्ट, <code>internal/adapters/driving/pluginhost/fetch.go</code> में:</p>
 <ul>
 <li>लक्ष्य को प्लगइन की <code>external_fetch</code> सूची से मिलाता है (पूरे होस्ट नाम, बड़े-छोटे
-  अक्षर का फ़र्क किए बिना; <code>*.example.com</code> wildcard इंस्टॉल पर मना हो जाता है; port का suffix अनदेखा किया जाता है);</li>
+  अक्षर का फ़र्क किए बिना; <code>*.example.com</code> wildcard इंस्टॉल पर मना हो जाता है; बिना port वाली एंट्री सिर्फ़ port 80 और 443 की अनुमति देती है, <code>host:port</code> सिर्फ़ उसी port की);</li>
 <li>सिर्फ़ <code>http</code> और <code>https</code>, और सिर्फ़ <code>GET</code> और <code>HEAD</code> की अनुमति देता है;</li>
 <li>एक SSRF से सुरक्षित client (<code>internal/pkg/ssrf</code>) से जुड़ता है, जो DNS से पता निकालने
   के बाद निजी, आरक्षित और link-local पते मना करता है, इसलिए DNS rebinding और redirect
@@ -4057,6 +4057,10 @@ namespace)। <code>network</code> अनुमति वाला प्लग�
 <tr>
 <td>Signal</td>
 <td><code>tgkill</code>, <code>rt_sigqueueinfo</code>, <code>rt_tgsigqueueinfo</code>, प्लगइन को छोड़कर किसी भी प्रोसेस की ओर (दोनों फ़िल्टर); <code>kill</code> भी इसी तरह kernel फ़िल्टर में, और <code>LD_PRELOAD</code> फ़िल्टर में किसी भी लक्ष्य की ओर; <code>tkill</code> kernel फ़िल्टर में (<code>LD_PRELOAD</code> फ़िल्टर इसे प्लगइन की खुद की ओर जाने देता है); <code>pidfd_send_signal</code>, <code>pidfd_getfd</code> (file descriptor चुराता है)। जो runtime कोई signal फिर से भेजता है या अपने ही thread को रोकता है, वह काम करता रहता है। Landlock ABI 6+ पर प्लगइन अपने सैंडबॉक्स के बाहर किसी प्रोसेस को signal भी नहीं भेज सकता</td>
+</tr>
+<tr>
+<td>फ़ाइल डिस्क्रिप्टर के signal का मालिक (kernel filter)</td>
+<td>प्लगइन के अलावा किसी भी दूसरे process की ओर <code>fcntl</code> <code>F_SETOWN</code>, डिफ़ॉल्ट <code>SIGIO</code> के अलावा किसी भी दूसरे signal की ओर <code>F_SETSIG</code>, <code>F_SETOWN_EX</code>, और <code>ioctl</code> <code>FIOSETOWN</code>/<code>SIOCSPGRP</code>: इसके बिना, ऐसा डिस्क्रिप्टर जिसका मालिक सर्वर हो और जिसका signal <code>SIGKILL</code> हो, अगली write पर सर्वर को बंद कर देता</td>
 </tr>
 <tr>
 <td>Mount</td>
@@ -4112,9 +4116,11 @@ namespace)। <code>network</code> अनुमति वाला प्लग�
 <code>bubblewrap</code> में launcher इस्तेमाल नहीं होता: वहाँ static binary को कोई seccomp फ़िल्टर
 नहीं मिलता, और उसे namespace और mount अनुमति सूची सीमित रखते हैं।</p>
 <h3 id="a-separate-user">एक अलग उपयोगकर्ता<a class="headerlink" href="#a-separate-user" title="Permanent link">¶</a></h3>
-<p>प्लगइन उपयोगकर्ता 1001 (<code>evey-plugin</code>) के रूप में चल सकता है, जो सर्वर (1000) से अलग
-है, ताकि सर्वर के secret सिर्फ़ फ़ाइल की अनुमतियों से ही उसके लिए न पढ़े जा सकें।
-<code>EVEY_PLUGINS_UID_SEPARATION</code> इसे नियंत्रित करता है:</p>
+<p>प्लगइन अपने खुद के उपयोगकर्ता के रूप में चल सकता है, जो सर्वर (1000) से अलग है, ताकि
+सर्वर के secret सिर्फ़ फ़ाइल की अनुमतियों से ही उसके लिए न पढ़े जा सकें। हर प्लगइन अपना uid
+अपनी id से लेता है, 40000 से 59999 की सीमा में, जो restart के बाद भी वही रहता है; वह सर्वर
+का group रखता है, जो इंस्टॉल की गई फ़ाइलों को सिर्फ़ पढ़ता है। दो id एक ही uid पर आ सकती
+हैं: तब वे दो प्लगइन उसे साझा करते हैं। <code>EVEY_PLUGINS_UID_SEPARATION</code> इसे नियंत्रित करता है:</p>
 <table>
 <thead>
 <tr>
@@ -4144,8 +4150,9 @@ capabilities के चलता है। launcher 1000 से नीचे क
 <code>bubblewrap</code> और <code>strict</code> में यह काम user namespace करता है।</p>
 <p>चालू होने पर, साइन करने वाली कुंजी (<code>0600</code>) और बैकअप (<code>0700</code> फ़ोल्डर, <code>0600</code> फ़ाइलें)
 चलते समय सिर्फ़ मालिक के लिए होते हैं, जो bind-mount किए गए <code>/data</code> पर भी बना रहता है।
-सभी प्लगइन उपयोगकर्ता 1001 साझा करते हैं: उन्हें एक-दूसरे से फ़ाइल सिस्टम वाली परत
-अलग रखती है, उपयोगकर्ता नहीं।</p>
+प्लगइन एक-दूसरे से अपने uid से अलग रहते हैं, फ़ाइल सिस्टम वाली परत के अलावा। root के रूप
+में चलने वाला सर्वर (सुझाया नहीं जाता) इसके बजाय हर प्लगइन को एक ही उपयोगकर्ता 1001 पर ले
+जाता है: वहाँ प्लगइन को सिर्फ़ फ़ाइल सिस्टम वाली परत अलग रखती है।</p>
 <h3 id="host-socket-authentication">होस्ट socket पर पहचान<a class="headerlink" href="#host-socket-authentication" title="Permanent link">¶</a></h3>
 <p>हर प्लगइन का अपना socket होता है, <code>/tmp/evey/plugins/&lt;plugin_id&gt;/host.sock</code>, जिसे उसका
 अपना gRPC सर्वर देता है। हर कॉल पर सर्वर kernel से कॉल करने वाले का PID पढ़ता है
@@ -4154,6 +4161,10 @@ capabilities के चलता है। launcher 1000 से नीचे क
 इसलिए प्लगइन किसी दूसरे की पहचान नहीं ले सकता, किसी दूसरे प्लगइन के socket को कॉल नहीं
 कर सकता, या किसी child process से कॉल नहीं भेज सकता। PID न मिलने पर एक चेतावनी लॉग
 होती है।</p>
+<p>दूसरी दिशा भी इसी तरह जाँची जाती है: सर्वर प्लगइन से उसी फ़ोल्डर के <code>plugin.sock</code> पर बात
+करता है, और कनेक्शन ठुकरा देता है अगर उस पर सुनने वाला process खुद प्लगइन नहीं है (फिर से
+<code>SO_PEERCRED</code>)। हर प्लगइन के अलग उपयोगकर्ता के साथ, फ़ोल्डर पर sticky bit होता है, ताकि
+साझा group का कोई पड़ोसी प्लगइन उस socket को हटाकर अपना socket न बाँध सके।</p>
 <h3 id="resource-limits">संसाधनों की सीमाएँ<a class="headerlink" href="#resource-limits" title="Permanent link">¶</a></h3>
 <p>user space में एक निगरानी प्रक्रिया (बिना अधिकार वाले container में cgroups उपलब्ध
 नहीं होते) हर 2 सेकंड में <code>/proc/&lt;pid&gt;</code> पढ़ता है और सीमा पार करने वाले प्लगइन को रोक
@@ -4433,8 +4444,8 @@ capabilities के चलता है। launcher 1000 से नीचे क
 <td>secret अलग उपयोगकर्ता और <code>PR_SET_DUMPABLE</code> से सुरक्षित; <code>auto</code> Landlock या bubblewrap को पहले चुनता है</td>
 </tr>
 <tr>
-<td>सभी प्लगइन उपयोगकर्ता 1001 साझा करते हैं</td>
-<td><code>basic</code> मोड में प्लगइन अपने साथियों की फ़ाइलें पढ़ सकता है</td>
+<td>प्लगइन के uid उनकी id के hash से आते हैं; root के रूप में चलने वाला सर्वर हर प्लगइन को उपयोगकर्ता 1001 पर ले जाता है</td>
+<td>जिन दो प्लगइन की id टकराती हैं, या root सर्वर के नीचे सभी प्लगइन, एक uid साझा करते हैं: <code>basic</code> मोड में एक दूसरे की फ़ाइलें पढ़ सकता है</td>
 <td>दूसरे प्रोसेस को signal भेजना बंद है (seccomp, <code>LD_PRELOAD</code> और bubblewrap तीनों इसे रोकते हैं); <code>PR_SET_DUMPABLE</code> <code>/proc</code> से दूसरे प्रोसेस पढ़ना रोकता है; Landlock और bubblewrap प्लगइन के फ़ोल्डर अलग रखते हैं</td>
 </tr>
 <tr>

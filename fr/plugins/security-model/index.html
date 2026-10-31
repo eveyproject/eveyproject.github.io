@@ -3372,7 +3372,8 @@ métadonnées (<code>metadata.provider</code>) sont des capacités, déclarées 
 toute l'installation.</p>
 <p>Une entrée est un <strong>nom d'hôte</strong>. Un préfixe de schéma et un chemin final sont
 retirés à l'analyse ; seul le nom d'hôte est conservé. Les hôtes correspondent
-exactement, un joker <code>*.example.com</code> est refusé à l'installation et un suffixe de port est ignoré.</p>
+exactement et un joker <code>*.example.com</code> est refusé à l'installation. Une entrée
+sans port n'autorise que les ports 80 et 443 ; <code>host:port</code> n'autorise que ce port.</p>
 <table>
 <thead>
 <tr>
@@ -3393,6 +3394,11 @@ exactement, un joker <code>*.example.com</code> est refusé à l'installation et
 <td>Schéma et chemin retirés à l'analyse, nom d'hôte conservé</td>
 </tr>
 <tr>
+<td><code>api.example.com:8443</code></td>
+<td>Oui</td>
+<td>Cet hôte sur le port 8443 seulement</td>
+</tr>
+<tr>
 <td><code>*.tmdb.org</code></td>
 <td>Non</td>
 <td>Les jokers sont refusés à l'installation ; listez chaque hôte</td>
@@ -3411,11 +3417,11 @@ exactement, un joker <code>*.example.com</code> est refusé à l'installation et
 </table>
 <p>À l'exécution, le courtier de l'hôte ajoute ses propres limites, que le
 manifeste ne peut pas élargir : <code>http</code> et <code>https</code> seulement, <code>GET</code> et <code>HEAD</code>
-seulement, l'hôte cible comparé à votre liste sans tenir compte de la casse
-(un suffixe <code>:port</code> dans une entrée est ignoré), les adresses privées ou
+seulement, l'hôte cible comparé à votre liste sans tenir compte de la casse,
+le port cible comparé à l'entrée (80 ou 443 sans port déclaré), les adresses privées ou
 réservées refusées après résolution DNS, un corps plafonné à 8 Mio et une
-requête à 20 secondes. Les redirections sont revérifiées contre la liste et
-contre la règle d'adresse.</p>
+requête à 20 secondes. Les redirections sont revérifiées contre la liste,
+la règle de port et la règle d'adresse.</p>
 <p>La même liste d'hôtes est le <code>connect-src</code> du cadre du plugin, préfixée de
 <code>https://</code> : un widget peut appeler ces hôtes directement, en <code>https</code>
 seulement.</p>

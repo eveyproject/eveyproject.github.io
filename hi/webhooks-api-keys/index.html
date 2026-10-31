@@ -3187,7 +3187,7 @@ event दिखाता है जो सर्वर प्रकाशित 
 <tbody>
 <tr>
 <td>लाइब्रेरी</td>
-<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
+<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>library.prune.suspended</code> (किसी रूट से एक साथ बहुत ज़्यादा फ़ाइलें गायब हो गईं, एडमिन की पुष्टि तक हटाना रोका गया), <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
 </tr>
 <tr>
 <td>प्लेबैक</td>
@@ -3209,14 +3209,23 @@ event दिखाता है जो सर्वर प्रकाशित 
 </table>
 <p>जो प्लगइन <code>EmitEvent</code> कॉल करता है, वह <code>plugin.event.&lt;type&gt;</code> प्रकाशित करता है, जो
 <strong>सभी इवेंट</strong> वाले वेबहुक को भी मिलता है।</p>
-<p><strong>भेजना।</strong> हर event एक JSON <code>POST</code> है, दो header के साथ:</p>
+<p><strong>भेजना।</strong> हर event एक JSON <code>POST</code> है, इन header के साथ:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: एक पहचान जो एक ही भेजने की सारी कोशिशों में एक जैसी रहती है,
   ताकि आपका receiver दोहराव को अनदेखा कर सके;</li>
 <li><code>X-Evey-Signature</code>: <code>sha256=</code> और उसके बाद body का HMAC-SHA256, जो वेबहुक के
   सीक्रेट से निकाला गया है। इसे उसी सीक्रेट से जाँचें, ताकि पता रहे कि request आपके
-  सर्वर से आया है। सीक्रेट के बिना सिग्नेचर कुछ साबित नहीं करता।</li>
+  सर्वर से आया है। सीक्रेट के बिना सिग्नेचर कुछ साबित नहीं करता। यह सिर्फ़ body को ढकता है,
+  इसलिए पकड़े गए request को दोबारा भेजे जाने से नहीं रोकता: नीचे के दो header को चुनें;</li>
+<li><code>X-Evey-Timestamp</code>: कोशिश का समय, Unix सेकंड में। हर नई कोशिश में नया मान होता है;</li>
+<li><code>X-Evey-Signature-V2</code>: <code>sha256=</code> और उसके बाद वेबहुक के सीक्रेट से निकाला गया
+  HMAC-SHA256, इस पाठ का: <code>&lt;timestamp&gt;.&lt;delivery id&gt;.&lt;body&gt;</code> (<code>X-Evey-Timestamp</code>
+  का मान, एक बिंदु, <code>X-Evey-Delivery</code> का मान, एक बिंदु, फिर कच्ची body)।</li>
 </ul>
+<p>किसी भेजे गए event को जाँचने के लिए कच्ची body से V2 सिग्नेचर दोबारा निकालें और उसे
+constant time में मिलाएँ, फिर अगर timestamp आपकी घड़ी से 5 मिनट से ज़्यादा दूर हो
+(किसी भी दिशा में) तो request मना कर दें। अगर आपका receiver उस अवधि में देखे गए
+delivery id भी याद रखता है, तो पकड़ा गया request दोबारा नहीं चलाया जा सकता।</p>
 <p>हर कोशिश जवाब के लिए 30 सेकंड तक रुकती है। फ़ेल होने पर 1, 5 और 30 सेकंड बाद फिर
 कोशिश होती है। हर कोशिश दर्ज होती है; इतिहास API से पढ़ा जाता है
 (<a href="../api/plugins/">प्लगइन API</a> में <code>ListWebhookDeliveries</code>), पैनल में नहीं।</p>

@@ -3188,7 +3188,7 @@ form offers every event the server publishes; among them:</p>
 <tbody>
 <tr>
 <td>Library</td>
-<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
+<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>library.prune.suspended</code> (a root lost too many files at once, deletions held until an admin confirms), <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
 </tr>
 <tr>
 <td>Playback</td>
@@ -3210,15 +3210,27 @@ form offers every event the server publishes; among them:</p>
 </table>
 <p>A plugin that calls <code>EmitEvent</code> publishes <code>plugin.event.&lt;type&gt;</code>, which a
 webhook on <strong>All events</strong> receives too.</p>
-<p><strong>Delivery.</strong> Each event is a JSON <code>POST</code>, with two headers:</p>
+<p><strong>Delivery.</strong> Each event is a JSON <code>POST</code>, with these headers:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: an identifier that stays the same across the retries of
   one delivery, so your receiver can ignore a duplicate;</li>
 <li><code>X-Evey-Signature</code>: <code>sha256=</code> followed by the HMAC-SHA256 of the body,
   computed with the webhook's secret. Verify it with the same secret to know
   the request comes from your server. Without a secret, the signature proves
-  nothing.</li>
+  nothing. It covers the body only, so it does not stop a captured request
+  from being sent again: prefer the two headers below;</li>
+<li><code>X-Evey-Timestamp</code>: the time of the attempt, in Unix seconds. Each retry
+  carries a fresh one;</li>
+<li><code>X-Evey-Signature-V2</code>: <code>sha256=</code> followed by the HMAC-SHA256, computed with
+  the webhook's secret, of the text <code>&lt;timestamp&gt;.&lt;delivery id&gt;.&lt;body&gt;</code> (the
+  value of <code>X-Evey-Timestamp</code>, a dot, the value of <code>X-Evey-Delivery</code>, a dot,
+  then the raw body).</li>
 </ul>
+<p>To verify a delivery, recompute the V2 signature from the raw body and compare
+it in constant time, then refuse the request when the timestamp is more than
+5 minutes away from your clock (in either direction). For a receiver that
+also remembers the delivery ids it has seen for that window, a captured
+request cannot be replayed.</p>
 <p>Each attempt waits up to 30 seconds for an answer. A delivery that fails is
 retried after 1, 5 and 30 seconds. Every attempt is recorded; the history is
 read through the API (<code>ListWebhookDeliveries</code> in the

@@ -3401,7 +3401,7 @@ in <strong>Admin → Server Config → Data &amp; retention</strong> applies at 
 <tr>
 <td><code>EVEY_LOG_DEV_MODE</code></td>
 <td><code>false</code></td>
-<td>Developer mode: security checks at startup only warn, and plugins may run without the sandbox library. Never on a real server; with <code>EVEY_ENV=production</code> the server refuses to start.</td>
+<td>Developer mode: security checks at startup only warn, and plugins may run without the sandbox library. Only takes effect together with <code>EVEY_ENV=dev</code>; on its own it is ignored with a warning. Never on a real server.</td>
 <td>none</td>
 </tr>
 </tbody>

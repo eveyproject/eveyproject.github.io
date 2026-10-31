@@ -3184,7 +3184,7 @@ API 密钥让脚本以您的身份调用服务器。两者都由管理员在管�
 <tbody>
 <tr>
 <td>媒体库</td>
-<td><code>library.scan.started</code>、<code>library.scan.completed</code>、<code>media.item.added</code>、<code>media.item.updated</code>、<code>media.item.removed</code>、<code>metadata.refreshed</code></td>
+<td><code>library.scan.started</code>、<code>library.scan.completed</code>、<code>library.prune.suspended</code>（某个根目录一次丢失了太多文件，删除操作被搁置，直到管理员确认）、<code>media.item.added</code>、<code>media.item.updated</code>、<code>media.item.removed</code>、<code>metadata.refreshed</code></td>
 </tr>
 <tr>
 <td>播放</td>
@@ -3205,12 +3205,17 @@ API 密钥让脚本以您的身份调用服务器。两者都由管理员在管�
 </tbody>
 </table>
 <p>调用 <code>EmitEvent</code> 的插件会发布 <code>plugin.event.&lt;type&gt;</code>，订阅了<strong>所有事件</strong>的 Webhook 也会收到它。</p>
-<p><strong>投递。</strong> 每个事件都是一个 JSON 格式的 <code>POST</code> 请求，带有两个请求头：</p>
+<p><strong>投递。</strong> 每个事件都是一个 JSON 格式的 <code>POST</code> 请求，带有以下请求头：</p>
 <ul>
 <li><code>X-Evey-Delivery</code>：一个标识符，同一次投递的多次重试都使用同一个值，这样您的接收端就能忽略重复的请求；</li>
 <li><code>X-Evey-Signature</code>：<code>sha256=</code> 后面跟着请求体的 HMAC-SHA256，用 Webhook 的密钥计算。
-  用同一个密钥验证它，就能确认请求来自您的服务器。没有设置密钥时，这个签名什么也证明不了。</li>
+  用同一个密钥验证它，就能确认请求来自您的服务器。没有设置密钥时，这个签名什么也证明不了。它只覆盖请求体，所以挡不住被截获的请求被重新发送：请优先使用下面两个请求头；</li>
+<li><code>X-Evey-Timestamp</code>：本次尝试的时间，以 Unix 秒表示。每次重试都会带上新的值；</li>
+<li><code>X-Evey-Signature-V2</code>：<code>sha256=</code> 后面跟着 HMAC-SHA256，用 Webhook 的密钥对文本 <code>&lt;timestamp&gt;.&lt;delivery id&gt;.&lt;body&gt;</code> 计算
+  （即 <code>X-Evey-Timestamp</code> 的值、一个点、<code>X-Evey-Delivery</code> 的值、一个点，再加上原始请求体）。</li>
 </ul>
+<p>验证一次投递时，用原始请求体重新计算 V2 签名并以恒定时间比较，然后在时间戳与您的时钟相差超过 5 分钟（无论偏早还是偏晚）时拒绝该请求。
+如果接收端还记住了这段时间内见过的投递标识符，被截获的请求就无法被重放。</p>
 <p>每次尝试最多等待 30 秒的回应。投递失败后，会在 1 秒、5 秒和 30 秒后重试。每次尝试都会被记录；
 这份历史要通过 API 读取（<a href="../api/plugins/">插件 API</a> 里的 <code>ListWebhookDeliveries</code>），在面板里看不到。</p>
 <div class="admonition warning">

@@ -3344,7 +3344,7 @@
 </table>
 <h2 id="external-fetch-rules">外部请求规则<a class="headerlink" href="#external-fetch-rules" title="Permanent link">¶</a></h2>
 <p>写在 <code>external_fetch: [...]</code> 里，安装时检查（<code>validateExternalFetch</code>）。要么全部通过，要么全部不通过：只要有一条无效，整个安装就会被拒绝。</p>
-<p>每一条是一个<strong>主机名</strong>。协议前缀和末尾的路径在解析时会被丢弃，只保留主机名。主机必须完全匹配，<code>*.example.com</code> 这样的通配符在安装时会被拒绝，端口后缀会被忽略。</p>
+<p>每一条是一个<strong>主机名</strong>。协议前缀和末尾的路径在解析时会被丢弃，只保留主机名。主机必须完全匹配，<code>*.example.com</code> 这样的通配符在安装时会被拒绝。不带端口的条目只允许 80 和 443 端口；<code>host:port</code> 只允许该端口。</p>
 <table>
 <thead>
 <tr>
@@ -3365,6 +3365,11 @@
 <td>协议和路径在解析时被丢弃，保留主机名</td>
 </tr>
 <tr>
+<td><code>api.example.com:8443</code></td>
+<td>是</td>
+<td>该主机，仅限 8443 端口</td>
+</tr>
+<tr>
 <td><code>*.tmdb.org</code></td>
 <td>否</td>
 <td>通配符在安装时会被拒绝；请逐个列出主机</td>
@@ -3382,8 +3387,8 @@
 </tbody>
 </table>
 <p>运行时，宿主的代理还会加上自己的限制，清单无法放宽这些限制：只允许 <code>http</code> 和 <code>https</code>，只允许 <code>GET</code> 和 <code>HEAD</code>；
-目标主机要和您的列表匹配（不区分大小写，条目里的 <code>:port</code> 后缀会被忽略）；DNS 解析之后，私有或保留地址一律拒绝；
-响应体最大 8 MiB，一次请求最长 20 秒。重定向会再次按列表和地址规则检查。</p>
+目标主机要和您的列表匹配（不区分大小写），目标端口要和条目匹配（未声明端口时为 80 或 443）；DNS 解析之后，私有或保留地址一律拒绝；
+响应体最大 8 MiB，一次请求最长 20 秒。重定向会再次按列表、端口规则和地址规则检查。</p>
 <p>同一份主机列表，加上 <code>https://</code> 前缀，也就是插件框架的 <code>connect-src</code>：小组件可以直接调用这些主机，但只能走 <code>https</code>。</p>
 <h2 id="slot-whitelist">插槽白名单<a class="headerlink" href="#slot-whitelist" title="Permanent link">¶</a></h2>
 <p>插件只能在明确允许的插槽里注入界面。关键的路径有意不在其中。</p>

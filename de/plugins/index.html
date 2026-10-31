@@ -2537,6 +2537,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadaten-Plugins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-a-plugin-can-do-on-your-host" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3194,6 +3205,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadaten-Plugins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-a-plugin-can-do-on-your-host" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3349,6 +3371,10 @@ beim Übernehmen des Updates noch einmal geprüft.</p>
 <td>Die letzten Zeilen, die das Plugin über den Host geschrieben hat.</td>
 </tr>
 <tr>
+<td><strong>Metadaten</strong></td>
+<td>Nur bei einem Metadaten-Plugin: die Felder, die es ersetzt, und der Abruf der vorhandenen Bibliothek (<a href="#metadata-plugins">weiter unten</a>).</td>
+</tr>
+<tr>
 <td><strong>Deinstallieren</strong></td>
 <td>Entfernt den Prozess, die Dateien und die gespeicherten Daten des Plugins.</td>
 </tr>
@@ -3405,6 +3431,34 @@ pro Pfad, und <a href="sandbox-deployment/">Plugin-Sandbox einrichten</a>
 erklärt, was zu ändern ist.</p>
 <p>Plugins sind standardmäßig eingeschaltet. <code>EVEY_PLUGINS_ENABLED=false</code>
 schaltet das gesamte Plugin-System ab.</p>
+<h2 id="metadata-plugins">Metadaten-Plugins<a class="headerlink" href="#metadata-plugins" title="Permanent link">¶</a></h2>
+<p>Ein Metadaten-Plugin (Fähigkeit <code>metadata.provider</code>) liefert eigenen Text für
+Ihre Filme und Serien, aus einer anderen Quelle als TMDB. Es ersetzt TMDB
+nicht: TMDB erkennt weiterhin jeden Titel und liefert Besetzung, Bilder,
+Bewertungen, Sammlungen und Übersetzungen. Der Text des Plugins wird neben dem
+von TMDB gespeichert und Feld für Feld an seiner Stelle angezeigt.</p>
+<p>Was ein Zuschauer liest, vom schwächsten zum stärksten:</p>
+<ol>
+<li>der Text von TMDB, in der Sprache des Zuschauers, wenn TMDB ihn hat;</li>
+<li>der Text des Plugins in dieser Sprache, für die Felder, die das Plugin
+   ersetzen darf;</li>
+<li>Ihre eigene Korrektur des Titels (<strong>Metadaten bearbeiten</strong> auf seiner
+   Seite), die immer Vorrang hat.</li>
+</ol>
+<p><strong>Metadaten</strong> auf der Karte des Plugins wählt die Felder, die es ersetzt,
+unter <strong>Titel</strong>, <strong>Beschreibung</strong> und <strong>Slogan</strong>. Solange Sie nichts gewählt
+haben, ersetzt ein Plugin die Beschreibung und den Slogan, nie den Titel. Eine
+Änderung gilt sofort für das, was das Plugin bereits geliefert hat; nichts wird
+erneut abgerufen.</p>
+<p>Das Plugin wird zu jedem Film und jeder Serie befragt, wenn sie zugeordnet
+oder aktualisiert werden. <strong>Für die ganze Bibliothek abrufen</strong> im selben Bereich
+befragt es zu den bereits vorhandenen Titeln, einem nach dem anderen, zeigt
+den Fortschritt und am Ende, wie viele es gefunden hat und wie viele ohne
+Antwort blieben. Eine Aktualisierung des Titels von TMDB überschreibt den Text
+des Plugins nie; das Plugin zu deaktivieren blendet diesen Text aus, es zu
+deinstallieren löscht ihn.</p>
+<p>Staffeln und Episoden behalten den Text von TMDB, und die Suche findet weiterhin
+die Titel von TMDB.</p>
 <h2 id="what-a-plugin-can-do-on-your-host">Was ein Plugin auf Ihrem Host tun kann<a class="headerlink" href="#what-a-plugin-can-do-on-your-host" title="Permanent link">¶</a></h2>
 <p>Egal, was sein Manifest angibt, ein Plugin:</p>
 <ul>

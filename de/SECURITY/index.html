@@ -4028,7 +4028,7 @@ Berechtigung <code>network</code> ruft die Methode <code>Fetch</code> des Hosts 
 Unix-Socket auf. Der Host, in
 <code>internal/adapters/driving/pluginhost/fetch.go</code>:</p>
 <ul>
-<li>prüft das Ziel gegen die Liste <code>external_fetch</code> des Plugins (genaue Hosts, ohne Beachtung von Groß- und Kleinschreibung; ein Platzhalter <code>*.example.com</code> wird bei der Installation abgelehnt; ein Port-Suffix wird ignoriert);</li>
+<li>prüft das Ziel gegen die Liste <code>external_fetch</code> des Plugins (genaue Hosts, ohne Beachtung von Groß- und Kleinschreibung; ein Platzhalter <code>*.example.com</code> wird bei der Installation abgelehnt; ein Eintrag ohne Port erlaubt nur die Ports 80 und 443, <code>host:port</code> nur diesen Port);</li>
 <li>erlaubt nur <code>http</code> und <code>https</code> und nur <code>GET</code> und <code>HEAD</code>;</li>
 <li>verbindet sich über einen SSRF-sicheren Client (<code>internal/pkg/ssrf</code>), der
   private, reservierte und link-lokale Adressen nach der DNS-Auflösung
@@ -4081,6 +4081,10 @@ Suche.</p>
 <tr>
 <td>Signale</td>
 <td><code>tgkill</code>, <code>rt_sigqueueinfo</code>, <code>rt_tgsigqueueinfo</code> an jeden Prozess außer dem Plugin selbst (beide Filter); <code>kill</code> ebenso im Kernel-Filter, an jedes Ziel im <code>LD_PRELOAD</code>-Filter; <code>tkill</code> im Kernel-Filter (der <code>LD_PRELOAD</code>-Filter erlaubt es an das Plugin selbst); <code>pidfd_send_signal</code>, <code>pidfd_getfd</code> (stiehlt einen Dateideskriptor). Eine Laufzeit, die ein Signal erneut auslöst oder ihre eigenen Threads unterbricht, funktioniert weiter. Ab Landlock ABI 6 kann ein Plugin außerdem keinem Prozess außerhalb seiner Sandbox ein Signal schicken</td>
+</tr>
+<tr>
+<td>Signal-Besitzer eines Dateideskriptors (Kernel-Filter)</td>
+<td><code>fcntl</code> <code>F_SETOWN</code> auf jeden anderen Prozess als das Plugin selbst, <code>F_SETSIG</code> auf jedes andere Signal als das voreingestellte <code>SIGIO</code>, <code>F_SETOWN_EX</code> sowie <code>ioctl</code> <code>FIOSETOWN</code>/<code>SIOCSPGRP</code>: Ohne das würde ein Deskriptor, dessen Besitzer der Server ist und dessen Signal <code>SIGKILL</code> ist, den Server beim nächsten Schreiben beenden</td>
 </tr>
 <tr>
 <td>Mounts</td>
@@ -4138,9 +4142,13 @@ nicht seccomp. In <code>bubblewrap</code> wird der Launcher nicht benutzt: Eine
 statische Binärdatei bekommt dort keinen seccomp-Filter und wird durch die
 Namespaces und die Liste erlaubter Mounts begrenzt.</p>
 <h3 id="a-separate-user">Ein eigener Benutzer<a class="headerlink" href="#a-separate-user" title="Permanent link">¶</a></h3>
-<p>Ein Plugin kann als Benutzer 1001 (<code>evey-plugin</code>) laufen, getrennt vom
-Server (1000). Dann kann es die Geheimnisse des Servers allein wegen der
-Dateirechte nicht lesen. <code>EVEY_PLUGINS_UID_SEPARATION</code> steuert das:</p>
+<p>Ein Plugin kann als eigener Benutzer laufen, getrennt vom Server (1000).
+Dann kann es die Geheimnisse des Servers allein wegen der Dateirechte nicht
+lesen. Jedes Plugin leitet seine UID aus seiner ID ab, im Bereich 40000 bis
+59999, über Neustarts hinweg gleich; es behält die Gruppe des Servers, die
+die installierten Dateien nur liest. Zwei IDs können auf dieselbe UID fallen:
+Diese beiden Plugins teilen sie dann. <code>EVEY_PLUGINS_UID_SEPARATION</code> steuert
+das:</p>
 <table>
 <thead>
 <tr>
@@ -4172,8 +4180,10 @@ Warnung als Benutzer des Servers läuft. In <code>bubblewrap</code> und <code>st
 <p>Ist der Wechsel aktiv, sind der Signierschlüssel (<code>0600</code>) und die
 Sicherungen (Verzeichnis <code>0700</code>, Dateien <code>0600</code>) zur Laufzeit nur für den
 Besitzer lesbar, und das gilt auch für ein per Bind-Mount eingehängtes
-<code>/data</code>. Alle Plugins teilen sich den Benutzer 1001: Voneinander getrennt
-sind sie durch die Dateisystem-Schicht, nicht durch den Benutzer.</p>
+<code>/data</code>. Voneinander getrennt sind die Plugins durch ihre UID, zusätzlich
+zur Dateisystem-Schicht. Ein als root laufender Server (nicht empfohlen)
+lässt dagegen jedes Plugin zum einzigen Benutzer 1001 wechseln: Dort trennt
+nur die Dateisystem-Schicht die Plugins.</p>
 <h3 id="host-socket-authentication">Authentifizierung am Host-Socket<a class="headerlink" href="#host-socket-authentication" title="Permanent link">¶</a></h3>
 <p>Jedes Plugin hat seinen eigenen Socket,
 <code>/tmp/evey/plugins/&lt;plugin_id&gt;/host.sock</code>, bedient von seinem eigenen
@@ -4184,6 +4194,12 @@ wurde. Die Identität des Plugins kommt aus dem Socket, nie aus einem Header.
 Ein Plugin kann sich also nicht als ein anderes ausgeben, nicht den Socket
 eines anderen Plugins aufrufen und keine Aufrufe über einen Kindprozess
 leiten. Eine abweichende PID wird als Warnung protokolliert.</p>
+<p>Die andere Richtung wird genauso geprüft: Der Server spricht mit dem Plugin
+über <code>plugin.sock</code> im selben Verzeichnis und lehnt die Verbindung ab, wenn
+der darauf lauschende Prozess nicht das Plugin selbst ist (wieder
+<code>SO_PEERCRED</code>). Mit einem eigenen Benutzer pro Plugin trägt das Verzeichnis
+das Sticky-Bit, sodass ein benachbartes Plugin der gemeinsamen Gruppe diesen
+Socket nicht löschen kann, um seinen eigenen zu binden.</p>
 <h3 id="resource-limits">Ressourcenlimits<a class="headerlink" href="#resource-limits" title="Permanent link">¶</a></h3>
 <p>Ein Wächter im Benutzerbereich (cgroups sind in einem Container ohne
 Privilegien nicht verfügbar) liest alle 2 Sekunden <code>/proc/&lt;pid&gt;</code> und hält
@@ -4483,8 +4499,8 @@ Maschine passt, in einfachen Worten:
 <td>Geheimnisse geschützt durch den eigenen Benutzer und <code>PR_SET_DUMPABLE</code>; <code>auto</code> bevorzugt Landlock oder bubblewrap</td>
 </tr>
 <tr>
-<td>Alle Plugins teilen sich den Benutzer 1001</td>
-<td>Im Modus <code>basic</code> kann ein Plugin Dateien lesen, die anderen Plugins gehören</td>
+<td>Plugin-UIDs stammen aus einem Hash der ID; ein als root laufender Server lässt jedes Plugin zum Benutzer 1001 wechseln</td>
+<td>Zwei Plugins mit kollidierenden IDs oder alle Plugins unter einem root-Server teilen sich eine UID: Im Modus <code>basic</code> kann eines die Dateien des anderen lesen</td>
 <td>Signale an andere Prozesse sind blockiert (seccomp, <code>LD_PRELOAD</code> und bubblewrap blockieren sie alle); <code>PR_SET_DUMPABLE</code> verhindert das Lesen anderer Prozesse über <code>/proc</code>; Landlock und bubblewrap trennen die Plugin-Verzeichnisse</td>
 </tr>
 <tr>

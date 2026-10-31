@@ -2605,6 +2605,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#metadata-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        元数据请求
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-store" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3350,6 +3361,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#metadata-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        元数据请求
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-store" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3602,7 +3624,7 @@
 </tr>
 <tr>
 <td><code>external_fetch</code></td>
-<td>主机名。协议前缀和末尾的路径在解析时会被丢弃；主机必须完全匹配，<code>*.example.com</code> 这样的通配符在安装时会被拒绝，端口后缀会被忽略；IP 地址会导致安装被拒绝（<a href="../security-model/#external-fetch-rules">规则</a>）。</td>
+<td>主机名。协议前缀和末尾的路径在解析时会被丢弃；主机必须完全匹配，<code>*.example.com</code> 这样的通配符在安装时会被拒绝；不带端口的条目只允许 80 和 443 端口，<code>host:port</code> 只允许该端口；IP 地址会导致安装被拒绝（<a href="../security-model/#external-fetch-rules">规则</a>）。</td>
 </tr>
 <tr>
 <td><code>capabilities</code></td>
@@ -3658,7 +3680,7 @@
 </tr>
 <tr>
 <td><code>OnEvent(event_type, payload, source)</code></td>
-<td>约定里有定义，但服务器目前不向插件投递任何事件：实现它并回答 <code>handled: true</code> 即可，目前它不会被调用。</td>
+<td>仅 <code>metadata.request</code>，发给具有 <code>metadata.provider</code> 能力的插件（见下文<a href="#metadata-requests">元数据请求</a>）。其他插件不会收到任何事件：回答 <code>handled: false</code>。</td>
 </tr>
 <tr>
 <td><code>GetCapabilities()</code></td>
@@ -3714,9 +3736,9 @@
 <td><em>未提供。</em></td>
 </tr>
 <tr>
-<td><code>UpdateMetadata</code></td>
-<td><code>api.metadata</code> 或 <code>media.write</code></td>
-<td><em>未提供。</em></td>
+<td><code>UpdateMetadata(media_item_id, fields, provider_ids)</code></td>
+<td><code>api.metadata</code> 或 <code>media.write</code>，以及 <code>metadata.provider</code> 能力</td>
+<td>主动为一部电影或剧集提供您的文本，与<a href="#metadata-requests">元数据回答</a>相同。<code>fields</code> 包含 <code>locale</code>（必填）以及 <code>title</code>、<code>overview</code>、<code>tagline</code> 中的任意几项；该文本替换您为这种语言提供过的内容，只含 <code>locale</code> 的 <code>fields</code> 会将其删除。<code>provider_ids</code> 会被拒绝：作品由 TMDB 识别。一个插件能存储的内容有上限：每个作品 16 种语言，总共 200 000 条文本和 128 MiB。超出后调用返回 <code>RESOURCE_EXHAUSTED</code>；替换或删除您已经提供的文本仍然可以。</td>
 </tr>
 <tr>
 <td><code>GetUserPreferences</code></td>
@@ -3730,6 +3752,59 @@
 </tr>
 </tbody>
 </table>
+<h3 id="metadata-requests">元数据请求<a class="headerlink" href="#metadata-requests" title="Permanent link">¶</a></h3>
+<p>每当服务器从 TMDB 识别或刷新一部电影或剧集时，它会向每个已启用的 <code>metadata.provider</code> 插件逐个发送 <code>event_type</code> 为 <code>metadata.request</code> 的 <code>OnEvent</code>，每个插件最多等待 15 秒。内容如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>media_item_id</code></td>
+<td>作品的 ID，供之后调用 <code>UpdateMetadata</code> 使用。</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>movie</code> 或 <code>series</code>。</td>
+</tr>
+<tr>
+<td><code>title</code>、<code>original_title</code></td>
+<td>服务器语言下的 TMDB 标题，以及原始标题。</td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>未知时不出现。</td>
+</tr>
+<tr>
+<td><code>provider_ids</code></td>
+<td><code>tmdb</code>、<code>imdb</code> 以及该作品已知的其他 ID。</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>TMDB 文本的语言，例如 <code>fr</code>。</td>
+</tr>
+<tr>
+<td><code>locales</code></td>
+<td>服务器显示的所有语言。</td>
+</tr>
+</tbody>
+</table>
+<p>回答 <code>handled: true</code>，并附上如下形式的 <code>result</code>：</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fr"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"overview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">"tagline"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">"translations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">"de"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"overview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>顶层字段使用 <code>locale</code> 指定的语言；没有 <code>locale</code> 时使用请求中的 <code>language</code>。<code>translations</code> 用于添加其他语言。您不覆盖的字段请省略。语言标签会被截为语言部分（<code>fr-FR</code> 视为 <code>fr</code>），超过 8 KiB 的字段会被忽略。一个回答会替换您之前为该作品提供的全部内容；<code>handled: false</code> 或不含文本的回答表示您不认识该作品，并会清除您为该作品提供的内容。出错或超时则保留您之前提供的内容。</p>
+<p>管理员选择您的文本替换 <code>title</code>、<code>overview</code> 和 <code>tagline</code> 中的哪些字段，并可以一次性就整个媒体库向您查询（<a href="../#metadata-plugins">元数据插件</a>）。季和单集不会发送。</p>
 <h3 id="data-store">数据存储<a class="headerlink" href="#data-store" title="Permanent link">¶</a></h3>
 <p>每个插件都有一个持久的键值存储，不需要声明任何权限：游标、缓存、上次同步的时间，任何需要在重启之后记住的东西都可以放进去。
 值是不透明的字符串；JSON 请自己编码。插件 id 取自经过验证的套接字，所以插件只能读写自己的命名空间；
@@ -3767,15 +3842,15 @@
 其他一切都通过 <code>window.evey</code> 进行，它在模块运行之前注入。同一个模块无需修改，就能在网页应用以及移动和电视应用里运行。</p>
 <h3 id="eveyoninitcallback"><code>evey.onInit(callback)</code><a class="headerlink" href="#eveyoninitcallback" title="Permanent link">¶</a></h3>
 <p>用宿主发来的上下文调用一次；如果回调是在上下文到达之后才注册的，会立即被调用。</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="c1">// data.config          - 插件的配置值（config_schema）</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="c1">// data.context         - 宿主上下文</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="c1">// data.locale          - 当前语言区域，例如 "en-US"</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" 或 "light"</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web"、"mobile" 或 "tv"</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - 仅 home.section：宿主建议的高度（px）</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - 仅 tv：面板的高度，单位 dp</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">});</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="c1">// data.config          - 插件的配置值（config_schema）</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="c1">// data.context         - 宿主上下文</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="c1">// data.locale          - 当前语言区域，例如 "en-US"</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" 或 "light"</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web"、"mobile" 或 "tv"</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - 仅 home.section：宿主建议的高度（px）</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - 仅 tv：面板的高度，单位 dp</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">});</span>
 </span></code></pre></div>
 <h3 id="eveynavigatepath"><code>evey.navigate(path)</code><a class="headerlink" href="#eveynavigatepath" title="Permanent link">¶</a></h3>
 <p>让宿主应用跳转到 <code>path</code>。只有 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、<code>/settings</code> 和 <code>/search</code> 开头的路径会被执行；
@@ -3790,16 +3865,16 @@
 <h3 id="eveyprefs-permission-prefs"><code>evey.prefs.*</code>（权限 <code>prefs</code>）<a class="headerlink" href="#eveyprefs-permission-prefs" title="Permanent link">¶</a></h3>
 <p>当前用户在插件自己命名空间里的偏好，通过宿主为框架持有的令牌，绑定到（这个插件，这个用户）。
 每个调用都返回一个 promise；缺少权限时 promise 会被拒绝。</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">);</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span><span class="w">        </span><span class="c1">// [{ key, value }]</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">);</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span><span class="w">        </span><span class="c1">// [{ key, value }]</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code>（权限 <code>public</code>）<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>媒体条目的一个安全投影：id、标题、类型、年份、简介、海报 URL。永远不会有文件路径、文件大小、提供方 id 或流。</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// 海报，以 data: URL 的形式</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// 海报，以 data: URL 的形式</span>
 </span></code></pre></div>
 <p><code>poster</code> 返回 <code>data:</code> URL，是因为框架的策略禁止直接从服务器加载图片；可以把它用作 <code>&lt;img&gt;</code> 的来源，或者当作纹理。</p>
 <h3 id="eveyassetsreadpath"><code>evey.assets.read(path)</code><a class="headerlink" href="#eveyassetsreadpath" title="Permanent link">¶</a></h3>
@@ -3864,7 +3939,7 @@
 <h2 id="capabilities">能力<a class="headerlink" href="#capabilities" title="Permanent link">¶</a></h2>
 <p>能力声明的是插件自称承担的角色：<code>metadata.provider</code>、<code>media.read</code>、<code>media.write</code>、<code>webhook.receiver</code> 或 <code>notification.sender</code>。
 安装程序会检查名称，管理员会在预览里看到这份列表，以及更新时新增的项，<strong>安全仪表板</strong>也会记录它。
-服务器目前不会根据能力转发任何东西：<code>metadata.provider</code> 收不到任何补全元数据的调用，<code>webhook.receiver</code> 收不到任何传入的请求。
+服务器会根据其中一种能力转发：<code>metadata.provider</code> 会收到<a href="#metadata-requests">元数据请求</a>，并可以调用 <code>UpdateMetadata</code>。其他能力目前不转发任何东西；<code>webhook.receiver</code> 收不到任何传入的请求。
 插件实际能做什么，由它的<strong>权限</strong>决定。</p>
 <h2 id="permissions-of-the-interface">界面的权限<a class="headerlink" href="#permissions-of-the-interface" title="Permanent link">¶</a></h2>
 <p><code>public</code> 和 <code>prefs</code> 和其他权限一样写在 <code>permissions</code> 下。它们不授予后端进程任何东西；它们解锁的是框架里的 <code>evey.media.*</code> 和 <code>evey.prefs.*</code>。

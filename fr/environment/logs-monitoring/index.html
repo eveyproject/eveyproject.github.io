@@ -3402,7 +3402,7 @@ valeur enregistrée dans <strong>Administration → Configuration du serveur →
 <tr>
 <td><code>EVEY_LOG_DEV_MODE</code></td>
 <td><code>false</code></td>
-<td>Mode développeur : les contrôles de sécurité du démarrage ne font qu'avertir, et les plugins peuvent tourner sans la bibliothèque de sandbox. Jamais sur un vrai serveur ; avec <code>EVEY_ENV=production</code>, le serveur refuse de démarrer.</td>
+<td>Mode développeur : les contrôles de sécurité du démarrage ne font qu'avertir, et les plugins peuvent tourner sans la bibliothèque de sandbox. Ne prend effet qu'avec <code>EVEY_ENV=dev</code> ; seule, elle est ignorée avec un avertissement. Jamais sur un vrai serveur.</td>
 <td>aucun</td>
 </tr>
 </tbody>

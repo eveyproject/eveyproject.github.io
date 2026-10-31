@@ -2537,6 +2537,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        元数据插件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-a-plugin-can-do-on-your-host" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3194,6 +3205,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        元数据插件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-a-plugin-can-do-on-your-host" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3322,6 +3344,10 @@
 <td>插件通过主机写下的最后几行。</td>
 </tr>
 <tr>
+<td><strong>元数据</strong></td>
+<td>仅限元数据插件：它替换的字段，以及获取已有媒体库（<a href="#metadata-plugins">见下文</a>）。</td>
+</tr>
+<tr>
 <td><strong>卸载</strong></td>
 <td>删除插件的进程、文件和它保存的数据。</td>
 </tr>
@@ -3370,6 +3396,17 @@ CPU 优先级和沙箱模式对之后启动的插件生效。<code>0</code> 会�
 <p><strong>安全仪表板</strong>按插件保存分析发现的问题、签名结果和最近一次错误。它的<strong>主机沙箱</strong>一行显示这台机器上实际生效的沙箱模式：
 如果显示 <code>basic</code>，说明主机无法按路径隔离文件系统，<a href="sandbox-deployment/">插件沙箱设置</a>说明了要改什么。</p>
 <p>插件默认是开启的。<code>EVEY_PLUGINS_ENABLED=false</code> 会关闭整个插件子系统。</p>
+<h2 id="metadata-plugins">元数据插件<a class="headerlink" href="#metadata-plugins" title="Permanent link">¶</a></h2>
+<p>元数据插件（能力 <code>metadata.provider</code>）从 TMDB 之外的来源，为您的电影和剧集提供它自己的文本。它不会取代 TMDB：每部作品仍由 TMDB 识别，演职员、图片、评分、合集和翻译也仍来自 TMDB。插件的文本与 TMDB 的文本分开保存，并逐个字段地显示在 TMDB 文本的位置上。</p>
+<p>观众看到的内容，按优先级从低到高：</p>
+<ol>
+<li>TMDB 的文本，在 TMDB 有观众所用语言时使用该语言；</li>
+<li>插件在该语言下的文本，仅限插件被允许替换的字段；</li>
+<li>您自己对该作品的修改（在其页面上的 <strong>编辑元数据</strong>），始终优先。</li>
+</ol>
+<p>插件卡片上的 <strong>元数据</strong> 用于在 <strong>标题</strong>、<strong>简介</strong> 和 <strong>宣传语</strong> 中选择插件替换的字段。在您做出选择之前，插件替换简介和宣传语，从不替换标题。修改会立即作用于插件已经提供的内容，不会重新获取任何内容。</p>
+<p>每部电影和剧集在被识别或刷新时都会向插件查询。同一面板上的 <strong>为整个媒体库获取</strong> 会逐个查询媒体库中已有的作品，显示进度，并在结束时显示找到了多少、多少没有响应。从 TMDB 刷新作品永远不会覆盖插件的文本；禁用插件会隐藏这些文本，卸载插件会删除这些文本。</p>
+<p>季和单集仍使用 TMDB 的文本，搜索也仍然匹配 TMDB 的标题。</p>
 <h2 id="what-a-plugin-can-do-on-your-host">插件在您的主机上能做什么<a class="headerlink" href="#what-a-plugin-can-do-on-your-host" title="Permanent link">¶</a></h2>
 <p>不管它的清单怎么写，一个插件：</p>
 <ul>

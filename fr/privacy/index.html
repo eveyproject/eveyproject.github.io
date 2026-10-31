@@ -3269,7 +3269,7 @@
 
 
 <h1 id="privacy-policy">Règles de confidentialité<a class="headerlink" href="#privacy-policy" title="Permanent link">¶</a></h1>
-<p>Dernière mise à jour : 2026-10-04.</p>
+<p>Dernière mise à jour : 2026-10-26.</p>
 <p>Ces règles concernent les applications Evey pour Android et Android TV.</p>
 <p>En bref : le projet Evey ne fait tourner aucun service qui reçoit vos données.
 Pas de compte chez nous, pas de statistiques d'usage, pas de publicité, pas de
@@ -3318,6 +3318,11 @@ projet Evey n'y a pas accès.</p>
 <li><strong>Plugins.</strong> Les plugins sont installés par l'administrateur du serveur. Un
   plugin peut afficher du contenu qui vient d'un service extérieur (un plugin
   météo, par exemple).</li>
+<li><strong>Le test de charge du serveur.</strong> Pas les applications : quand
+  l'administrateur du serveur lance un test de charge, le serveur envoie une
+  dizaine de secondes de données remplies de zéros à <code>speed.cloudflare.com</code>
+  pour mesurer sa connexion internet. Rien sur vous ni sur votre bibliothèque
+  ne s'y trouve ; Cloudflare voit l'adresse IP du serveur.</li>
 </ul>
 <h2 id="what-stays-on-the-device">Ce qui reste sur l'appareil<a class="headerlink" href="#what-stays-on-the-device" title="Permanent link">¶</a></h2>
 <p>L'adresse du serveur, votre jeton de session et, si vous cochez se souvenir de moi, votre nom d'utilisateur et votre mot de passe (dans le stockage chiffré d'Android, le keystore Android), vos préférences, et les films et la musique que vous téléchargez

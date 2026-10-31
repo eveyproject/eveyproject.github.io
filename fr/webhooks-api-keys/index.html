@@ -3190,7 +3190,7 @@ parmi eux :</p>
 <tbody>
 <tr>
 <td>Bibliothèque</td>
-<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
+<td><code>library.scan.started</code>, <code>library.scan.completed</code>, <code>library.prune.suspended</code> (une racine a perdu trop de fichiers d'un coup, suppressions suspendues jusqu'à confirmation d'un administrateur), <code>media.item.added</code>, <code>media.item.updated</code>, <code>media.item.removed</code>, <code>metadata.refreshed</code></td>
 </tr>
 <tr>
 <td>Lecture</td>
@@ -3212,15 +3212,27 @@ parmi eux :</p>
 </table>
 <p>Un plugin qui appelle <code>EmitEvent</code> publie <code>plugin.event.&lt;type&gt;</code>, qu'un
 webhook abonné à <strong>Tous les événements</strong> reçoit aussi.</p>
-<p><strong>Envoi.</strong> Chaque événement est un <code>POST</code> JSON, accompagné de deux en-têtes :</p>
+<p><strong>Envoi.</strong> Chaque événement est un <code>POST</code> JSON, accompagné de les en-têtes suivants :</p>
 <ul>
 <li><code>X-Evey-Delivery</code> : un identifiant identique pour toutes les tentatives
   d'un même envoi, qui permet à votre récepteur d'ignorer un doublon ;</li>
 <li><code>X-Evey-Signature</code> : <code>sha256=</code> suivi du HMAC-SHA256 du corps, calculé avec
   le secret du webhook. Vérifiez-le avec le même secret pour savoir que la
   requête vient bien de votre serveur. Sans secret, la signature ne prouve
-  rien.</li>
+  rien. Elle ne couvre que le corps, donc elle n'empêche pas qu'une requête
+  interceptée soit renvoyée : préférez les deux en-têtes ci-dessous ;</li>
+<li><code>X-Evey-Timestamp</code> : l'heure de la tentative, en secondes Unix. Chaque nouvelle
+  tentative en porte une nouvelle ;</li>
+<li><code>X-Evey-Signature-V2</code> : <code>sha256=</code> suivi du HMAC-SHA256, calculé avec le secret
+  du webhook, du texte <code>&lt;timestamp&gt;.&lt;delivery id&gt;.&lt;body&gt;</code> (la valeur de
+  <code>X-Evey-Timestamp</code>, un point, la valeur de <code>X-Evey-Delivery</code>, un point, puis
+  le corps brut).</li>
 </ul>
+<p>Pour vérifier un envoi, recalculez la signature V2 à partir du corps brut et
+comparez-la en temps constant, puis refusez la requête si l'horodatage s'écarte
+de plus de 5 minutes de votre horloge (dans un sens comme dans l'autre). Avec
+un récepteur qui retient aussi les identifiants d'envoi vus pendant cette
+fenêtre, une requête interceptée ne peut pas être rejouée.</p>
 <p>Chaque tentative attend une réponse pendant 30 secondes au plus. Un envoi qui
 échoue est retenté après 1, 5 et 30 secondes. Chaque tentative est
 consignée ; l'historique se lit par l'API (<code>ListWebhookDeliveries</code> dans

@@ -3217,6 +3217,18 @@ que tiene prioridad en cuanto se guarda un valor ahí; la parte del panel se des
 <td>Configuración del servidor → Bibliotecas → <strong>Intervalo de escaneo periódico</strong>, al reiniciar</td>
 </tr>
 <tr>
+<td><code>EVEY_LIBRARY_PRUNE_MAX_MISSING_PERCENT</code></td>
+<td><code>5</code></td>
+<td>Parte de los elementos de una carpeta que pueden haber desaparecido en un escaneo. Por encima (y pasado el mínimo de abajo), no se borra nada de esa carpeta hasta que un administrador confirme, lo que protege frente a un pool que perdió un disco.</td>
+<td>ninguno</td>
+</tr>
+<tr>
+<td><code>EVEY_LIBRARY_PRUNE_MIN_MISSING</code></td>
+<td><code>20</code></td>
+<td>Menor número de archivos ausentes que puede retener los borrados de una carpeta, para que una biblioteca pequeña aún pueda perder algunos títulos.</td>
+<td>ninguno</td>
+</tr>
+<tr>
 <td><code>EVEY_LIBRARY_SCAN_WORKERS</code></td>
 <td>según la parte de CPU</td>
 <td>Archivos analizados en paralelo durante un escaneo. Si la defines a mano, no se aplica la parte de <strong>Potencia asignada</strong> para los escaneos.</td>

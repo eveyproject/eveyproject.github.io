@@ -4011,7 +4011,7 @@ namespace in <code>bubblewrap</code> and <code>strict</code>). A plugin with the
 permission calls the host's <code>Fetch</code> method over its Unix socket. The host, in
 <code>internal/adapters/driving/pluginhost/fetch.go</code>:</p>
 <ul>
-<li>checks the target against the plugin's <code>external_fetch</code> list (exact hosts, case-insensitive; a <code>*.example.com</code> wildcard is refused at install; a port suffix is ignored);</li>
+<li>checks the target against the plugin's <code>external_fetch</code> list (exact hosts, case-insensitive; a <code>*.example.com</code> wildcard is refused at install; an entry without a port allows ports 80 and 443 only, <code>host:port</code> allows that port only);</li>
 <li>allows only <code>http</code> and <code>https</code>, and only <code>GET</code> and <code>HEAD</code>;</li>
 <li>connects through an SSRF-safe client (<code>internal/pkg/ssrf</code>) that refuses
   private, reserved and link-local addresses after DNS resolution, so DNS
@@ -4061,6 +4061,10 @@ and search endpoints.</p>
 <tr>
 <td>Signals</td>
 <td><code>tgkill</code>, <code>rt_sigqueueinfo</code>, <code>rt_tgsigqueueinfo</code> towards any process but the plugin itself (both filters); <code>kill</code> likewise in the kernel filter, towards any target in the <code>LD_PRELOAD</code> filter; <code>tkill</code> in the kernel filter (the <code>LD_PRELOAD</code> filter allows it towards the plugin itself); <code>pidfd_send_signal</code>, <code>pidfd_getfd</code> (steals a file descriptor). A runtime re-raising a signal or preempting its own threads keeps working. On Landlock ABI 6+, a plugin also cannot signal a process outside its sandbox</td>
+</tr>
+<tr>
+<td>Signal owner of a file descriptor (kernel filter)</td>
+<td><code>fcntl</code> <code>F_SETOWN</code> towards any process but the plugin itself, <code>F_SETSIG</code> to any signal but the default <code>SIGIO</code>, <code>F_SETOWN_EX</code>, and <code>ioctl</code> <code>FIOSETOWN</code>/<code>SIOCSPGRP</code>: without this, an fd owned by the server with <code>SIGKILL</code> as its signal would kill the server on the next write</td>
 </tr>
 <tr>
 <td>Mounts</td>
@@ -4117,9 +4121,12 @@ seccomp. In <code>bubblewrap</code> the launcher is not used: a static binary ge
 seccomp filter there, and is contained by the namespaces and the mount
 whitelist.</p>
 <h3 id="a-separate-user">A separate user<a class="headerlink" href="#a-separate-user" title="Permanent link">¶</a></h3>
-<p>A plugin can run as user 1001 (<code>evey-plugin</code>), distinct from the server
-(1000), so the server's secrets are unreadable to it by file permissions
-alone. <code>EVEY_PLUGINS_UID_SEPARATION</code> controls it:</p>
+<p>A plugin can run as a user of its own, distinct from the server (1000), so
+the server's secrets are unreadable to it by file permissions alone. Each
+plugin gets its uid from its id, in the range 40000 to 59999, stable across
+restarts; it keeps the server's group, which only reads the installed files.
+Two ids can land on the same uid: those two plugins then share it.
+<code>EVEY_PLUGINS_UID_SEPARATION</code> controls it:</p>
 <table>
 <thead>
 <tr>
@@ -4150,8 +4157,10 @@ user with a warning. In <code>bubblewrap</code> and <code>strict</code>, the use
 this role.</p>
 <p>When active, the signing key (<code>0600</code>) and the backups (<code>0700</code> directory,
 <code>0600</code> files) are owner-only at run time, which holds even on a bind-mounted
-<code>/data</code>. All plugins share user 1001: they are isolated from each other by
-the filesystem layer, not by the user.</p>
+<code>/data</code>. Plugins are isolated from each other by their uid on top of the
+filesystem layer. A server run as root (not recommended) drops every plugin
+to the single user 1001 instead: there, only the filesystem layer separates
+the plugins.</p>
 <h3 id="host-socket-authentication">Host socket authentication<a class="headerlink" href="#host-socket-authentication" title="Permanent link">¶</a></h3>
 <p>Each plugin has its own socket, <code>/tmp/evey/plugins/&lt;plugin_id&gt;/host.sock</code>,
 served by its own gRPC server. On every call, the server reads the caller's
@@ -4160,6 +4169,11 @@ compares it with the PID recorded when the plugin started. The plugin's
 identity comes from the socket, never from a header. A plugin therefore
 cannot impersonate another, call another plugin's socket, or route calls
 through a child process. A PID mismatch is logged as a warning.</p>
+<p>The other direction is checked the same way: the server talks to the plugin
+on <code>plugin.sock</code> in the same directory, and refuses the connection unless the
+process listening on it is the plugin itself (<code>SO_PEERCRED</code> again). With a
+separate user per plugin, the directory is sticky, so a neighbour plugin of
+the shared group cannot unlink that socket to bind its own.</p>
 <h3 id="resource-limits">Resource limits<a class="headerlink" href="#resource-limits" title="Permanent link">¶</a></h3>
 <p>A monitor in user space (cgroups are unavailable in an unprivileged
 container) reads <code>/proc/&lt;pid&gt;</code> every 2 seconds and stops a plugin that
@@ -4448,8 +4462,8 @@ on the host. Which setup fits which machine, in plain terms:
 <td>Secrets protected by the separate user and <code>PR_SET_DUMPABLE</code>; <code>auto</code> prefers Landlock or bubblewrap</td>
 </tr>
 <tr>
-<td>All plugins share user 1001</td>
-<td>In <code>basic</code> mode, a plugin can read files its siblings own</td>
+<td>Plugin uids come from a hash of the id; a server run as root drops every plugin to user 1001</td>
+<td>Two plugins whose ids collide, or every plugin under a root server, share a uid: in <code>basic</code> mode, one can read files the other owns</td>
 <td>Signalling other processes is blocked (seccomp, <code>LD_PRELOAD</code> and bubblewrap all block it); <code>PR_SET_DUMPABLE</code> blocks reading other processes through <code>/proc</code>; Landlock and bubblewrap isolate plugin directories</td>
 </tr>
 <tr>

@@ -3483,21 +3483,21 @@ binary की नहीं: bare metal पर दोनों आप खुद �
 <code>EVEY_MEILI_URL</code> में उनके पते सेट करते हैं।</p>
 <h2 id="run-as-a-dedicated-non-root-user">एक अलग उपयोगकर्ता से चलाएँ, root से नहीं<a class="headerlink" href="#run-as-a-dedicated-non-root-user" title="Permanent link">¶</a></h2>
 <p>सर्वर को कभी root के रूप में न चलाएँ। इमेज की तरह एक ग्रुप और बिना विशेष
-अधिकार वाले दो उपयोगकर्ता बनाएँ:</p>
+अधिकार वाला एक उपयोगकर्ता बनाएँ:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>groupadd<span class="w"> </span>--gid<span class="w"> </span><span class="m">1000</span><span class="w"> </span>evey
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--uid<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--gid<span class="w"> </span>evey<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>evey
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--uid<span class="w"> </span><span class="m">1001</span><span class="w"> </span>--gid<span class="w"> </span>evey<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>evey-plugin
 </span></code></pre></div>
 <ul>
 <li><code>evey</code> (UID 1000) सर्वर चलाता है।</li>
-<li><code>evey-plugin</code> (UID 1001) वह उपयोगकर्ता है जिसके रूप में uid separation चालू
-  होने पर प्लगइन चलाए जाते हैं, ताकि कोई हैक हुआ प्लगइन एक अलग, बिना विशेष
-  अधिकार वाले उपयोगकर्ता के रूप में चले, जो सामान्य फ़ाइल अनुमतियों की वजह से
-  सर्वर के secret नहीं पढ़ सकता।</li>
+<li>uid separation चालू होने पर हर प्लगइन अपने खुद के uid पर चलाया जाता है, जो
+  उसकी id से 40000 से 59999 की सीमा में निकाला जाता है, ताकि कोई हैक हुआ प्लगइन
+  एक अलग, बिना विशेष अधिकार वाले उपयोगकर्ता के रूप में चले, जो सामान्य फ़ाइल
+  अनुमतियों की वजह से न सर्वर के secret पढ़ सकता है, न किसी दूसरे प्लगइन की फ़ाइलें।
+  इन uid के लिए <code>/etc/passwd</code> में किसी खाते की ज़रूरत नहीं है।</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>ग्रुप id मायने रखती है: launcher प्लगइन को UID 1001 और सर्वर के अपने ग्रुप
+<p>ग्रुप id मायने रखती है: launcher प्लगइन को उसके uid और सर्वर के अपने ग्रुप
 पर स्विच करता है, और 1000 से नीचे की कोई भी uid या gid मना कर देता है। सिर्फ़
 <code>useradd --system</code> से बने ग्रुप को 1000 से नीचे की system id मिलती है, और तब
 <code>basic</code> मोड में प्लगइन मना कर दिए जाते हैं।</p>
@@ -3546,7 +3546,7 @@ bare-metal Linux पर मिलते हैं पर बिना विश�
 <p><code>EVEY_PLUGINS_SANDBOX_MODE=basic</code> में uid बदला जाता है और साथ में seccomp shim
 होता है; launcher मौजूद हो, तो वह फिर भी अपनी kernel seccomp मनाही-सूची और जितना
 हो सके उतना Landlock लगाता है। हर रास्ते के हिसाब से फ़ाइल सिस्टम का कोई प्रतिबंध
-नहीं है: प्लगइन सिर्फ़ seccomp के साथ UID 1001 पर चलता है। इसे पुराने या सख़्ती से
+नहीं है: प्लगइन सिर्फ़ seccomp के साथ अपने खुद के uid पर चलता है। इसे पुराने या सख़्ती से
 प्रतिबंधित kernel पर इस्तेमाल करें जहाँ न Landlock चलता है न bubblewrap, और secret
 बचाने के लिए नीचे दिए uid separation पर भरोसा करें।</p>
 <p>जिस प्लगइन को <code>subprocess</code> की अनुमति मिली है, उसे <code>basic</code> मोड में भी launcher
@@ -3554,7 +3554,7 @@ bare-metal Linux पर मिलते हैं पर बिना विश�
 kernel seccomp लागू रहता है। launcher के बिना ऐसा प्लगइन बिना प्रतिबंध के चलने की
 जगह शुरू होने से मना कर देता है।</p>
 <h2 id="keep-secrets-out-of-a-plugins-reach">secret को प्लगइन की पहुँच से दूर रखें<a class="headerlink" href="#keep-secrets-out-of-a-plugins-reach" title="Permanent link">¶</a></h2>
-<p>uid separation हर प्लगइन को <code>evey-plugin</code> (UID 1001) के रूप में चलाता है, जो
+<p>uid separation हर प्लगइन को उसके अपने uid (40000 से 59999, उसकी id से) पर चलाता है, जो
 सर्वर (UID 1000) से अलग है, ताकि सामान्य फ़ाइल अनुमतियों की वजह से प्लगइन
 <code>jwt.key</code>, बैकअप या लॉग न पढ़ सके। यह <code>basic</code> मोड में मायने रखता है; Landlock या
 bubblewrap में फ़ाइल सिस्टम पहले से प्रतिबंधित होता है, इसलिए वहाँ यह दोहराव है।</p>
@@ -3583,7 +3583,7 @@ bubblewrap में फ़ाइल सिस्टम पहले से प�
 </table>
 <p>uid बदलने का काम launcher करता है, सर्वर नहीं। सर्वर root के बिना और बिना किसी
 capability के रहता है; launcher के पास एक file capability होती है और वह प्लगइन
-चलाने से ठीक पहले UID 1001 पर चला जाता है:</p>
+चलाने से ठीक पहले उसके uid पर चला जाता है:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>setcap<span class="w"> </span>cap_setuid+ep<span class="w"> </span>/opt/evey/evey-plugin-launcher
 </span></code></pre></div>
 <p>launcher 1000 से नीचे की कोई भी लक्ष्य uid या gid मना कर देता है। जब वह uid नहीं
@@ -3597,15 +3597,17 @@ capability के रहता है; launcher के पास एक file cap
 जाती है: <code>basic</code> मोड में प्लगइन मना कर दिए जाते हैं, और Landlock में uid
 separation लागू नहीं होता, प्लगइन सर्वर की uid पर चलता है। एक चुनें।</p>
 </div>
-<p>अगर सर्वर इसकी जगह root के रूप में चलता है (सुझाया नहीं जाता), तो वह प्लगइन को
-सीधे 1001 पर भेजता है और capability की ज़रूरत नहीं होती। हर स्थिति का आसान भाषा
+<p>अगर सर्वर इसकी जगह root के रूप में चलता है (सुझाया नहीं जाता), तो वह हर प्लगइन को
+एक ही उपयोगकर्ता 1001 पर भेजता है (इसे <code>useradd --system --uid 1001 --gid evey
+evey-plugin</code> से बनाएँ) और capability की ज़रूरत नहीं होती; तब प्लगइन वह uid साझा
+करते हैं। हर स्थिति का आसान भाषा
 में विवरण <a href="../plugins/sandbox-deployment/">प्लगइन सैंडबॉक्स सेटअप</a> में है।</p>
 <h2 id="secret-file-permissions">secret वाली फ़ाइलों की अनुमतियाँ<a class="headerlink" href="#secret-file-permissions" title="Permanent link">¶</a></h2>
-<p>इमेज जैसी ही अनुमतियाँ रखें: secret वाले फ़ोल्डर सिर्फ़ मालिक के लिए होते हैं, ताकि UID
-1001 पर भेजा गया प्लगइन Landlock के बिना भी उन्हें न पढ़ सके।</p>
+<p>इमेज जैसी ही अनुमतियाँ रखें: secret वाले फ़ोल्डर सिर्फ़ मालिक के लिए होते हैं, ताकि
+अपने uid पर भेजा गया प्लगइन Landlock के बिना भी उन्हें न पढ़ सके।</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>evey:evey<span class="w"> </span>/var/lib/evey
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># plugins/ सर्वर का है (वह इंस्टॉल वहीं खोलता है); ग्रुप evey,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># जिसमें evey-plugin है, इंस्टॉल की गई फ़ाइलें सिर्फ़ पढ़ता और चलाता है:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># जिसे प्लगइन रखते हैं, इंस्टॉल की गई फ़ाइलें सिर्फ़ पढ़ता और चलाता है:</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/lib/evey/plugins
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># secret वाले फ़ोल्डर सिर्फ़ मालिक के लिए:</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/lib/evey/keys<span class="w"> </span>/var/lib/evey/logs<span class="w"> </span>/var/lib/evey/backups

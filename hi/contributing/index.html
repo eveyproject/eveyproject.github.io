@@ -3239,7 +3239,11 @@
    (typecheck, lint, unit टेस्ट), सुरक्षा जाँच, lint,
    <a href="../ARCHITECTURE/#architecture-guards">आर्किटेक्चर की जाँचें</a>, commit के नियमों की जाँच,
    secret की जाँच, proto में breaking change की जाँच, साफ़ checkout से build,
-   repository और ट्रांसकोडिंग के integration gate, और TV audit।</li>
+   repository और ट्रांसकोडिंग के integration gate, और TV audit।
+   <code>dev</code> या किसी work branch पर push करने से इसके बजाय <code>make pre-push-dev</code>
+   चलता है: वही gate, पर उन लंबी suites के बिना जिन्हें pull request की CI
+   उन्हीं commits पर फिर से चलाती है (कमज़ोरियों की जाँच, फ़्रंटएंड टेस्ट और
+   build, repository suite, TV audit); <code>master</code> पर push पूरा gate चलाता है।</li>
 <li>नए बर्ताव के लिए और हर bug fix के लिए टेस्ट जोड़ें।</li>
 <li>बाहर से योगदान के लिए, एक बार
    <a href="https://github.com/eveyproject/evey/blob/master/CLA.md">योगदानकर्ता लाइसेंस समझौता</a> स्वीकार करें: Evey AGPL-3.0-or-later है

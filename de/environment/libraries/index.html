@@ -3218,6 +3218,18 @@ Verwaltungsbereichs ist unter
 <td>Serverkonfiguration → Bibliotheken → <strong>Intervall für periodischen Scan</strong>, Neustart</td>
 </tr>
 <tr>
+<td><code>EVEY_LIBRARY_PRUNE_MAX_MISSING_PERCENT</code></td>
+<td><code>5</code></td>
+<td>Anteil der Einträge eines Ordners, die bei einem Scan fehlen dürfen. Darüber (und über dem Minimum unten) wird unter diesem Ordner nichts gelöscht, bis ein Administrator bestätigt. Das schützt vor einem Pool, der eine Festplatte verloren hat.</td>
+<td>keine</td>
+</tr>
+<tr>
+<td><code>EVEY_LIBRARY_PRUNE_MIN_MISSING</code></td>
+<td><code>20</code></td>
+<td>Geringste Zahl fehlender Dateien, die die Löschungen eines Ordners anhalten kann, damit eine kleine Bibliothek noch ein paar Titel verlieren darf.</td>
+<td>keine</td>
+</tr>
+<tr>
 <td><code>EVEY_LIBRARY_SCAN_WORKERS</code></td>
 <td>aus dem CPU-Anteil</td>
 <td>Dateien, die bei einem Scan gleichzeitig analysiert werden. Von Hand gesetzt, umgeht der Wert für Scans den Anteil unter <strong>Zugeteilte Rechenleistung</strong>.</td>

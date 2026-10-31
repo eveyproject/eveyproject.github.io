@@ -2605,6 +2605,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#metadata-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        मेटाडेटा अनुरोध
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-store" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3350,6 +3361,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#metadata-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        मेटाडेटा अनुरोध
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-store" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3605,7 +3627,7 @@
 </tr>
 <tr>
 <td><code>external_fetch</code></td>
-<td>होस्ट के नाम। scheme और अंत का path पार्स के समय हटा दिए जाते हैं; होस्ट ठीक-ठीक मिलने चाहिए, <code>*.example.com</code> जैसा wildcard इंस्टॉल पर मना हो जाता है और port का suffix अनदेखा किया जाता है; IP लिखने पर इंस्टॉल मना होता है (<a href="../security-model/#external-fetch-rules">नियम</a>)।</td>
+<td>होस्ट के नाम। scheme और अंत का path पार्स के समय हटा दिए जाते हैं; होस्ट ठीक-ठीक मिलने चाहिए, <code>*.example.com</code> जैसा wildcard इंस्टॉल पर मना हो जाता है; बिना port वाली एंट्री सिर्फ़ port 80 और 443 की अनुमति देती है, <code>host:port</code> सिर्फ़ उसी port की; IP लिखने पर इंस्टॉल मना होता है (<a href="../security-model/#external-fetch-rules">नियम</a>)।</td>
 </tr>
 <tr>
 <td><code>capabilities</code></td>
@@ -3667,7 +3689,7 @@ environment में मिलते हैं:</p>
 </tr>
 <tr>
 <td><code>OnEvent(event_type, payload, source)</code></td>
-<td>अनुबंध में है, पर सर्वर आज प्लगइन को कोई event नहीं भेजता: इसे <code>handled: true</code> लौटाने के लिए लागू करें, और कोई कॉल न आने की उम्मीद रखें।</td>
+<td>सिर्फ़ <code>metadata.request</code>, उस प्लगइन को जिसके पास <code>metadata.provider</code> क्षमता हो (नीचे <a href="#metadata-requests">मेटाडेटा अनुरोध</a>)। किसी दूसरे प्लगइन को कोई event नहीं मिलता: <code>handled: false</code> लौटाएँ।</td>
 </tr>
 <tr>
 <td><code>GetCapabilities()</code></td>
@@ -3725,9 +3747,9 @@ environment में मिलते हैं:</p>
 <td><em>दिया नहीं जाता।</em></td>
 </tr>
 <tr>
-<td><code>UpdateMetadata</code></td>
-<td><code>api.metadata</code> या <code>media.write</code></td>
-<td><em>दिया नहीं जाता।</em></td>
+<td><code>UpdateMetadata(media_item_id, fields, provider_ids)</code></td>
+<td><code>api.metadata</code> या <code>media.write</code>, और <code>metadata.provider</code> क्षमता</td>
+<td>बिना पूछे किसी फ़िल्म या सीरीज़ के लिए आपका टेक्स्ट देता है, जैसे <a href="#metadata-requests">मेटाडेटा जवाब</a> देता। <code>fields</code> में <code>locale</code> (ज़रूरी) और <code>title</code>, <code>overview</code>, <code>tagline</code> में से कोई भी होता है; टेक्स्ट उस भाषा के लिए आपके पहले दिए टेक्स्ट की जगह लेता है, और सिर्फ़ <code>locale</code> वाला <code>fields</code> उसे हटा देता है। <code>provider_ids</code> मना है: आइटम की पहचान TMDB करता है। एक प्लगइन जो सहेजता है उसकी सीमा है: हर आइटम पर 16 भाषाएँ, कुल 200 000 टेक्स्ट और 128 MiB। इससे ऊपर कॉल <code>RESOURCE_EXHAUSTED</code> लौटाता है; पहले दिया गया टेक्स्ट बदलना या हटाना फिर भी संभव रहता है।</td>
 </tr>
 <tr>
 <td><code>GetUserPreferences</code></td>
@@ -3741,6 +3763,71 @@ environment में मिलते हैं:</p>
 </tr>
 </tbody>
 </table>
+<h3 id="metadata-requests">मेटाडेटा अनुरोध<a class="headerlink" href="#metadata-requests" title="Permanent link">¶</a></h3>
+<p>जब भी सर्वर TMDB से किसी फ़िल्म या सीरीज़ का मिलान या रीफ़्रेश करता है, वह हर
+सक्षम <code>metadata.provider</code> प्लगइन को <code>event_type</code> <code>metadata.request</code> वाला
+<code>OnEvent</code> भेजता है, एक के बाद एक प्लगइन को, और हर एक के लिए 15 सेकंड तक इंतज़ार
+करता है। सामग्री:</p>
+<table>
+<thead>
+<tr>
+<th>फ़ील्ड</th>
+<th>सामग्री</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>media_item_id</code></td>
+<td>आइटम की ID, बाद में <code>UpdateMetadata</code> के लिए।</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>movie</code> या <code>series</code>।</td>
+</tr>
+<tr>
+<td><code>title</code>, <code>original_title</code></td>
+<td>सर्वर की भाषा में TMDB का शीर्षक, और मूल शीर्षक।</td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>पता न होने पर मौजूद नहीं होता।</td>
+</tr>
+<tr>
+<td><code>provider_ids</code></td>
+<td><code>tmdb</code>, <code>imdb</code> और आइटम की दूसरी ज्ञात ID।</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>TMDB के टेक्स्ट की भाषा, जैसे <code>fr</code>।</td>
+</tr>
+<tr>
+<td><code>locales</code></td>
+<td>सर्वर जो भी भाषाएँ दिखाता है।</td>
+</tr>
+</tbody>
+</table>
+<p><code>handled: true</code> के साथ इस रूप का <code>result</code> लौटाएँ:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fr"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"overview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">"tagline"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">"translations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">"de"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"overview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>ऊपरी स्तर के फ़ील्ड <code>locale</code> की भाषा में होते हैं, या <code>locale</code> न हो तो अनुरोध
+की <code>language</code> में; <code>translations</code> दूसरी भाषाएँ जोड़ता है। जो फ़ील्ड आप नहीं देते,
+उसे छोड़ दें। भाषा टैग सिर्फ़ भाषा तक छोटे किए जाते हैं (<code>fr-FR</code> को <code>fr</code> पढ़ा
+जाता है), और 8 KiB से बड़ा फ़ील्ड अनदेखा किया जाता है। एक जवाब उस आइटम के लिए
+आपके पहले दिए सब कुछ की जगह लेता है; <code>handled: false</code>, या बिना टेक्स्ट वाला
+जवाब, बताता है कि आप आइटम को नहीं जानते और आपका दिया टेक्स्ट मिटा देता है। कोई error या
+समय सीमा पार होने पर आपका पहले दिया टेक्स्ट बना रहता है।</p>
+<p>एडमिन चुनता है कि आपका टेक्स्ट <code>title</code>, <code>overview</code> और <code>tagline</code> में से किनकी
+जगह ले, और आपसे एक साथ पूरी लाइब्रेरी के बारे में पूछ सकता है
+(<a href="../#metadata-plugins">मेटाडेटा प्लगइन</a>)। सीज़न और एपिसोड नहीं भेजे
+जाते।</p>
 <h3 id="data-store">डेटा स्टोर<a class="headerlink" href="#data-store" title="Permanent link">¶</a></h3>
 <p>हर प्लगइन के पास एक स्थायी key/value स्टोर होता है, बिना कोई अनुमति बताए: cursor,
 cache, आखिरी sync का समय, कुछ भी जो restart के बाद भी याद रखना हो। मान ऐसी
@@ -3784,15 +3871,15 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 <h3 id="eveyoninitcallback"><code>evey.onInit(callback)</code><a class="headerlink" href="#eveyoninitcallback" title="Permanent link">¶</a></h3>
 <p>होस्ट जो context भेजता है, उसके साथ एक बार कॉल होता है; context आने के बाद
 रजिस्टर किया गया callback तुरंत कॉल होता है।</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="c1">// data.config          - प्लगइन के कॉन्फ़िगरेशन मान (config_schema)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="c1">// data.context         - होस्ट का संदर्भ</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="c1">// data.locale          - चालू भाषा, जैसे "en-US"</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" या "light"</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web", "mobile" या "tv"</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - सिर्फ़ home.section: होस्ट की सुझाई ऊँचाई (px)</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - सिर्फ़ tv: पैनल की ऊँचाई, dp में</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">});</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">evey</span><span class="p">.</span><span class="nx">onInit</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="c1">// data.config          - प्लगइन के कॉन्फ़िगरेशन मान (config_schema)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="c1">// data.context         - होस्ट का संदर्भ</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="c1">// data.locale          - चालू भाषा, जैसे "en-US"</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="c1">// data.theme           - "dark" या "light"</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="c1">// data.surface         - "web", "mobile" या "tv"</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="c1">// data.suggestedHeight - सिर्फ़ home.section: होस्ट की सुझाई ऊँचाई (px)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="c1">// data.viewportHeight  - सिर्फ़ tv: पैनल की ऊँचाई, dp में</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">});</span>
 </span></code></pre></div>
 <h3 id="eveynavigatepath"><code>evey.navigate(path)</code><a class="headerlink" href="#eveynavigatepath" title="Permanent link">¶</a></h3>
 <p>होस्ट ऐप्लिकेशन को <code>path</code> पर ले जाता है। सिर्फ़ <code>/home</code>, <code>/library</code>, <code>/media</code>,
@@ -3813,17 +3900,17 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 <p>मौजूदा उपयोगकर्ता की पसंद, प्लगइन के अपने हिस्से में, उस token के ज़रिए (यह प्लगइन, यह
 उपयोगकर्ता) से जुड़ी हुई जो होस्ट फ़्रेम के लिए रखता है। हर कॉल एक promise
 लौटाती है; अनुमति न हो तो वह reject होता है।</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">);</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span><span class="w">        </span><span class="c1">// [{ key, value }]</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"units"</span><span class="p">,</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">);</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">found</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span><span class="w">        </span><span class="c1">// [{ key, value }]</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code> (अनुमति <code>public</code>)<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>मीडिया आइटम की एक सुरक्षित झलक: id, टाइटल, टाइप, साल, सारांश, पोस्टर का URL।
 कभी फ़ाइल का रास्ता, आकार, provider id या stream नहीं।</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// पोस्टर, data: URL के रूप में</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// पोस्टर, data: URL के रूप में</span>
 </span></code></pre></div>
 <p><code>poster</code> एक <code>data:</code> URL लौटाता है, क्योंकि फ़्रेम की नीति सर्वर से सीधे तस्वीर
 लोड करने से मना करती है; इसे <code>&lt;img&gt;</code> के स्रोत या texture की तरह इस्तेमाल करें।</p>
@@ -3898,8 +3985,9 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 <p>क्षमता वह भूमिका बताती है जो प्लगइन निभाने का दावा करता है: <code>metadata.provider</code>,
 <code>media.read</code>, <code>media.write</code>, <code>webhook.receiver</code> या <code>notification.sender</code>। इंस्टॉलर
 नाम जाँचता है, एडमिन पूर्वावलोकन में सूची देखता है और अपडेट पर हर नई क्षमता
-देखता है, और सुरक्षा डैशबोर्ड उसे दर्ज करता है। सर्वर आज किसी क्षमता के आधार पर
-कुछ नहीं भेजता: <code>metadata.provider</code> को जानकारी जोड़ने का कोई कॉल नहीं मिलता,
+देखता है, और सुरक्षा डैशबोर्ड उसे दर्ज करता है। सर्वर इनमें से एक के आधार पर
+भेजता है: <code>metadata.provider</code> को <a href="#metadata-requests">मेटाडेटा अनुरोध</a> मिलते हैं
+और वह <code>UpdateMetadata</code> कॉल कर सकता है। बाकी आज कुछ नहीं भेजतीं;
 <code>webhook.receiver</code> को कोई आने वाला request नहीं मिलता। प्लगइन असल में क्या कर
 सकता है, यह उसकी <strong>अनुमतियाँ</strong> तय करती हैं।</p>
 <h2 id="permissions-of-the-interface">इंटरफ़ेस की अनुमतियाँ<a class="headerlink" href="#permissions-of-the-interface" title="Permanent link">¶</a></h2>

@@ -3482,22 +3482,22 @@ to:</p>
 entrypoint, not of the binary: on bare metal you run both yourself and point
 <code>EVEY_DB_HOST</code> and <code>EVEY_MEILI_URL</code> at them.</p>
 <h2 id="run-as-a-dedicated-non-root-user">Run as a dedicated non-root user<a class="headerlink" href="#run-as-a-dedicated-non-root-user" title="Permanent link">¶</a></h2>
-<p>Never run the server as root. Create a group and two unprivileged users, as
+<p>Never run the server as root. Create a group and an unprivileged user, as
 the image does:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>groupadd<span class="w"> </span>--gid<span class="w"> </span><span class="m">1000</span><span class="w"> </span>evey
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--uid<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--gid<span class="w"> </span>evey<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>evey
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--uid<span class="w"> </span><span class="m">1001</span><span class="w"> </span>--gid<span class="w"> </span>evey<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>evey-plugin
 </span></code></pre></div>
 <ul>
 <li><code>evey</code> (UID 1000) runs the server.</li>
-<li><code>evey-plugin</code> (UID 1001) is the user plugins are dropped to when uid
-  separation is active, so a compromised plugin lands as a different
-  unprivileged user that cannot read the server's secrets by plain file
-  permissions.</li>
+<li>When uid separation is active, each plugin is dropped to a uid of its own,
+  derived from its id in the range 40000 to 59999, so a compromised plugin
+  lands as a different unprivileged user that cannot read the server's
+  secrets, nor another plugin's files, by plain file permissions. These uids
+  need no account in <code>/etc/passwd</code>.</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The group id matters: the launcher drops a plugin to UID 1001 and to the
+<p>The group id matters: the launcher drops a plugin to its uid and to the
 server's own group, and refuses any uid or gid below 1000. A group
 created by <code>useradd --system</code> alone gets a system id below 1000, and
 plugins in <code>basic</code> mode are then refused.</p>
@@ -3546,7 +3546,7 @@ absent and a throwaway <code>bwrap</code> probe succeeds.</p>
 <p><code>EVEY_PLUGINS_SANDBOX_MODE=basic</code> is a uid drop plus the seccomp shim; the
 launcher, when present, still installs its kernel seccomp denylist and
 best-effort Landlock. There is no per-path filesystem confinement: a plugin
-runs at UID 1001 with seccomp only. Use it on old or locked-down kernels
+runs at its own uid with seccomp only. Use it on old or locked-down kernels
 where neither Landlock nor bubblewrap works, and rely on the uid separation
 below to protect the secrets.</p>
 <p>A plugin granted the <code>subprocess</code> permission requires the launcher even in
@@ -3554,9 +3554,9 @@ below to protect the secrets.</p>
 the launcher's kernel seccomp does. Without the launcher such a plugin
 refuses to start rather than run unconfined.</p>
 <h2 id="keep-secrets-out-of-a-plugins-reach">Keep secrets out of a plugin's reach<a class="headerlink" href="#keep-secrets-out-of-a-plugins-reach" title="Permanent link">¶</a></h2>
-<p>Uid separation runs each plugin under <code>evey-plugin</code> (UID 1001), distinct
-from the server (UID 1000), so a plugin cannot read <code>jwt.key</code>, the backups
-or the logs by plain file permissions. It matters in <code>basic</code> mode; under
+<p>Uid separation runs each plugin under a uid of its own (40000 to 59999,
+from its id), distinct from the server (UID 1000), so a plugin cannot read
+<code>jwt.key</code>, the backups or the logs by plain file permissions. It matters in <code>basic</code> mode; under
 Landlock or bubblewrap the filesystem is already restricted, so it is
 redundant there.</p>
 <p><code>EVEY_PLUGINS_UID_SEPARATION</code>:</p>
@@ -3584,7 +3584,7 @@ redundant there.</p>
 </table>
 <p>The drop is done by the launcher, not the server. The server stays non-root
 with no capability; the launcher carries one file capability and switches to
-UID 1001 just before executing the plugin:</p>
+the plugin's uid just before executing it:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>setcap<span class="w"> </span>cap_setuid+ep<span class="w"> </span>/opt/evey/evey-plugin-launcher
 </span></code></pre></div>
 <p>The launcher refuses any target uid or gid below 1000. When it cannot drop
@@ -3598,15 +3598,17 @@ under systemd <code>NoNewPrivileges=yes</code>, the file capability is ignored o
 exec: plugins are refused in <code>basic</code> mode, and under Landlock uid
 separation degrades to same-uid. Pick one.</p>
 </div>
-<p>If the server runs as root instead (not recommended), it drops plugins to
-1001 directly and the capability is not needed. The plain-language picture
+<p>If the server runs as root instead (not recommended), it drops every plugin
+to the single user 1001 (create it with <code>useradd --system --uid 1001 --gid
+evey evey-plugin</code>) and the capability is not needed; plugins then share that
+uid. The plain-language picture
 per scenario is in <a href="../plugins/sandbox-deployment/">Plugin sandbox setup</a>.</p>
 <h2 id="secret-file-permissions">Secret file permissions<a class="headerlink" href="#secret-file-permissions" title="Permanent link">¶</a></h2>
 <p>Mirror the image: secret-bearing directories are owner-only, so a plugin
-dropped to UID 1001 cannot read them even without Landlock.</p>
+dropped to its own uid cannot read them even without Landlock.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>evey:evey<span class="w"> </span>/var/lib/evey
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># the server owns plugins/ (it extracts installs there); group evey,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># which evey-plugin belongs to, only reads and executes the installed files:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># which the plugins keep, only reads and executes the installed files:</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/lib/evey/plugins
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># owner-only on the secret directories:</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/lib/evey/keys<span class="w"> </span>/var/lib/evey/logs<span class="w"> </span>/var/lib/evey/backups

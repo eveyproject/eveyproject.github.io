@@ -1410,6 +1410,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        लोड टेस्ट
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3201,6 +3212,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#load-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        लोड टेस्ट
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3384,6 +3406,31 @@
 <li><strong>लोड टेस्ट</strong> (<strong>एडमिन → ट्रांसकोडिंग</strong>): यह नकली दर्शक बनाकर नापता है कि
   सर्वर कितना संभाल सकता है। कोई देख रहा हो तो यह चलने से मना कर देता है।</li>
 </ul>
+<h2 id="load-test">लोड टेस्ट<a class="headerlink" href="#load-test" title="Permanent link">¶</a></h2>
+<p>लोड टेस्ट आपकी लाइब्रेरी के टाइटल नकली दर्शकों के लिए चलाता है, तब तक दर्शक
+जोड़ता है जब तक कुछ जवाब न दे दे, और बताता है कि सबसे पहले क्या जवाब दिया:
+प्रोसेसर, मेमोरी, कोई डिस्क, खुद सर्वर, या उसके आगे का नेटवर्क।</p>
+<p><strong>टेस्ट का रास्ता।</strong> दर्शक सर्वर तक उसके पब्लिक पते से पहुँचते हैं, जैसे दूर
+बैठे दर्शक पहुँचते हैं। अगर वह पता आपके लोकल नेटवर्क के किसी रिवर्स प्रॉक्सी
+तक जाता है, तो टेस्ट उसी नाम और उसी सर्टिफिकेट के साथ प्रॉक्सी के लोकल पते से
+जुड़ता है। वरना हर बाइट राउटर तक जाकर प्रॉक्सी पर वापस लौटता, ऐसा चक्कर जो
+किसी बाहरी दर्शक का ट्रैफ़िक नहीं लगाता, और टेस्ट राउटर को नापता। तब रिपोर्ट
+बताती है कि कौन-सा लोकल पता इस्तेमाल हुआ। आपके नेटवर्क के बाहर का प्रॉक्सी
+(किराए का सर्वर, कोई टनल) असली दर्शकों के रास्ते पर है, इसलिए वह वैसा ही रहता
+है।</p>
+<p><strong>कनेक्शन का अपलोड।</strong> आपके नेटवर्क के अंदर के दर्शक आपके इंटरनेट कनेक्शन का
+अपलोड कभी इस्तेमाल नहीं करते, इसलिए नकली दर्शक उसे नाप नहीं सकते। दर्शकों के
+शुरू होने से पहले सर्वर उसे खुद नापता है: करीब दस सेकंड तक वह शून्यों से भरा
+डेटा <code>speed.cloudflare.com</code> पर अपलोड करता है, यह स्पीड टेस्ट सर्विस Cloudflare
+के नेटवर्क के सबसे पास वाले पॉइंट से जवाब देती है। आपकी लाइब्रेरी या आपके
+खातों से कुछ नहीं भेजा जाता। Cloudflare सर्वर का पब्लिक IP पता देखता है, जैसे
+हर वह साइट देखती है जिससे सर्वर जुड़ता है।</p>
+<p><strong>बाहर से।</strong> दोनों आँकड़ों से रिपोर्ट बताती है कि आपके नेटवर्क के बाहर के कितने
+दर्शकों को सेवा दी जा सकती है: जितने दर्शक सर्वर ने संभाले, या टेस्ट के एक
+दर्शक की दर पर अपलोड जितने दर्शक ले जा सकता है (अपलोड का पाँचवाँ हिस्सा खाली
+रखकर), इन दोनों में से जो कम हो। रिपोर्ट बताती है कि दोनों में से सीमा कौन है।
+अगर स्पीड टेस्ट जवाब नहीं देता, तो रिपोर्ट बताती है कि अपलोड नापा नहीं जा सका,
+और बाहरी दर्शकों के लिए कोई संख्या नहीं देती।</p>
 <!-- sources
 disk floor: cmd/evey/wire.go (EVEY_TRANSCODE_CACHE_MIN_FREE_MB, DefaultMinFreeBytes, SetWriteFloor, SetSubtitleCacheWriteFloor, OnSubtitleCacheFloorHit) ; internal/app/transcoding/segment_cache_admit.go - AdmitWrite, tryOnDemandEvict, ErrCacheFull ; internal/adapters/driving/http/transcode_vod_admission.go (503 + Retry-After) ; internal/domain/transcoding/events.go - DerivedCacheFull ; i18n notifications.cache_full
 clear all empties extracted subtitles: internal/app/transcoding/service.go - WithDerivedCachePurge ; internal/adapters/driving/http/subtitle_cache.go - SubtitleCachePurger (/data/subtitles)

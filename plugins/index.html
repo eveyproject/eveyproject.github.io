@@ -2537,6 +2537,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata plugins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-a-plugin-can-do-on-your-host" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3194,6 +3205,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata plugins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-a-plugin-can-do-on-your-host" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3342,6 +3364,10 @@ update is applied.</p>
 <td>The last lines the plugin wrote through the host.</td>
 </tr>
 <tr>
+<td><strong>Metadata</strong></td>
+<td>On a metadata plugin only: the fields it replaces and the fetch of the existing library (<a href="#metadata-plugins">below</a>).</td>
+</tr>
+<tr>
 <td><strong>Uninstall</strong></td>
 <td>Removes the process, the files and the plugin's stored data.</td>
 </tr>
@@ -3397,6 +3423,31 @@ offers no per-path filesystem isolation, and
 <a href="sandbox-deployment/">Plugin sandbox setup</a> explains what to change.</p>
 <p>Plugins are enabled by default. <code>EVEY_PLUGINS_ENABLED=false</code> turns the whole
 subsystem off.</p>
+<h2 id="metadata-plugins">Metadata plugins<a class="headerlink" href="#metadata-plugins" title="Permanent link">¶</a></h2>
+<p>A metadata plugin (capability <code>metadata.provider</code>) gives its own text for your
+movies and series, from a source other than TMDB. It does not replace TMDB:
+TMDB still identifies each title and gives its cast, its artwork, its ratings,
+its collections and its translations. The plugin's text is kept beside TMDB's,
+and shown in its place field by field.</p>
+<p>What a viewer reads, from the weakest to the strongest:</p>
+<ol>
+<li>TMDB's text, in the viewer's language when TMDB has it;</li>
+<li>the plugin's text in that language, for the fields the plugin is allowed to
+   replace;</li>
+<li>your own edit of the title (<strong>Edit metadata</strong> on its page), which always
+   wins.</li>
+</ol>
+<p><strong>Metadata</strong> on the plugin's card chooses the fields it replaces among
+<strong>Title</strong>, <strong>Overview</strong> and <strong>Tagline</strong>. Until you choose, a plugin replaces
+the overview and the tagline, never the title. A change applies at once to
+what the plugin already gave; nothing is fetched again.</p>
+<p>The plugin is asked about every movie and series as it is matched or
+refreshed. <strong>Fetch for the whole library</strong>, on the same panel, asks it about
+the titles already there, one after the other, and shows how far it has gone
+and, at the end, how many it found and how many got no answer. A refresh of
+the title from TMDB never overwrites the plugin's text; disabling the plugin
+hides that text, uninstalling it deletes it.</p>
+<p>Seasons and episodes keep TMDB's text, and search still matches TMDB's titles.</p>
 <h2 id="what-a-plugin-can-do-on-your-host">What a plugin can do on your host<a class="headerlink" href="#what-a-plugin-can-do-on-your-host" title="Permanent link">¶</a></h2>
 <p>Whatever its manifest says, a plugin:</p>
 <ul>
@@ -3471,7 +3522,9 @@ critical findings refuse, warnings: internal/app/plugin/install.go - validateSta
 runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries ; i18n admin.plugins.availableRuntimes
 cosign policy: internal/config/config.go - CosignPolicy, CosignPublicKey ; internal/adapters/driven/pluginrunner/cosign.go
 update, version higher, escalation, hash re-checked: internal/app/plugin/install.go - resolveExistingPlugin ; internal/app/plugin/update.go - ApplyUpdate ; internal/app/plugin/permissions.go - DiffPermissions ; i18n admin.plugin.update, admin.plugins.permissionEscalation.*
-card actions: i18n admin.plugin.enabled, disabled, config, logs, uninstall ; secrets masked: internal/domain/plugin/model.go - IsSecretConfigField ; internal/adapters/driving/grpcapi/admin_plugin.go
+card actions: i18n admin.plugin.enabled, disabled, config, logs, uninstall, metadata.title ;
+metadata plugins: internal/app/metadata/enricher.go - enrichPluginTexts, takesPluginTexts ; internal/app/library/query_service.go - GetMediaItemTranslations, pluginTextsFor ; internal/domain/library/plugin_text.go - OverlayPluginTexts ; internal/adapters/driving/grpcapi/media_item_overlay.go - overlayItems (admin edits after) ; internal/domain/plugin/metadata_fields.go - DefaultMetadataFields ; internal/adapters/driven/postgres/plugin_text_repo.go - DisplayedForLocale (enabled plugins only) ; migration 000182 (ON DELETE CASCADE) ; internal/app/metadata/plugin_text_refresh.go ; i18n admin.plugin.metadata.* ; search: internal/app/library/search_reindex.go (TMDB translations only)
+ secrets masked: internal/domain/plugin/model.go - IsSecretConfigField ; internal/adapters/driving/grpcapi/admin_plugin.go
 resource limits defaults and env: internal/config/config.go - Plugins (MemoryMB, PIDsMax, DiskMaxMB, CPUNice, SandboxMode) ; i18n admin.plugins.resourceLimits.*
 security dashboard, host sandbox: i18n admin.plugins.security.* ; internal/app/plugin/security_dashboard_service.go
 plugins enabled flag: internal/config/config.go - PluginsEnabled

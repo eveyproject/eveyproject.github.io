@@ -3269,7 +3269,7 @@
 
 
 <h1 id="privacy-policy">Privacy policy<a class="headerlink" href="#privacy-policy" title="Permanent link">¶</a></h1>
-<p>Last updated: 2026-10-04.</p>
+<p>Last updated: 2026-10-26.</p>
 <p>This policy covers the Evey apps for Android and Android TV.</p>
 <p>In short: the Evey project runs no service that receives your data. There is
 no account with us, no analytics, no advertising, and no crash reporting to
@@ -3311,6 +3311,10 @@ has no access to it.</p>
   that service's own policy.</li>
 <li><strong>Plugins.</strong> Plugins are installed by the server's administrator. A plugin
   may show content from an outside service (a weather plugin, for instance).</li>
+<li><strong>The server's load test.</strong> Not the apps: when the server's administrator
+  runs a load test, the server uploads about ten seconds of zero-filled data
+  to <code>speed.cloudflare.com</code> to measure its internet connection. Nothing about
+  you or your library is in it; Cloudflare sees the server's IP address.</li>
 </ul>
 <h2 id="what-stays-on-the-device">What stays on the device<a class="headerlink" href="#what-stays-on-the-device" title="Permanent link">¶</a></h2>
 <p>The server address, your session token and, if you tick remember me, your username and password (in Android's encrypted storage, the Android keystore), your preferences, and the films and music you download for offline viewing. Removing
@@ -3382,6 +3386,7 @@ cover art: frontend/packages/client/src/lib/artwork.ts - coverArtUri
 cast receiver: docs/adr/0025-server-driven-cast.md
 voice search: frontend/packages/voice-search/android/src/main/java/com/evey/voicesearch/EveyVoiceSearchModule.kt
 store page: frontend/apps/tv/src/lib/appUpdate.ts - openStorePage
+load test upload: internal/app/loadtest/uplink.go - UplinkProbeURL, countingZeros
 -->
 
 

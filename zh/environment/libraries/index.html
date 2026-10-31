@@ -3215,6 +3215,18 @@
 <td>服务器配置 → 媒体库 → <strong>定期扫描间隔</strong>，需重启</td>
 </tr>
 <tr>
+<td><code>EVEY_LIBRARY_PRUNE_MAX_MISSING_PERCENT</code></td>
+<td><code>5</code></td>
+<td>一次扫描中，一个文件夹里可以消失的条目所占的比例。超过它（并且超过下面的最小值）时，在管理员确认之前，该文件夹下不会删除任何内容，以防存储池丢了一块磁盘。</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>EVEY_LIBRARY_PRUNE_MIN_MISSING</code></td>
+<td><code>20</code></td>
+<td>能够搁置一个文件夹删除操作的最少缺失文件数，这样小型媒体库仍然可以丢掉几个条目。</td>
+<td>无</td>
+</tr>
+<tr>
 <td><code>EVEY_LIBRARY_SCAN_WORKERS</code></td>
 <td>根据 CPU 份额</td>
 <td>扫描时同时分析的文件数。手动设置后，扫描就不再受<strong>处理能力</strong>份额的约束。</td>

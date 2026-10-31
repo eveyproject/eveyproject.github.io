@@ -3965,7 +3965,7 @@
 <p>无论声明了什么，插件都<strong>没有直接的网络访问</strong>：所有 IP 套接字都会被拒绝（<code>landlock</code> 和 <code>basic</code> 下用 <code>-deny-inet</code>，<code>bubblewrap</code> 和 <code>strict</code> 下用网络命名空间）。
 带 <code>network</code> 权限的插件通过自己的 Unix 套接字调用宿主的 <code>Fetch</code> 方法。宿主在 <code>internal/adapters/driving/pluginhost/fetch.go</code> 里：</p>
 <ul>
-<li>按插件的 <code>external_fetch</code> 列表检查目标（精确的主机名，不区分大小写；<code>*.example.com</code> 通配符在安装时会被拒绝；端口后缀会被忽略）；</li>
+<li>按插件的 <code>external_fetch</code> 列表检查目标（精确的主机名，不区分大小写；<code>*.example.com</code> 通配符在安装时会被拒绝；不带端口的条目只允许 80 和 443 端口，<code>host:port</code> 只允许该端口）；</li>
 <li>只允许 <code>http</code> 和 <code>https</code>，只允许 <code>GET</code> 和 <code>HEAD</code>；</li>
 <li>通过一个防 SSRF 的客户端（<code>internal/pkg/ssrf</code>）连接，它在 DNS 解析之后拒绝私有、保留和链路本地地址，
   所以 DNS 重绑定和重定向都会被再次检查（重定向到列表之外的主机会被拒绝）；</li>
@@ -4004,6 +4004,10 @@
 <tr>
 <td>信号</td>
 <td><code>tgkill</code>、<code>rt_sigqueueinfo</code>、<code>rt_tgsigqueueinfo</code>，目标是插件自己以外的任何进程时（两个过滤器都拒绝）；<code>kill</code> 在内核过滤器里同样如此，在 <code>LD_PRELOAD</code> 过滤器里则无论目标是谁都拒绝；<code>tkill</code> 在内核过滤器里拒绝（<code>LD_PRELOAD</code> 过滤器允许它发给插件自己）；<code>pidfd_send_signal</code>、<code>pidfd_getfd</code>（窃取文件描述符）。运行时重新抛出信号、或抢占自己的线程，仍然可以正常工作。在 Landlock ABI 6 及以上，插件也无法向沙箱外的进程发信号</td>
+</tr>
+<tr>
+<td>文件描述符的信号所有者（内核过滤器）</td>
+<td>指向插件自身以外任何进程的 <code>fcntl</code> <code>F_SETOWN</code>、指向默认 <code>SIGIO</code> 以外任何信号的 <code>F_SETSIG</code>、<code>F_SETOWN_EX</code>，以及 <code>ioctl</code> <code>FIOSETOWN</code>/<code>SIOCSPGRP</code>：没有这一条，一个所有者是服务器、信号是 <code>SIGKILL</code> 的描述符会在下一次写入时杀死服务器</td>
 </tr>
 <tr>
 <td>挂载</td>
@@ -4056,8 +4060,9 @@
 <p>这是一份<strong>黑名单</strong>：<code>open</code>、<code>read</code>、<code>write</code>、<code>mmap</code>、Unix <code>socket</code> 和 <code>connect</code> 仍然允许。路径由文件系统那一层限制，而不是靠 seccomp。
 在 <code>bubblewrap</code> 下不使用启动器：静态二进制文件在那里没有 seccomp 过滤器，由命名空间和挂载白名单进行限制。</p>
 <h3 id="a-separate-user">独立的用户<a class="headerlink" href="#a-separate-user" title="Permanent link">¶</a></h3>
-<p>插件可以以用户 1001（<code>evey-plugin</code>）运行，和服务器（1000）不同，这样仅凭文件权限，它就无法读取服务器的机密。
-由 <code>EVEY_PLUGINS_UID_SEPARATION</code> 控制：</p>
+<p>插件可以以它自己的用户运行，和服务器（1000）不同，这样仅凭文件权限，它就无法读取服务器的机密。
+每个插件根据自己的 id 得到 uid，范围是 40000 到 59999，重启后保持不变；它保留服务器的组，这个组只读取已安装的文件。
+两个 id 可能落到同一个 uid：这两个插件就共用它。由 <code>EVEY_PLUGINS_UID_SEPARATION</code> 控制：</p>
 <table>
 <thead>
 <tr>
@@ -4084,11 +4089,13 @@
 如果无法切换，<code>basic</code> 下的插件会被拒绝（在那里，用户是唯一的保护），而在 <code>landlock</code> 下，插件会以服务器的用户身份运行，并记录一条警告。
 在 <code>bubblewrap</code> 和 <code>strict</code> 下，由用户命名空间承担这个角色。</p>
 <p>启用时，签名密钥（<code>0600</code>）和备份（<code>0700</code> 目录、<code>0600</code> 文件）在运行时只有所有者能访问，即使 <code>/data</code> 是绑定挂载的也一样。
-所有插件共用用户 1001：它们之间靠文件系统那一层隔离，而不是靠用户。</p>
+插件之间靠各自的 uid 隔离，外加文件系统那一层。以 root 运行的服务器（不推荐）则把所有插件都切换到同一个用户 1001：那时只有文件系统那一层把插件隔开。</p>
 <h3 id="host-socket-authentication">宿主套接字的身份验证<a class="headerlink" href="#host-socket-authentication" title="Permanent link">¶</a></h3>
 <p>每个插件都有自己的套接字 <code>/tmp/evey/plugins/&lt;plugin_id&gt;/host.sock</code>，由它自己的 gRPC 服务器提供服务。每次调用时，服务器从内核读取调用方的 PID
 （<code>SO_PEERCRED</code>，用户空间无法伪造），并和插件启动时记录的 PID 比较。插件的身份来自套接字，从不来自请求头。
 所以插件无法冒充另一个插件，无法调用另一个插件的套接字，也无法借子进程转发调用。PID 不匹配时会记录一条警告。</p>
+<p>另一个方向也以同样的方式检查：服务器通过同一目录下的 <code>plugin.sock</code> 和插件通信，如果在上面监听的进程不是插件本身，就拒绝连接（同样靠 <code>SO_PEERCRED</code>）。
+每个插件有独立用户时，该目录带有 sticky 位，共用组里的相邻插件无法删除这个套接字来绑定自己的套接字。</p>
 <h3 id="resource-limits">资源限制<a class="headerlink" href="#resource-limits" title="Permanent link">¶</a></h3>
 <p>一个运行在用户空间的监控程序（在无特权的容器里用不了 cgroups）每 2 秒读取一次 <code>/proc/&lt;pid&gt;</code>，停止超出限制的插件
 （<a href="https://github.com/eveyproject/evey/blob/master/docs/adr/0013-userspace-plugin-resource-monitor.md">ADR-0013</a>）：</p>
@@ -4339,8 +4346,8 @@
 <td>机密由独立的用户和 <code>PR_SET_DUMPABLE</code> 保护；<code>auto</code> 优先选择 Landlock 或 bubblewrap</td>
 </tr>
 <tr>
-<td>所有插件共用用户 1001</td>
-<td>在 <code>basic</code> 模式下，插件可以读取其他插件拥有的文件</td>
+<td>插件的 uid 来自 id 的哈希；以 root 运行的服务器把所有插件切换到用户 1001</td>
+<td>id 冲突的两个插件，或 root 服务器下的所有插件，共用一个 uid：在 <code>basic</code> 模式下，一个插件可以读取另一个插件拥有的文件</td>
 <td>向其他进程发信号会被阻止（seccomp、<code>LD_PRELOAD</code> 和 bubblewrap 都会阻止）；<code>PR_SET_DUMPABLE</code> 阻止通过 <code>/proc</code> 读取其他进程；Landlock 和 bubblewrap 隔离各个插件的目录</td>
 </tr>
 <tr>

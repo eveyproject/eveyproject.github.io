@@ -3398,7 +3398,7 @@
 <tr>
 <td><code>EVEY_LOG_DEV_MODE</code></td>
 <td><code>false</code></td>
-<td>开发者模式：启动时的安全检查只给出警告，插件可以在没有沙箱库的情况下运行。绝不要在真正的服务器上开启；如果设置了 <code>EVEY_ENV=production</code>，服务器会拒绝启动。</td>
+<td>开发者模式：启动时的安全检查只给出警告，插件可以在没有沙箱库的情况下运行。只有同时设置 <code>EVEY_ENV=dev</code> 才会生效；单独设置时会被忽略并给出警告。绝不要在真正的服务器上开启。</td>
 <td>无</td>
 </tr>
 </tbody>

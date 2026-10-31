@@ -3398,6 +3398,14 @@ profil a un <strong>Nom</strong>, une <strong>Langue</strong> et une <strong>Ré
   Contrôle parental</strong> règle le code PIN du profil en cours.</li>
 <li>Les profils et le contrôle parental ne se gèrent que depuis un profil
   qui n'est pas un profil enfant.</li>
+<li>Les codes PIN erronés verrouillent le profil un moment, de plus en plus
+  longtemps si les essais continuent. Un code parent tapé sur l'écran de
+  verrouillage d'un profil enfant est décompté sur les profils adultes sur
+  lesquels il a été essayé. Pour lever un verrouillage plus tôt, un
+  administrateur, ou le propriétaire du compte avec le mot de passe du
+  compte, appelle <code>POST /api/v1/profiles/{id}/parental/reset-lockout</code>
+  (corps <code>{"currentPassword": "..."}</code> pour le propriétaire). C'est refusé
+  depuis un profil enfant.</li>
 <li>Le compte d'un administrateur ne peut pas avoir de profil enfant : la
   limite cacherait une partie de la bibliothèque de l'administrateur
   lui-même.</li>

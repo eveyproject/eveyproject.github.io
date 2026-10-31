@@ -3485,22 +3485,22 @@ servicios que usa el servidor:</p>
 de entrada de la imagen, no del binario: sin contenedor, los ejecutas tú
 mismo y apuntas <code>EVEY_DB_HOST</code> y <code>EVEY_MEILI_URL</code> hacia ellos.</p>
 <h2 id="run-as-a-dedicated-non-root-user">Ejecutar con un usuario dedicado que no sea root<a class="headerlink" href="#run-as-a-dedicated-non-root-user" title="Permanent link">¶</a></h2>
-<p>Nunca ejecutes el servidor como root. Crea un grupo y dos usuarios sin
+<p>Nunca ejecutes el servidor como root. Crea un grupo y un usuario sin
 privilegios, como hace la imagen:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>groupadd<span class="w"> </span>--gid<span class="w"> </span><span class="m">1000</span><span class="w"> </span>evey
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--uid<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--gid<span class="w"> </span>evey<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>evey
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>--system<span class="w"> </span>--uid<span class="w"> </span><span class="m">1001</span><span class="w"> </span>--gid<span class="w"> </span>evey<span class="w"> </span>--shell<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>evey-plugin
 </span></code></pre></div>
 <ul>
 <li><code>evey</code> (UID 1000) ejecuta el servidor.</li>
-<li><code>evey-plugin</code> (UID 1001) es el usuario al que pasan los plugins cuando la
-  separación de uid está activa. Así, un plugin comprometido acaba como otro
-  usuario sin privilegios, que no puede leer los secretos del servidor por
-  simples permisos de archivo.</li>
+<li>Cuando la separación de uid está activa, cada plugin pasa a un uid propio,
+  sacado de su identificador en el rango 40000 a 59999. Así, un plugin
+  comprometido acaba como otro usuario sin privilegios, que no puede leer por
+  simples permisos de archivo ni los secretos del servidor ni los archivos de
+  otro plugin. Estos uid no necesitan ninguna cuenta en <code>/etc/passwd</code>.</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>El id del grupo importa: el lanzador hace pasar un plugin al UID 1001 y al
+<p>El id del grupo importa: el lanzador hace pasar un plugin a su uid y al
 grupo del propio servidor, y rechaza cualquier uid o gid por debajo de
 1000. Un grupo creado solo con <code>useradd --system</code> recibe un id de sistema
 por debajo de 1000, y entonces los plugins en modo <code>basic</code> se rechazan.</p>
@@ -3555,7 +3555,7 @@ bubblewrap cuando falta Landlock y una prueba desechable de <code>bwrap</code> f
 <p><code>EVEY_PLUGINS_SANDBOX_MODE=basic</code> es un cambio de uid más la capa seccomp; el
 lanzador, si está presente, sigue instalando su lista seccomp del kernel y
 Landlock en la medida de lo posible. No hay confinamiento del sistema de
-archivos por rutas: un plugin se ejecuta con el UID 1001 y solo con seccomp.
+archivos por rutas: un plugin se ejecuta con su propio uid y solo con seccomp.
 Úsalo en kernels antiguos o muy restringidos donde no funciona ni Landlock ni
 bubblewrap, y cuenta con la separación de uid descrita más abajo para
 proteger los secretos.</p>
@@ -3564,8 +3564,8 @@ modo <code>basic</code>: la capa seccomp no sobrevive a un <code>exec</code> de 
 solo el seccomp del kernel que instala el lanzador. Sin el lanzador, un plugin
 así se niega a arrancar en lugar de ejecutarse sin confinar.</p>
 <h2 id="keep-secrets-out-of-a-plugins-reach">Mantener los secretos fuera del alcance de un plugin<a class="headerlink" href="#keep-secrets-out-of-a-plugins-reach" title="Permanent link">¶</a></h2>
-<p>La separación de uid ejecuta cada plugin como <code>evey-plugin</code> (UID 1001),
-distinto del servidor (UID 1000), así que un plugin no puede leer
+<p>La separación de uid ejecuta cada plugin con un uid propio (40000 a 59999,
+según su identificador), distinto del servidor (UID 1000), así que un plugin no puede leer
 <code>jwt.key</code>, las copias de seguridad ni los registros por simples permisos de
 archivo. Es importante en modo <code>basic</code>; con Landlock o bubblewrap, el sistema
 de archivos ya está restringido, así que ahí es redundante.</p>
@@ -3594,7 +3594,7 @@ de archivos ya está restringido, así que ahí es redundante.</p>
 </table>
 <p>El cambio de usuario lo hace el lanzador, no el servidor. El servidor sigue
 sin ser root y sin ninguna capacidad; el lanzador lleva una capacidad de
-archivo y cambia al UID 1001 justo antes de ejecutar el plugin:</p>
+archivo y cambia al uid del plugin justo antes de ejecutarlo:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>setcap<span class="w"> </span>cap_setuid+ep<span class="w"> </span>/opt/evey/evey-plugin-launcher
 </span></code></pre></div>
 <p>El lanzador rechaza cualquier uid o gid de destino por debajo de 1000. Cuando
@@ -3610,16 +3610,18 @@ Landlock, la separación de uid se queda en el mismo uid. Elige una de las
 dos cosas.</p>
 </div>
 <p>Si en cambio el servidor funciona como root (no recomendado), hace pasar
-directamente los plugins al UID 1001 y la capacidad no hace falta. La
+todos los plugins al único usuario 1001 (créalo con <code>useradd --system --uid
+1001 --gid evey evey-plugin</code>) y la capacidad no hace falta; los plugins
+comparten entonces ese uid. La
 explicación en lenguaje sencillo de cada caso está en
 <a href="../plugins/sandbox-deployment/">Configurar el sandbox de plugins</a>.</p>
 <h2 id="secret-file-permissions">Permisos de los archivos secretos<a class="headerlink" href="#secret-file-permissions" title="Permanent link">¶</a></h2>
 <p>Haz lo mismo que la imagen: las carpetas que contienen secretos son
-accesibles solo para su propietario, así que un plugin que pasa al UID 1001
+accesibles solo para su propietario, así que un plugin que pasa a su propio uid
 no puede leerlas ni siquiera sin Landlock.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>evey:evey<span class="w"> </span>/var/lib/evey
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># el servidor es propietario de plugins/ (ahí extrae las instalaciones); el grupo</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># evey, al que pertenece evey-plugin, solo lee y ejecuta los archivos instalados:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># evey, que los plugins conservan, solo lee y ejecuta los archivos instalados:</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/lib/evey/plugins
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># solo el propietario en las carpetas secretas:</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/lib/evey/keys<span class="w"> </span>/var/lib/evey/logs<span class="w"> </span>/var/lib/evey/backups
