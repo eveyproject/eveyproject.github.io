@@ -3402,6 +3402,9 @@ steht jede Spur mit ihrer Entscheidung (<em>kopiert</em>, <em>transkodiert</em> 
 </table>
 <p>Beurteilt wird nur die Tonspur, die gerade läuft. Hat eine Datei eine nicht
 gewählte Kommentarspur in DTS, wird sie deswegen nicht transkodiert.</p>
+<p>Eine Datei, die keine der Methoden auf diesem Gerät liefern kann, wird vor dem
+Start der Wiedergabe abgelehnt, mit <strong>Dieser Server ist für diese Datei nicht
+leistungsstark genug</strong>: siehe <a href="../transcoding/#sharing-the-capacity">Transkodierung und Serverkapazität</a>.</p>
 <p>Stream-Info wird beim Start der Wiedergabe berechnet. Nur einen Fall kann sie
 nicht vorhersehen: eine Grafikkarte, die genau beim Start des Streams voll
 ist. Der Stream wechselt dann auf den Prozessor, und <strong>Verwaltung → Aktuelle
@@ -3498,7 +3501,7 @@ hebt die Begrenzung der Bildhöhe auf, die der Player sonst anfordern würde.</p
 <!-- sources
 decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels)
 
-session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked)
+session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked) ; internal/adapters/driving/http/transcode_vod_admission.go - ErrCodeSourceTooHeavy
 remote cap: internal/adapters/driving/grpcapi/playback_handler.go - resolvePlaybackPrefs ; internal/config/config.go - RemoteBitrateCapKbps
 client caps: internal/domain/transcoding/playback_decision.go - ClientProfile ; frontend/packages/client/src/web/codec.ts ; frontend/packages/media-caps/src/castUrl.ts
 example: internal/app/transcoding/testdata/route_golden.txt - "nvenc-pass | 2160p-hevc-hdr10-70m | hdr-tv{,-20m} | {plain,gpu-full,title-blocked}"

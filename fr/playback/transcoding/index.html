@@ -3330,6 +3330,12 @@ empaquetage.</p>
 <li><strong>Un refus.</strong> Quand aucun n'en a, le lecteur affiche <strong>Le serveur est
    occupé par d'autres transcodages</strong> et peut réessayer.</li>
 </ol>
+<p>Un refus est définitif et ne tient pas à la place disponible. Un fichier dont
+l'encodage pour cet appareil coûterait plus que toute la capacité mesurée, sur
+un serveur où rien d'autre n'est en cours, est refusé avec <strong>Ce serveur n'est
+pas assez puissant pour ce fichier</strong>, et le lecteur ne réessaie pas. Cela
+n'arrive que lorsque le fichier ne peut être ni lu ni copié tel quel sur cet
+appareil ; la solution est un appareil qui décode le fichier directement.</p>
 <p>Un encodage sur carte graphique qui échoue sur un titre envoie ce titre sur
 le processeur pendant un moment, pour tous les spectateurs. La carte
 elle-même n'est écartée qu'après l'échec d'un encodage de test indépendant du

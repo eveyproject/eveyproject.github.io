@@ -3401,6 +3401,9 @@ lecteur ; sur la TV, dans le menu d'options du lecteur) affichent la
 </table>
 <p>Seule la piste audio écoutée est prise en compte : un fichier dont la piste de
 commentaire, non sélectionnée, est en DTS ne sera pas transcodé pour autant.</p>
+<p>Un fichier qu'aucune des méthodes ne peut servir sur cet appareil est refusé
+avant le début de la lecture, avec <strong>Ce serveur n'est pas assez puissant pour
+ce fichier</strong> : voir <a href="../transcoding/#sharing-the-capacity">Transcodage et capacité du serveur</a>.</p>
 <p>Les Infos du flux sont calculées au lancement de la lecture. Un seul cas leur
 échappe : une carte graphique saturée au moment précis où le flux démarre. Le
 flux bascule alors sur le processeur, et <strong>Administration → En cours de lecture</strong>

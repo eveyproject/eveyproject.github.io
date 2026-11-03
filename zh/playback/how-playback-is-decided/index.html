@@ -3385,6 +3385,7 @@
 </tbody>
 </table>
 <p>只看正在播放的那条音轨。如果文件里有一条没被选中的解说音轨是 DTS 格式，文件不会因此被转码。</p>
+<p>如果没有任何方式能在这台设备上播放某个文件，它会在播放开始前就被拒绝，并显示<strong>此服务器性能不足以播放此文件</strong>：见<a href="../transcoding/#sharing-the-capacity">转码与服务器容量</a>。</p>
 <p>流信息是在播放开始时计算的。只有一种情况它无法预见：视频流开始的那一刻，显卡正好已满负荷。这时视频流会改由处理器处理，<strong>管理 → 正在播放</strong>会显示实际使用的后端。</p>
 <h2 id="what-each-side-brings">每一方提供什么<a class="headerlink" href="#what-each-side-brings" title="Permanent link">¶</a></h2>
 <p><strong>文件。</strong> 编码、分辨率、位深、HDR 格式、码率，以及音轨和字幕轨，这些在扫描文件时就读取好了。</p>
@@ -3425,7 +3426,7 @@
 <!-- sources
 decision: internal/app/transcoding/decision.go - MakePlaybackDecisionWithPrefs, evaluateVideo, pixelFormatPlayable, evaluateAudio, selectedAudioSpec, servedBitrateBps, resolveMaxBitrate, checkBitrate, applyAudioChannelTarget (aacMaxTargetChannels)
 
-session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked)
+session: internal/app/transcoding/playback_plan_resolver.go - Decide, Reported, resolveDecided ; internal/app/transcoding/resolved_route.go - SpillReason (pool_full, title_blocked) ; internal/adapters/driving/http/transcode_vod_admission.go - ErrCodeSourceTooHeavy
 remote cap: internal/adapters/driving/grpcapi/playback_handler.go - resolvePlaybackPrefs ; internal/config/config.go - RemoteBitrateCapKbps
 client caps: internal/domain/transcoding/playback_decision.go - ClientProfile ; frontend/packages/client/src/web/codec.ts ; frontend/packages/media-caps/src/castUrl.ts
 example: internal/app/transcoding/testdata/route_golden.txt - "nvenc-pass | 2160p-hevc-hdr10-70m | hdr-tv{,-20m} | {plain,gpu-full,title-blocked}"
