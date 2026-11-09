@@ -3362,6 +3362,10 @@ Die Gruppen, die sich für ein erstes Diagramm lohnen:</p>
 <td>Größe des Segment-Caches auf der Festplatte und was die Bereinigung freigegeben hat.</td>
 </tr>
 <tr>
+<td><code>evey_hls_first_segment_seconds</code></td>
+<td>Wie lange eine Wiedergabe von ihrer Playlist bis zu ihrem ersten Segment gewartet hat, nach Auslieferungsweg (<code>transcode</code>, <code>ffmpeg-copy</code>). Die Wartezeit, die Zuschauer beim Start spüren.</td>
+</tr>
+<tr>
 <td><code>evey_mkvgo_walks_in_flight</code>, <code>evey_mkvgo_plan_stats</code></td>
 <td>Der eingebaute Packager: Abschnitte, die gerade gelesen werden, Lesevorgänge in der Warteschlange (<code>stat="slot_waits"</code>), siehe <a href="../../playback/mkvgo/#load-replaced-files-and-updates">MKVGo in Evey</a>.</td>
 </tr>
@@ -3375,6 +3379,7 @@ Die Gruppen, die sich für ein erstes Diagramm lohnen:</p>
 </tr>
 </tbody>
 </table>
+<p><a href="https://github.com/eveyproject/evey/blob/master/docs/operations/alerts.example.yml"><code>alerts.example.yml</code></a> enthält Beispiel-Alarmregeln auf Basis dieser Metriken, zum Kopieren in Ihre eigenen Prometheus-Regeldateien.</p>
 <h2 id="command-line">Kommandozeile<a class="headerlink" href="#command-line" title="Permanent link">¶</a></h2>
 <p><code>evey admin doctor</code> prüft den ganzen Server in einem Bericht; die anderen
 Befehle zur Diagnose stehen unter <a href="../../runbooks/cli/">Kommandozeile</a>.</p>
@@ -3383,7 +3388,7 @@ who's online: frontend/apps/web/src/features/admin/DashboardOnline.tsx (presence
 logs: internal/pkg/logger/logger.go - New (file only outside DevMode), rotatingWriter ; config EVEY_LOG_RETENTION_DAYS ; docker-compose.yml ./evey-data:/data
 labels: i18n admin.sessions.*, admin.systemHealth.*, admin.logs.where.*, admin.logs.live, admin.qoe.*, admin.analytics.*, admin.activity.*, admin.serverSettings.*RetentionDays, retentionSweepHint
 automatic limits: i18n admin.qoe.overrides.*
-metrics: internal/pkg/metrics/metrics.go (names) ; internal/adapters/driving/http/auth_middleware.go - httpScrapeOrAdminMiddleware (Bearer scrape token or admin JWT) ; docs/adr/0018-cmcd-qoe-pipeline.md
+metrics: internal/pkg/metrics/metrics.go (names), HLSFirstSegmentSeconds fed by internal/adapters/driving/http/transcode_first_segment.go ; internal/adapters/driving/http/auth_middleware.go - httpScrapeOrAdminMiddleware (Bearer scrape token or admin JWT) ; docs/adr/0018-cmcd-qoe-pipeline.md
 -->
 
 

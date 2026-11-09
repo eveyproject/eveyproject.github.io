@@ -3199,8 +3199,11 @@ Comment un flux est choisi au départ :
 portant cette clé dans <strong>Administration → Configuration du serveur → Entrées de
 configuration</strong> ; la ligne l'emporte sur l'environnement. Le panneau propose
 les clés des téléchargements ; les autres se saisissent telles qu'elles
-figurent ici. Toutes sont lues au démarrage : un changement s'applique au
-redémarrage suivant, quelle que soit la façon de le faire.</p>
+figurent ici. Elles sont lues au démarrage : un changement s'applique au
+redémarrage suivant, quelle que soit la façon de le faire, sauf pour les deux
+marquées « lecture suivante » : un changement s'applique en quelques secondes
+aux lectures lancées après lui, et une lecture déjà en cours garde le réglage
+avec lequel elle a commencé.</p>
 <h2 id="packaging">Empaquetage<a class="headerlink" href="#packaging" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3216,13 +3219,13 @@ redémarrage suivant, quelle que soit la façon de le faire.</p>
 <td><code>EVEY_HLS_ONDEMAND</code></td>
 <td>activé</td>
 <td>Sert un fichier dont les pistes peuvent être copiées en le réempaquetant à la volée, sans ffmpeg et sans rien écrire dans le cache. <code>off</code> : ces fichiers passent par la voie de copie ffmpeg.</td>
-<td>Entrées de configuration <code>transcoding.hls_ondemand</code>, redémarrage</td>
+<td>Entrées de configuration <code>transcoding.hls_ondemand</code>, lecture suivante</td>
 </tr>
 <tr>
 <td><code>EVEY_REMUX_COPY</code></td>
 <td>activé</td>
 <td>La voie de copie ffmpeg : la vidéo est copiée sans réencodage quand le fichier le permet. <code>off</code> : ces fichiers sont transcodés.</td>
-<td>Entrées de configuration <code>transcoding.remux_copy</code>, redémarrage</td>
+<td>Entrées de configuration <code>transcoding.remux_copy</code>, lecture suivante</td>
 </tr>
 <tr>
 <td><code>EVEY_HLS_AUDIO_RENDITION_ENABLED</code></td>

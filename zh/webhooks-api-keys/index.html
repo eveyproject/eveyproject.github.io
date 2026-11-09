@@ -3205,6 +3205,7 @@ API 密钥让脚本以您的身份调用服务器。两者都由管理员在管�
 </tbody>
 </table>
 <p>调用 <code>EmitEvent</code> 的插件会发布 <code>plugin.event.&lt;type&gt;</code>，订阅了<strong>所有事件</strong>的 Webhook 也会收到它。</p>
+<p>每个结束的会话都会触发 <code>playback.stopped</code>，并带有 <code>Reason</code>：播放器请求停止时为 <code>client</code>，服务器结束一个心跳已沉默的会话时为 <code>stale</code>（例如关闭的标签页、关掉的电视）。</p>
 <p><strong>投递。</strong> 每个事件都是一个 JSON 格式的 <code>POST</code> 请求，带有以下请求头：</p>
 <ul>
 <li><code>X-Evey-Delivery</code>：一个标识符，同一次投递的多次重试都使用同一个值，这样您的接收端就能忽略重复的请求；</li>

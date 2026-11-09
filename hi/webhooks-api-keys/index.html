@@ -3209,6 +3209,9 @@ event दिखाता है जो सर्वर प्रकाशित 
 </table>
 <p>जो प्लगइन <code>EmitEvent</code> कॉल करता है, वह <code>plugin.event.&lt;type&gt;</code> प्रकाशित करता है, जो
 <strong>सभी इवेंट</strong> वाले वेबहुक को भी मिलता है।</p>
+<p><code>playback.stopped</code> हर ख़त्म होने वाले सत्र के लिए भेजा जाता है, एक <code>Reason</code> के साथ:
+<code>client</code> जब प्लेयर ने रुकने को कहा, <code>stale</code> जब सर्वर ने ऐसा सत्र बंद किया जिसकी
+heartbeat चुप हो गई थी (बंद किया गया टैब, बंद किया गया टीवी)।</p>
 <p><strong>भेजना।</strong> हर event एक JSON <code>POST</code> है, इन header के साथ:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: एक पहचान जो एक ही भेजने की सारी कोशिशों में एक जैसी रहती है,

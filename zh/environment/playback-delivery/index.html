@@ -3193,8 +3193,9 @@
 这些开关的用途，是在排查问题时关闭某种处理方式，或者主动开启一种默认关闭的处理方式。
 播放方式最初是如何选择的：见<a href="../../playback/how-playback-is-decided/">Evey 如何选择播放方式</a>。</p>
 <p>有面板键的变量，也可以在<strong>管理 → 服务器配置 → 配置条目</strong>里用这个键添加一行来设置；这一行优先于环境变量。
-面板会提示下载相关的键；其他的键请按这里写的样子输入。它们都在启动时读取，
-所以不管用哪种方式修改，都要到下次重启才生效。</p>
+面板会提示下载相关的键；其他的键请按这里写的样子输入。它们在启动时读取，
+所以不管用哪种方式修改，都要到下次重启才生效。标为“下次播放”的两项例外：
+修改后几秒内对之后开始的播放生效，已经在进行的播放保持开始时的设置。</p>
 <h2 id="packaging">打包<a class="headerlink" href="#packaging" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3210,13 +3211,13 @@
 <td><code>EVEY_HLS_ONDEMAND</code></td>
 <td>开启</td>
 <td>如果文件的轨道可以直接复制，就在发送时即时重新打包，不用 ffmpeg，也不写入缓存。<code>off</code>：这类文件改用 ffmpeg 的复制方式。</td>
-<td>配置条目 <code>transcoding.hls_ondemand</code>，需重启</td>
+<td>配置条目 <code>transcoding.hls_ondemand</code>，下次播放</td>
 </tr>
 <tr>
 <td><code>EVEY_REMUX_COPY</code></td>
 <td>开启</td>
 <td>ffmpeg 的复制方式：文件允许时，视频直接复制，不重新编码。<code>off</code>：这些文件改为转码。</td>
-<td>配置条目 <code>transcoding.remux_copy</code>，需重启</td>
+<td>配置条目 <code>transcoding.remux_copy</code>，下次播放</td>
 </tr>
 <tr>
 <td><code>EVEY_HLS_AUDIO_RENDITION_ENABLED</code></td>

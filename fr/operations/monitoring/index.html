@@ -3356,6 +3356,10 @@ Les familles qui méritent un premier graphique :</p>
 <td>Taille du cache de segments sur le disque, et ce que le balayage a libéré.</td>
 </tr>
 <tr>
+<td><code>evey_hls_first_segment_seconds</code></td>
+<td>Le temps qu'une lecture a attendu entre sa playlist et son premier segment, par chemin de service (<code>transcode</code>, <code>ffmpeg-copy</code>). L'attente que ressentent les spectateurs au démarrage.</td>
+</tr>
+<tr>
 <td><code>evey_mkvgo_walks_in_flight</code>, <code>evey_mkvgo_plan_stats</code></td>
 <td>L'empaqueteur intégré : fenêtres en cours de lecture, lectures en attente (<code>stat="slot_waits"</code>), voir <a href="../../playback/mkvgo/#load-replaced-files-and-updates">MKVGo dans Evey</a>.</td>
 </tr>
@@ -3369,6 +3373,7 @@ Les familles qui méritent un premier graphique :</p>
 </tr>
 </tbody>
 </table>
+<p><a href="https://github.com/eveyproject/evey/blob/master/docs/operations/alerts.example.yml"><code>alerts.example.yml</code></a> contient des exemples de règles d'alerte bâties sur ces métriques, à copier dans vos propres fichiers de règles Prometheus.</p>
 <h2 id="command-line">Ligne de commande<a class="headerlink" href="#command-line" title="Permanent link">¶</a></h2>
 <p><code>evey admin doctor</code> vérifie tout le serveur en un seul rapport ; les autres
 commandes de diagnostic sont listées dans la

@@ -3383,7 +3383,7 @@ values and applies them without a restart. How the gate decides:
 <tr>
 <td><code>EVEY_RATELIMIT_LOGIN_MAX</code></td>
 <td><code>10</code></td>
-<td>Sign-in attempts per address per minute.</td>
+<td>Sign-in attempts per address per minute. The silent session renewal has its own fixed budget and never spends this one.</td>
 <td>Server Config → Accounts &amp; security → <strong>Login Rate Limit</strong>, live</td>
 </tr>
 <tr>

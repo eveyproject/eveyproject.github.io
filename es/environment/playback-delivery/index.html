@@ -3198,9 +3198,11 @@ elige un flujo en primer lugar:
 <p>Una variable con clave de panel también se puede definir como una fila con
 esa clave en <strong>Administración → Configuración del servidor → Entradas de
 configuración</strong>; la fila tiene prioridad sobre el entorno. El panel sugiere las claves de las
-descargas; las demás se escriben tal como aparecen aquí. Todas se leen al
+descargas; las demás se escriben tal como aparecen aquí. Se leen al
 arrancar, así que un cambio se aplica en el siguiente reinicio, se haga como
-se haga.</p>
+se haga, salvo las dos marcadas «siguiente reproducción»: un cambio en ellas
+se aplica en pocos segundos a las reproducciones que empiezan después, y una
+reproducción ya en curso conserva el ajuste con el que empezó.</p>
 <h2 id="packaging">Empaquetado<a class="headerlink" href="#packaging" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3216,13 +3218,13 @@ se haga.</p>
 <td><code>EVEY_HLS_ONDEMAND</code></td>
 <td>activado</td>
 <td>Sirve un archivo cuyas pistas se pueden copiar reempaquetándolo sobre la marcha, sin ffmpeg y sin escribir en la caché. <code>off</code>: esos archivos pasan por la vía de copia de ffmpeg.</td>
-<td>Entradas de configuración <code>transcoding.hls_ondemand</code>, al reiniciar</td>
+<td>Entradas de configuración <code>transcoding.hls_ondemand</code>, siguiente reproducción</td>
 </tr>
 <tr>
 <td><code>EVEY_REMUX_COPY</code></td>
 <td>activado</td>
 <td>La vía de copia de ffmpeg: el vídeo se copia sin recodificar cuando el archivo lo permite. <code>off</code>: esos archivos se transcodifican.</td>
-<td>Entradas de configuración <code>transcoding.remux_copy</code>, al reiniciar</td>
+<td>Entradas de configuración <code>transcoding.remux_copy</code>, siguiente reproducción</td>
 </tr>
 <tr>
 <td><code>EVEY_HLS_AUDIO_RENDITION_ENABLED</code></td>

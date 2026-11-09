@@ -3212,6 +3212,10 @@ veröffentlicht, unter anderem:</p>
 </table>
 <p>Ein Plugin, das <code>EmitEvent</code> aufruft, veröffentlicht <code>plugin.event.&lt;type&gt;</code>.
 Ein Webhook auf <strong>Alle Ereignisse</strong> empfängt auch das.</p>
+<p><code>playback.stopped</code> wird für jede beendete Sitzung ausgelöst, mit einem <code>Reason</code>:
+<code>client</code>, wenn der Player das Stoppen gemeldet hat, <code>stale</code>, wenn der Server eine
+Sitzung beendet hat, deren Heartbeat verstummt ist (ein geschlossener Tab, ein
+ausgeschalteter Fernseher).</p>
 <p><strong>Zustellung.</strong> Jedes Ereignis ist ein JSON-<code>POST</code> mit diesen Headern:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: eine Kennung, die über alle Wiederholungen einer

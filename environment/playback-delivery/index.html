@@ -3197,8 +3197,11 @@ off. How a stream is chosen in the first place:
 <p>A variable with a panel key can also be set as a row with that key in
 <strong>Admin → Server Config → Config entries</strong>; the row wins over the
 environment. The panel suggests the download keys; the others are typed in
-as they appear here. All of them are read at startup, so a change applies at
-the next restart whichever way it is made.</p>
+as they appear here. They are read at startup, so a change applies at the
+next restart whichever way it is made, except the two marked "next
+playback": a change to those applies within a few seconds to the playbacks
+that start after it, and a playback already running keeps the setting it
+started with.</p>
 <h2 id="packaging">Packaging<a class="headerlink" href="#packaging" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3214,13 +3217,13 @@ the next restart whichever way it is made.</p>
 <td><code>EVEY_HLS_ONDEMAND</code></td>
 <td>on</td>
 <td>Serves a file whose tracks can be copied by repackaging it on the fly, without ffmpeg and without writing to the cache. <code>off</code>: such files go through the ffmpeg copy path instead.</td>
-<td>Config entries <code>transcoding.hls_ondemand</code>, restart</td>
+<td>Config entries <code>transcoding.hls_ondemand</code>, next playback</td>
 </tr>
 <tr>
 <td><code>EVEY_REMUX_COPY</code></td>
 <td>on</td>
 <td>The ffmpeg copy path: the video is copied without re-encoding when the file allows it. <code>off</code>: those files are transcoded.</td>
-<td>Config entries <code>transcoding.remux_copy</code>, restart</td>
+<td>Config entries <code>transcoding.remux_copy</code>, next playback</td>
 </tr>
 <tr>
 <td><code>EVEY_HLS_AUDIO_RENDITION_ENABLED</code></td>

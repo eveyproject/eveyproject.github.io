@@ -3211,6 +3211,9 @@ entre ellos:</p>
 </table>
 <p>Un plugin que llama a <code>EmitEvent</code> publica <code>plugin.event.&lt;type&gt;</code>, que también
 recibe un webhook suscrito a <strong>Todos los eventos</strong>.</p>
+<p><code>playback.stopped</code> se emite por cada sesión que termina, con un <code>Reason</code>:
+<code>client</code> cuando el reproductor pidió parar, <code>stale</code> cuando el servidor cerró una
+sesión cuyo latido se apagó (una pestaña cerrada, un televisor apagado).</p>
 <p><strong>Envío.</strong> Cada evento es un <code>POST</code> en JSON, con estas cabeceras:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: un identificador que no cambia entre los reintentos de

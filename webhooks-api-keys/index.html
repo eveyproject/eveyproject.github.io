@@ -3210,6 +3210,9 @@ form offers every event the server publishes; among them:</p>
 </table>
 <p>A plugin that calls <code>EmitEvent</code> publishes <code>plugin.event.&lt;type&gt;</code>, which a
 webhook on <strong>All events</strong> receives too.</p>
+<p><code>playback.stopped</code> is raised for every session that ends, with a <code>Reason</code>:
+<code>client</code> when the player said stop, <code>stale</code> when the server ended a session
+whose heartbeat went quiet (a closed tab, a television switched off).</p>
 <p><strong>Delivery.</strong> Each event is a JSON <code>POST</code>, with these headers:</p>
 <ul>
 <li><code>X-Evey-Delivery</code>: an identifier that stays the same across the retries of

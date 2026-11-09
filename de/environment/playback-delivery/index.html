@@ -3199,8 +3199,11 @@ Stream überhaupt gewählt wird:
 Zeile mit diesem Schlüssel unter <strong>Verwaltung → Serverkonfiguration →
 Konfigurationseinträge</strong> setzen. Die Zeile hat Vorrang vor der Umgebung.
 Der Verwaltungsbereich schlägt die Download-Schlüssel vor; die anderen tippen
-Sie so ein, wie sie hier stehen. Alle werden beim Start gelesen: Eine Änderung
-gilt also ab dem nächsten Neustart, egal auf welchem Weg sie gemacht wurde.</p>
+Sie so ein, wie sie hier stehen. Sie werden beim Start gelesen: Eine Änderung
+gilt also ab dem nächsten Neustart, egal auf welchem Weg sie gemacht wurde.
+Ausgenommen sind die beiden mit „nächste Wiedergabe“: Eine Änderung daran gilt
+nach wenigen Sekunden für die danach gestarteten Wiedergaben, und eine
+laufende Wiedergabe behält die Einstellung, mit der sie begonnen hat.</p>
 <h2 id="packaging">Verpackung<a class="headerlink" href="#packaging" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3216,13 +3219,13 @@ gilt also ab dem nächsten Neustart, egal auf welchem Weg sie gemacht wurde.</p>
 <td><code>EVEY_HLS_ONDEMAND</code></td>
 <td>an</td>
 <td>Liefert eine Datei, deren Spuren kopiert werden können, indem sie im laufenden Betrieb neu verpackt wird, ohne ffmpeg und ohne in den Cache zu schreiben. <code>off</code>: Solche Dateien gehen stattdessen über den Kopierweg von ffmpeg.</td>
-<td>Konfigurationseinträge <code>transcoding.hls_ondemand</code>, Neustart</td>
+<td>Konfigurationseinträge <code>transcoding.hls_ondemand</code>, nächste Wiedergabe</td>
 </tr>
 <tr>
 <td><code>EVEY_REMUX_COPY</code></td>
 <td>an</td>
 <td>Der Kopierweg von ffmpeg: Das Video wird ohne neue Kodierung kopiert, wenn die Datei es erlaubt. <code>off</code>: Diese Dateien werden transkodiert.</td>
-<td>Konfigurationseinträge <code>transcoding.remux_copy</code>, Neustart</td>
+<td>Konfigurationseinträge <code>transcoding.remux_copy</code>, nächste Wiedergabe</td>
 </tr>
 <tr>
 <td><code>EVEY_HLS_AUDIO_RENDITION_ENABLED</code></td>

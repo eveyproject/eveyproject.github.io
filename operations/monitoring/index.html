@@ -3351,6 +3351,10 @@ families worth a first chart:</p>
 <td>Size of the segment cache on disk, and what the sweeper freed.</td>
 </tr>
 <tr>
+<td><code>evey_hls_first_segment_seconds</code></td>
+<td>How long a playback waited from its playlist to its first segment, by serving path (<code>transcode</code>, <code>ffmpeg-copy</code>). The wait viewers feel at start-up.</td>
+</tr>
+<tr>
 <td><code>evey_mkvgo_walks_in_flight</code>, <code>evey_mkvgo_plan_stats</code></td>
 <td>The in-process packager: windows being read, queued reads (<code>stat="slot_waits"</code>), see <a href="../../playback/mkvgo/#load-replaced-files-and-updates">MKVGo in Evey</a>.</td>
 </tr>
@@ -3364,6 +3368,8 @@ families worth a first chart:</p>
 </tr>
 </tbody>
 </table>
+<p><a href="https://github.com/eveyproject/evey/blob/master/docs/operations/alerts.example.yml"><code>alerts.example.yml</code></a> holds example alerting rules built
+on these metrics, to copy into your own Prometheus rule files.</p>
 <h2 id="command-line">Command line<a class="headerlink" href="#command-line" title="Permanent link">¶</a></h2>
 <p><code>evey admin doctor</code> checks the whole server in one report; the other
 diagnostic commands are listed in <a href="../../runbooks/cli/">Command line</a>.</p>
@@ -3373,7 +3379,7 @@ logs: internal/pkg/logger/logger.go - New (file only outside DevMode), rotatingW
 disks and trends: internal/pkg/sysinfo/diskio.go (DiskIO, DiskSaturated, SaturationAwaitMs) ; internal/app/activity/metrics_sampler.go (recordDisks, WithStorage) ; postgres server_metric_repo.go GetBucketed/IdleDiskAwaitMs ; proto ActivityService.ListServerMetrics, DashboardInfo.disks ; web features/admin/SystemTrends.tsx, DiskIO.tsx ; tests sysinfo diskio_test.go, SystemTrends.test.tsx
 labels: i18n admin.sessions.*, admin.systemHealth.*, admin.logs.where.*, admin.logs.live, admin.qoe.*, admin.analytics.*, admin.activity.*, admin.serverSettings.*RetentionDays, retentionSweepHint
 automatic limits: i18n admin.qoe.overrides.*
-metrics: internal/pkg/metrics/metrics.go (names) ; internal/adapters/driving/http/auth_middleware.go - httpScrapeOrAdminMiddleware (Bearer scrape token or admin JWT) ; docs/adr/0018-cmcd-qoe-pipeline.md
+metrics: internal/pkg/metrics/metrics.go (names), HLSFirstSegmentSeconds fed by internal/adapters/driving/http/transcode_first_segment.go ; internal/adapters/driving/http/auth_middleware.go - httpScrapeOrAdminMiddleware (Bearer scrape token or admin JWT) ; docs/adr/0018-cmcd-qoe-pipeline.md
 -->
 
 

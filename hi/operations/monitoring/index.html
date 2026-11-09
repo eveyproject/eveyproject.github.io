@@ -3351,6 +3351,10 @@ Grafana कहीं से भी बिना साइन इन किए �
 <td>डिस्क पर segment कैश का आकार, और सफ़ाई प्रक्रिया ने कितनी जगह खाली की।</td>
 </tr>
 <tr>
+<td><code>evey_hls_first_segment_seconds</code></td>
+<td>किसी प्लेबैक ने अपनी playlist से पहले segment तक कितना इंतज़ार किया, serving path के हिसाब से (<code>transcode</code>, <code>ffmpeg-copy</code>)। शुरुआत में दर्शकों को महसूस होने वाला इंतज़ार।</td>
+</tr>
+<tr>
 <td><code>evey_mkvgo_walks_in_flight</code>, <code>evey_mkvgo_plan_stats</code></td>
 <td>सर्वर के अंदर चलने वाला packager: पढ़ी जा रही windows, कतार में लगी reads (<code>stat="slot_waits"</code>), देखें <a href="../../playback/mkvgo/#load-replaced-files-and-updates">Evey में MKVGo</a>।</td>
 </tr>
@@ -3364,6 +3368,7 @@ Grafana कहीं से भी बिना साइन इन किए �
 </tr>
 </tbody>
 </table>
+<p><a href="https://github.com/eveyproject/evey/blob/master/docs/operations/alerts.example.yml"><code>alerts.example.yml</code></a> में इन metrics पर बने alerting नियमों के उदाहरण हैं, जिन्हें आप अपनी Prometheus नियम फ़ाइलों में कॉपी कर सकते हैं।</p>
 <h2 id="command-line">कमांड लाइन<a class="headerlink" href="#command-line" title="Permanent link">¶</a></h2>
 <p><code>evey admin doctor</code> एक ही रिपोर्ट में पूरे सर्वर की जाँच करता है; जाँच की बाकी
 कमांड <a href="../../runbooks/cli/">कमांड लाइन</a> में दी गई हैं।</p>
@@ -3372,7 +3377,7 @@ who's online: frontend/apps/web/src/features/admin/DashboardOnline.tsx (presence
 logs: internal/pkg/logger/logger.go - New (file only outside DevMode), rotatingWriter ; config EVEY_LOG_RETENTION_DAYS ; docker-compose.yml ./evey-data:/data
 labels: i18n admin.sessions.*, admin.systemHealth.*, admin.logs.where.*, admin.logs.live, admin.qoe.*, admin.analytics.*, admin.activity.*, admin.serverSettings.*RetentionDays, retentionSweepHint
 automatic limits: i18n admin.qoe.overrides.*
-metrics: internal/pkg/metrics/metrics.go (names) ; internal/adapters/driving/http/auth_middleware.go - httpScrapeOrAdminMiddleware (Bearer scrape token or admin JWT) ; docs/adr/0018-cmcd-qoe-pipeline.md
+metrics: internal/pkg/metrics/metrics.go (names), HLSFirstSegmentSeconds fed by internal/adapters/driving/http/transcode_first_segment.go ; internal/adapters/driving/http/auth_middleware.go - httpScrapeOrAdminMiddleware (Bearer scrape token or admin JWT) ; docs/adr/0018-cmcd-qoe-pipeline.md
 -->
 
 
