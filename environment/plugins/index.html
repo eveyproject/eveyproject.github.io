@@ -3299,13 +3299,13 @@ Resource limits</strong> apply to every plugin and win over them.</p>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
 <td><code>warn</code></td>
-<td><code>off</code>, <code>warn</code> or <code>enforce</code>: what a failed signature check does. <code>enforce</code> without a key refuses to start.</td>
+<td><code>off</code>, <code>warn</code> or <code>enforce</code>: what a failed signature check does. Signatures are checked against the key each package carries and the trusted-publisher list, so no key is needed.</td>
 <td>none</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>empty</td>
-<td>Path to the PEM public key signatures are checked against. With <code>warn</code> and no key, nothing is verified and the server warns at startup.</td>
+<td>Optional path to your own publisher's PEM public key, added to the trusted publishers at every start.</td>
 <td>none</td>
 </tr>
 </tbody>

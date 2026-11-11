@@ -1818,17 +1818,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#media-maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mantenimiento de los medios
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#per-title-encoding" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1840,10 +1829,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#diagnostics" class="md-nav__link">
+  <a href="#media-maintenance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Diagnóstico
+        Mantenimiento de los medios
       
     </span>
   </a>
@@ -1855,6 +1844,17 @@
     <span class="md-ellipsis">
       
         Capacidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnóstico
       
     </span>
   </a>
@@ -3281,17 +3281,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#media-maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mantenimiento de los medios
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#per-title-encoding" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3303,10 +3292,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#diagnostics" class="md-nav__link">
+  <a href="#media-maintenance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Diagnóstico
+        Mantenimiento de los medios
       
     </span>
   </a>
@@ -3318,6 +3307,17 @@
     <span class="md-ellipsis">
       
         Capacidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnóstico
       
     </span>
   </a>
@@ -3487,6 +3487,10 @@ actual.</p>
 </span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>                                             the visitor accounts, the four libraries, and with
 </span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>                                             --media the freely licensed media (gigabytes). Refuses
 </span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>                                             unless EVEY_DEMO=1. Dry-run by default.
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>evey admin rollback                          Read-only advisor: running version, schema, newest
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>                                             pre-migration backup and the exact HOST commands to roll
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>                                             back. The container has no Docker access, by design, so
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>                                             it advises rather than acts.
 </span></code></pre></div>
 <p><code>reset-password</code> y <code>rotate-jwt-key</code> cierran sesiones los dos: las del usuario
 en el primer caso, las de todo el mundo en el segundo. Las apps abiertas lo
@@ -3506,83 +3510,79 @@ completos están en <a href="../recovery/">Recuperación</a>.</p>
 desarrollo, el Makefile ofrece estos tres como <code>make migrate-up</code>,
 <code>make migrate-down</code> y <code>make migrate-version</code>, ejecutados en el contenedor de
 desarrollo <code>evey-server</code>.</p>
+<h3 id="per-title-encoding">Codificación por título<a class="headerlink" href="#per-title-encoding" title="Permanent link">¶</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>evey admin reclassify &lt;media-id&gt;             Force-recompute the complexity class of one media item.
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>evey admin reclassify --all                  Wipe every classified row; the background worker then
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                             re-classifies the whole library at its background pace.
+</span></code></pre></div>
 <h3 id="media-maintenance">Mantenimiento de los medios<a class="headerlink" href="#media-maintenance" title="Permanent link">¶</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>evey admin reindex-no-cue --root &lt;dir&gt; [--apply] [--limit N] [--mode auto|inplace|rewrite] [--deep-verify] [--resync] [--keep-backup=false]
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                                             Rebuild the seek index (Cues) of MKV/WebM files that
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                             lack one, fixing slow resume. DRY-RUN BY DEFAULT: pass
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                                             --apply to rewrite. Each rewrite is validated and
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                                             cross-checked and keeps a .mkvgobak backup; --limit N for
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                                             a cautious first run; --keep-backup=false drops the
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                                             backups and enforces --deep-verify instead. --mode auto
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                                             takes the surgical in-place patch when the file layout
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                                             allows it and rewrites otherwise; inplace patches only
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                                             (no backup); rewrite always rebuilds and swaps.
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                                             --resync repairs files with a CORRUPTED region the strict
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                                             pass refuses: it skips the damage, keeps the rest and
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                                             reports the lost bytes. LONG: rewrites each file in full
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                                             (hours on a large library); shows a progress bar.
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>evey admin validate-streaming --root &lt;dir&gt; [--errors-only]
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>                                             Read-only report of each file's streaming readiness: a
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>                                             missing Cues index, cue points on a non-video track, cue
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>                                             times matching no keyframe, video tracks without a
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>                                             DefaultDuration. A file with errors falls back to the
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>                                             ffmpeg pipeline. --errors-only skips the warnings.
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>evey admin artwork-gc [--root &lt;dir&gt;] [--apply]
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>                                             Delete artwork files on disk that no DB row references.
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>                                             Dry-run by default. --root defaults to /data/artworks.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>evey admin reindex-no-cue --root &lt;dir&gt; [--apply] [--limit N] [--mode auto|inplace|rewrite] [--deep-verify] [--resync] [--keep-backup=false]
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                                             Rebuild the seek index (Cues) of MKV/WebM files that
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                                             lack one, fixing slow resume. DRY-RUN BY DEFAULT: pass
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>                                             --apply to rewrite. Each rewrite is validated and
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                                             cross-checked and keeps a .mkvgobak backup; --limit N for
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>                                             a cautious first run; --keep-backup=false drops the
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>                                             backups and enforces --deep-verify instead. --mode auto
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>                                             takes the surgical in-place patch when the file layout
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                                             allows it and rewrites otherwise; inplace patches only
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>                                             (no backup); rewrite always rebuilds and swaps.
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>                                             --resync repairs files with a CORRUPTED region the strict
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>                                             pass refuses: it skips the damage, keeps the rest and
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>                                             reports the lost bytes. LONG: rewrites each file in full
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>                                             (hours on a large library); shows a progress bar.
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>evey admin validate-streaming --root &lt;dir&gt; [--errors-only]
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>                                             Read-only report of each file's streaming readiness: a
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>                                             missing Cues index, cue points on a non-video track, cue
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>                                             times matching no keyframe, video tracks without a
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>                                             DefaultDuration. A file with errors falls back to the
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>                                             ffmpeg pipeline. --errors-only skips the warnings.
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>evey admin artwork-gc [--root &lt;dir&gt;] [--apply]
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>                                             Delete artwork files on disk that no DB row references.
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>                                             Dry-run by default. --root defaults to /data/artworks.
 </span></code></pre></div>
 <p>El mismo motor funciona detrás de <strong>Administración → Salud de medios</strong>, que
 es la forma más fácil de reparar una biblioteca: consulta
 <a href="../media-health/">Salud de medios</a>.</p>
-<h3 id="per-title-encoding">Codificación por título<a class="headerlink" href="#per-title-encoding" title="Permanent link">¶</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>evey admin reclassify &lt;media-id&gt;             Force-recompute the complexity class of one media item.
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>evey admin reclassify --all                  Wipe every classified row; the background worker then
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                                             re-classifies the whole library at its background pace.
+<h3 id="capacity">Capacidad<a class="headerlink" href="#capacity" title="Permanent link">¶</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>evey admin load-test [minimal|standard|max] [--scenario &lt;s&gt;] [--mode &lt;m&gt;] [--max-viewers N] [--duration S] [--cold-cache]
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                             Needs a LIVE server: it is an HTTP client of the local
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                             gateway. Ramps simulated viewers until the box hits its
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                                             ceiling, then reports the sustained count and latencies.
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                                             Scenarios: transcode, natural, mkvgo, light (80/20),
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                                             balanced (50/50, default), heavy (20/80), mkvgo+N.
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                                             Modes: ramp (default), flash, seek, endurance. Presets:
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>                                             minimal (4 viewers), standard (12), max (32); an explicit
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                                             --max-viewers wins. --cold-cache keeps evicting the
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                                             library from the page cache so the run measures the
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                                             storage, not the RAM. admission_full is the ceiling
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                                             verdict (exit 0), not an error. Short sanity run:
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                                             load-test --scenario balanced --max-viewers 4
 </span></code></pre></div>
 <h3 id="diagnostics">Diagnóstico<a class="headerlink" href="#diagnostics" title="Permanent link">¶</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>evey admin doctor [--repair]                 Health-check DB, schema, jwt.key, Meilisearch (plus
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                             index drift), media mounts (can the server write each
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>                                             library root?), cache dirs, ffmpeg/mkvgo, trusted
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                                             proxies, remote access and disk. One line per check
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                                             (ok / WARN / FAIL) with a remediation hint; exits 1 when
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                                             a check fails. --repair applies only the safe fixes
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                                             (create and chown the missing writable dirs).
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>evey admin rollback                          Read-only advisor: running version, schema, newest
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                                             pre-migration backup and the exact HOST commands to roll
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                                             back. The container has no Docker access, by design, so
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                                             it advises rather than acts.
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>evey admin route-bench [--backend nvenc|vaapi|qsv|none] [--heights 1080,2160] [--fps 24,30,50,60] [--out rows.csv] [--json run.json] [&lt;file&gt;...]
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                                             Measure what a session of each transcode route costs on
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                                             this host against the calibration and the cost model.
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                                             Minutes of full load; never while serving. More flags
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                                             (--device --routes --classes --duration --workdir
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                                             --capability): the full list is in
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                                             `evey admin route-bench --help`.
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>evey admin ladder-bench [--scenes 3] [--window 8] [--heights 1080,720] [--crf 18,23,28] [--out rows.csv] [--efficiency --mode full|fast|incremental] &lt;file&gt;...
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                                             Encode a few scenes of each title at fixed CRFs and
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                                             score encode cost against the ladder's complexity
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                                             features. Runs ffmpeg for minutes; never while serving.
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>                                             More flags (--preset --ref-height --ref-crf --cache
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>                                             --encoders --device): the full list is in
-</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>                                             `evey admin ladder-bench --help`.
-</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>evey admin ladder-probe [--window 8] [--cache &lt;dir&gt;] [--out &lt;dir&gt;] &lt;file&gt;...
-</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>                                             Run the per-title probe on the given files: probe time,
-</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>                                             early-stop rate and points. Reads and encodes only.
-</span></code></pre></div>
-<h3 id="capacity">Capacidad<a class="headerlink" href="#capacity" title="Permanent link">¶</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>evey admin load-test [minimal|standard|max] [--scenario &lt;s&gt;] [--mode &lt;m&gt;] [--max-viewers N] [--duration S] [--cold-cache]
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>                                             Needs a LIVE server: it is an HTTP client of the local
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>                                             gateway. Ramps simulated viewers until the box hits its
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>                                             ceiling, then reports the sustained count and latencies.
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>                                             Scenarios: transcode, natural, mkvgo, light (80/20),
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>                                             balanced (50/50, default), heavy (20/80), mkvgo+N.
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>                                             Modes: ramp (default), flash, seek, endurance. Presets:
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>                                             minimal (4 viewers), standard (12), max (32); an explicit
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>                                             --max-viewers wins. --cold-cache keeps evicting the
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                                             library from the page cache so the run measures the
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                                             storage, not the RAM. admission_full is the ceiling
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                                             verdict (exit 0), not an error. Short sanity run:
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                                             load-test --scenario balanced --max-viewers 4
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>evey admin doctor [--repair]                 Health-check DB, schema, jwt.key, Meilisearch (plus
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>                                             index drift), media mounts (can the server write each
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>                                             library root?), cache dirs, ffmpeg/mkvgo, trusted
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>                                             proxies, remote access and disk. One line per check
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>                                             (ok / WARN / FAIL) with a remediation hint; exits 1 when
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>                                             a check fails. --repair applies only the safe fixes
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>                                             (create and chown the missing writable dirs).
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>evey admin route-bench [--backend nvenc|vaapi|qsv|none] [--heights 1080,2160] [--fps 24,30,50,60] [--out rows.csv] [--json run.json] [&lt;file&gt;...]
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>                                             Measure what a session of each transcode route costs on
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                                             this host against the calibration and the cost model.
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                                             Minutes of full load; never while serving. More flags
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                                             (--device --routes --classes --duration --workdir
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                                             --capability): the full list is in
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>                                             `evey admin route-bench --help`.
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>evey admin ladder-bench [--scenes 3] [--window 8] [--heights 1080,720] [--crf 18,23,28] [--out rows.csv] [--efficiency --mode full|fast|incremental] &lt;file&gt;...
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>                                             Encode a few scenes of each title at fixed CRFs and
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>                                             score encode cost against the ladder's complexity
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>                                             features. Runs ffmpeg for minutes; never while serving.
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>                                             More flags (--preset --ref-height --ref-crf --cache
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>                                             --encoders --device): the full list is in
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>                                             `evey admin ladder-bench --help`.
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>evey admin ladder-probe [--window 8] [--cache &lt;dir&gt;] [--out &lt;dir&gt;] &lt;file&gt;...
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>                                             Run the per-title probe on the given files: probe time,
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>                                             early-stop rate and points. Reads and encodes only.
 </span></code></pre></div>
 <h3 id="completion-sources">Fuentes del autocompletado<a class="headerlink" href="#completion-sources" title="Permanent link">¶</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>evey admin list-users                        Print user emails, one per line (drives --user completion).

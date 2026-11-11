@@ -3302,13 +3302,13 @@ prioridad sobre ellos.</p>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
 <td><code>warn</code></td>
-<td><code>off</code>, <code>warn</code> o <code>enforce</code>: qué pasa cuando falla la comprobación de una firma. <code>enforce</code> sin clave impide el arranque.</td>
+<td><code>off</code>, <code>warn</code> o <code>enforce</code>: qué pasa cuando falla la comprobación de una firma. Las firmas se comprueban con la clave que lleva cada paquete y con la lista de editores de confianza, así que no hace falta ninguna clave.</td>
 <td>ninguno</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>vacío</td>
-<td>Ruta de la clave pública PEM con la que se comprueban las firmas. Con <code>warn</code> y sin clave, no se verifica nada y el servidor avisa al arrancar.</td>
+<td>Ruta opcional a la clave pública PEM de tu propio editor, añadida a los editores de confianza en cada arranque.</td>
 <td>ninguno</td>
 </tr>
 </tbody>

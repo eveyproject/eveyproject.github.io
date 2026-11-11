@@ -3452,8 +3452,8 @@ monorepo हैं (मोबाइल और टीवी के लिए Reac
 हैं जो वही domain port लागू करते हैं: 21 में से 20 domain package के साथ एक <code>fakes/</code>
 sub-package आता है।</p>
 <h2 id="bounded-contexts">Bounded context<a class="headerlink" href="#bounded-contexts" title="Permanent link">¶</a></h2>
-<p>बत्तीस context package <code>internal/domain/</code> और <code>internal/app/</code> के नीचे हैं: 19
-दोनों परतों में हैं, 2 सिर्फ़ domain में (<code>ratings</code>, <code>shared</code>), 11 सिर्फ़ app में। ये
+<p>तैंतीस context package <code>internal/domain/</code> और <code>internal/app/</code> के नीचे हैं: 19
+दोनों परतों में हैं, 2 सिर्फ़ domain में (<code>ratings</code>, <code>shared</code>), 12 सिर्फ़ app में। ये
 कुछ हद तक एक साझा bus पर domain event के ज़रिए साथ काम करते हैं; app परत पड़ोसी
 context का domain package सीधे भी पढ़ती है (देखें <a href="#relations">संबंध</a>)।</p>
 <table>
@@ -3573,6 +3573,10 @@ context का domain package सीधे भी पढ़ती है (दे
 <td>एडमिन के शुरू किए मीडिया रखरखाव: सीक इंडेक्स फिर से बनाना, मरम्मत का जर्नल, वापस लेना, ऑडियो की अखंडता</td>
 </tr>
 <tr>
+<td><code>prunehold</code> (सिर्फ़ app)</td>
+<td>किसी स्कैन में गायब फ़ाइलों को एक साथ हटाना तब तक रोके रखता है जब तक कोई एडमिन उसकी पुष्टि न करे (<code>library.prune.suspended</code>)</td>
+</tr>
+<tr>
 <td><code>presence</code> (सिर्फ़ app)</td>
 <td>मेमोरी में रहने वाला, न सहेजा जाने वाला रजिस्टर कि अभी कौन जुड़ा है</td>
 </tr>
@@ -3616,8 +3620,8 @@ context का domain package सीधे भी पढ़ती है (दे
 </tr>
 <tr>
 <td><code>user</code></td>
-<td><code>UserCreated</code>, <code>user.password.reset_requested</code></td>
-<td>पहले का कोई subscriber नहीं; दूसरे को <code>email</code> driven adapter लेता है</td>
+<td><code>UserCreated</code>, <code>user.password.reset_requested</code>, <code>user.login.succeeded</code> / <code>user.login.failed</code></td>
+<td><code>UserCreated</code> का कोई subscriber नहीं; रीसेट के अनुरोध को <code>email</code> driven adapter लेता है; लॉगिन वाले events को <code>activity</code> (लॉगिन इतिहास)</td>
 </tr>
 <tr>
 <td><code>pluginrunner</code></td>
@@ -3647,7 +3651,7 @@ context का domain package सीधे भी पढ़ती है (दे
 <h2 id="typical-data-flow---user-plays-a-media">आम डेटा का रास्ता - "उपयोगकर्ता एक मीडिया चलाता है"<a class="headerlink" href="#typical-data-flow---user-plays-a-media" title="Permanent link">¶</a></h2>
 <ol>
 <li>मोबाइल/वेब क्लाइंट <code>POST /api/v1/playback/start</code> कॉल करता है (grpc-gateway route)।</li>
-<li><code>internal/adapters/driving/http</code> अपना auth middleware चलाता है (<code>auth_middleware.go</code>, <code>httpAuthMiddleware</code>), सेशन निकालता है।</li>
+<li><code>internal/adapters/driving/http</code> अनुरोध grpc-gateway को सौंपता है (rate limit, cache headers); gRPC <code>AuthInterceptor</code> (<code>grpcapi/interceptors/auth.go</code>) token की पुष्टि करता है और RBAC लागू करता है।</li>
 <li><code>internal/adapters/driving/grpcapi</code> (<code>playback_handler.go</code>) proto जाँचता है, <code>app/playback.CommandService.StartStream</code> कॉल करता है (command/query का बँटवारा, देखें <a href="https://github.com/eveyproject/evey/blob/master/docs/adr/0009-cqrs-repo-split.md">ADR-0009</a>)।</li>
 <li><code>app/playback.CommandService</code> domain port कॉल करता है: <code>user.UserRepository</code>, <code>playback.SessionQueryRepo</code> (idempotency + डिवाइस की सीमा), <code>playback.SessionCommandRepo</code>, फिर <code>shared.EventBus.Publish(PlaybackStarted)</code>।</li>
 <li>driven adapter काम करते हैं: <code>postgres</code> सेशन को एक <code>shared.TransactionalUnit.Do</code> दायरे के अंदर सहेजता है; प्रोसेस के अंदर का bus (<code>internal/pkg/eventbus</code>) asynchronous रूप से आगे भेजता है।</li>
@@ -3658,7 +3662,7 @@ context का domain package सीधे भी पढ़ती है (दे
 <a href="../playback-serving/">प्लेबैक पाइपलाइन</a> का विषय है।</p>
 <h2 id="architecture-guards">आर्किटेक्चर की जाँचें<a class="headerlink" href="#architecture-guards" title="Permanent link">¶</a></h2>
 <p>ऊपर के नियम सिर्फ़ दस्तावेज़ में नहीं हैं। <code>internal/contractguard/</code> में 30 फ़ाइलों में
-58 static टेस्ट हैं, जो कोड के इनसे हटने पर build फ़ेल कर देते हैं।</p>
+63 static टेस्ट हैं, जो कोड के इनसे हटने पर build फ़ेल कर देते हैं।</p>
 <p>hexagonal नियम खुद <code>TestDomainContextsDoNotImportEachOther</code> (ADR-0001) है,
 <code>domain_imports_test.go</code> में। यह <code>internal/domain</code> की सारी फ़ाइलें जाँचता है और ठीक यही लागू करता
 है: एक context <code>internal/domain/shared</code> और अपना package tree import कर सकता है,
@@ -3836,7 +3840,7 @@ adapter उन port को लागू करते हैं।</p>
         a_photo[photo]
         a_user[user]
         a_upd[updatecheck]
-        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, qoe, loadtest,&lt;br/&gt;demo]
+        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, prunehold, qoe, loadtest,&lt;br/&gt;demo]
     end
 
     subgraph domain[Domain केंद्र - internal/domain]

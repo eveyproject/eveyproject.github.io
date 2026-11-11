@@ -3444,7 +3444,7 @@
 以及同目录的 <code>wire_infra.go</code>、<code>wire_services.go</code>、<code>wire_adapters.go</code>、<code>wire_events.go</code>、<code>wire_helpers.go</code> 里。
 测试绕过适配器，注入实现同样领域端口的假对象：21 个领域包里有 20 个带有 <code>fakes/</code> 子包。</p>
 <h2 id="bounded-contexts">限界上下文<a class="headerlink" href="#bounded-contexts" title="Permanent link">¶</a></h2>
-<p><code>internal/domain/</code> 和 <code>internal/app/</code> 下共有三十二个上下文包：19 个在两层都有，2 个只在领域层（<code>ratings</code>、<code>shared</code>），11 个只在应用层。
+<p><code>internal/domain/</code> 和 <code>internal/app/</code> 下共有三十三个上下文包：19 个在两层都有，2 个只在领域层（<code>ratings</code>、<code>shared</code>），12 个只在应用层。
 它们部分通过共享总线上的领域事件协作；应用层也会直接读取相邻上下文的领域包（见<a href="#relations">关系</a>）。</p>
 <table>
 <thead>
@@ -3563,6 +3563,10 @@
 <td>由管理员触发的媒体维护：重建跳转索引、修复日志、撤销、音频完整性</td>
 </tr>
 <tr>
+<td><code>prunehold</code>（仅应用层）</td>
+<td>扫描要大批删除缺失文件时先暂停，直到管理员确认（<code>library.prune.suspended</code>）</td>
+</tr>
+<tr>
 <td><code>presence</code>（仅应用层）</td>
 <td>内存里、不持久化的“此刻谁在线”登记表</td>
 </tr>
@@ -3606,8 +3610,8 @@
 </tr>
 <tr>
 <td><code>user</code></td>
-<td><code>UserCreated</code>、<code>user.password.reset_requested</code></td>
-<td>前者没有订阅者；后者由 <code>email</code> 被驱动适配器消费</td>
+<td><code>UserCreated</code>、<code>user.password.reset_requested</code>、<code>user.login.succeeded</code> / <code>user.login.failed</code></td>
+<td><code>UserCreated</code> 没有订阅者；重置请求由 <code>email</code> 被驱动适配器消费；登录事件由 <code>activity</code>（登录历史）消费</td>
 </tr>
 <tr>
 <td><code>pluginrunner</code></td>
@@ -3632,7 +3636,7 @@
 <h2 id="typical-data-flow---user-plays-a-media">典型的数据流：“用户播放一个媒体”<a class="headerlink" href="#typical-data-flow---user-plays-a-media" title="Permanent link">¶</a></h2>
 <ol>
 <li>移动或网页客户端调用 <code>POST /api/v1/playback/start</code>（grpc-gateway 路由）。</li>
-<li><code>internal/adapters/driving/http</code> 运行它的身份验证中间件（<code>auth_middleware.go</code>，<code>httpAuthMiddleware</code>），取出会话。</li>
+<li><code>internal/adapters/driving/http</code> 把请求交给 grpc-gateway（限流、缓存头）；gRPC 的 <code>AuthInterceptor</code>（<code>grpcapi/interceptors/auth.go</code>）验证令牌并执行 RBAC。</li>
 <li><code>internal/adapters/driving/grpcapi</code>（<code>playback_handler.go</code>）校验 proto，调用 <code>app/playback.CommandService.StartStream</code>（命令和查询分离，见 <a href="https://github.com/eveyproject/evey/blob/master/docs/adr/0009-cqrs-repo-split.md">ADR-0009</a>）。</li>
 <li><code>app/playback.CommandService</code> 调用领域端口：<code>user.UserRepository</code>、<code>playback.SessionQueryRepo</code>（幂等 + 设备数量上限）、<code>playback.SessionCommandRepo</code>，然后 <code>shared.EventBus.Publish(PlaybackStarted)</code>。</li>
 <li>被驱动适配器执行：<code>postgres</code> 在一个 <code>shared.TransactionalUnit.Do</code> 范围内保存会话；进程内的总线（<code>internal/pkg/eventbus</code>）异步分发事件。</li>
@@ -3641,7 +3645,7 @@
 </ol>
 <p>播放器请求清单文件和分段之后发生的事情，是<a href="../playback-serving/">播放链路</a>的主题。</p>
 <h2 id="architecture-guards">架构检查<a class="headerlink" href="#architecture-guards" title="Permanent link">¶</a></h2>
-<p>上面这些规则不只是写在文档里。<code>internal/contractguard/</code> 里有分布在 30 个文件中的 58 个静态测试，代码一旦偏离这些规则，构建就会失败。</p>
+<p>上面这些规则不只是写在文档里。<code>internal/contractguard/</code> 里有分布在 30 个文件中的 63 个静态测试，代码一旦偏离这些规则，构建就会失败。</p>
 <p>六边形规则本身是 <code>domain_imports_test.go</code> 里的 <code>TestDomainContextsDoNotImportEachOther</code>（ADR-0001）。它遍历 <code>internal/domain</code>，
 严格执行这一点：一个上下文可以导入 <code>internal/domain/shared</code> 和它自己的包树，<code>internal/domain</code> 里的其他内容一律不能导入，
 也永远不能导入 <code>internal/app</code> 或 <code>internal/adapters</code>。它的范围止于 <code>internal/domain</code>：对应用层不做任何约束。</p>
@@ -3805,7 +3809,7 @@ Meilisearch 二进制（<code>Dockerfile</code> 的 <code>meili-download</code> 
         a_photo[photo]
         a_user[user]
         a_upd[updatecheck]
-        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, qoe, loadtest,&lt;br/&gt;demo]
+        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, prunehold, qoe, loadtest,&lt;br/&gt;demo]
     end
 
     subgraph domain[领域核心 - internal/domain]

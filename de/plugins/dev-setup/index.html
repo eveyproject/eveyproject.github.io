@@ -3440,8 +3440,8 @@ ZIP:</p>
 <p>Öffnen Sie <code>https://evey.test</code>. Der Einrichtungsassistent legt beim ersten
 Start das Administratorkonto an, wie in
 <a href="../../getting-started/first-setup/">Ersteinrichtung</a> beschrieben.
-Plugin-Dateien liegen in <code>./evey-data/plugins/&lt;plugin-id&gt;/</code>, im Container
-als <code>/data/plugins</code> eingehängt.</p>
+In diesem Entwicklungsstack liegen Plugin-Dateien in <code>./plugins/&lt;plugin-id&gt;/</code>,
+im Container als <code>/data/plugins</code> eingehängt.</p>
 <h2 id="3-your-first-plugin-step-by-step">3. Ihr erstes Plugin, Schritt für Schritt<a class="headerlink" href="#3-your-first-plugin-step-by-step" title="Permanent link">¶</a></h2>
 <p>Das Beispiel <code>examples/plugins/nodejs-example</code> ist das kleinste vollständige
 Plugin: Es bedient <code>PluginService</code>, verbindet sich mit <code>HostService</code> und
@@ -3687,9 +3687,9 @@ das Serverprotokoll enthält die Einzelheiten.</p>
    neue Slot oder Host hält die Installation hier an, bis der Administrator
    den Unterschied bestätigt (<code>accept_permission_changes=true</code> auf der
    Upload-Route).</li>
-<li><strong>Signatur und Hash.</strong> Die Signatur wird geprüft, wenn ein öffentlicher
-   Schlüssel konfiguriert ist; ein Fehler blockiert nur unter <code>enforce</code>. Der
-   Hash des ZIP wird festgehalten und erneut geprüft, wenn ein zuvor in der
+<li><strong>Signatur und Hash.</strong> Die Signatur wird gegen den <code>cosign.pub</code> geprüft,
+   den das Paket mitbringt, außer die Richtlinie ist <code>off</code>; ein Fehler
+   blockiert nur unter <code>enforce</code>. Der Hash des ZIP wird festgehalten und erneut geprüft, wenn ein zuvor in der
    Vorschau gezeigtes Update angewendet wird.</li>
 <li><strong>Entpacken</strong> in ein Zwischenverzeichnis: höchstens 5.000 Einträge,
    100 MB pro Datei, 500 MB insgesamt, ein Kompressionsverhältnis von 100:1,
@@ -3776,9 +3776,9 @@ Website).</p>
 <td>Erhöhen Sie <code>version</code> oder deinstallieren Sie zuerst.</td>
 </tr>
 <tr>
-<td><code>signature does not match the plugin or the configured key</code></td>
+<td><code>signature does not match the package and its signing key</code></td>
 <td>Die <code>.sig</code> wurde mit einem anderen Schlüssel erstellt, oder das ZIP hat sich nach dem Signieren geändert.</td>
-<td>Signieren Sie genau dieses ZIP neu mit dem richtigen Schlüssel, oder korrigieren Sie <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>.</td>
+<td>Signieren Sie genau dieses ZIP neu mit dem privaten Schlüssel, der zum <code>cosign.pub</code> darin passt.</td>
 </tr>
 <tr>
 <td><code>plugin blocked: theme.js contains forbidden pattern</code></td>

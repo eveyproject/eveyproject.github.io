@@ -3301,13 +3301,13 @@ Limites de ressources</strong> s'appliquent à tous les plugins et l'emportent.<
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
 <td><code>warn</code></td>
-<td><code>off</code>, <code>warn</code> ou <code>enforce</code> : l'effet d'une vérification de signature qui échoue. <code>enforce</code> sans clé refuse de démarrer.</td>
+<td><code>off</code>, <code>warn</code> ou <code>enforce</code> : l'effet d'une vérification de signature qui échoue. Les signatures sont vérifiées avec la clé que porte chaque paquet et la liste des éditeurs de confiance, aucune clé n'est donc nécessaire.</td>
 <td>aucun</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>vide</td>
-<td>Chemin de la clé publique PEM avec laquelle les signatures sont vérifiées. Avec <code>warn</code> et sans clé, rien n'est vérifié et le serveur l'indique au démarrage.</td>
+<td>Chemin facultatif vers la clé publique PEM de votre propre éditeur, ajoutée aux éditeurs de confiance à chaque démarrage.</td>
 <td>aucun</td>
 </tr>
 </tbody>

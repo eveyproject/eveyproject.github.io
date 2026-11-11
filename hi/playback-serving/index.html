@@ -3340,8 +3340,9 @@ fingerprint</strong> से पहचाना जाता है, जो फ�
    का फ़ैसला करने वाला मुख्य function है। resolver इसके ऊपर request के समय की पिन (<code>vd=</code> / <code>ad=</code>), ऑडियो
    resync वाला override, वगैरह जोड़ता है।</li>
 <li><strong>Q3 - क्षमता</strong> - <code>internal/app/transcoding/calibration_service.go</code>:
-   <code>Current()</code> <code>domain/transcoding.Derive(report, policy)</code> (<code>derive.go</code>) लौटाता है,
-   यानी होस्ट की ऊपरी सीमाएँ, जो आख़िरी calibration से निकाली गई हैं।</li>
+   <code>Current()</code> होस्ट की ऊपरी सीमाएँ लौटाता है: आख़िरी calibration से निकाला गया
+   क्षमता snapshot (<code>domain/transcoding.Derive</code>, <code>derive.go</code>), ऑपरेटर की ऊपरी
+   सीमाओं के override लागू करके।</li>
 <li><strong>Ladder और प्रवेश</strong> - resolver ladder को ढालता है (जटिलता की श्रेणी, producer की
    प्रोफ़ाइल, स्रोत/क्षमता की सीमाएँ, CMCD/AV1 की सीमाएँ, प्रवेश का रास्ता और ऊपरी
    सीमा), फिर उसे प्रवेश की पिन पर <strong>स्थिर (freeze) कर देता है</strong> (<code>admission_shaper.go</code>,

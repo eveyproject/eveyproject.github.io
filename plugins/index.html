@@ -3413,8 +3413,8 @@ the panel has never been saved.</p>
 </tbody>
 </table>
 <p>Memory, processes and disk apply at the next sweep of the monitor, which stops
-a plugin that exceeds them; the CPU priority and the sandbox mode apply to
-plugins started afterwards. <code>0</code> restores the default for memory and processes; only the disk limit treats
+a plugin that exceeds them; the CPU priority applies to plugins started
+afterwards, and a sandbox-mode change restarts the running plugins at once. <code>0</code> restores the default for memory and processes; only the disk limit treats
 <code>0</code> as off.</p>
 <p>The <strong>Security Dashboard</strong> keeps, per plugin, the findings of the analysis, the
 signature result and the last error. Its <strong>Host sandbox</strong> line shows the

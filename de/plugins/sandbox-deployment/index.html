@@ -3400,8 +3400,8 @@ die keine vollständige virtuelle Maschine ist.</p>
 <li>gefährliche Systemaktionen bleiben im Kernel blockiert;</li>
 <li>aber ohne Dateibeschränkung pro Ordner könnte ein bösartiges Plugin gewöhnliche, nicht
   geheime Dateien lesen, laufende Prozesse auflisten und, weil sich die
-  Plugins ein Konto teilen, die Dateien eines anderen Plugins lesen oder
-  stören.</li>
+  Plugins die Gruppe des Servers teilen, die für die Gruppe lesbaren Dateien
+  eines anderen Plugins lesen.</li>
 </ul>
 <p>Installieren Sie auf einem solchen Host nur Plugins, denen Sie vertrauen, oder
 wechseln Sie auf einen modernen Kernel, um die vollständige Dateibeschränkung zu erhalten.</p>
@@ -3438,8 +3438,8 @@ fehlerhaft: Stellen Sie den Modus zurück.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># der Launcher trägt die Capability für die UID-Trennung</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>getcap<span class="w"> </span>/evey-plugin-launcher<span class="w">        </span><span class="c1"># cap_setuid=ep</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># unter welchem Benutzer ein laufendes Plugin läuft (evey = mit dem Server geteilt,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># evey-plugin = getrennt); das Image hat ps, also funktioniert auch `docker exec evey-server ps`</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># unter welchem Benutzer ein laufendes Plugin läuft (evey = mit dem Server geteilt, eine</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># numerische UID in 40000-59999 = getrennt, eine pro Plugin); das Image hat ps, also funktioniert auch `docker exec evey-server ps`</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>docker<span class="w"> </span>top<span class="w"> </span>evey-server<span class="w"> </span>-o<span class="w"> </span>user,pid,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"node|python"</span>
 </span></code></pre></div>
 <p>Der geltende Sandbox-Modus ist das Abzeichen unter <strong>Verwaltung → Plugins →

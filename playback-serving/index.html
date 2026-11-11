@@ -3342,8 +3342,9 @@ directory, written once and served from there.</p>
    brain. The resolver layers on the request-time pins (<code>vd=</code> / <code>ad=</code>), the
    audio-resync override, etc.</li>
 <li><strong>Q3 - Capability</strong> - <code>internal/app/transcoding/calibration_service.go</code>:
-   <code>Current()</code> returns <code>domain/transcoding.Derive(report, policy)</code>
-   (<code>derive.go</code>), the host's ceilings derived from the last calibration.</li>
+   <code>Current()</code> returns the host's ceilings: the capability snapshot derived
+   from the last calibration (<code>domain/transcoding.Derive</code>, <code>derive.go</code>), with
+   the operator's ceiling overrides applied.</li>
 <li><strong>Ladder and admission</strong> - the resolver shapes the ladder (complexity
    class, producer profiles, source/capability caps, CMCD/AV1 caps, admission
    route and ceiling), then <strong>freezes it</strong> on the admission pin

@@ -3396,8 +3396,12 @@ player decodes itself), and under <strong>Why not direct play</strong> the reaso
 </tr>
 </tbody>
 </table>
-<p>Only the audio track being played is judged. A file whose unselected
-commentary track is in DTS is not transcoded because of it.</p>
+<p>Only the audio track being played decides whether the sound is re-encoded.
+But when another audio track of the file is in a codec the device cannot
+decode (a DTS commentary, for example), the file is repackaged (Remux) rather
+than sent as is, because a raw file would let the player switch to that track
+itself. Stream info then says <strong>Another audio track of the file cannot be
+played on this device</strong>.</p>
 <p>A file that none of the methods can serve on this device is refused before
 playback starts, with <strong>This server isn't powerful enough for this file</strong>:
 see <a href="../transcoding/#sharing-the-capacity">Transcoding and server capacity</a>.</p>
@@ -3456,10 +3460,12 @@ lowest of these limits is transcoded down to it:</p>
 player reports or than the profile's <strong>Max Audio Channels</strong>. A re-encoded
 track keeps up to 5.1 channels, never more: see <a href="../audio/">Audio</a>.</p>
 <h2 id="constraints-the-server-applies-itself">Constraints the server applies itself<a class="headerlink" href="#constraints-the-server-applies-itself" title="Permanent link">¶</a></h2>
-<p>A few limits are not reported by players today and are applied by the server
-as a conservative compatibility rule, the same for every player: 10-bit
-H.264, and any video in 4:2:2, 4:4:4 or 12-bit, are re-encoded, while HEVC,
-VP9 and AV1 up to 10-bit 4:2:0 are left to the player's codec support. Dolby
+<p>The Android and Android TV apps report which pixel formats their decoders
+take (8-bit 4:2:0 per codec, 10-bit where the decoder supports it), and the
+server judges the source against that list. For a player that reports none
+(the web app, cast), it applies a conservative rule: 10-bit H.264, and any
+video in 4:2:2, 4:4:4 or 12-bit, are re-encoded, while HEVC, VP9 and AV1 up
+to 10-bit 4:2:0 are left to the player's codec support. Dolby
 Vision is kept only in a form the player can display correctly: see
 <a href="../hdr/">HDR and Dolby Vision</a>.</p>
 <h2 id="why-the-method-rarely-changes-mid-film">Why the method rarely changes mid-film<a class="headerlink" href="#why-the-method-rarely-changes-mid-film" title="Permanent link">¶</a></h2>

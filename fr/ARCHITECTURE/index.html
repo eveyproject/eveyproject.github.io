@@ -3456,9 +3456,9 @@ Les tests contournent les adaptateurs en injectant des doublures qui
 implémentent les mêmes ports du domaine : 20 des 21 paquets du domaine
 livrent un sous-paquet <code>fakes/</code>.</p>
 <h2 id="bounded-contexts">Contextes bornés<a class="headerlink" href="#bounded-contexts" title="Permanent link">¶</a></h2>
-<p>Trente-deux paquets de contexte se trouvent sous <code>internal/domain/</code> et
+<p>Trente-trois paquets de contexte se trouvent sous <code>internal/domain/</code> et
 <code>internal/app/</code> : 19 existent dans les deux couches, 2 n'existent que dans le
-domaine (<code>ratings</code>, <code>shared</code>), 11 n'existent que dans la couche applicative.
+domaine (<code>ratings</code>, <code>shared</code>), 12 n'existent que dans la couche applicative.
 Ils collaborent en partie par des événements de domaine sur un bus partagé ;
 la couche applicative lit aussi directement le paquet de domaine d'un
 contexte voisin (voir <a href="#relations">Relations</a>).</p>
@@ -3579,6 +3579,10 @@ contexte voisin (voir <a href="#relations">Relations</a>).</p>
 <td>maintenance des médias déclenchée par l'administrateur : reconstruction de l'index de lecture, journal de réparation, annulation, intégrité audio</td>
 </tr>
 <tr>
+<td><code>prunehold</code> (app seulement)</td>
+<td>retient la suppression en masse, par un scan, des fichiers disparus jusqu'à ce qu'un administrateur la confirme (<code>library.prune.suspended</code>)</td>
+</tr>
+<tr>
 <td><code>presence</code> (app seulement)</td>
 <td>registre en mémoire, non persisté, de qui est connecté en ce moment</td>
 </tr>
@@ -3622,8 +3626,8 @@ contexte voisin (voir <a href="#relations">Relations</a>).</p>
 </tr>
 <tr>
 <td><code>user</code></td>
-<td><code>UserCreated</code>, <code>user.password.reset_requested</code></td>
-<td>le premier n'a pas d'abonné ; le second est consommé par l'adaptateur sortant <code>email</code></td>
+<td><code>UserCreated</code>, <code>user.password.reset_requested</code>, <code>user.login.succeeded</code> / <code>user.login.failed</code></td>
+<td><code>UserCreated</code> n'a pas d'abonné ; la demande de réinitialisation est consommée par l'adaptateur sortant <code>email</code> ; les événements de connexion par <code>activity</code> (historique des connexions)</td>
 </tr>
 <tr>
 <td><code>pluginrunner</code></td>
@@ -3655,7 +3659,7 @@ domaine d'un contexte voisin.</p>
 <h2 id="typical-data-flow---user-plays-a-media">Flux de données typique : « un utilisateur lance un média »<a class="headerlink" href="#typical-data-flow---user-plays-a-media" title="Permanent link">¶</a></h2>
 <ol>
 <li>Le client mobile ou web appelle <code>POST /api/v1/playback/start</code> (route grpc-gateway).</li>
-<li><code>internal/adapters/driving/http</code> exécute son middleware d'authentification (<code>auth_middleware.go</code>, <code>httpAuthMiddleware</code>) et extrait la session.</li>
+<li><code>internal/adapters/driving/http</code> passe la requête à grpc-gateway (limitation de débit, en-têtes de cache) ; l'<code>AuthInterceptor</code> gRPC (<code>grpcapi/interceptors/auth.go</code>) authentifie le jeton et applique le RBAC.</li>
 <li><code>internal/adapters/driving/grpcapi</code> (<code>playback_handler.go</code>) valide le proto et appelle <code>app/playback.CommandService.StartStream</code> (séparation commande/requête, voir <a href="https://github.com/eveyproject/evey/blob/master/docs/adr/0009-cqrs-repo-split.md">ADR-0009</a>).</li>
 <li><code>app/playback.CommandService</code> appelle les ports du domaine : <code>user.UserRepository</code>, <code>playback.SessionQueryRepo</code> (idempotence + plafond d'appareils), <code>playback.SessionCommandRepo</code>, puis <code>shared.EventBus.Publish(PlaybackStarted)</code>.</li>
 <li>Les adaptateurs sortants s'exécutent : <code>postgres</code> persiste la session dans une portée <code>shared.TransactionalUnit.Do</code> ; le bus en mémoire (<code>internal/pkg/eventbus</code>) distribue de façon asynchrone.</li>
@@ -3666,7 +3670,7 @@ domaine d'un contexte voisin.</p>
 segments, fait l'objet de <a href="../playback-serving/">Pipeline de lecture</a>.</p>
 <h2 id="architecture-guards">Gardes d'architecture<a class="headerlink" href="#architecture-guards" title="Permanent link">¶</a></h2>
 <p>Les règles ci-dessus ne sont pas que de la documentation.
-<code>internal/contractguard/</code> contient 58 tests statiques répartis sur 30
+<code>internal/contractguard/</code> contient 63 tests statiques répartis sur 30
 fichiers qui font échouer le build dès que le code s'en écarte.</p>
 <p>La règle hexagonale elle-même est <code>TestDomainContextsDoNotImportEachOther</code>
 (ADR-0001), dans <code>domain_imports_test.go</code>. Elle parcourt <code>internal/domain</code> et
@@ -3850,7 +3854,7 @@ implémentent ces ports.</p>
         a_photo[photo]
         a_user[user]
         a_upd[updatecheck]
-        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, qoe, loadtest,&lt;br/&gt;demo]
+        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, prunehold, qoe, loadtest,&lt;br/&gt;demo]
     end
 
     subgraph domain[Cœur du domaine - internal/domain]

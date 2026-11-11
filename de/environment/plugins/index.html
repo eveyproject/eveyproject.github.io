@@ -3302,13 +3302,13 @@ Vorrang vor ihnen.</p>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
 <td><code>warn</code></td>
-<td><code>off</code>, <code>warn</code> oder <code>enforce</code>: was eine fehlgeschlagene Signaturprüfung bewirkt. <code>enforce</code> ohne Schlüssel verhindert den Start.</td>
+<td><code>off</code>, <code>warn</code> oder <code>enforce</code>: was eine fehlgeschlagene Signaturprüfung bewirkt. Signaturen werden gegen den Schlüssel geprüft, den jedes Paket mitbringt, und gegen die Liste vertrauenswürdiger Herausgeber; ein Schlüssel ist also nicht nötig.</td>
 <td>keine</td>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code></td>
 <td>leer</td>
-<td>Pfad zum öffentlichen PEM-Schlüssel, gegen den Signaturen geprüft werden. Mit <code>warn</code> und ohne Schlüssel wird nichts geprüft, und der Server warnt beim Start.</td>
+<td>Optionaler Pfad zum öffentlichen PEM-Schlüssel Ihres eigenen Herausgebers, der bei jedem Start zu den vertrauenswürdigen Herausgebern hinzugefügt wird.</td>
 <td>keine</td>
 </tr>
 </tbody>

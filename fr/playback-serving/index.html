@@ -3347,8 +3347,9 @@ fichier sous le répertoire de l'empreinte, écrit une fois et servi depuis là.
    par piste. Le résolveur y superpose les valeurs imposées par la requête (<code>vd=</code> /
    <code>ad=</code>), la surcharge de resynchronisation audio, etc.</li>
 <li><strong>Q3 : capacité</strong> : <code>internal/app/transcoding/calibration_service.go</code> :
-   <code>Current()</code> renvoie <code>domain/transcoding.Derive(report, policy)</code>
-   (<code>derive.go</code>), les plafonds de l'hôte dérivés de la dernière calibration.</li>
+   <code>Current()</code> renvoie les plafonds de l'hôte : l'instantané de capacité dérivé
+   de la dernière calibration (<code>domain/transcoding.Derive</code>, <code>derive.go</code>), avec
+   les plafonds imposés par l'opérateur appliqués.</li>
 <li><strong>Échelle et admission</strong> : le résolveur met l'échelle en forme (classe de
    complexité, profils de producteur, plafonds de la source et de la
    capacité, plafonds CMCD/AV1, route et plafond d'admission), puis la

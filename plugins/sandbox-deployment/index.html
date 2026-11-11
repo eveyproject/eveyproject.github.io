@@ -3393,8 +3393,8 @@ full virtual machine.</p>
   declared;</li>
 <li>dangerous system actions are still blocked at the kernel;</li>
 <li>but with no per-folder file restriction, a malicious plugin could read ordinary, non-secret
-  files, list running processes and, because plugins share one account,
-  read or disturb another plugin's files.</li>
+  files, list running processes and, because plugins share the server's group,
+  read another plugin's group-readable files.</li>
 </ul>
 <p>Only install plugins you trust on such a host, or move to a modern kernel
 for the full file restriction.</p>
@@ -3430,8 +3430,8 @@ an unprivileged container) shows up as errored: switch back.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># the launcher carries the capability used for uid separation</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>getcap<span class="w"> </span>/evey-plugin-launcher<span class="w">        </span><span class="c1"># cap_setuid=ep</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># which user a running plugin runs as (evey = shared with the server,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># evey-plugin = separated); the image has ps, so `docker exec evey-server ps` also works</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># which user a running plugin runs as (evey = shared with the server, a</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># numeric uid in 40000-59999 = separated, one per plugin); the image has ps, so `docker exec evey-server ps` also works</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>docker<span class="w"> </span>top<span class="w"> </span>evey-server<span class="w"> </span>-o<span class="w"> </span>user,pid,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"node|python"</span>
 </span></code></pre></div>
 <p>The sandbox mode in force is the badge of <strong>Admin -&gt; Plugins -&gt; Security

@@ -3326,7 +3326,7 @@ install. Receiving webhooks (<code>webhook.receiver</code>) and providing metada
 </tr>
 <tr>
 <td><code>media.write</code></td>
-<td>Reserved for the metadata write calls, not served today.</td>
+<td><code>UpdateMetadata</code> on the host, for a plugin that also declares the <code>metadata.provider</code> capability.</td>
 </tr>
 <tr>
 <td><code>api.library</code></td>
@@ -3338,7 +3338,7 @@ install. Receiving webhooks (<code>webhook.receiver</code>) and providing metada
 </tr>
 <tr>
 <td><code>api.metadata</code></td>
-<td>Reserved for <code>UpdateMetadata</code>, not served today.</td>
+<td>The same <code>UpdateMetadata</code> call as <code>media.write</code>, under the same capability condition.</td>
 </tr>
 <tr>
 <td><code>notification.sender</code></td>

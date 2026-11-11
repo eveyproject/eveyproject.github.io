@@ -3417,8 +3417,9 @@ les fixe tant que le panneau n'a jamais été enregistré.</p>
 </tbody>
 </table>
 <p>La mémoire, les processus et le disque s'appliquent au prochain balayage du
-moniteur, qui arrête un plugin qui les dépasse ; la priorité processeur et le
-mode sandbox s'appliquent aux plugins démarrés ensuite. <code>0</code> rétablit la
+moniteur, qui arrête un plugin qui les dépasse ; la priorité processeur s'applique aux
+plugins démarrés ensuite, et un changement de mode sandbox redémarre aussitôt
+les plugins en cours. <code>0</code> rétablit la
 valeur par défaut pour la mémoire et les processus ; seule la limite de disque traite <code>0</code> comme « désactivée ».</p>
 <p>Le <strong>Tableau de bord sécurité</strong> conserve, par plugin, les constats de
 l'analyse, le résultat de la signature et la dernière erreur. Sa ligne

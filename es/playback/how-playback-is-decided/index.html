@@ -3402,9 +3402,13 @@ directa</strong>, los motivos.</p>
 </tr>
 </tbody>
 </table>
-<p>Solo cuenta la pista de audio que se está reproduciendo. Un archivo con una
-pista de comentarios en DTS que no has elegido no se transcodifica por culpa
-de esa pista.</p>
+<p>Solo la pista de audio que se está reproduciendo decide si el sonido se
+vuelve a codificar. Pero cuando otra pista de audio del archivo está en un
+códec que el dispositivo no puede descodificar (un comentario en DTS, por
+ejemplo), el archivo se reempaqueta (Remux) en lugar de enviarse tal cual,
+porque un archivo sin procesar permitiría al reproductor cambiar él mismo a
+esa pista. Información del flujo dice entonces <strong>Otra pista de audio del
+archivo no se puede reproducir en este dispositivo</strong>.</p>
 <p>Un archivo que ninguno de los métodos puede servir en este dispositivo se
 rechaza antes de empezar la reproducción, con <strong>Este servidor no es lo
 bastante potente para este archivo</strong>: ver <a href="../transcoding/#sharing-the-capacity">Transcodificación y capacidad del servidor</a>.</p>
@@ -3472,10 +3476,12 @@ canales de los que indica el reproductor o de los que permiten los <strong>Canal
 de audio máximos</strong> del perfil. Una pista vuelta a codificar conserva hasta
 5.1 canales, nunca más: consulta <a href="../audio/">Audio</a>.</p>
 <h2 id="constraints-the-server-applies-itself">Restricciones que aplica el propio servidor<a class="headerlink" href="#constraints-the-server-applies-itself" title="Permanent link">¶</a></h2>
-<p>Hoy los reproductores no indican algunos límites, así que el servidor los
-aplica como una regla de compatibilidad prudente, la misma para todos los
-reproductores: el H.264 de 10 bits, y cualquier vídeo en 4:2:2, 4:4:4 o de
-12 bits, se vuelven a codificar, mientras que HEVC, VP9 y AV1 hasta 10 bits
+<p>Las apps de Android y Android TV indican qué formatos de píxel aceptan sus
+decodificadores (8 bits 4:2:0 por códec, 10 bits cuando el decodificador lo
+admite), y el servidor juzga la fuente según esa lista. Para un reproductor
+que no indica ninguno (la app web, el envío), aplica una regla prudente: el
+H.264 de 10 bits, y cualquier vídeo en 4:2:2, 4:4:4 o de 12 bits, se vuelven
+a codificar, mientras que HEVC, VP9 y AV1 hasta 10 bits
 4:2:0 dependen de los códecs que admita el reproductor. Dolby Vision solo se
 conserva en una forma que el reproductor pueda mostrar bien: consulta
 <a href="../hdr/">HDR y Dolby Vision</a>.</p>

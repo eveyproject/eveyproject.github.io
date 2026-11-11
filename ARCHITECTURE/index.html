@@ -3453,8 +3453,8 @@ app or the adapters. Composition is hand-written (not google/wire) in
 adapters by injecting fakes that implement the same domain ports: 20 of the
 21 domain packages ship a <code>fakes/</code> subpackage.</p>
 <h2 id="bounded-contexts">Bounded contexts<a class="headerlink" href="#bounded-contexts" title="Permanent link">¶</a></h2>
-<p>Thirty-two context packages live under <code>internal/domain/</code> and <code>internal/app/</code>:
-19 exist in both layers, 2 are domain-only (<code>ratings</code>, <code>shared</code>), 11 are
+<p>Thirty-three context packages live under <code>internal/domain/</code> and <code>internal/app/</code>:
+19 exist in both layers, 2 are domain-only (<code>ratings</code>, <code>shared</code>), 12 are
 app-only. They collaborate partly through domain events on a shared bus; the
 app layer also reads a neighbouring context's domain package directly (see
 <a href="#relations">Relations</a>).</p>
@@ -3575,6 +3575,10 @@ app layer also reads a neighbouring context's domain package directly (see
 <td>admin-triggered media maintenance: seek-index rebuild, repair journal, undo, audio integrity</td>
 </tr>
 <tr>
+<td><code>prunehold</code> (app only)</td>
+<td>holds a scan's mass deletion of missing files until an administrator confirms it (<code>library.prune.suspended</code>)</td>
+</tr>
+<tr>
 <td><code>presence</code> (app only)</td>
 <td>in-memory, non-persisted registry of who is connected right now</td>
 </tr>
@@ -3618,8 +3622,8 @@ app layer also reads a neighbouring context's domain package directly (see
 </tr>
 <tr>
 <td><code>user</code></td>
-<td><code>UserCreated</code>, <code>user.password.reset_requested</code></td>
-<td>the first has no subscriber; the second is consumed by the <code>email</code> driven adapter</td>
+<td><code>UserCreated</code>, <code>user.password.reset_requested</code>, <code>user.login.succeeded</code> / <code>user.login.failed</code></td>
+<td><code>UserCreated</code> has no subscriber; the reset request is consumed by the <code>email</code> driven adapter; the login events by <code>activity</code> (login history)</td>
 </tr>
 <tr>
 <td><code>pluginrunner</code></td>
@@ -3648,7 +3652,7 @@ it: 15 app packages import a neighbouring context's domain package today.</p>
 <h2 id="typical-data-flow---user-plays-a-media">Typical data flow - "user plays a media"<a class="headerlink" href="#typical-data-flow---user-plays-a-media" title="Permanent link">¶</a></h2>
 <ol>
 <li>Mobile/web client calls <code>POST /api/v1/playback/start</code> (grpc-gateway route).</li>
-<li><code>internal/adapters/driving/http</code> runs its auth middleware (<code>auth_middleware.go</code>, <code>httpAuthMiddleware</code>), extracts session.</li>
+<li><code>internal/adapters/driving/http</code> hands the request to grpc-gateway (rate limit, cache headers); the gRPC <code>AuthInterceptor</code> (<code>grpcapi/interceptors/auth.go</code>) authenticates the token and applies RBAC.</li>
 <li><code>internal/adapters/driving/grpcapi</code> (<code>playback_handler.go</code>) validates proto, calls <code>app/playback.CommandService.StartStream</code> (command/query split, see <a href="https://github.com/eveyproject/evey/blob/master/docs/adr/0009-cqrs-repo-split.md">ADR-0009</a>).</li>
 <li><code>app/playback.CommandService</code> calls domain ports: <code>user.UserRepository</code>, <code>playback.SessionQueryRepo</code> (idempotency + device cap), <code>playback.SessionCommandRepo</code>, then <code>shared.EventBus.Publish(PlaybackStarted)</code>.</li>
 <li>Driven adapters execute: <code>postgres</code> persists the session inside a <code>shared.TransactionalUnit.Do</code> scope; the in-process bus (<code>internal/pkg/eventbus</code>) dispatches asynchronously.</li>
@@ -3659,7 +3663,7 @@ it: 15 app packages import a neighbouring context's domain package today.</p>
 subject of <a href="../playback-serving/">Playback pipeline</a>.</p>
 <h2 id="architecture-guards">Architecture guards<a class="headerlink" href="#architecture-guards" title="Permanent link">¶</a></h2>
 <p>The rules above are not documentation-only. <code>internal/contractguard/</code> holds
-58 static tests across 30 files that fail the build when the codebase drifts
+63 static tests across 30 files that fail the build when the codebase drifts
 from them.</p>
 <p>The hexagonal rule itself is <code>TestDomainContextsDoNotImportEachOther</code>
 (ADR-0001), in <code>domain_imports_test.go</code>. It walks <code>internal/domain</code> and
@@ -3839,7 +3843,7 @@ ports; driven adapters implement those ports.</p>
         a_photo[photo]
         a_user[user]
         a_upd[updatecheck]
-        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, qoe, loadtest,&lt;br/&gt;demo]
+        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, prunehold, qoe, loadtest,&lt;br/&gt;demo]
     end
 
     subgraph domain[Domain core - internal/domain]

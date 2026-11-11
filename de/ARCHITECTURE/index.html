@@ -3456,9 +3456,9 @@ die App oder die Adapter. Die Zusammensetzung ist von Hand geschrieben
 einsetzen, die dieselben Domänen-Ports umsetzen: 20 der 21 Domänenpakete
 bringen ein Unterpaket <code>fakes/</code> mit.</p>
 <h2 id="bounded-contexts">Abgegrenzte Kontexte<a class="headerlink" href="#bounded-contexts" title="Permanent link">¶</a></h2>
-<p>Zweiunddreißig Kontextpakete liegen unter <code>internal/domain/</code> und
+<p>Dreiunddreißig Kontextpakete liegen unter <code>internal/domain/</code> und
 <code>internal/app/</code>: 19 gibt es in beiden Schichten, 2 nur in der Domäne
-(<code>ratings</code>, <code>shared</code>), 11 nur in der App. Sie arbeiten teils über
+(<code>ratings</code>, <code>shared</code>), 12 nur in der App. Sie arbeiten teils über
 Domänenereignisse auf einem gemeinsamen Bus zusammen; die App-Schicht liest
 außerdem direkt das Domänenpaket eines benachbarten Kontexts (siehe
 <a href="#relations">Beziehungen</a>).</p>
@@ -3579,6 +3579,10 @@ außerdem direkt das Domänenpaket eines benachbarten Kontexts (siehe
 <td>Medienwartung auf Anstoß des Administrators: Neuaufbau des Seek-Index, Reparaturjournal, Rückgängig, Prüfung der Tonspuren</td>
 </tr>
 <tr>
+<td><code>prunehold</code> (nur App)</td>
+<td>hält das massenhafte Löschen fehlender Dateien durch einen Scan zurück, bis ein Administrator es bestätigt (<code>library.prune.suspended</code>)</td>
+</tr>
+<tr>
 <td><code>presence</code> (nur App)</td>
 <td>nicht gespeichertes Verzeichnis im Arbeitsspeicher, wer gerade verbunden ist</td>
 </tr>
@@ -3622,8 +3626,8 @@ außerdem direkt das Domänenpaket eines benachbarten Kontexts (siehe
 </tr>
 <tr>
 <td><code>user</code></td>
-<td><code>UserCreated</code>, <code>user.password.reset_requested</code></td>
-<td>das erste hat keinen Abonnenten; das zweite empfängt der getriebene Adapter <code>email</code></td>
+<td><code>UserCreated</code>, <code>user.password.reset_requested</code>, <code>user.login.succeeded</code> / <code>user.login.failed</code></td>
+<td><code>UserCreated</code> hat keinen Abonnenten; die Anfrage zum Zurücksetzen empfängt der getriebene Adapter <code>email</code>; die Anmeldeereignisse <code>activity</code> (Anmeldeverlauf)</td>
 </tr>
 <tr>
 <td><code>pluginrunner</code></td>
@@ -3655,7 +3659,7 @@ eines benachbarten Kontexts.</p>
 <h2 id="typical-data-flow---user-plays-a-media">Typischer Datenfluss - „ein Benutzer spielt ein Medium ab“<a class="headerlink" href="#typical-data-flow---user-plays-a-media" title="Permanent link">¶</a></h2>
 <ol>
 <li>Der Client (Handy/Web) ruft <code>POST /api/v1/playback/start</code> auf (Route von grpc-gateway).</li>
-<li><code>internal/adapters/driving/http</code> führt seine Auth-Middleware aus (<code>auth_middleware.go</code>, <code>httpAuthMiddleware</code>) und liest die Sitzung aus.</li>
+<li><code>internal/adapters/driving/http</code> übergibt die Anfrage an grpc-gateway (Ratenbegrenzung, Cache-Header); der gRPC-<code>AuthInterceptor</code> (<code>grpcapi/interceptors/auth.go</code>) authentifiziert das Token und wendet RBAC an.</li>
 <li><code>internal/adapters/driving/grpcapi</code> (<code>playback_handler.go</code>) prüft das Proto und ruft <code>app/playback.CommandService.StartStream</code> auf (Trennung von Befehlen und Abfragen, siehe <a href="https://github.com/eveyproject/evey/blob/master/docs/adr/0009-cqrs-repo-split.md">ADR-0009</a>).</li>
 <li><code>app/playback.CommandService</code> ruft Domänen-Ports auf: <code>user.UserRepository</code>, <code>playback.SessionQueryRepo</code> (Idempotenz + Gerätelimit), <code>playback.SessionCommandRepo</code>, dann <code>shared.EventBus.Publish(PlaybackStarted)</code>.</li>
 <li>Die getriebenen Adapter führen aus: <code>postgres</code> speichert die Sitzung innerhalb eines Bereichs <code>shared.TransactionalUnit.Do</code>; der Bus im Prozess (<code>internal/pkg/eventbus</code>) verteilt asynchron.</li>
@@ -3666,7 +3670,7 @@ eines benachbarten Kontexts.</p>
 beschreibt <a href="../playback-serving/">Ein Video ausliefern - der HLS-Wiedergabeweg</a>.</p>
 <h2 id="architecture-guards">Architekturwächter<a class="headerlink" href="#architecture-guards" title="Permanent link">¶</a></h2>
 <p>Die Regeln oben stehen nicht nur in der Dokumentation.
-<code>internal/contractguard/</code> enthält 58 statische Tests in 30 Dateien, die den
+<code>internal/contractguard/</code> enthält 63 statische Tests in 30 Dateien, die den
 Build scheitern lassen, wenn die Codebasis von ihnen abweicht.</p>
 <p>Die hexagonale Regel selbst ist <code>TestDomainContextsDoNotImportEachOther</code>
 (ADR-0001), in <code>domain_imports_test.go</code>. Er durchläuft <code>internal/domain</code> und
@@ -3851,7 +3855,7 @@ nur von Domänen-Ports ab; getriebene Adapter setzen diese Ports um.</p>
         a_photo[photo]
         a_user[user]
         a_upd[updatecheck]
-        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, qoe, loadtest,&lt;br/&gt;demo]
+        a_misc[favorite, playlist, collection,&lt;br/&gt;feed, activity,&lt;br/&gt;chromecast, syncplay,&lt;br/&gt;plugin, notification, webhook,&lt;br/&gt;backup, dlna, config, mediarequest,&lt;br/&gt;maintenance, presence, prunehold, qoe, loadtest,&lt;br/&gt;demo]
     end
 
     subgraph domain[Domänenkern - internal/domain]

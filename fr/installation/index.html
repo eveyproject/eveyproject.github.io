@@ -3292,8 +3292,13 @@ dans <a href="../operations/advanced-deployments/">Déploiements avancés</a>.</
 <h2 id="what-you-need">Ce qu'il vous faut<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Un ordinateur ou un NAS qui reste allumé</strong>, avec un processeur x86-64
-  (Intel ou AMD). Les machines ARM64 ont besoin d'un tag de version, qui
-  n'existe pas encore : voir <a href="../operations/advanced-deployments/#arm-hosts">Machines ARM</a>.</li>
+  (Intel ou AMD) ou ARM64. Les images de version (tags <code>vX.Y.Z</code>) sont
+  multi-architecture (<code>linux/amd64</code> et <code>linux/arm64</code>) et Docker choisit la
+  bonne ; les builds de branche sont amd64 seulement, donc sur ARM on épingle
+  un tag de version. Le transcodage matériel sur ARM se limite à Rockchip
+  RKMPP (au mieux, pas encore validé sur du vrai matériel) ; un Raspberry Pi
+  ou un NAS ARM Realtek fait de la lecture directe et du transcodage
+  logiciel. Voir <a href="../operations/advanced-deployments/#arm-hosts">Machines ARM</a>.</li>
 <li><strong>Docker avec Compose v2.</strong> La commande est <code>docker compose</code>, avec une
   espace, et non l'ancienne <code>docker-compose</code>.</li>
 <li><strong>Votre dossier de médias</strong> : là où sont vos films, séries, musique ou
@@ -3480,7 +3485,7 @@ seulement pour appliquer ce choix ; Evey lui-même ne tourne jamais en root.</p>
 </tr>
 <tr>
 <td><code>eveyproject/evey:master</code></td>
-<td>la branche de développement, reconstruite à chaque push : pour tester, pas pour un serveur sur lequel vous comptez</td>
+<td>la branche d'intégration, reconstruite à chaque merge : pour tester, pas pour un serveur sur lequel vous comptez</td>
 </tr>
 </tbody>
 </table>

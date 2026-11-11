@@ -3292,8 +3292,13 @@ archivo <code>.env</code> y arranca servicios adicionales. Se explica en
 <h2 id="what-you-need">Qué necesitas<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Un ordenador o un NAS que esté siempre encendido</strong>, con un procesador
-  x86-64 (Intel o AMD). Las máquinas ARM64 necesitan una etiqueta de versión,
-  que todavía no existe: consulta
+  x86-64 (Intel o AMD) o ARM64. Las imágenes de versión (etiquetas <code>vX.Y.Z</code>)
+  son multiarquitectura (<code>linux/amd64</code> y <code>linux/arm64</code>) y Docker elige la
+  correcta; las builds de rama son solo amd64, así que en ARM fija una
+  etiqueta de versión. La transcodificación por hardware en ARM se limita a
+  Rockchip RKMPP (sin garantías, aún no validada en hardware real); una
+  Raspberry Pi o un NAS ARM Realtek reproduce en directo y transcodifica por
+  software. Consulta
   <a href="../operations/advanced-deployments/#arm-hosts">Máquinas ARM</a>.</li>
 <li><strong>Docker con Compose v2.</strong> El comando es <code>docker compose</code>, con un espacio,
   y no el antiguo <code>docker-compose</code>.</li>
@@ -3480,7 +3485,7 @@ tarjeta: consulta <a href="../administration/hardware-acceleration/">Aceleració
 </tr>
 <tr>
 <td><code>eveyproject/evey:master</code></td>
-<td>la rama de desarrollo, reconstruida en cada push: para probar, no para un servidor del que dependes</td>
+<td>la rama de integración, reconstruida en cada merge: para probar, no para un servidor del que dependes</td>
 </tr>
 </tbody>
 </table>

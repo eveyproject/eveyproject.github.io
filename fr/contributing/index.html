@@ -3242,13 +3242,14 @@ changer l'un de ces choix.</p>
    unitaires), analyse de sécurité, lint,
    <a href="../ARCHITECTURE/#architecture-guards">gardes d'architecture</a>, hygiène des
    commits, recherche de secrets, détection de rupture des proto, build
-   depuis un checkout propre, les contrôles d'intégration du dépôt et du
-   transcodage, et l'audit TV.
+   depuis un checkout propre, les gardes du wiki, les contrôles d'intégration
+   du dépôt et du transcodage, et l'audit TV.
    Un push vers <code>dev</code> ou vers une branche de travail lance
-   <code>make pre-push-dev</code> à la place : le même contrôle sans les longues suites
-   que la CI de la pull request rejoue sur les mêmes commits (recherche de
-   vulnérabilités, tests et build du frontend, suite du dépôt, audit TV) ;
-   un push vers <code>master</code> lance le contrôle complet.</li>
+   <code>make pre-push-dev</code> à la place : tests unitaires des seuls paquets
+   modifiés, tests du frontend et suite du dépôt seulement quand la branche
+   les touche, et ni recherche de vulnérabilités, ni build du frontend, ni
+   audit TV (la CI de la pull request les lance) ; un push vers <code>master</code>
+   lance le contrôle complet.</li>
 <li>Ajoutez des tests pour tout nouveau comportement et pour chaque
    correction de bug.</li>
 <li>Pour une contribution externe, acceptez une fois

@@ -3421,7 +3421,7 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres、meilisearch、服务器（Air）、网页应用（Vite）</span>
 </span></code></pre></div>
 <p>打开 <code>https://evey.test</code>。第一次启动时，设置向导会创建管理员账户，见<a href="../../getting-started/first-setup/">首次设置</a>。
-插件文件放在 <code>./evey-data/plugins/&lt;plugin-id&gt;/</code>，在容器里挂载为 <code>/data/plugins</code>。</p>
+在这个开发环境里，插件文件放在 <code>./plugins/&lt;plugin-id&gt;/</code>，在容器里挂载为 <code>/data/plugins</code>。</p>
 <h2 id="3-your-first-plugin-step-by-step">3. 一步步写出第一个插件<a class="headerlink" href="#3-your-first-plugin-step-by-step" title="Permanent link">¶</a></h2>
 <p>示例 <code>examples/plugins/nodejs-example</code> 是最小的完整插件：它提供 <code>PluginService</code>，连接 <code>HostService</code>，
 并在服务器启动它时往日志里写一行。我们把它复制一份，改一处，然后安装。</p>
@@ -3580,7 +3580,7 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
    <code>external_fetch</code> 的条目是纯主机名、声明了 <code>frontend</code> 时有 <code>web_root</code>。声明的 <code>language</code> 必须是镜像里有的运行时。</li>
 <li><strong>版本和权限升级。</strong> 对于已经安装的插件，新版本必须更高；任何新增的权限、能力、插槽或主机，都会让安装停在这一步，
    直到管理员批准这些差异（上传路由上的 <code>accept_permission_changes=true</code>）。</li>
-<li><strong>签名和哈希。</strong> 配置了公钥时会验证签名；只有在 <code>enforce</code> 下，验证失败才会阻止安装。ZIP 包的哈希会被记录下来，
+<li><strong>签名和哈希。</strong> 除非策略为 <code>off</code>，签名会根据插件包自带的 <code>cosign.pub</code> 来验证；只有在 <code>enforce</code> 下，验证失败才会阻止安装。ZIP 包的哈希会被记录下来，
    之前预览过的更新在应用时会再核对一次。</li>
 <li><strong>解压</strong>到一个临时目录：最多 5,000 个条目，单个文件最大 100 MB，总共最多 500 MB，压缩比不超过 100:1，
    不允许符号链接，不允许超出压缩包范围的路径。在后面每一步都通过之前，更新绝不会改动正在运行的版本。</li>
@@ -3640,9 +3640,9 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
 <td>调高 <code>version</code>，或者先卸载。</td>
 </tr>
 <tr>
-<td><code>signature does not match the plugin or the configured key</code></td>
+<td><code>signature does not match the package and its signing key</code></td>
 <td><code>.sig</code> 是用另一个密钥生成的，或者 ZIP 包在签名之后被改过。</td>
-<td>用正确的密钥给这个 ZIP 包重新签名，或者修正 <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>。</td>
+<td>用与包内 <code>cosign.pub</code> 对应的私钥给这个 ZIP 包重新签名。</td>
 </tr>
 <tr>
 <td><code>plugin blocked: theme.js contains forbidden pattern</code></td>

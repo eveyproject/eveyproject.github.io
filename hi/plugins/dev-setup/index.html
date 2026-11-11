@@ -3433,8 +3433,8 @@ Python और Node.js रहते हैं और <code>-lean</code> इमे
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres, meilisearch, सर्वर (Air), वेब ऐप (Vite)</span>
 </span></code></pre></div>
 <p><code>https://evey.test</code> खोलें। पहली बार चलाने पर सेटअप विज़ार्ड एडमिन खाता बनाता है,
-जैसा <a href="../../getting-started/first-setup/">पहला सेटअप</a> में बताया गया है। प्लगइन की
-फ़ाइलें <code>./evey-data/plugins/&lt;plugin-id&gt;/</code> में जाती हैं, जो कंटेनर में
+जैसा <a href="../../getting-started/first-setup/">पहला सेटअप</a> में बताया गया है। इस dev stack
+में प्लगइन की फ़ाइलें <code>./plugins/&lt;plugin-id&gt;/</code> में जाती हैं, जो कंटेनर में
 <code>/data/plugins</code> के रूप में mount होता है।</p>
 <h2 id="3-your-first-plugin-step-by-step">3. आपका पहला प्लगइन, कदम-दर-कदम<a class="headerlink" href="#3-your-first-plugin-step-by-step" title="Permanent link">¶</a></h2>
 <p>उदाहरण <code>examples/plugins/nodejs-example</code> सबसे छोटा पूरा प्लगइन है: यह
@@ -3655,8 +3655,8 @@ transparency log।</p>
    चाहिए, और कोई भी नई अनुमति, क्षमता, स्लॉट या होस्ट इंस्टॉल को यहीं रोक देता है,
    जब तक एडमिन फ़र्क को मंज़ूरी न दे (अपलोड route पर
    <code>accept_permission_changes=true</code>)।</li>
-<li><strong>सिग्नेचर और hash।</strong> public key सेट हो, तो सिग्नेचर जाँचा जाता है; फ़ेल होने
-   पर रोक सिर्फ़ <code>enforce</code> में लगती है। ZIP का hash दर्ज किया जाता है, और पहले
+<li><strong>सिग्नेचर और hash।</strong> सिग्नेचर उस <code>cosign.pub</code> से जाँचा जाता है जो पैकेज के
+   अंदर है, जब तक नीति <code>off</code> न हो; फ़ेल होने पर रोक सिर्फ़ <code>enforce</code> में लगती है। ZIP का hash दर्ज किया जाता है, और पहले
    देखा गया अपडेट लागू करते समय फिर से जाँचा जाता है।</li>
 <li><strong>Extraction</strong>, एक अस्थायी फ़ोल्डर में: ज़्यादा से ज़्यादा 5,000 एंट्री, हर
    फ़ाइल 100 MB, कुल 500 MB, compression ratio 100:1, कोई symbolic link नहीं, कोई
@@ -3735,9 +3735,9 @@ transparency log।</p>
 <td><code>version</code> बढ़ाएँ, या पहले अनइंस्टॉल करें।</td>
 </tr>
 <tr>
-<td><code>signature does not match the plugin or the configured key</code></td>
+<td><code>signature does not match the package and its signing key</code></td>
 <td><code>.sig</code> किसी और कुंजी से बनी, या साइन करने के बाद ZIP बदला।</td>
-<td>ठीक उसी ZIP को सही कुंजी से फिर से साइन करें, या <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> ठीक करें।</td>
+<td>ठीक उसी ZIP को उस private key से फिर से साइन करें जो उसके अंदर वाली <code>cosign.pub</code> से मेल खाती है।</td>
 </tr>
 <tr>
 <td><code>plugin blocked: theme.js contains forbidden pattern</code></td>

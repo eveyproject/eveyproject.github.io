@@ -3289,8 +3289,13 @@ runs extra services. It is described in
 </div>
 <h2 id="what-you-need">What you need<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
 <ul>
-<li><strong>A computer or NAS that stays on</strong>, with an x86-64 processor (Intel or
-  AMD). ARM64 machines need a release tag, which does not exist yet: see
+<li><strong>A computer or NAS that stays on</strong>, with an x86-64 (Intel or AMD) or an
+  ARM64 processor. Release images (<code>vX.Y.Z</code> tags) are multi-arch
+  (<code>linux/amd64</code> and <code>linux/arm64</code>) and Docker picks the right one; branch
+  builds are amd64 only, so pin a release tag on ARM. Hardware transcoding on
+  ARM is Rockchip RKMPP only (best-effort, not yet validated on real
+  hardware); a Raspberry Pi or a Realtek-based ARM NAS plays direct and
+  transcodes in software. See
   <a href="../operations/advanced-deployments/#arm-hosts">ARM hosts</a>.</li>
 <li><strong>Docker with Compose v2.</strong> The command is <code>docker compose</code>, with a space,
   not the older <code>docker-compose</code>.</li>
@@ -3467,7 +3472,7 @@ card: see <a href="../administration/hardware-acceleration/">Hardware accelerati
 </tr>
 <tr>
 <td><code>eveyproject/evey:master</code></td>
-<td>the development branch, rebuilt at every push: for testing, not for a server you rely on</td>
+<td>the integration branch, rebuilt at every merge: for testing, not for a server you rely on</td>
 </tr>
 </tbody>
 </table>
@@ -3522,7 +3527,7 @@ writes into media folders: internal/app/subtitle/service.go (.subtitles) ; inter
 delete = library only: internal/app/library/command_service.go - DeleteMediaItem ; internal/app/music/command_service.go - DeleteTrack
 remote access inference: docs/adr/0026-remote-access-inferred-from-a-published-url.md
 calibration at first quiet moment: internal/app/transcoding/calibration_service.go
-ARM needs a release tag, none exists yet: docs/operations/advanced-deployments.md (ARM hosts) ; git tag (none)
+ARM: release tags are multi-arch, branch builds amd64 only: docs/operations/advanced-deployments.md (ARM hosts) ; .github/workflows/ci.yml (Resolve build platforms)
 probe file removed right after: internal/app/library/watcher_probe.go - probeOnce
 apps link label: docs/getting-started/apps.md (Connect the apps)
 -->

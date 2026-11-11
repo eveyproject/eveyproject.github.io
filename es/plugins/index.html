@@ -3417,8 +3417,9 @@ entorno los define mientras el panel no se haya guardado nunca.</p>
 </tbody>
 </table>
 <p>La memoria, los procesos y el disco se aplican en la siguiente revisión del
-monitor, que detiene un plugin que los supere; la prioridad de CPU y el modo
-de sandbox se aplican a los plugins que arranquen después. <code>0</code> restablece el
+monitor, que detiene un plugin que los supere; la prioridad de CPU se aplica
+a los plugins que arranquen después, y un cambio del modo de sandbox reinicia
+en el acto los plugins en marcha. <code>0</code> restablece el
 valor por defecto para la memoria y los procesos; solo el límite de disco trata <code>0</code> como desactivado.</p>
 <p>El <strong>Panel de seguridad</strong> guarda, para cada plugin, lo que encontró el
 análisis, el resultado de la firma y el último error. Su línea <strong>Sandbox del

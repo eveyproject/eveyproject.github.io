@@ -3334,7 +3334,7 @@ métadonnées (<code>metadata.provider</code>) sont des capacités, déclarées 
 </tr>
 <tr>
 <td><code>media.write</code></td>
-<td>Réservée aux appels d'écriture de métadonnées, non servis aujourd'hui.</td>
+<td><code>UpdateMetadata</code> sur l'hôte, pour un plugin qui déclare aussi la capacité <code>metadata.provider</code>.</td>
 </tr>
 <tr>
 <td><code>api.library</code></td>
@@ -3346,7 +3346,7 @@ métadonnées (<code>metadata.provider</code>) sont des capacités, déclarées 
 </tr>
 <tr>
 <td><code>api.metadata</code></td>
-<td>Réservée à <code>UpdateMetadata</code>, non servi aujourd'hui.</td>
+<td>Le même appel <code>UpdateMetadata</code> que <code>media.write</code>, sous la même condition de capacité.</td>
 </tr>
 <tr>
 <td><code>notification.sender</code></td>

@@ -3283,7 +3283,7 @@
 </div>
 <h2 id="what-you-need">您需要准备什么<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
 <ul>
-<li><strong>一台持续开机的电脑或 NAS</strong>，处理器是 x86-64 架构（Intel 或 AMD）。ARM64 机器需要正式发布的版本标签，目前还没有：见 <a href="../operations/advanced-deployments/#arm-hosts">ARM 主机</a>。</li>
+<li><strong>一台持续开机的电脑或 NAS</strong>，处理器是 x86-64（Intel 或 AMD）或 ARM64 架构。正式发布的镜像（<code>vX.Y.Z</code> 标签）是多架构的（<code>linux/amd64</code> 和 <code>linux/arm64</code>），Docker 会自动选对；分支构建只有 amd64，所以在 ARM 上请固定一个发布标签。ARM 上的硬件转码只支持 Rockchip RKMPP（尽力而为，尚未在真实硬件上验证）；树莓派或 Realtek 芯片的 ARM NAS 走直接播放和软件转码。见 <a href="../operations/advanced-deployments/#arm-hosts">ARM 主机</a>。</li>
 <li><strong>带 Compose v2 的 Docker。</strong> 命令是 <code>docker compose</code>（中间有空格），不是旧的 <code>docker-compose</code>。</li>
 <li><strong>您的媒体文件夹</strong>：放电影、剧集、音乐或照片的地方。</li>
 <li><strong>一些磁盘空间，给 Evey 存自己的数据</strong>（数据库、海报图片、搜索索引）。下面的 compose 文件会把这些数据放在文件旁边一个叫 <code>evey-data</code> 的文件夹里。</li>
@@ -3418,7 +3418,7 @@
 </tr>
 <tr>
 <td><code>eveyproject/evey:master</code></td>
-<td>开发分支，每次推送都会重新构建：用于测试，不适合您依赖的服务器</td>
+<td>集成分支，每次合并都会重新构建：用于测试，不适合您依赖的服务器</td>
 </tr>
 </tbody>
 </table>

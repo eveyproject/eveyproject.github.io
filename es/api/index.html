@@ -3148,7 +3148,7 @@ en un archivo es el método gRPC que hay detrás.</p>
 <tr>
 <td>Token de plugin</td>
 <td>La interfaz de un plugin, a través de la página anfitriona</td>
-<td>Se emite por cinco minutos para un plugin y un usuario, y solo lleva los alcances <code>public</code> y <code>prefs</code> que se concedieron al plugin; todos los demás métodos lo rechazan. El marco nunca lo tiene: la página anfitriona hace de intermediaria en las llamadas.</td>
+<td>Se emite por cinco minutos para un plugin y un usuario, y puede llevar otros alcances concedidos al plugin, pero solo lo aceptan los métodos asociados a <code>public</code> y <code>prefs</code>; todos los demás métodos lo rechazan. El marco nunca lo tiene: la página anfitriona hace de intermediaria en las llamadas.</td>
 </tr>
 </tbody>
 </table>

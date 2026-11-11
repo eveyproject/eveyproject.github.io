@@ -3436,8 +3436,8 @@ indica el plugin gRPC que necesita su lenguaje.</p>
 </span></code></pre></div>
 <p>Abre <code>https://evey.test</code>. El asistente de configuración crea la cuenta de
 administrador en el primer arranque, como se explica en
-<a href="../../getting-started/first-setup/">Primera configuración</a>. Los archivos de
-los plugins van a <code>./evey-data/plugins/&lt;plugin-id&gt;/</code>, montado como
+<a href="../../getting-started/first-setup/">Primera configuración</a>. En esta pila de
+desarrollo, los archivos de los plugins van a <code>./plugins/&lt;plugin-id&gt;/</code>, montado como
 <code>/data/plugins</code> en el contenedor.</p>
 <h2 id="3-your-first-plugin-step-by-step">3. Tu primer plugin, paso a paso<a class="headerlink" href="#3-your-first-plugin-step-by-step" title="Permanent link">¶</a></h2>
 <p>El ejemplo <code>examples/plugins/nodejs-example</code> es el plugin completo más
@@ -3673,8 +3673,9 @@ registro del servidor tiene el detalle.</p>
    versión nueva tiene que ser mayor, y cualquier permiso, capacidad, slot o
    host nuevo detiene la instalación aquí hasta que el administrador aprueba
    la diferencia (<code>accept_permission_changes=true</code> en la ruta de subida).</li>
-<li><strong>Firma y hash.</strong> La firma se verifica cuando hay una clave pública
-   configurada; un fallo solo bloquea con <code>enforce</code>. El hash del ZIP se
+<li><strong>Firma y hash.</strong> La firma se verifica con el <code>cosign.pub</code> que lleva el
+   paquete, salvo si la política es <code>off</code>; un fallo solo bloquea con
+   <code>enforce</code>. El hash del ZIP se
    guarda, y se vuelve a comprobar cuando se aplica una actualización
    revisada antes en la vista previa.</li>
 <li><strong>Extracción</strong> a una carpeta temporal: como mucho 5.000 entradas, 100 MB
@@ -3759,9 +3760,9 @@ versión en una forja, tu propia web).</p>
 <td>Sube <code>version</code>, o desinstala primero.</td>
 </tr>
 <tr>
-<td><code>signature does not match the plugin or the configured key</code></td>
+<td><code>signature does not match the package and its signing key</code></td>
 <td>El <code>.sig</code> se hizo con otra clave, o el ZIP cambió después de firmarlo.</td>
-<td>Vuelve a firmar exactamente ese ZIP con la clave correcta, o corrige <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>.</td>
+<td>Vuelve a firmar exactamente ese ZIP con la clave privada que corresponde al <code>cosign.pub</code> que contiene.</td>
 </tr>
 <tr>
 <td><code>plugin blocked: theme.js contains forbidden pattern</code></td>

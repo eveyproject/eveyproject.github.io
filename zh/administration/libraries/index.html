@@ -3423,7 +3423,7 @@
 <ul>
 <li>服务器每次启动时都会读取所有媒体库，之后每 2 分钟读一次（<strong>管理 → 服务器配置 → 媒体库 → 定期扫描间隔</strong>，重启后生效）。有内容正在播放时，它每隔 15 分钟才读一次，以免拖慢播放。</li>
 <li>对于开启了实时监控的媒体库，系统也可以在文件变化时通知服务器（<strong>管理 → 服务器配置 → 媒体库 → 媒体库文件监视</strong>）。为了确认这项功能仍然有效，服务器会往文件夹里写入一个小测试文件，几秒后删除。已经证明这项功能有效的媒体库，改为每小时读一次，而不是每 2 分钟。</li>
-<li>在网页管理面板里创建的媒体库不使用文件监视：每 2 分钟一次的读取会发现它们的文件。手机应用的管理表单里，媒体库有一个<strong>实时监控</strong>开关。</li>
+<li>网页和手机的媒体库表单都有一个<strong>实时监控</strong>开关，新建媒体库时默认开启；关闭后，每 2 分钟一次的读取会发现这些文件。</li>
 </ul>
 </details>
 <div class="admonition note">
@@ -3476,7 +3476,7 @@
 <p>Evey 会找出剧集和电影的片头、前情提要和片尾，让播放器可以提供跳过。如果社区数据库（先查 TheIntroDB，再查 IntroDB）收录了该影片，时间点就来自那里。否则，服务器会分析文件，自行计算。管理员可以为某个影片手动调整时间点，或重新运行检测。</p>
 <p>播放器默认显示<strong>跳过片头</strong>、<strong>跳过前情提要</strong>和<strong>跳过片尾</strong>按钮。开启<strong>自动跳过片头</strong>（<strong>管理 → 服务器配置 → 媒体库</strong>，默认关闭）后，所有播放器都会自动跳过。</p>
 <!-- sources
-add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths only - no realtime/scan-on-startup toggles) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)
+add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths, realtime monitoring on by default) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)
 types: i18n admin.libraries.types.* ; internal/adapters/driven/metadata/musicbrainz_provider.go ; internal/app/music/album_art_chain.go
 parser: internal/adapters/driven/filesystem/parser.go (reEditionSuffix, knownQualities, SetExtraParserTokens) ; internal/app/library/parser_config.go ApplyParserConfig ; i18n admin.serverConfig.parserTokens*
 fix a title: frontend/apps/web/src/features/library/MediaDetailEdit.tsx (save, refresh, reset, rematch, identify) ; IdentifyMetadataModal.tsx ; http/admin_handler_media.go (identify search) ; internal/app/metadata/command_service_overrides.go SetOverride, ResetItemMetadata (overrides, artwork, persons, Catalog=nil, children) ; command_service_refresh.go RefreshItemMetadata ; i18n media.detail.editMetadata, identify.*, tmdbId, imdbId, idChangedWarning, refreshMetadata, resetMetadata, rematchMetadata, rematchConfirm

@@ -3280,8 +3280,9 @@ hat immer Vorrang. Sonst folgen die Player der <strong>Standard-Audiosprache</st
 Profils, dann der Spur, die die Datei als Standard markiert, dann der ersten.
 Hat die Datei eine Kommentarspur und eine normale Spur, wird die
 Kommentarspur übersprungen.</p>
-<p>Beurteilt wird nur die Spur, die gerade läuft: Eine DTS-Spur, die Sie nicht
-hören, löst nie eine Transkodierung aus.</p>
+<p>Neu kodiert werden kann nur die Spur, die gerade läuft: Eine DTS-Spur, die Sie
+nicht hören, löst nie eine Transkodierung aus, macht aber auf einem Gerät, das
+sie nicht dekodieren kann, aus einer Direktwiedergabe einen Remux.</p>
 <h2 id="copied-or-re-encoded">Kopiert oder neu kodiert<a class="headerlink" href="#copied-or-re-encoded" title="Permanent link">¶</a></h2>
 <p>Die Spur wird kopiert, wenn der Player ihren Codec dekodiert und seine
 Ausgabe genug Kanäle dafür hat, im Rahmen von <strong>Maximale Audio-Kanäle</strong> im
@@ -3297,8 +3298,9 @@ wird sie in AAC neu kodiert:</p>
 </ul>
 <p>Eine kopierte Spur in einem transkodierten oder umverpackten Stream muss
 außerdem ein Format haben, das der Player in den Segmenten des Streams
-annimmt. AAC, AC-3 und E-AC-3 gehen immer; andere Codecs nur, wenn der Player
-es meldet. Sonst wird die Spur neu kodiert, und Stream-Info zeigt
+annimmt. AAC, AC-3 und E-AC-3 gehen immer; MP3 und Opus nur, wenn der Player
+meldet, dass er sie in einem Stream annimmt; jeder andere Codec wird neu
+kodiert. Sonst wird die Spur neu kodiert, und Stream-Info zeigt
 <strong>Audiospur kann im Stream nicht unverändert übertragen werden</strong>: Ein Player
 kann MP3 in einer Datei dekodieren und es in einem Stream trotzdem ablehnen.</p>
 <h2 id="dolby-digital-in-a-browser">Dolby Digital im Browser<a class="headerlink" href="#dolby-digital-in-a-browser" title="Permanent link">¶</a></h2>

@@ -3399,7 +3399,7 @@ que vale para cualquier sandbox que no sea una máquina virtual completa.</p>
 <li>las acciones peligrosas del sistema siguen bloqueadas en el kernel;</li>
 <li>pero sin restricción de archivos por carpeta, un plugin malicioso podría leer archivos corrientes
   que no son secretos, ver la lista de procesos en marcha y, como los plugins
-  comparten una misma cuenta, leer o alterar los archivos de otro plugin.</li>
+  comparten el grupo del servidor, leer los archivos de otro plugin legibles por el grupo.</li>
 </ul>
 <p>En un equipo así, instala solo plugins de confianza, o pasa a un kernel
 moderno para tener la restricción de archivos completa.</p>
@@ -3436,8 +3436,8 @@ aparece con error: vuelve al modo anterior.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># el lanzador lleva la capacidad que usa la separación de uid</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>getcap<span class="w"> </span>/evey-plugin-launcher<span class="w">        </span><span class="c1"># cap_setuid=ep</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># con qué usuario se ejecuta un plugin en marcha (evey = compartido con el servidor,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># evey-plugin = separado); la imagen tiene ps, así que `docker exec evey-server ps` también funciona</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># con qué usuario se ejecuta un plugin en marcha (evey = compartido con el servidor, un</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># uid numérico entre 40000 y 59999 = separado, uno por plugin); la imagen tiene ps, así que `docker exec evey-server ps` también funciona</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>docker<span class="w"> </span>top<span class="w"> </span>evey-server<span class="w"> </span>-o<span class="w"> </span>user,pid,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"node|python"</span>
 </span></code></pre></div>
 <p>El modo de sandbox activo es la insignia de <strong>Administración → Plugins →

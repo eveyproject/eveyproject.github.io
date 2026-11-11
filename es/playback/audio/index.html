@@ -3279,8 +3279,9 @@ siempre tiene prioridad. Si no, los reproductores siguen el <strong>Idioma de au
 por defecto</strong> del perfil, después la pista que el archivo marca como
 predeterminada, y después la primera. Una pista marcada como comentario se
 salta en favor de una normal cuando el archivo tiene las dos.</p>
-<p>Solo cuenta la pista que se está reproduciendo: una pista DTS que no estás
-escuchando nunca provoca una transcodificación.</p>
+<p>Solo la pista que se está reproduciendo puede volver a codificarse: una pista
+DTS que no estás escuchando nunca provoca una transcodificación, pero en un
+dispositivo que no puede descodificarla, convierte un Direct Play en un Remux.</p>
 <h2 id="copied-or-re-encoded">Copiada o vuelta a codificar<a class="headerlink" href="#copied-or-re-encoded" title="Permanent link">¶</a></h2>
 <p>La pista se copia cuando el reproductor descodifica su códec y su salida
 tiene canales suficientes, dentro de los <strong>Canales de audio máximos</strong> del
@@ -3296,8 +3297,9 @@ vuelve a codificar en AAC:</p>
 </ul>
 <p>Una pista copiada dentro de un flujo transcodificado o en remux también tiene
 que estar en un formato que el reproductor acepte dentro de los segmentos del
-flujo. AAC, AC-3 y E-AC-3 siempre lo están; los demás códecs, solo cuando el
-reproductor lo indica. Cuando no es así, la pista se vuelve a codificar e
+flujo. AAC, AC-3 y E-AC-3 siempre lo están; MP3 y Opus, solo cuando el
+reproductor indica que los acepta en un flujo; cualquier otro códec se vuelve
+a codificar. Cuando no es así, la pista se vuelve a codificar e
 Información del flujo dice <strong>La pista de audio no puede transmitirse sin
 cambios en el stream</strong>: un reproductor puede descodificar MP3 en un archivo y
 aun así rechazarlo dentro de un flujo.</p>

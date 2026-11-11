@@ -3470,10 +3470,10 @@ biblioteca:</p>
   sigue funcionando, escribe un pequeño archivo de prueba en la carpeta
   durante unos segundos. Una biblioteca en la que se ha comprobado que
   funciona se lee una vez por hora en lugar de cada 2 minutos.</li>
-<li>Las bibliotecas creadas desde el panel web no usan el monitor de archivos:
-  las lecturas cada 2 minutos encuentran sus archivos. El formulario de
-  administración de la app del teléfono tiene, para una biblioteca, un
-  interruptor <strong>Monitoreo en tiempo real</strong>.</li>
+<li>Los formularios de biblioteca de la web y de la app del teléfono tienen
+  ambos un interruptor <strong>Monitoreo en tiempo real</strong>, activado por defecto
+  en una biblioteca nueva; si está desactivado, las lecturas cada 2 minutos
+  encuentran los archivos.</li>
 </ul>
 </details>
 <div class="admonition note">
@@ -3567,7 +3567,7 @@ la detección.</p>
 (<strong>Administración → Configuración del servidor → Bibliotecas</strong>, desactivado por defecto) hace que todos los reproductores las
 salten solos.</p>
 <!-- sources
-add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths only - no realtime/scan-on-startup toggles) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)
+add library: frontend/apps/web/src/features/admin/LibraryForm.tsx (name, type, paths, realtime monitoring on by default) ; i18n admin.libraries.addLibrary, tvShows, paths, enterCustomPath, addPath, createLibrary ; internal/domain/library/model.go NewLibrary (RealtimeMonitoring false by default) ; grpcapi/library_handler.go CreateLibrary (no scan trigger ; only watcher + feed subscribe library.created)
 types: i18n admin.libraries.types.* ; internal/adapters/driven/metadata/musicbrainz_provider.go ; internal/app/music/album_art_chain.go
 parser: internal/adapters/driven/filesystem/parser.go (reEditionSuffix, knownQualities, SetExtraParserTokens) ; internal/app/library/parser_config.go ApplyParserConfig ; i18n admin.serverConfig.parserTokens*
 fix a title: frontend/apps/web/src/features/library/MediaDetailEdit.tsx (save, refresh, reset, rematch, identify) ; IdentifyMetadataModal.tsx ; http/admin_handler_media.go (identify search) ; internal/app/metadata/command_service_overrides.go SetOverride, ResetItemMetadata (overrides, artwork, persons, Catalog=nil, children) ; command_service_refresh.go RefreshItemMetadata ; i18n media.detail.editMetadata, identify.*, tmdbId, imdbId, idChangedWarning, refreshMetadata, resetMetadata, rematchMetadata, rematchConfirm

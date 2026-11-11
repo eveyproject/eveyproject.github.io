@@ -3147,7 +3147,7 @@ Insomnia). The HTTP routes are generated from the gRPC definitions in
 <tr>
 <td>Plugin token</td>
 <td>A plugin's interface, through the host page</td>
-<td>Minted for five minutes for one plugin and one user, carrying only the <code>public</code> and <code>prefs</code> scopes the plugin was granted; every other method refuses it. The frame never holds it: the host page proxies the calls.</td>
+<td>Minted for five minutes for one plugin and one user, it may carry other scopes the plugin was granted, but only the methods mapped to <code>public</code> and <code>prefs</code> accept it; every other method refuses it. The frame never holds it: the host page proxies the calls.</td>
 </tr>
 </tbody>
 </table>

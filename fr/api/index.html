@@ -3149,7 +3149,7 @@ la méthode gRPC qui se trouve derrière.</p>
 <tr>
 <td>Jeton de plugin</td>
 <td>L'interface d'un plugin, par la page hôte</td>
-<td>Émis pour cinq minutes, pour un plugin et un utilisateur, ne portant que les portées <code>public</code> et <code>prefs</code> accordées au plugin ; toute autre méthode le refuse. Le cadre ne le détient jamais : la page hôte relaie les appels.</td>
+<td>Émis pour cinq minutes, pour un plugin et un utilisateur, il peut porter d'autres portées accordées au plugin, mais seules les méthodes rattachées à <code>public</code> et <code>prefs</code> l'acceptent ; toute autre méthode le refuse. Le cadre ne le détient jamais : la page hôte relaie les appels.</td>
 </tr>
 </tbody>
 </table>

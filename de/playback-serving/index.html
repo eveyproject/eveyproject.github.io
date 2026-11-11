@@ -3353,9 +3353,10 @@ von Anfang bis Ende zu verfolgen:</p>
    Festlegungen aus der Anfrage darüber (<code>vd=</code> / <code>ad=</code>), die Übersteuerung
    für die Audio-Neusynchronisierung usw.</li>
 <li><strong>F3 - Fähigkeit</strong> - <code>internal/app/transcoding/calibration_service.go</code>:
-   <code>Current()</code> liefert <code>domain/transcoding.Derive(report, policy)</code>
-   (<code>derive.go</code>), die Obergrenzen des Hosts, abgeleitet aus der letzten
-   Kalibrierung.</li>
+   <code>Current()</code> liefert die Obergrenzen des Hosts: den aus der letzten
+   Kalibrierung abgeleiteten Snapshot der Fähigkeiten
+   (<code>domain/transcoding.Derive</code>, <code>derive.go</code>), mit den Obergrenzen-Overrides
+   des Betreibers angewendet.</li>
 <li><strong>Leiter und Zulassung</strong> - der Resolver schneidet die Leiter zu
    (Komplexitätsklasse, Profile der Produzenten, Grenzen aus Quelle und
    Fähigkeit, CMCD/AV1-Grenzen, Zulassungsroute und Obergrenze) und

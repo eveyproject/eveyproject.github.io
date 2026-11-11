@@ -3290,8 +3290,13 @@ CPU की कोई सेटिंग नहीं।</p>
 </div>
 <h2 id="what-you-need">आपको क्या चाहिए<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
 <ul>
-<li><strong>एक कंप्यूटर या NAS जो हमेशा चालू रहे</strong>, x86-64 प्रोसेसर (Intel या AMD)
-  वाला। ARM64 मशीनों के लिए एक रिलीज़ टैग चाहिए, जो अभी मौजूद नहीं है: देखें
+<li><strong>एक कंप्यूटर या NAS जो हमेशा चालू रहे</strong>, x86-64 (Intel या AMD) या ARM64
+  प्रोसेसर वाला। रिलीज़ इमेज (<code>vX.Y.Z</code> टैग) मल्टी-आर्क हैं (<code>linux/amd64</code> और
+  <code>linux/arm64</code>), Docker सही वाली चुन लेता है; ब्रांच बिल्ड सिर्फ़ amd64 हैं,
+  इसलिए ARM पर रिलीज़ टैग पिन करें। ARM पर हार्डवेयर ट्रांसकोडिंग सिर्फ़
+  Rockchip RKMPP से होती है (बिना गारंटी, अभी असली हार्डवेयर पर जाँची नहीं गई);
+  Raspberry Pi या Realtek वाला ARM NAS सीधे चलाता है और सॉफ़्टवेयर से
+  ट्रांसकोड करता है। देखें
   <a href="../operations/advanced-deployments/#arm-hosts">ARM मशीनें</a>।</li>
 <li><strong>Compose v2 के साथ Docker।</strong> कमांड है <code>docker compose</code>, बीच में स्पेस के
   साथ, पुराना <code>docker-compose</code> नहीं।</li>
@@ -3469,7 +3474,7 @@ Evey चलता रहेगा।</p>
 </tr>
 <tr>
 <td><code>eveyproject/evey:master</code></td>
-<td>डेवलपमेंट ब्रांच, हर push पर दोबारा बनती है: परीक्षण के लिए, उस सर्वर के लिए नहीं जिस पर आप निर्भर हैं</td>
+<td>इंटीग्रेशन ब्रांच, हर merge पर दोबारा बनती है: परीक्षण के लिए, उस सर्वर के लिए नहीं जिस पर आप निर्भर हैं</td>
 </tr>
 </tbody>
 </table>

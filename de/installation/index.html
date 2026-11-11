@@ -3293,8 +3293,13 @@ beschrieben.</p>
 <h2 id="what-you-need">Was Sie brauchen<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Einen Computer oder ein NAS, das eingeschaltet bleibt</strong>, mit einem
-  x86-64-Prozessor (Intel oder AMD). ARM64-Geräte brauchen ein
-  Versions-Tag, das es noch nicht gibt: siehe
+  x86-64-Prozessor (Intel oder AMD) oder einem ARM64-Prozessor.
+  Release-Images (Tags <code>vX.Y.Z</code>) sind Multi-Arch (<code>linux/amd64</code> und
+  <code>linux/arm64</code>), Docker wählt das passende; Branch-Builds gibt es nur für
+  amd64, auf ARM also ein Release-Tag festlegen. Hardware-Transkodierung auf
+  ARM gibt es nur mit Rockchip RKMPP (ohne Gewähr, noch nicht auf echter
+  Hardware geprüft); ein Raspberry Pi oder ein ARM-NAS mit Realtek-Chip spielt
+  direkt ab und transkodiert in Software. Siehe
   <a href="../operations/advanced-deployments/#arm-hosts">ARM-Rechner</a>.</li>
 <li><strong>Docker mit Compose v2.</strong> Der Befehl heißt <code>docker compose</code>, mit
   Leerzeichen, nicht das ältere <code>docker-compose</code>.</li>
@@ -3479,7 +3484,7 @@ auf die Karte: siehe <a href="../administration/hardware-acceleration/">Hardware
 </tr>
 <tr>
 <td><code>eveyproject/evey:master</code></td>
-<td>der Entwicklungszweig, bei jedem Push neu gebaut: zum Testen, nicht für einen Server, auf den Sie sich verlassen</td>
+<td>der Integrationszweig, bei jedem Merge neu gebaut: zum Testen, nicht für einen Server, auf den Sie sich verlassen</td>
 </tr>
 </tbody>
 </table>

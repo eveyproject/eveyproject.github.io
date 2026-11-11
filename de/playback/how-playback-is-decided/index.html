@@ -3400,8 +3400,12 @@ steht jede Spur mit ihrer Entscheidung (<em>kopiert</em>, <em>transkodiert</em> 
 </tr>
 </tbody>
 </table>
-<p>Beurteilt wird nur die Tonspur, die gerade läuft. Hat eine Datei eine nicht
-gewählte Kommentarspur in DTS, wird sie deswegen nicht transkodiert.</p>
+<p>Nur die Tonspur, die gerade läuft, entscheidet, ob der Ton neu kodiert wird.
+Liegt aber eine andere Tonspur der Datei in einem Codec vor, den das Gerät
+nicht dekodieren kann (etwa ein DTS-Kommentar), wird die Datei umverpackt
+(Remux) statt unverändert gesendet, denn mit der Rohdatei könnte der Player
+selbst zu dieser Spur wechseln. Stream-Info zeigt dann <strong>Eine andere Audiospur
+der Datei kann auf diesem Gerät nicht abgespielt werden</strong>.</p>
 <p>Eine Datei, die keine der Methoden auf diesem Gerät liefern kann, wird vor dem
 Start der Wiedergabe abgelehnt, mit <strong>Dieser Server ist für diese Datei nicht
 leistungsstark genug</strong>: siehe <a href="../transcoding/#sharing-the-capacity">Transkodierung und Serverkapazität</a>.</p>
@@ -3466,8 +3470,10 @@ der Player meldet oder als die <strong>Maximale Audio-Kanäle</strong> des Profi
 Eine neu kodierte Spur behält bis zu 5.1 Kanäle, nie mehr: siehe
 <a href="../audio/">Audio</a>.</p>
 <h2 id="constraints-the-server-applies-itself">Einschränkungen, die der Server selbst anwendet<a class="headerlink" href="#constraints-the-server-applies-itself" title="Permanent link">¶</a></h2>
-<p>Einige Grenzen melden die Player heute nicht. Der Server wendet sie als
-vorsichtige Regel für die Kompatibilität an, gleich für jeden Player: H.264
+<p>Die Apps für Android und Android TV melden, welche Pixelformate ihre Decoder
+annehmen (8 Bit 4:2:0 pro Codec, 10 Bit, wo der Decoder es unterstützt), und
+der Server beurteilt die Quelle anhand dieser Liste. Für einen Player, der
+nichts meldet (die Web-App, Cast), wendet er eine vorsichtige Regel an: H.264
 mit 10 Bit und jedes Video in 4:2:2, 4:4:4 oder 12 Bit werden neu kodiert.
 HEVC, VP9 und AV1 bis 10 Bit 4:2:0 hängen dagegen davon ab, welche Codecs der
 Player unterstützt. Dolby Vision bleibt nur in einer Form erhalten, die der

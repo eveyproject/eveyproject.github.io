@@ -3256,7 +3256,7 @@
 </p>
 
 <p class="evey-platforms">
-<strong>您需要：</strong>一台装了 Docker 的 x86-64 电脑或 NAS，以及一个放着您媒体文件的文件夹。安装只要一个文件和一条命令。<br>
+<strong>您需要：</strong>一台装了 Docker 的电脑或 NAS（x86-64，或树莓派这类 ARM64：<a href="operations/advanced-deployments/#arm-hosts">ARM 主机</a>），以及一个放着您媒体文件的文件夹。安装只要一个文件和一条命令。<br>
 <strong>观看方式：</strong>网页浏览器、Android 手机和平板、Android TV、电视的网页浏览器，以及 Chromecast。Android 和 Android TV 应用已上架 [Google Play](https://play.google.com/store/apps/details?id=com.evey.app)；网页应用随服务器一起提供，电视浏览器版应用位于 `/tv`。
 </p>
 
@@ -3340,7 +3340,7 @@
 <p><strong>您的数据。</strong> 本项目不运行任何接收您数据的服务：不需要在我们这里注册账户，没有使用统计，也没有崩溃报告。应用只和您的服务器通信，不连接我们运营的任何其他服务。会离开您网络的内容只有这些：服务器会从外部服务获取海报和简介（The Movie Database、TVmaze、一个 IMDb API、设置了密钥时的 OMDb、MusicBrainz，以及音乐的封面来源），还会不时检查有没有新版本，这一项可以关闭。每次会改动数据库的更新之前，数据库都会先备份。
 <a href="privacy/">隐私政策</a> · <a href="backups/">备份与更新</a></p>
 <h2 id="plugins-run-isolated-and-controlled">插件隔离运行，权限受控<a class="headerlink" href="#plugins-run-isolated-and-controlled" title="Permanent link">¶</a></h2>
-<p>插件可以添加元数据来源、通知渠道、首页栏目和播放器上的叠加内容。主题用来改变外观。安装插件之前，管理员能看到系统检查出它会做哪些事，以及它申请了哪些权限；新的权限必须明确同意才行。每个插件作为独立的进程运行，使用单独的系统用户，没有直接的网络访问；一旦超出内存、进程数或磁盘的限制，就会被停止。它的文件访问受到多严格的限制，取决于这台机器，<strong>安全仪表板</strong>会显示当前使用的模式。插件的小组件会显示在网页、Android 和电视上；在电视上只能看，不能操作。
+<p>插件可以添加元数据来源、通知渠道、首页栏目和播放器上的叠加内容。主题用来改变外观。安装插件之前，管理员能看到系统检查出它会做哪些事，以及它申请了哪些权限；新的权限必须明确同意才行。每个插件作为独立的进程运行，由 Landlock 或 bubblewrap 限制（机器只支持基础沙箱时，使用单独的系统用户），没有直接的网络访问；一旦超出内存、进程数或磁盘的限制，就会被停止。它的文件访问受到多严格的限制，取决于这台机器，<strong>安全仪表板</strong>会显示当前使用的模式。插件的小组件会显示在网页、Android 和电视上；在电视上只能看，不能操作。
 <a href="plugins/">插件</a> ·
 <a href="SECURITY/#sandbox-modes">安全模型与插件沙箱</a></p>
 <h2 id="find-your-way">从哪里开始<a class="headerlink" href="#find-your-way" title="Permanent link">¶</a></h2>

@@ -3435,7 +3435,7 @@ names the gRPC plugin its language needs.</p>
 </span></code></pre></div>
 <p>Open <code>https://evey.test</code>. The setup wizard creates the administrator account
 on first launch, as described in <a href="../../getting-started/first-setup/">First setup</a>.
-Plugin files land in <code>./evey-data/plugins/&lt;plugin-id&gt;/</code>, mounted as
+In this dev stack, plugin files land in <code>./plugins/&lt;plugin-id&gt;/</code>, mounted as
 <code>/data/plugins</code> in the container.</p>
 <h2 id="3-your-first-plugin-step-by-step">3. Your first plugin, step by step<a class="headerlink" href="#3-your-first-plugin-step-by-step" title="Permanent link">¶</a></h2>
 <p>The example <code>examples/plugins/nodejs-example</code> is the smallest complete plugin:
@@ -3659,8 +3659,9 @@ server log carries the detail.</p>
    version must be higher, and any new permission, capability, slot or host
    stops the install here until the administrator approves the difference
    (<code>accept_permission_changes=true</code> on the upload route).</li>
-<li><strong>Signature and hash.</strong> The signature is verified when a public key is
-   configured; a failure blocks only under <code>enforce</code>. The hash of the ZIP is
+<li><strong>Signature and hash.</strong> The signature is verified against the <code>cosign.pub</code>
+   the package carries, unless the policy is <code>off</code>; a failure blocks only
+   under <code>enforce</code>. The hash of the ZIP is
    recorded, and checked again when an update previewed earlier is applied.</li>
 <li><strong>Extraction</strong> into a staging directory: at most 5,000 entries, 100 MB per
    file, 500 MB in total, a compression ratio of 100:1, no symbolic link, no
@@ -3742,9 +3743,9 @@ on a forge, your own site).</p>
 <td>Bump <code>version</code>, or uninstall first.</td>
 </tr>
 <tr>
-<td><code>signature does not match the plugin or the configured key</code></td>
+<td><code>signature does not match the package and its signing key</code></td>
 <td>The <code>.sig</code> was made with another key, or the ZIP changed after signing.</td>
-<td>Re-sign the exact ZIP with the right key, or fix <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code>.</td>
+<td>Re-sign the exact ZIP with the private key matching the <code>cosign.pub</code> inside it.</td>
 </tr>
 <tr>
 <td><code>plugin blocked: theme.js contains forbidden pattern</code></td>

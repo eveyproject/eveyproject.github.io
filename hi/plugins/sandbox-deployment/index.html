@@ -3392,8 +3392,8 @@
   होस्ट तक पहुँचता है;</li>
 <li>ख़तरनाक सिस्टम काम अब भी kernel के स्तर पर रोके जाते हैं;</li>
 <li>पर हर फ़ोल्डर के स्तर पर फ़ाइल प्रतिबंध के बिना, दुर्भावनापूर्ण प्लगइन सामान्य, गैर-secret फ़ाइलें पढ़ सकता
-  है, चल रहे प्रोसेस की सूची देख सकता है, और क्योंकि सभी प्लगइन एक ही खाता
-  इस्तेमाल करते हैं, किसी दूसरे प्लगइन की फ़ाइलें पढ़ सकता है या उनमें गड़बड़ी कर सकता है।</li>
+  है, चल रहे प्रोसेस की सूची देख सकता है, और क्योंकि सभी प्लगइन सर्वर का group
+  साझा करते हैं, किसी दूसरे प्लगइन की group के लिए पढ़ने योग्य फ़ाइलें पढ़ सकता है।</li>
 </ul>
 <p>ऐसे होस्ट पर सिर्फ़ वही प्लगइन इंस्टॉल करें जिन पर आपको भरोसा है, या पूरे फ़ाइल
 प्रतिबंध के लिए आधुनिक kernel पर जाएँ।</p>
@@ -3430,7 +3430,7 @@
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>evey-server<span class="w"> </span>getcap<span class="w"> </span>/evey-plugin-launcher<span class="w">        </span><span class="c1"># cap_setuid=ep</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># कोई चल रहा प्लगइन किस उपयोगकर्ता के रूप में चलता है (evey = सर्वर के साथ साझा,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># evey-plugin = अलग); इमेज में ps है, इसलिए `docker exec evey-server ps` भी काम करता है</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 40000-59999 में कोई संख्यात्मक uid = अलग, हर प्लगइन का अपना); इमेज में ps है, इसलिए `docker exec evey-server ps` भी काम करता है</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>docker<span class="w"> </span>top<span class="w"> </span>evey-server<span class="w"> </span>-o<span class="w"> </span>user,pid,args<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">"node|python"</span>
 </span></code></pre></div>
 <p>लागू सैंडबॉक्स मोड <strong>एडमिन → प्लगइन → सुरक्षा डैशबोर्ड</strong> का बैज है।</p>

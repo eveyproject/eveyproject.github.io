@@ -3350,9 +3350,9 @@ de principio a fin:</p>
    fijados en la petición (<code>vd=</code> / <code>ad=</code>), la corrección de la
    resincronización del audio, etc.</li>
 <li><strong>P3 - Capacidad</strong> - <code>internal/app/transcoding/calibration_service.go</code>:
-   <code>Current()</code> devuelve <code>domain/transcoding.Derive(report, policy)</code>
-   (<code>derive.go</code>), los techos de la máquina deducidos de la última
-   calibración.</li>
+   <code>Current()</code> devuelve los techos de la máquina: la instantánea de capacidades
+   deducida de la última calibración (<code>domain/transcoding.Derive</code>, <code>derive.go</code>),
+   con los techos forzados por el operador aplicados.</li>
 <li><strong>Escalera y admisión</strong> - el resolutor ajusta la escalera (clase de
    complejidad, perfiles de los productores, topes de la fuente y de la
    capacidad, topes CMCD/AV1, ruta y techo de admisión) y después <strong>la
