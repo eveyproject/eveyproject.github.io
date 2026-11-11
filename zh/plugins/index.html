@@ -3308,7 +3308,7 @@
 <code>-lean</code> 镜像只保留 Python。</p>
 <div class="admonition tip">
 <p class="admonition-title">签名的插件</p>
-<p>插件作者可以用 <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a> 给 ZIP 签名，
+<p>插件作者可以用 <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a> 给 ZIP 签名，
 作者的公钥随包一起分发。Evey 自己检查签名（不需要 <code>cosign</code> 程序）：密钥在您的<strong>受信任的发布者</strong>列表里时显示<strong>由 &lt;发布者&gt; 签名</strong>，否则显示<strong>已签名，未知密钥</strong>和它的指纹（点一下即可信任），或者<strong>未签名</strong>、<strong>无效</strong>。
 更换密钥或去掉签名的更新，要等您明确接受。其余由策略决定：</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn（默认）| enforce</span>

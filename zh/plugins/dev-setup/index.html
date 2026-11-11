@@ -3396,7 +3396,7 @@
 <td>只有 <code>bubblewrap</code> 和 <code>strict</code> 沙箱模式才需要。默认的 <code>auto</code> 模式使用 Landlock，在 5.13 或更新的内核上什么都不用装。</td>
 </tr>
 <tr>
-<td><a href="https://docs.sigstore.dev/cosign/installation/">cosign</a></td>
+<td><a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a></td>
 <td>在分发之前给插件包签名（<a href="#7-sign-your-plugin">第 7 节</a>）。开发时用不到。</td>
 </tr>
 </tbody>
@@ -3527,7 +3527,7 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
 （对 ZIP 的 SHA-256 做 ECDSA P-256 签名，也就是 <code>cosign sign-blob --key</code> 生成的格式）：
 服务器上不需要 <code>cosign</code> 程序，不联网，也不用透明日志。</p>
 </div>
-<p>只有您自己的机器上需要 <a href="https://docs.sigstore.dev/cosign/installation/">cosign</a>。</p>
+<p>只有您自己的机器上需要 <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a>。</p>
 <ol>
 <li>
 <p><strong>只需一次：生成一对密钥。</strong></p>
