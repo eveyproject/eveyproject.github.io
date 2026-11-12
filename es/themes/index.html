@@ -3348,15 +3348,21 @@ instalador reescribe o rechaza. Los temas se instalan como los plugins, desde
 <strong>Administración → Plugins</strong>, y cada usuario elige el suyo en
 <strong>Ajustes → Apariencia → Tema</strong>.</p>
 <h2 id="manifest">Manifiesto<a class="headerlink" href="#manifest" title="Permanent link">¶</a></h2>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aurora</span><span class="w">               </span><span class="c1"># obligatorio; nombre legible</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aurora</span><span class="w">               </span><span class="c1"># obligatorio; único, en kebab-case</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">             </span><span class="c1"># obligatorio; semver</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">theme</span><span class="w">                </span><span class="c1"># obligatorio</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">         </span><span class="c1"># opcional</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">              </span><span class="c1"># opcional</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># sin language, entrypoint, permissions ni capabilities: si no, se rechaza la instalación</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">display_name</span><span class="p">:</span><span class="w">              </span><span class="c1"># opcional; la etiqueta del selector de temas</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aurora</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">fr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aurore</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">         </span><span class="c1"># opcional</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">              </span><span class="c1"># opcional</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># sin language, entrypoint, permissions ni capabilities: si no, se rechaza la instalación</span>
 </span></code></pre></div>
+<p>El selector de temas muestra <code>display_name</code> en el idioma de la interfaz,
+si no en inglés, y <code>name</code> cuando el manifiesto no declara ninguno. Una sola
+cadena (<code>display_name: Aurora</code>) vale para todos los idiomas.</p>
 <p>El ZIP lleva <code>theme.css</code> y/o <code>theme.js</code> en su raíz, junto al manifiesto. Un
 paquete sin ninguno de los dos se acepta y no tiene ningún efecto visible.
 <code>examples/plugins/theme-dark-blue</code> (un <code>theme.css</code> corto que cambia las

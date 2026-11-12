@@ -3017,6 +3017,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#where-the-package-comes-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Woher das Paket kommt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#zip-extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3441,6 +3452,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#where-the-package-comes-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Woher das Paket kommt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#zip-extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3810,6 +3832,32 @@ Die Risiken, gegen die er schützt, vom schwersten zum leichtesten:</p>
         res[Ressourcenwächter&lt;br/&gt;Speicher, PIDs, Platte, nice]
     end</code></pre>
 <h2 id="at-install">Bei der Installation<a class="headerlink" href="#at-install" title="Permanent link">¶</a></h2>
+<h3 id="where-the-package-comes-from">Woher das Paket kommt<a class="headerlink" href="#where-the-package-comes-from" title="Permanent link">¶</a></h3>
+<p>Ein Administrator gibt ein Paket auf zwei Arten an: indem er das ZIP
+hochlädt, oder über einen <code>https://</code>-Link, entweder auf das ZIP selbst oder auf
+ein GitHub-Repository, das für sein neuestes Release steht. Alles andere wird
+abgelehnt, bevor der Installer es liest:</p>
+<ul>
+<li>ein Pfad auf dem Server oder ein <code>file://</code>-Link: Eine Anfrage über die API
+  kann den Server kein Archiv von seiner eigenen Festplatte lesen lassen. Nur
+  der Code des Servers selbst liest eine lokale Datei: die Upload-Route aus
+  der temporären Kopie des hochgeladenen ZIP und die Demo aus ihren
+  mitgelieferten Plugins;</li>
+<li>ein einfacher <code>http://</code>-Link oder ein Download, den eine Weiterleitung auf
+  <code>http://</code> schickt: Jeder auf dem Weg könnte das Archiv austauschen, vor der
+  Vorschau oder zwischen Vorschau und Installation, und bei einem nicht
+  signierten Plugin hält ihn nichts anderes auf.</li>
+</ul>
+<p>Der Download läuft über den SSRF-sicheren Client (<code>internal/pkg/ssrf</code>), der
+private, reservierte und Link-Local-Adressen nach der DNS-Auflösung ablehnt.
+Er übernimmt keinen Proxy aus der Umgebung (<code>HTTPS_PROXY</code>, <code>HTTP_PROXY</code>):
+Über einen Proxy sieht der Client nur die Adresse des Proxys, nie die des
+Ziels, und die Prüfung wäre wirkungslos. Ein Server, der das Internet nur über
+einen Proxy erreicht, kann daher weder von einem Link installieren noch ein
+automatisches Update herunterladen; laden Sie stattdessen das ZIP hoch.</p>
+<p>Der Download endet bei 100 MB. Ein an den Link angehängtes <code>#sha256:&lt;hash&gt;</code>
+wird gegen die empfangenen Bytes geprüft, und eine aus der Vorschau gestartete
+Installation ist an die Bytes gebunden, die die Vorschau gezeigt hat.</p>
 <h3 id="zip-extraction">Entpacken des ZIP<a class="headerlink" href="#zip-extraction" title="Permanent link">¶</a></h3>
 <p>Bevor irgendeine Datei geschrieben wird (<code>pluginrunner/zip.go</code>):</p>
 <ul>
@@ -4571,6 +4619,7 @@ wie für alles andere. Testen Sie nicht gegen Evey-Instanzen, die Ihnen nicht
 gehören.</p>
 <!-- sources
 install checks: internal/adapters/driven/pluginrunner/zip.go ; internal/adapters/driven/pluginrunner/analyzer.go ; internal/adapters/driven/pluginrunner/cosign.go ; internal/app/plugin/install.go ; internal/adapters/driving/grpcapi/plugin_interceptor.go - PluginPermissionInterceptor
+package source: internal/app/plugin/install.go - CheckRequestedSource, ErrInsecureSource, downloadIfURL (http and redirect refusal, 100 MB) ; installer_service.go - SafeHTTPClientNoProxy ; internal/adapters/driving/grpcapi/admin_plugin.go - InstallPlugin, PreviewPluginUpdate, ApplyPluginUpdate ; internal/adapters/driving/http/plugin_asset_handler.go - preview JSON source ; internal/pkg/ssrf/dialer.go
 runtime: internal/adapters/driven/pluginrunner/runner_sandbox.go - applySandbox ; internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode, launcherPath, systemReadOnlyDirs, safeDevNodes ; cmd/evey-plugin-launcher/seccomp_linux.go - deniedSyscalls, selfSignalSyscalls, cloneNamespaceFlags, appendDenyForkRules ; cmd/evey-plugin-launcher/droppriv_linux.go ; sandbox/sandbox.c ; internal/adapters/driven/pluginrunner/runner_bwrap.go - buildBwrapCmd ; internal/adapters/driven/pluginrunner/sandbox_probe.go - ProbeSandbox ; internal/adapters/driving/pluginhost/fetch.go - Fetch, maxFetchBytes, maxFetchHeaderBytes, fetchTimeout ; cmd/evey/hardening_linux.go
 resource monitor: internal/adapters/driven/pluginrunner/runner_resmon.go - defaultMemBytes, defaultPIDsMax, resMonInterval, resMonDiskEveryN, resMonCPUPegPct, resMonGPUPegPct ; internal/app/plugin/resource_config.go - ResolveResourceConfig
 bridge: frontend/packages/client/src/plugins/hostProtocol.ts - ALLOWED_NAV_PREFIXES, SLOT_MAX_HEIGHT, TOAST_MAX, TOAST_WINDOW_MS, TOAST_MAX_LENGTH ; frontend/packages/client/src/web/PluginIframe.tsx - MIN_SLOT_HEIGHT ; frontend/packages/client/src/native/PluginWebView.tsx

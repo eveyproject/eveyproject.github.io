@@ -2653,6 +2653,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自动更新
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3226,6 +3237,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自动更新
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3256,6 +3278,7 @@
 <h2 id="what-is-checked-at-install">安装时检查什么<a class="headerlink" href="#what-is-checked-at-install" title="Permanent link">¶</a></h2>
 <p>出现以下情况时，插件会在安装时被拒绝：</p>
 <ul>
+<li>它的来源既不是上传的 ZIP，也不是 <code>https://</code> 链接：服务器上的路径和普通的 <code>http://</code> 链接都会被拒绝（参见<a href="../../SECURITY/#where-the-package-comes-from">安装包从哪里来</a>）；</li>
 <li>缺少 <code>kind</code>，或者它既不是 <code>plugin</code> 也不是 <code>theme</code>；</li>
 <li><code>kind: plugin</code> 缺少 <code>language</code> 或 <code>entrypoint</code>；或者 <code>kind: theme</code> 声明了它们，或声明了 <code>permissions</code> 或 <code>capabilities</code>；</li>
 <li>某个权限或能力是未知的；</li>
@@ -3459,6 +3482,34 @@
 <li>包的哈希值在预览时记下，在应用时核对：被分析的 ZIP，就是被安装的那个 ZIP。</li>
 <li>签名密钥要检查连续性：用与已安装版本不同的密钥签名、或不再签名的更新会被拒绝，直到管理员接受新的发布者。在 <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code> 下，即使预览通过了，只要应用这一步的签名不受信任或无效，更新就会被阻止。</li>
 </ol>
+<h2 id="automatic-updates">自动更新<a class="headerlink" href="#automatic-updates" title="Permanent link">¶</a></h2>
+<p>插件可以关联它的安装来源仓库（<code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code>）。服务器每小时
+通过 GitHub API 读取最新 release，只下载一次它的 zip，判断这些字节，并通过上文所述
+的完整安装流程安装同样的这些字节。</p>
+<ul>
+<li><strong>拒绝</strong>：静态分析拒绝该代码，即出现严重级别的问题，或出现安装本身就会阻止的警告
+  （<code>deserialization</code>、<code>obfuscation</code>、未声明 <code>native-binary</code> 的 <code>native_code</code>）。
+  管理员会收到通知；不安装任何内容。</li>
+<li><strong>等待管理员</strong>：release 要求已安装版本没有的权限、能力、显示位置或
+  <code>external_fetch</code> 主机，带有已安装版本没有的分析警告类型，改变了 <code>kind</code>（主题与插件之间）或 <code>language</code>，是预发布版本，使用了另一把密钥签名
+  或不再有签名；或者已安装的版本根本没有签名；或者管理员关闭了自动更新。每个
+  release 只通知管理员一次。</li>
+<li><strong>应用</strong>：其他所有情况。版本必须更高，zip 必须与 release 发布的 sha256 一致，
+  release 必须是同一个插件（相同的 <code>name</code>），并且 zip 必须来自该仓库自己的
+  release 文件。</li>
+</ul>
+<p>保证安全的是签名：分析只能识别已知模式，无法发现所有恶意代码，因此自动安装的
+release 必须使用插件安装时固定下来的密钥签名。没有这把密钥却接管了仓库的人，
+得到的是一个等待中的 release，而不是已安装的 release。</p>
+<p>围绕这条规则还有三道防护：</p>
+<ul>
+<li>仓库按其永久的 GitHub id 关联，而不是按名称：在重命名或删除后被他人抢注的
+  名称无法关联到任何东西。</li>
+<li>只会在与判断时完全一致的插件上安装。如果在判断某个 release 期间，管理员卸载
+  或更新了该插件，或者更改了它的密钥、所关联的仓库或开关，则不会安装任何内容。</li>
+<li>通过仓库链接进行的安装会固定到预览显示的字节：预览返回该 release 的 zip 链接
+  及其 sha256，安装收到的正是这个链接和 sha256。</li>
+</ul>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
@@ -3471,6 +3522,7 @@ frame connect-src: frontend/packages/client/src/plugins/hostProtocol.ts - buildC
 slots: internal/domain/plugin/slots.go - AllowedSlots
 bridge limits: frontend/packages/client/src/plugins/hostProtocol.ts ; token: internal/app/plugin/token_service.go - PluginTokenTTL ; docs/adr/0012-plugin-token-deny-by-default.md
 update workflow: internal/app/plugin/update.go - ApplyUpdate ; internal/app/plugin/install.go - resolveExistingPlugin ; proto/evey/v1/admin_plugin.proto - PreviewPluginUpdate, ApplyPluginUpdate
+automatic updates: internal/app/plugin/auto_update.go - updateFromRelease, newWarningCategories, checkUpdateExpectation ; update.go - KindChange, LanguageChange ; preview.go - ResolvedSource ; install.go - blockingWarning ; internal/adapters/driven/pluginrelease/github.go - Latest (asset prefix check) ; internal/domain/plugin/update.go - NormalizeRepoURL
 -->
 
 

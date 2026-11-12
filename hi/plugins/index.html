@@ -2523,6 +2523,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="प्लगइन अपडेट करें">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        अपने-आप अपडेट
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3191,6 +3208,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="प्लगइन अपडेट करें">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        अपने-आप अपडेट
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3297,9 +3331,14 @@
 <ol>
 <li><strong>एडमिन → प्लगइन</strong> में <strong>प्लगइन इंस्टॉल करें</strong> खोलें और <strong>प्लगइन फ़ाइल
    (.zip)</strong> चुनें। अगर बनाने वाला एक सिग्नेचर देता है, तो उसे <strong>हस्ताक्षर फ़ाइल
-   (.zip.sig, वैकल्पिक)</strong> में जोड़ें। <strong>URL से</strong> वाला टैब इसकी जगह किसी लिंक से
-   इंस्टॉल करता है; डाउनलोड की जाँच करवाने के लिए URL के आखिर में
-   <code>#sha256:&lt;hash&gt;</code> जोड़ें।</li>
+   (.zip.sig, वैकल्पिक)</strong> में जोड़ें। <strong>URL से</strong> वाला टैब इसकी जगह किसी <code>https://</code>
+   लिंक से इंस्टॉल करता है; सादा <code>http://</code> लिंक या सर्वर पर का कोई रास्ता अस्वीकार
+   किया जाता है (देखें <a href="../SECURITY/#where-the-package-comes-from">पैकेज कहाँ से आता है</a>)।
+   डाउनलोड की जाँच करवाने के लिए लिंक के आखिर में <code>#sha256:&lt;hash&gt;</code> जोड़ें।
+   रिपॉज़िटरी लिंक, <code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code>, उसकी सबसे नई release
+   का zip इंस्टॉल करता है, जिसे release में प्रकाशित sha256 से जाँचा जाता है,
+   और उसके बाद प्लगइन अपने अपडेट के लिए उसी रिपॉज़िटरी को फ़ॉलो करता है
+   (देखें <a href="#automatic-updates">अपने-आप अपडेट</a>)।</li>
 <li><strong>पूर्वावलोकन और इंस्टॉल</strong> पैकेज को इंस्टॉल किए बिना जाँचता है।
    पूर्वावलोकन दिखाता है कि प्लगइन कौन सी <strong>अनुमतियां</strong> और <strong>क्षमताएँ</strong> माँगता
    है, <strong>स्थैतिक विश्लेषण</strong> का नतीजा और, अगर सिग्नेचर दिया गया हो, प्रकाशक के साथ
@@ -3335,13 +3374,59 @@ fingerprint के साथ <strong>हस्ताक्षरित, अज�
 <a href="dev-setup/#7-sign-your-plugin">अपने प्लगइन पर सिग्नेचर करें</a>।</p>
 </div>
 <h2 id="update-a-plugin">प्लगइन अपडेट करें<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
-<p>प्लगइन के कार्ड पर, <strong>स्रोत से अपडेट करें…</strong> नई ZIP लेता है (एक रास्ता या एक
-URL) और वही पूर्वावलोकन दिखाता है। अपडेट का वर्ज़न इंस्टॉल किए गए वर्ज़न से
+<p>प्लगइन के कार्ड पर, <strong>स्रोत से अपडेट करें…</strong> नई ZIP का <code>https://</code> लिंक लेता है
+और वही पूर्वावलोकन दिखाता है। अपडेट का वर्ज़न इंस्टॉल किए गए वर्ज़न से
 ऊँचा होना चाहिए। जब वह नई अनुमतियाँ, क्षमताएँ, स्लॉट या होस्ट माँगता है, तो
 पूर्वावलोकन में <strong>यह अपडेट नई अनुमतियाँ माँग रहा है</strong> लिखा आता है और फ़र्क की
 सूची दिखती है: जब तक आप <strong>स्वीकृति दें और इंस्टॉल करें</strong> न चुनें, कुछ लागू नहीं
 होता। जो पैकेज जाँचा गया, वही इंस्टॉल होता है: अपडेट लागू करते समय उसका hash
 फिर से जाँचा जाता है।</p>
+<p>स्रोत प्लगइन का रिपॉज़िटरी लिंक भी हो सकता है: तब प्रीव्यू उसकी सबसे नई
+release का होता है।</p>
+<h3 id="automatic-updates">अपने-आप अपडेट<a class="headerlink" href="#automatic-updates" title="Permanent link">¶</a></h3>
+<p>जो प्लगइन अपने रिपॉज़िटरी के लिंक से, या उस रिपॉज़िटरी के किसी release लिंक
+से इंस्टॉल हुआ है, वह उस रिपॉज़िटरी को फ़ॉलो करता है। उसके कार्ड का
+<strong>अपडेट</strong> सेक्शन रिपॉज़िटरी दिखाता है (<strong>बदलें</strong> से दूसरा या कोई नहीं चुना
+जाता है), <strong>अपने-आप अपडेट</strong> स्विच, जो पहले से चालू रहता है, और पिछली जाँच
+में क्या मिला। Evey शुरू होने के कुछ मिनट बाद सबसे नई release देखता है, फिर
+हर घंटे; <strong>अभी जाँचें</strong> तुरंत देखता है।</p>
+<p>किसी नई release के चलने से पहले उसे परखा जाता है:</p>
+<table>
+<thead>
+<tr>
+<th>release में क्या है</th>
+<th>क्या होता है</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>कुछ नया नहीं: कोई नई अनुमति, क्षमता, स्लॉट या होस्ट नहीं, विश्लेषण की कोई नई तरह की चेतावनी नहीं, वही साइनिंग कुंजी</td>
+<td>अपने-आप इंस्टॉल: <strong>वर्ज़न … अपने-आप इंस्टॉल हुआ</strong>।</td>
+</tr>
+<tr>
+<td>कुछ नया (कोई अनुमति, कोई होस्ट, थीम और प्लगइन के बीच बदलाव, कोई दूसरी भाषा), कोई pre-release, बिना साइन वाला इंस्टॉल किया गया वर्ज़न, या स्विच बंद</td>
+<td><strong>वर्ज़न … आपकी मंज़ूरी का इंतज़ार कर रहा है</strong>, और एडमिन को नोटिफ़िकेशन मिलता है। <strong>देखें</strong> सामान्य अपडेट प्रीव्यू खोलता है, जहाँ आप अंतर को मंज़ूरी देते हैं।</td>
+</tr>
+<tr>
+<td>ऐसा कोड जिसे स्टैटिक विश्लेषण अस्वीकार करता है</td>
+<td><strong>वर्ज़न … अस्वीकार किया गया</strong>, कारण के साथ, और एडमिन को नोटिफ़िकेशन मिलता है। यह न अपने-आप इंस्टॉल होता है, न हाथ से।</td>
+</tr>
+</tbody>
+</table>
+<p>बिना साइन वाला प्लगइन कभी अपने-आप अपडेट नहीं होता: जिसने उसकी रिपॉज़िटरी
+पर कब्ज़ा कर लिया हो, वह ऐसा कोड प्रकाशित कर सकता है जिसे विश्लेषण नहीं
+पकड़ता, और उसे सिर्फ़ वही साइनिंग कुंजी रोकती है जो उसके पास नहीं है।
+नोटिफ़िकेशन हर release के लिए एक बार भेजा जाता है, हर घंटे नहीं। जाँच GitHub
+API से पूछती है और सिर्फ़ रिपॉज़िटरी की release फ़ाइलों से डाउनलोड करती है,
+कहीं और से नहीं।</p>
+<p>रिपॉज़िटरी को उस स्थायी नंबर से फ़ॉलो किया जाता है जो GitHub उसे देता है, उसके
+नाम से नहीं: नाम बदली गई या ट्रांसफ़र की गई रिपॉज़िटरी फ़ॉलो होती रहती है, और
+जो कोई छोड़ा गया नाम दोबारा रजिस्टर करता है उसका कुछ भी फ़ॉलो नहीं होता। रिपॉज़िटरी
+लिंक से इंस्टॉल करने पर वही release इंस्टॉल होती है जो प्रीव्यू में दिखी थी, भले
+बीच में कोई नई प्रकाशित हो जाए। पहले से परखी गई release दोबारा तब तक डाउनलोड
+नहीं होती जब तक किसी तरफ़ कुछ न बदले। Evey बिना टोकन के GitHub से पूछता है, जिससे
+हर पते के लिए घंटे में 60 रिक्वेस्ट मिलती हैं: हर फ़ॉलो किए गए प्लगइन के लिए
+घंटे में एक; कोटा ख़त्म होने पर जाँच अगली बार तक रुक जाती है।</p>
 <h2 id="manage-the-installed-plugins">इंस्टॉल किए गए प्लगइन संभालें<a class="headerlink" href="#manage-the-installed-plugins" title="Permanent link">¶</a></h2>
 <p>हर कार्ड प्लगइन की स्थिति (<strong>सक्षम</strong> या <strong>अक्षम</strong>) दिखाता है और ये विकल्प देता
 है:</p>
@@ -3520,7 +3605,7 @@ TMDB से आते हैं। प्लगइन का टेक्स्�
 </tbody>
 </table>
 <!-- sources
-install dialog, from URL with #sha256: i18n admin.plugins.installPlugin, pluginFileZip, sigFileOptional, fromUrl, installFromUrlHint, previewInstall, staticAnalysis ; internal/app/plugin/install.go - downloadIfURL
+install dialog, from URL with #sha256: i18n admin.plugins.installPlugin, pluginFileZip, sigFileOptional, fromUrl, installFromUrlHint, previewInstall, staticAnalysis ; internal/app/plugin/install.go - downloadIfURL, CheckRequestedSource ; internal/adapters/driving/grpcapi/admin_plugin.go - InstallPlugin, PreviewPluginUpdate, ApplyPluginUpdate ; i18n admin.plugin.updateSourceLabel
 critical findings refuse, warnings: internal/app/plugin/install.go - validateStagedPlugin, checkEscalatedWarnings ; i18n admin.plugins.blockedByAnalysis, installAnyway
 runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries ; i18n admin.plugins.availableRuntimes
 cosign policy: internal/config/config.go - CosignPolicy, CosignPublicKey ; internal/adapters/driven/pluginrunner/cosign.go
@@ -3534,6 +3619,7 @@ subprocess: docs/plugins/security-model.md (Permissions catalog)
 slots: internal/domain/plugin/slots.go - AllowedSlots
 scoped token, public/prefs: docs/adr/0012-plugin-token-deny-by-default.md ; internal/pkg/auth/plugin_jwt.go - AllowedPluginScopes
 theme selection: frontend/apps/web/src/features/user/ThemeSettings.tsx ; i18n common.appearance, common.theme
+automatic updates: internal/app/plugin/auto_update.go - AutoUpdater, updateFromRelease ; install_source.go - resolveInstallSource, followRepository, settleUpdateState ; internal/adapters/driven/pluginrelease/github.go ; frontend/apps/web/src/features/admin/PluginAutoUpdate.tsx ; i18n admin.plugin.autoUpdate.*, common.notifications.pluginUpdateHeld, pluginUpdateRefused
 -->
 
 

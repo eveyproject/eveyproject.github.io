@@ -2523,6 +2523,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Mettre à jour un plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mises à jour automatiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3191,6 +3208,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Mettre à jour un plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mises à jour automatiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3299,8 +3333,14 @@ de la page.</p>
 <li>Dans <strong>Administration → Plugins</strong>, ouvrez <strong>Installer un plugin</strong> et choisissez le
    <strong>Fichier plugin (.zip)</strong>. Si l'auteur fournit une signature, ajoutez-la
    dans <strong>Fichier signature (.zip.sig, optionnel)</strong>. L'onglet <strong>Depuis une
-   URL</strong> installe à partir d'un lien ; ajoutez <code>#sha256:&lt;empreinte&gt;</code> à l'URL
-   pour faire vérifier le téléchargement.</li>
+   URL</strong> installe à partir d'un lien <code>https://</code> ; un lien <code>http://</code> simple ou
+   un chemin sur le serveur est refusé (voir
+   <a href="../SECURITY/#where-the-package-comes-from">D'où vient le paquet</a>).
+   Ajoutez <code>#sha256:&lt;empreinte&gt;</code> au lien pour faire vérifier le téléchargement.
+   Un lien de dépôt, <code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code>, installe le zip de
+   sa dernière release, vérifié contre le sha256 qu'elle publie, et le plugin
+   suit ensuite ce dépôt pour ses mises à jour (voir
+   <a href="#automatic-updates">Mises à jour automatiques</a>).</li>
 <li><strong>Aperçu et installation</strong> analyse le paquet sans l'installer. L'aperçu
    montre les <strong>Permissions</strong> et les <strong>Capacités</strong> que demande le plugin, le
    résultat de l'<strong>Analyse statique</strong> et, quand une signature a été fournie,
@@ -3337,14 +3377,62 @@ reste :</p>
 <a href="dev-setup/#7-sign-your-plugin">Signer son plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Mettre à jour un plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>
-<p>Sur la carte du plugin, <strong>Mettre à jour depuis la source…</strong> prend le nouveau
-ZIP (un chemin ou une URL) et affiche le même aperçu. Une mise à jour doit
+<p>Sur la carte du plugin, <strong>Mettre à jour depuis la source…</strong> prend le lien
+<code>https://</code> du nouveau ZIP et affiche le même aperçu. Une mise à jour doit
 porter une version supérieure à celle installée. Quand elle demande de
 nouvelles permissions, capacités, emplacements ou hôtes, l'aperçu indique
 <strong>Cette mise à jour demande de nouvelles permissions</strong> et liste la
 différence : rien n'est appliqué tant que vous n'avez pas choisi <strong>Approuver
 et installer</strong>. Le paquet analysé est le paquet installé : son empreinte est
 vérifiée de nouveau au moment d'appliquer la mise à jour.</p>
+<p>La source peut aussi être le lien du dépôt du plugin : l'aperçu porte alors
+sur sa dernière release.</p>
+<h3 id="automatic-updates">Mises à jour automatiques<a class="headerlink" href="#automatic-updates" title="Permanent link">¶</a></h3>
+<p>Un plugin installé depuis le lien de son dépôt, ou depuis un lien de release
+de ce dépôt, suit ce dépôt. La section <strong>Mises à jour</strong> de sa carte affiche le
+dépôt (<strong>Modifier</strong> en indique un autre, ou aucun), l'interrupteur <strong>Mise à
+jour automatique</strong>, activé par défaut, et ce que la dernière vérification a
+trouvé. Evey consulte la dernière release quelques minutes après son
+démarrage, puis toutes les heures ; <strong>Vérifier maintenant</strong> le fait tout de
+suite.</p>
+<p>Une release plus récente est jugée avant que quoi que ce soit ne s'exécute :</p>
+<table>
+<thead>
+<tr>
+<th>Ce que contient la release</th>
+<th>Ce qui se passe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rien de nouveau : aucune nouvelle permission, capacité, zone d'affichage ni hôte, aucun nouveau type d'alerte à l'analyse, la même clé de signature</td>
+<td>Installée seule : <strong>Version … installée automatiquement</strong>.</td>
+</tr>
+<tr>
+<td>Quelque chose de nouveau (une permission, un hôte, un passage entre thème et plugin, un autre langage), une pré-release, une version installée non signée, ou l'interrupteur coupé</td>
+<td><strong>Version … en attente de votre accord</strong>, et les administrateurs reçoivent une notification. <strong>Examiner</strong> ouvre l'aperçu de mise à jour habituel, où vous approuvez la différence.</td>
+</tr>
+<tr>
+<td>Du code que l'analyse statique refuse</td>
+<td><strong>Version … refusée</strong>, avec la raison, et les administrateurs reçoivent une notification. Elle n'est installée ni automatiquement ni à la main.</td>
+</tr>
+</tbody>
+</table>
+<p>Un plugin non signé ne se met jamais à jour seul : quelqu'un qui aurait pris
+le contrôle de son dépôt pourrait publier du code que l'analyse ne détecte
+pas, et seule une clé de signature qu'il ne détient pas l'arrête. La
+notification est envoyée une fois par release, pas toutes les heures. La
+vérification interroge l'API de GitHub et ne télécharge que depuis les
+fichiers de release du dépôt, nulle part ailleurs.</p>
+<p>Le dépôt est suivi par le numéro permanent que GitHub lui attribue, pas par
+son nom : un dépôt renommé ou transféré reste suivi, et quelqu'un qui
+enregistre un nom abandonné ne fait rien suivre. Installer depuis le lien du dépôt
+installe la release montrée par l'aperçu, même si une plus récente est publiée
+entre-temps. Une release déjà jugée n'est pas retéléchargée tant que rien ne
+change d'un côté ou de l'autre. Evey interroge GitHub sans jeton, ce qui donne
+60 requêtes par heure et par adresse : une par plugin suivi et par heure ;
+quand le quota est épuisé, la vérification s'arrête jusqu'à son prochain
+passage.</p>
 <h2 id="manage-the-installed-plugins">Gérer les plugins installés<a class="headerlink" href="#manage-the-installed-plugins" title="Permanent link">¶</a></h2>
 <p>Chaque carte montre l'état du plugin (<strong>Activé</strong> ou <strong>Désactivé</strong>) et propose :</p>
 <table>
@@ -3531,7 +3619,7 @@ Apparence → Thème</strong>. Ce qu'un thème peut contenir est décrit dans
 </tbody>
 </table>
 <!-- sources
-install dialog, from URL with #sha256: i18n admin.plugins.installPlugin, pluginFileZip, sigFileOptional, fromUrl, installFromUrlHint, previewInstall, staticAnalysis ; internal/app/plugin/install.go - downloadIfURL
+install dialog, from URL with #sha256: i18n admin.plugins.installPlugin, pluginFileZip, sigFileOptional, fromUrl, installFromUrlHint, previewInstall, staticAnalysis ; internal/app/plugin/install.go - downloadIfURL, CheckRequestedSource ; internal/adapters/driving/grpcapi/admin_plugin.go - InstallPlugin, PreviewPluginUpdate, ApplyPluginUpdate ; i18n admin.plugin.updateSourceLabel
 critical findings refuse, warnings: internal/app/plugin/install.go - validateStagedPlugin, checkEscalatedWarnings ; i18n admin.plugins.blockedByAnalysis, installAnyway
 runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries ; i18n admin.plugins.availableRuntimes
 cosign policy: internal/config/config.go - CosignPolicy, CosignPublicKey ; internal/adapters/driven/pluginrunner/cosign.go
@@ -3545,6 +3633,7 @@ subprocess: docs/plugins/security-model.md (Permissions catalog)
 slots: internal/domain/plugin/slots.go - AllowedSlots
 scoped token, public/prefs: docs/adr/0012-plugin-token-deny-by-default.md ; internal/pkg/auth/plugin_jwt.go - AllowedPluginScopes
 theme selection: frontend/apps/web/src/features/user/ThemeSettings.tsx ; i18n common.appearance, common.theme
+automatic updates: internal/app/plugin/auto_update.go - AutoUpdater, updateFromRelease ; install_source.go - resolveInstallSource, followRepository, settleUpdateState ; internal/adapters/driven/pluginrelease/github.go ; frontend/apps/web/src/features/admin/PluginAutoUpdate.tsx ; i18n admin.plugin.autoUpdate.*, common.notifications.pluginUpdateHeld, pluginUpdateRefused
 -->
 
 

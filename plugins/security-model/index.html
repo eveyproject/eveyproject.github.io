@@ -2653,6 +2653,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic updates
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3226,6 +3237,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic updates
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3258,6 +3280,9 @@ containment cannot stop, is described in
 <h2 id="what-is-checked-at-install">What is checked at install<a class="headerlink" href="#what-is-checked-at-install" title="Permanent link">¶</a></h2>
 <p>A plugin is refused at install when:</p>
 <ul>
+<li>its source is neither an uploaded ZIP nor an <code>https://</code> link: a path on the
+  server and a plain <code>http://</code> link are refused (see
+  <a href="../../SECURITY/#where-the-package-comes-from">Where the package comes from</a>);</li>
 <li><code>kind</code> is missing, or is neither <code>plugin</code> nor <code>theme</code>;</li>
 <li>a <code>kind: plugin</code> lacks <code>language</code> or <code>entrypoint</code>, or a <code>kind: theme</code>
   declares them, or declares <code>permissions</code> or <code>capabilities</code>;</li>
@@ -3499,6 +3524,42 @@ server refuses by default every method that token does not name.</p>
    <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code>, an untrusted or invalid signature at
    the apply step blocks the update even if the preview passed.</li>
 </ol>
+<h2 id="automatic-updates">Automatic updates<a class="headerlink" href="#automatic-updates" title="Permanent link">¶</a></h2>
+<p>A plugin can follow the repository it was installed from
+(<code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code>). Every hour the server reads the latest
+release through the GitHub API, downloads its zip once, judges those bytes and
+installs those same bytes, through the full install pipeline above.</p>
+<ul>
+<li><strong>Refused</strong> when the static analysis refuses the code: a critical finding,
+  or a warning the install itself blocks (<code>deserialization</code>, <code>obfuscation</code>,
+  <code>native_code</code> without <code>native-binary</code>). The admins are notified; nothing is
+  installed.</li>
+<li><strong>Held for an admin</strong> when the release asks for any permission, capability,
+  slot or <code>external_fetch</code> host the installed version does not have, carries
+  a kind of analysis warning the installed version did not, changes the
+  <code>kind</code> (theme and plugin) or the <code>language</code>, is a pre-release, is signed by
+  another key or no longer signed, or when the installed version is not
+  signed at all, or when the admin turned automatic updates off. The admins
+  are notified once per release.</li>
+<li><strong>Applied</strong> otherwise. The version must be higher, the zip must match the
+  sha256 the release publishes, the release must be the same plugin (same
+  <code>name</code>), and the zip must be served from the repository's own release files.</li>
+</ul>
+<p>Signing is what makes this safe: the analysis catches known patterns, not
+every piece of malicious code, so a release that installs on its own must be
+signed by the key pinned when the plugin was installed. Whoever takes over the
+repository without that key gets a held release, not an installed one.</p>
+<p>Three more guards hold around that rule:</p>
+<ul>
+<li>The repository is followed by its permanent GitHub id, not by its name: a
+  name taken over after a rename or a deletion reaches nothing.</li>
+<li>The install proceeds only onto the plugin as it was judged. If an admin
+  uninstalls it, updates it, changes its key, the repository it follows or
+  its switch while a release is being judged, nothing is installed.</li>
+<li>An install from a repository link is pinned to the bytes the preview
+  showed: the preview returns the release's zip link with its sha256, and
+  the install is sent that.</li>
+</ul>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
@@ -3511,6 +3572,7 @@ frame connect-src: frontend/packages/client/src/plugins/hostProtocol.ts - buildC
 slots: internal/domain/plugin/slots.go - AllowedSlots
 bridge limits: frontend/packages/client/src/plugins/hostProtocol.ts ; token: internal/app/plugin/token_service.go - PluginTokenTTL ; docs/adr/0012-plugin-token-deny-by-default.md
 update workflow: internal/app/plugin/update.go - ApplyUpdate ; internal/app/plugin/install.go - resolveExistingPlugin ; proto/evey/v1/admin_plugin.proto - PreviewPluginUpdate, ApplyPluginUpdate
+automatic updates: internal/app/plugin/auto_update.go - updateFromRelease, newWarningCategories, checkUpdateExpectation ; update.go - KindChange, LanguageChange ; preview.go - ResolvedSource ; install.go - blockingWarning ; internal/adapters/driven/pluginrelease/github.go - Latest (asset prefix check) ; internal/domain/plugin/update.go - NormalizeRepoURL
 -->
 
 

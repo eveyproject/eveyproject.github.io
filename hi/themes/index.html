@@ -3347,15 +3347,21 @@
 प्लगइन की तरह <strong>एडमिन → प्लगइन</strong> से इंस्टॉल होती हैं, और हर उपयोगकर्ता
 <strong>सेटिंग्स → रूप-रंग → थीम</strong> में अपनी थीम चुनता है।</p>
 <h2 id="manifest">Manifest<a class="headerlink" href="#manifest" title="Permanent link">¶</a></h2>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aurora</span><span class="w">               </span><span class="c1"># ज़रूरी; पढ़ने लायक नाम</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aurora</span><span class="w">               </span><span class="c1"># ज़रूरी; अनोखा, kebab-case</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">             </span><span class="c1"># ज़रूरी; semver</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">theme</span><span class="w">                </span><span class="c1"># ज़रूरी</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">         </span><span class="c1"># वैकल्पिक</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">              </span><span class="c1"># वैकल्पिक</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># न language, न entrypoint, न permissions, न capabilities: वरना इंस्टॉल मना होता है</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">display_name</span><span class="p">:</span><span class="w">              </span><span class="c1"># वैकल्पिक; थीम चुनने वाली जगह पर दिखने वाला नाम</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aurora</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">fr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aurore</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">         </span><span class="c1"># वैकल्पिक</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">              </span><span class="c1"># वैकल्पिक</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># न language, न entrypoint, न permissions, न capabilities: वरना इंस्टॉल मना होता है</span>
 </span></code></pre></div>
+<p>थीम चुनने वाली जगह पर थीम का नाम <code>display_name</code> से आता है, इंटरफ़ेस की भाषा में,
+वह न हो तो अंग्रेज़ी में, और अगर manifest में यह नहीं है तो <code>name</code> दिखता है।
+एक अकेली स्ट्रिंग (<code>display_name: Aurora</code>) सभी भाषाओं के लिए चलती है।</p>
 <p>ZIP के root फ़ोल्डर में, manifest के बगल में, <code>theme.css</code> और/या <code>theme.js</code> होती है। जिस
 पैकेज में दोनों में से कोई नहीं, वह स्वीकार होता है पर कोई असर नहीं दिखता।
 <code>examples/plugins/theme-dark-blue</code> (रंगों के वेरिएबल बदलने वाली एक छोटी

@@ -3590,6 +3590,9 @@ transparence.</p>
 </div>
 <p>Vous n'avez besoin de <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a>
 que sur votre machine.</p>
+<p>Utilisez cosign 2 : cosign 3 refuse <code>--tlog-upload=false</code> sans
+configuration de signature, et ce sont les commandes ci-dessous contre
+lesquelles le format d'Evey est vérifié.</p>
 <ol>
 <li>
 <p><strong>Une fois : générez une paire de clés.</strong></p>
@@ -3716,19 +3719,41 @@ plugin : <a href="../../SECURITY/#sandbox-modes">Sandbox des plugins et modèle 
 les décrit, et <a href="../sandbox-deployment/">Mise en place de la sandbox des plugins</a>
 indique à un administrateur lequel choisir.</p>
 <h2 id="10-distribute-a-plugin">10. Distribuer un plugin<a class="headerlink" href="#10-distribute-a-plugin" title="Permanent link">¶</a></h2>
-<p>Il n'y a pas de catalogue : un administrateur installe un plugin en envoyant
-son ZIP ou en collant son URL dans le panneau d'administration, depuis
-l'endroit où vous le publiez (une release sur une forge, votre propre site).</p>
+<p>Il n'y a pas de catalogue. Publiez le plugin sous forme de releases de son
+propre dépôt GitHub : un administrateur l'installe alors en collant le lien du
+dépôt, <code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code>, et le plugin suit ce dépôt pour
+ses mises à jour (<a href="../#automatic-updates">Mises à jour automatiques</a>).
+Un ZIP envoyé ou lié depuis ailleurs s'installe aussi, mais ne suit rien.</p>
 <ul>
-<li>Livrez le ZIP, son <code>.sig</code> et votre <code>cosign.pub</code> ensemble (section 7).</li>
+<li>Nommez le dépôt <code>evey-plugin-&lt;nom&gt;</code>, ou <code>evey-theme-&lt;nom&gt;</code> pour un thème :
+  une recherche sur ces préfixes trouve tous les plugins.</li>
+<li>Étiquetez chaque release <code>v</code> + la <code>version</code> du manifeste, et joignez-y
+  exactement un <code>.zip</code>, son <code>.sig</code> (section 7) et son <code>.sha256</code> (la sortie de
+  <code>sha256sum</code>). Sans <code>.sha256</code>, c'est l'empreinte que GitHub publie pour le
+  fichier qui sert.</li>
+<li>Gardez le <code>name</code> du manifeste d'une release à l'autre : c'est lui qui relie
+  une mise à jour à son plugin. <code>display_name</code> peut changer librement.</li>
+<li>Signez chaque release avec la même clé. Une release ne s'installe seule que
+  si elle est signée par la clé qu'Evey a épinglée à l'installation et ne
+  demande rien de nouveau ; un plugin non signé attend toujours
+  l'administrateur.</li>
+<li>Une release qui demande une nouvelle permission, capacité, zone d'affichage
+  ou un nouvel hôte attend l'accord de l'administrateur : expliquez pourquoi
+  dans ses notes.
+  Il en va de même d'une release qui change le <code>kind</code> ou le <code>language</code> du
+  manifeste, et une pré-release (<code>1.2.0-beta.1</code>) ne s'installe jamais seule.</li>
+<li>Renommer ou transférer le dépôt ne pose pas de problème : Evey le suit par
+  son identifiant GitHub permanent.</li>
 <li>Indiquez les permissions et les hôtes <code>external_fetch</code> dans votre README :
-  l'administrateur voit les permissions à l'installation, et les hôtes à la mise à jour et dans le Tableau de bord sécurité, et doit les approuver ; une
+  l'administrateur voit les permissions à l'installation, et les hôtes à la
+  mise à jour et dans le Tableau de bord sécurité, et doit les approuver ; une
   surprise à cet endroit est la première cause de refus.</li>
-<li>Pour faire figurer votre plugin parmi les exemples fournis, ouvrez une pull
-  request contre <code>examples/plugins/</code> avec la source et un README. Les exemples
-  sont relus et construits depuis la source ; une inscription n'est pas une
-  recommandation et ne porte aucune signature du projet.</li>
 </ul>
+<p>Les plugins du projet Evey sont publiés ainsi, avec un workflow de release
+que vous pouvez copier : <a href="https://github.com/eveyproject/evey-plugin-weather/blob/main/.github/workflows/release.yml">evey-plugin-weather</a>
+construit un ZIP reproductible, le signe avec une clé gardée dans les secrets
+du dépôt, et publie le ZIP, le <code>.sig</code> et le <code>.sha256</code> quand une étiquette de
+version est poussée.</p>
 <h2 id="11-troubleshooting">11. Dépannage<a class="headerlink" href="#11-troubleshooting" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3802,7 +3827,8 @@ host RPC permissions: internal/adapters/driving/grpcapi/plugin_interceptor.go ; 
 host RPCs: internal/adapters/driving/pluginhost/host_server.go - Log, GetConfig, SetConfig, GetData ; fetch.go - Fetch (GET/HEAD, maxFetchBytes, fetchTimeout)
 frame connect-src: frontend/packages/client/src/plugins/hostProtocol.ts - buildConnectSrc ; internal/adapters/driving/http/plugin_frame_handler.go - pluginFramePolicy
 bridge: frontend/packages/client/src/plugins/bridgeScript.ts - EveyBridge
-cosign: internal/adapters/driven/pluginrunner/cosign.go - NewCosignVerifier, readPackageKey, verifyBlobSignature ; internal/config/config.go - CosignPolicy validation
+cosign: internal/adapters/driven/pluginrunner/cosign.go - NewCosignVerifier, readPackageKey, verifyBlobSignature ; cosign 3 vs --tlog-upload=false: release run of the project's plugin repositories (cosign-installer default) ; internal/config/config.go - CosignPolicy validation
+distribution, repository links: internal/app/plugin/install_source.go - resolveInstallSource ; internal/adapters/driven/pluginrelease/github.go - Latest (one .zip, .sha256 or asset digest) ; internal/app/plugin/auto_update.go ;
 install order: internal/app/plugin/install.go - installLocalZip, parseAndValidateManifest, resolveExistingPlugin, verifyPluginIntegrity, extractPluginToStaging, validateStagedPlugin, checkEscalatedWarnings, swapAndPersistPlugin ; update.go - ApplyUpdate ; zip limits: docs/SECURITY.md (ZIP extraction)
 resource limits: internal/config/config.go - Plugins ; internal/adapters/driven/pluginrunner/runner_resmon.go ; i18n admin.plugins.resourceLimits.*
 error texts: internal/adapters/driven/pluginrunner/manifest.go ; internal/domain/plugin/model.go ; internal/app/plugin/install.go ; cosign.go ; runner_resmon.go

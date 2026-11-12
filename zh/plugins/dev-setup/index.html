@@ -3528,6 +3528,8 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
 服务器上不需要 <code>cosign</code> 程序，不联网，也不用透明日志。</p>
 </div>
 <p>只有您自己的机器上需要 <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a>。</p>
+<p>请使用 cosign 2：cosign 3 在没有签名配置时会拒绝 <code>--tlog-upload=false</code>，
+而 Evey 的格式正是按下面这些命令校验的。</p>
 <ol>
 <li>
 <p><strong>只需一次：生成一对密钥。</strong></p>
@@ -3597,13 +3599,33 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
 <p>在启动器运行的每一种模式下，沙箱都会把文件系统限制在插件自己的目录里，并切断所有网络套接字（没有启动器的 <code>basic</code> 只拒绝 <code>execve</code>）。生效的是哪种模式，取决于宿主机器，而不是插件：
 <a href="../../SECURITY/#sandbox-modes">插件沙箱与威胁模型</a>介绍了各种模式，<a href="../sandbox-deployment/">插件沙箱设置</a>告诉管理员该选哪一种。</p>
 <h2 id="10-distribute-a-plugin">10. 分发插件<a class="headerlink" href="#10-distribute-a-plugin" title="Permanent link">¶</a></h2>
-<p>没有插件目录商店：管理员在管理面板里上传插件的 ZIP 包，或者粘贴它的网址，来源是您发布它的任何地方（代码托管平台上的一个 release，您自己的网站）。</p>
+<p>没有插件目录。请将插件发布为它自己的 GitHub 仓库的 release：管理员粘贴仓库链接
+<code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code> 即可安装，之后插件会关联该仓库来获取更新
+（<a href="../#automatic-updates">自动更新</a>）。从其他地方上传或链接的 ZIP 也能
+安装，但不会关联任何仓库。</p>
 <ul>
-<li>把 ZIP 包、它的 <code>.sig</code> 和您的 <code>cosign.pub</code> 放在一起发布（第 7 节）。</li>
-<li>在 README 里写明权限和 <code>external_fetch</code> 主机：管理员在安装时会看到权限，在更新时和<strong>安全仪表板</strong>里会看到主机，并且必须批准；这里出现未预期的内容，是安装被拒绝的首要原因。</li>
-<li>如果想让您的插件和自带的示例列在一起，请向 <code>examples/plugins/</code> 提交一个 pull request，附上源代码和 README。
-  示例会经过审查，并从源代码构建；被列入并不代表项目背书，也不带项目的签名。</li>
+<li>将仓库命名为 <code>evey-plugin-&lt;name&gt;</code>，主题则命名为 <code>evey-theme-&lt;name&gt;</code>：搜索这些
+  前缀就能找到所有插件。</li>
+<li>为每个 release 打上 <code>v</code> + 清单中 <code>version</code> 的标签，并恰好附带一个 <code>.zip</code>、它的
+  <code>.sig</code>（第 7 节）和它的 <code>.sha256</code>（<code>sha256sum</code> 的输出）。没有 <code>.sha256</code> 时，
+  会使用 GitHub 为该文件发布的摘要。</li>
+<li>在各个 release 之间保持清单中的 <code>name</code> 不变：更新正是靠它与插件对应。
+  <code>display_name</code> 可以随意修改。</li>
+<li>每个 release 都用同一把密钥签名。只有当 release 使用 Evey 在安装时固定下来的
+  密钥签名、且没有提出任何新要求时，才会自动安装；未签名的插件始终等待管理员。</li>
+<li>要求新的权限、能力、显示位置或主机的 release 会等待管理员批准：请在它的说明中
+  解释原因。
+  更改清单中 <code>kind</code> 或 <code>language</code> 的 release 同样如此，而预发布版本
+  （<code>1.2.0-beta.1</code>）永远不会自动安装。</li>
+<li>重命名或转移仓库没有问题：Evey 按其永久的 GitHub id 关联它。</li>
+<li>在 README 中写明权限和 <code>external_fetch</code> 主机：管理员在安装时会看到权限，在更新
+  时和安全仪表盘中会看到主机，并且必须批准它们；这里出现意外是安装被拒绝的首要
+  原因。</li>
 </ul>
+<p>Evey 项目的插件就是这样发布的，您可以复制它的 release 工作流：
+<a href="https://github.com/eveyproject/evey-plugin-weather/blob/main/.github/workflows/release.yml">evey-plugin-weather</a>
+会构建可复现的 ZIP，使用保存在仓库 secrets 中的密钥对其签名，并在推送版本标签时
+发布 ZIP、<code>.sig</code> 和 <code>.sha256</code>。</p>
 <h2 id="11-troubleshooting">11. 故障排除<a class="headerlink" href="#11-troubleshooting" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -3677,7 +3699,8 @@ host RPC permissions: internal/adapters/driving/grpcapi/plugin_interceptor.go ; 
 host RPCs: internal/adapters/driving/pluginhost/host_server.go - Log, GetConfig, SetConfig, GetData ; fetch.go - Fetch (GET/HEAD, maxFetchBytes, fetchTimeout)
 frame connect-src: frontend/packages/client/src/plugins/hostProtocol.ts - buildConnectSrc ; internal/adapters/driving/http/plugin_frame_handler.go - pluginFramePolicy
 bridge: frontend/packages/client/src/plugins/bridgeScript.ts - EveyBridge
-cosign: internal/adapters/driven/pluginrunner/cosign.go - NewCosignVerifier, readPackageKey, verifyBlobSignature ; internal/config/config.go - CosignPolicy validation
+cosign: internal/adapters/driven/pluginrunner/cosign.go - NewCosignVerifier, readPackageKey, verifyBlobSignature ; cosign 3 vs --tlog-upload=false: release run of the project's plugin repositories (cosign-installer default) ; internal/config/config.go - CosignPolicy validation
+distribution, repository links: internal/app/plugin/install_source.go - resolveInstallSource ; internal/adapters/driven/pluginrelease/github.go - Latest (one .zip, .sha256 or asset digest) ; internal/app/plugin/auto_update.go ;
 install order: internal/app/plugin/install.go - installLocalZip, parseAndValidateManifest, resolveExistingPlugin, verifyPluginIntegrity, extractPluginToStaging, validateStagedPlugin, checkEscalatedWarnings, swapAndPersistPlugin ; update.go - ApplyUpdate ; zip limits: docs/SECURITY.md (ZIP extraction)
 resource limits: internal/config/config.go - Plugins ; internal/adapters/driven/pluginrunner/runner_resmon.go ; i18n admin.plugins.resourceLimits.*
 error texts: internal/adapters/driven/pluginrunner/manifest.go ; internal/domain/plugin/model.go ; internal/app/plugin/install.go ; cosign.go ; runner_resmon.go

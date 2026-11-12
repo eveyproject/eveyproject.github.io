@@ -2653,6 +2653,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones automáticas
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3226,6 +3237,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#automatic-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones automáticas
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3258,6 +3280,9 @@ el servidor a un plugin, y lo que ese aislamiento no puede impedir, se explica e
 <h2 id="what-is-checked-at-install">Lo que se comprueba al instalar<a class="headerlink" href="#what-is-checked-at-install" title="Permanent link">¶</a></h2>
 <p>Un plugin se rechaza al instalarlo cuando:</p>
 <ul>
+<li>su origen no es ni un ZIP subido ni un enlace <code>https://</code>: una ruta del
+  servidor y un enlace <code>http://</code> simple se rechazan (consulta
+  <a href="../../SECURITY/#where-the-package-comes-from">De dónde viene el paquete</a>);</li>
 <li>falta <code>kind</code>, o no es ni <code>plugin</code> ni <code>theme</code>;</li>
 <li>a un <code>kind: plugin</code> le falta <code>language</code> o <code>entrypoint</code>, o un <code>kind: theme</code>
   los declara, o declara <code>permissions</code> o <code>capabilities</code>;</li>
@@ -3511,6 +3536,44 @@ método que ese token no nombre.</p>
    válida en el paso de aplicar bloquea la actualización aunque la vista
    previa haya pasado.</li>
 </ol>
+<h2 id="automatic-updates">Actualizaciones automáticas<a class="headerlink" href="#automatic-updates" title="Permanent link">¶</a></h2>
+<p>Un plugin puede seguir el repositorio desde el que se instaló
+(<code>https://github.com/&lt;owner&gt;/&lt;repo&gt;</code>). Cada hora, el servidor lee la última
+release por la API de GitHub, descarga su zip una sola vez, juzga esos bytes e
+instala esos mismos bytes, por toda la cadena de instalación descrita arriba.</p>
+<ul>
+<li><strong>Rechazada</strong> cuando el análisis estático rechaza el código: un hallazgo
+  crítico, o un aviso que la propia instalación bloquea (<code>deserialization</code>,
+  <code>obfuscation</code>, <code>native_code</code> sin <code>native-binary</code>). Se notifica a los
+  administradores; no se instala nada.</li>
+<li><strong>Retenida para un administrador</strong> cuando la release pide un permiso, una
+  capacidad, una zona de visualización o un host <code>external_fetch</code> que la
+  versión instalada no tiene, trae un tipo de aviso del análisis que la
+  versión instalada no tenía, cambia el <code>kind</code> (tema y plugin) o el <code>language</code>, es una pre-release, está firmada con otra clave o ya no lo está, o
+  cuando la versión instalada no está firmada en absoluto, o cuando el
+  administrador desactivó las actualizaciones automáticas. Se notifica a los
+  administradores una vez por release.</li>
+<li><strong>Aplicada</strong> en cualquier otro caso. La versión debe ser superior, el zip
+  debe coincidir con el sha256 que publica la release, la release debe ser el
+  mismo plugin (el mismo <code>name</code>), y el zip debe venir de los propios archivos
+  de release del repositorio.</li>
+</ul>
+<p>La firma es lo que lo hace seguro: el análisis detecta patrones conocidos, no
+todo el código malicioso, así que una release que se instala sola debe estar
+firmada con la clave fijada al instalar el plugin. Quien se haga con el
+repositorio sin esa clave obtiene una release retenida, no una instalada.</p>
+<p>Otras tres protecciones rodean esa regla:</p>
+<ul>
+<li>El repositorio se sigue por su identificador permanente de GitHub, no por
+  su nombre: un nombre que otro registra tras un cambio de nombre o un borrado no lleva a nada.</li>
+<li>La instalación solo se hace sobre el plugin tal como se juzgó. Si un
+  administrador lo desinstala, lo actualiza, cambia su clave, el repositorio
+  que sigue o su interruptor mientras se juzga una release, no se instala
+  nada.</li>
+<li>Una instalación desde un enlace de repositorio queda fijada a los bytes que
+  mostró la vista previa: la vista previa devuelve el enlace del zip de la
+  release con su sha256, y es lo que recibe la instalación.</li>
+</ul>
 <!-- sources
 manifest validation: internal/adapters/driven/pluginrunner/manifest.go - validateManifest, validateExternalFetch ; internal/domain/plugin/model.go - Validate ; capabilities.go - KnownPermissions, KnownCapabilities
 escalated warnings, native-binary: internal/app/plugin/install.go - checkEscalatedWarnings, validateStagedPlugin
@@ -3523,6 +3586,7 @@ frame connect-src: frontend/packages/client/src/plugins/hostProtocol.ts - buildC
 slots: internal/domain/plugin/slots.go - AllowedSlots
 bridge limits: frontend/packages/client/src/plugins/hostProtocol.ts ; token: internal/app/plugin/token_service.go - PluginTokenTTL ; docs/adr/0012-plugin-token-deny-by-default.md
 update workflow: internal/app/plugin/update.go - ApplyUpdate ; internal/app/plugin/install.go - resolveExistingPlugin ; proto/evey/v1/admin_plugin.proto - PreviewPluginUpdate, ApplyPluginUpdate
+automatic updates: internal/app/plugin/auto_update.go - updateFromRelease, newWarningCategories, checkUpdateExpectation ; update.go - KindChange, LanguageChange ; preview.go - ResolvedSource ; install.go - blockingWarning ; internal/adapters/driven/pluginrelease/github.go - Latest (asset prefix check) ; internal/domain/plugin/update.go - NormalizeRepoURL
 -->
 
 

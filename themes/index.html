@@ -3347,15 +3347,21 @@ may contain and what the installer rewrites or refuses. Themes are installed
 like plugins, from <strong>Admin → Plugins</strong>, and each user picks one under
 <strong>Settings → Appearance → Theme</strong>.</p>
 <h2 id="manifest">Manifest<a class="headerlink" href="#manifest" title="Permanent link">¶</a></h2>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aurora</span><span class="w">               </span><span class="c1"># required; human-readable name</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aurora</span><span class="w">               </span><span class="c1"># required; unique, kebab-case</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">             </span><span class="c1"># required; semver</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">theme</span><span class="w">                </span><span class="c1"># required</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">         </span><span class="c1"># optional</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">              </span><span class="c1"># optional</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># no language, entrypoint, permissions or capabilities: the install is refused</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">display_name</span><span class="p">:</span><span class="w">              </span><span class="c1"># optional; the label of the theme picker</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aurora</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">fr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Aurore</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">         </span><span class="c1"># optional</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span><span class="w">              </span><span class="c1"># optional</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># no language, entrypoint, permissions or capabilities: the install is refused</span>
 </span></code></pre></div>
+<p>The theme picker labels the theme with <code>display_name</code> in the interface
+language, then in English, and with <code>name</code> when the manifest declares none.
+One string (<code>display_name: Aurora</code>) stands for every language.</p>
 <p>The ZIP holds <code>theme.css</code> and/or <code>theme.js</code> at its root, next to the
 manifest. A package with neither is accepted and has no visible effect.
 <code>examples/plugins/theme-dark-blue</code> (a short <code>theme.css</code> overriding the colour
@@ -3565,7 +3571,8 @@ has no legitimate reason to mention these names, even in a comment.</p>
 </table>
 <!-- sources
 manifest rules: internal/adapters/driven/pluginrunner/manifest.go - validateManifest (KindTheme)
-theme selection: frontend/apps/web/src/features/user/ThemeSettings.tsx ; i18n common.appearance, common.theme ; GET /api/v1/plugins/themes
+theme selection: frontend/apps/web/src/features/user/ThemeSettings.tsx ;
+display_name: internal/domain/plugin/display_name.go - DisplayName.Validate ; frontend/packages/client/src/lib/pluginTheme.ts - pluginThemeLabel ; i18n common.appearance, common.theme ; GET /api/v1/plugins/themes
 routes, auth: internal/adapters/driving/http/theme_asset_handler.go (theme.css open, theme.js authMw)
 link injection, hidden iframe, connect-src none: frontend/apps/web/src/features/themes/ThemeLoader.tsx
 sanitizer: internal/adapters/driven/pluginrunner/css_sanitizer.go - SanitizeCSS, reImport, reURLExternal, reURLExternalUnterminated, reImageSetCandidateExternal, reCustomPropExternalURL, reURLJavascript, reExpression, reMozBinding, reBehavior, reSensitiveSelector, overlaySignals.isOverlay, stripPointerEventsOnInteractive, reZIndex ; written back at install: internal/app/plugin/install.go - validateStagedPlugin
