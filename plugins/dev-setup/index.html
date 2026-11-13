@@ -3627,9 +3627,11 @@ Evey verifies the package against the key it carries and shows one of:</p>
   trusted yet. One click, <strong>Trust this key</strong>, adds it to the list under a name.</li>
 <li><strong>Unsigned</strong>, or <strong>Invalid signature</strong>.</li>
 </ul>
-<p>The policy decides what happens: <code>EVEY_PLUGINS_COSIGN_POLICY=warn</code> (default)
-records the verdict and lets every install through; <code>enforce</code> admits trusted
-keys only. Whatever the policy, an update whose key differs from the installed
+<p>The policy decides what happens: <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code>
+(default) admits trusted keys only, so an unsigned package does not install;
+<code>warn</code> records the verdict and lets every install through. The administrator
+installing your plugin sees your key in the install preview and trusts it
+there with one click, then installs. Whatever the policy, an update whose key differs from the installed
 version, or that drops the signature, is refused until the administrator
 ticks <strong>The publisher changed, I accept the new key</strong> in the update dialog.
 <code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> is optional: it seeds the trusted list with

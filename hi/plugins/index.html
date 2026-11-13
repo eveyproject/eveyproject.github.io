@@ -3367,10 +3367,11 @@ fingerprint के साथ <strong>हस्ताक्षरित, अज�
 होता है), <strong>हस्ताक्षर रहित</strong> या <strong>अमान्य</strong>। जो अपडेट कुंजी बदलता है, या
 सिग्नेचर छोड़ देता है, वह आपकी साफ़ मंज़ूरी का इंतज़ार करता है। बाकी नीति
 तय करती है:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (डिफ़ॉल्ट) | enforce</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>enforce<span class="w">   </span><span class="c1"># off | warn | enforce (डिफ़ॉल्ट)</span>
 </span></code></pre></div>
-<p><code>warn</code> के साथ, फ़ैसला दिखता है और कुछ रोका नहीं जाता; <code>enforce</code> के साथ, सिर्फ़
-भरोसेमंद प्रकाशक इंस्टॉल होते हैं। प्लगइन बनाने वालों के लिए: देखें
+<p><code>enforce</code> के साथ, सिर्फ़ भरोसेमंद प्रकाशक इंस्टॉल होते हैं: Evey प्रोजेक्ट की
+कुंजी पर शुरू से भरोसा है, और दूसरे प्रकाशक की कुंजी को इंस्टॉल की झलक में
+भरोसेमंद बनाया जाता है। <code>warn</code> के साथ, फ़ैसला दिखता है और कुछ रोका नहीं जाता। प्लगइन बनाने वालों के लिए: देखें
 <a href="dev-setup/#7-sign-your-plugin">अपने प्लगइन पर सिग्नेचर करें</a>।</p>
 </div>
 <h2 id="update-a-plugin">प्लगइन अपडेट करें<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>

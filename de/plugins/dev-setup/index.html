@@ -3649,9 +3649,12 @@ und zeigt eines von:</p>
   vertrauen</strong>, nimmt ihn unter einem Namen in die Liste auf.</li>
 <li><strong>Nicht signiert</strong> oder <strong>Ungültige Signatur</strong>.</li>
 </ul>
-<p>Die Regel entscheidet, was geschieht: <code>EVEY_PLUGINS_COSIGN_POLICY=warn</code>
-(Standard) hält das Urteil fest und lässt jede Installation durch; <code>enforce</code>
-lässt nur vertraute Schlüssel zu. Unabhängig von der Regel wird ein Update,
+<p>Die Regel entscheidet, was geschieht: <code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code>
+(Standard) lässt nur vertraute Schlüssel zu, ein unsigniertes Paket wird also
+nicht installiert; <code>warn</code> hält das Urteil fest und lässt jede Installation
+durch. Der Administrator, der Ihr Plugin installiert, sieht Ihren Schlüssel in
+der Installationsvorschau, vertraut ihm dort mit einem Klick und installiert
+dann. Unabhängig von der Regel wird ein Update,
 dessen Schlüssel von der installierten Version abweicht oder das die
 Signatur weglässt, abgelehnt, bis der Administrator im Update-Dialog <strong>Der
 Herausgeber hat gewechselt, ich akzeptiere den neuen Schlüssel</strong> ankreuzt.

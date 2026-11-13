@@ -3367,10 +3367,12 @@ signature on its own (no <code>cosign</code> binary) and tells you <strong>Signe
 it), <strong>Unsigned</strong> or <strong>Invalid</strong>. An update that changes key, or drops the
 signature, waits for your explicit acceptance. The policy decides the
 rest:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (default) | enforce</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>enforce<span class="w">   </span><span class="c1"># off | warn | enforce (default)</span>
 </span></code></pre></div>
-<p>With <code>warn</code>, the verdict is shown and nothing is blocked; with <code>enforce</code>,
-only trusted publishers install. Authors: see
+<p>With <code>enforce</code>, only trusted publishers install: the Evey project's key is
+trusted from the start, and another publisher's key can be trusted from
+the install preview. With <code>warn</code>, the verdict is shown and nothing is
+blocked. Authors: see
 <a href="dev-setup/#7-sign-your-plugin">Sign your plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Update a plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>

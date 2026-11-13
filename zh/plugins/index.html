@@ -3350,9 +3350,9 @@
 <p>插件作者可以用 <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a> 给 ZIP 签名，
 作者的公钥随包一起分发。Evey 自己检查签名（不需要 <code>cosign</code> 程序）：密钥在您的<strong>受信任的发布者</strong>列表里时显示<strong>由 &lt;发布者&gt; 签名</strong>，否则显示<strong>已签名，未知密钥</strong>和它的指纹（点一下即可信任），或者<strong>未签名</strong>、<strong>无效</strong>。
 更换密钥或去掉签名的更新，要等您明确接受。其余由策略决定：</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn（默认）| enforce</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>enforce<span class="w">   </span><span class="c1"># off | warn | enforce（默认）</span>
 </span></code></pre></div>
-<p>设为 <code>warn</code> 时，只显示结论，不阻止任何东西；设为 <code>enforce</code> 时，只有受信任的发布者才能安装。插件作者请看
+<p>设为 <code>enforce</code> 时，只有受信任的发布者才能安装：Evey 项目的密钥一开始就受信任，其他发布者的密钥可以在安装预览里设为受信任。设为 <code>warn</code> 时，只显示结论，不阻止任何东西。插件作者请看
 <a href="dev-setup/#7-sign-your-plugin">编写插件</a>。</p>
 </div>
 <h2 id="update-a-plugin">更新插件<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>

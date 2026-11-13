@@ -3370,10 +3370,12 @@ son empreinte sinon (un clic lui fait confiance), <strong>Non signé</strong> ou
 <strong>Invalide</strong>. Une mise à jour qui change de clé, ou qui abandonne la
 signature, attend votre acceptation explicite. La politique décide du
 reste :</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (défaut) | enforce</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>enforce<span class="w">   </span><span class="c1"># off | warn | enforce (défaut)</span>
 </span></code></pre></div>
-<p>Avec <code>warn</code>, le verdict est affiché et rien n'est bloqué ; avec
-<code>enforce</code>, seuls les éditeurs de confiance s'installent. Auteurs : voir
+<p>Avec <code>enforce</code>, seuls les éditeurs de confiance s'installent : la clé du
+projet Evey est approuvée dès le départ, et celle d'un autre éditeur
+s'approuve depuis l'aperçu d'installation. Avec <code>warn</code>, le verdict est
+affiché et rien n'est bloqué. Auteurs : voir
 <a href="dev-setup/#7-sign-your-plugin">Signer son plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Mettre à jour un plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>

@@ -3566,7 +3566,7 @@ Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js
 <li><strong>已签名 - 未知密钥 sha256:...</strong>：签名没问题，但这把密钥还不受信任。点一下<strong>信任此密钥</strong>，就能给它起个名字加进列表。</li>
 <li><strong>未签名</strong>，或<strong>签名无效</strong>。</li>
 </ul>
-<p>后果由策略决定：<code>EVEY_PLUGINS_COSIGN_POLICY=warn</code>（默认）只记录结论，所有安装都放行；<code>enforce</code> 只接受受信任的密钥。无论策略如何，如果更新的密钥与已安装版本不同，或者去掉了签名，就会被拒绝，直到管理员在更新对话框里勾选<strong>发布者已更改，我接受新密钥</strong>。<code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> 是可选的：它在启动时往受信任列表里加入一把密钥（标记为服务器运营者的密钥）。</p>
+<p>后果由策略决定：<code>EVEY_PLUGINS_COSIGN_POLICY=enforce</code>（默认）只接受受信任的密钥，所以未签名的包无法安装；<code>warn</code> 只记录结论，所有安装都放行。安装您插件的管理员会在安装预览里看到您的密钥，在那里点一下设为受信任，然后再安装。无论策略如何，如果更新的密钥与已安装版本不同，或者去掉了签名，就会被拒绝，直到管理员在更新对话框里勾选<strong>发布者已更改，我接受新密钥</strong>。<code>EVEY_PLUGINS_COSIGN_PUBLIC_KEY</code> 是可选的：它在启动时往受信任列表里加入一把密钥（标记为服务器运营者的密钥）。</p>
 <p>常见问题：</p>
 <ul>
 <li><strong>对 ZIP 包的任何改动都会让签名失效</strong>，哪怕只是把同样的文件重新打包。请给您分发的那个文件签名，每个版本都重新签一次。</li>

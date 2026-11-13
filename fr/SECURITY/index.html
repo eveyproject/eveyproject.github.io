@@ -4031,15 +4031,18 @@ découlent :</p>
 <td>La signature n'est pas vérifiée et rien n'est enregistré.</td>
 </tr>
 <tr>
-<td><code>warn</code> (défaut)</td>
+<td><code>warn</code></td>
 <td>Le verdict est enregistré et montré ; les paquets non signés, non fiables et invalides s'installent.</td>
 </tr>
 <tr>
-<td><code>enforce</code></td>
+<td><code>enforce</code> (défaut)</td>
 <td>Seul un paquet signé par un éditeur de confiance s'installe ou se met à jour.</td>
 </tr>
 </tbody>
 </table>
+<p>La clé du projet Evey figure dans la liste dès le départ, sous <strong>Evey
+project</strong>. La clé d'un autre éditeur s'approuve depuis l'aperçu d'installation,
+avant que rien ne soit installé.</p>
 <p>Une signature prouve que le paquet est bien celui que son éditeur a publié, et
 qu'une mise à jour vient du même éditeur. Elle ne dit rien du code, que
 l'analyse, les permissions et le bac à sable jugent.</p>
@@ -4500,7 +4503,7 @@ refusés, binaires compilés inclus.</p>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
-<td><code>warn</code></td>
+<td><code>enforce</code></td>
 <td><code>off</code>, <code>warn</code> ou <code>enforce</code>.</td>
 </tr>
 <tr>

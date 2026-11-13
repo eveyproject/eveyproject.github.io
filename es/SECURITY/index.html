@@ -4030,15 +4030,18 @@ derivan tres cosas:</p>
 <td>La firma no se comprueba y no se registra nada.</td>
 </tr>
 <tr>
-<td><code>warn</code> (por defecto)</td>
+<td><code>warn</code></td>
 <td>El veredicto se registra y se muestra; los paquetes sin firma, de clave no fiable o no válidos se instalan.</td>
 </tr>
 <tr>
-<td><code>enforce</code></td>
+<td><code>enforce</code> (por defecto)</td>
 <td>Solo se instala o actualiza un paquete firmado por un editor de confianza.</td>
 </tr>
 </tbody>
 </table>
+<p>La clave del propio proyecto Evey está en la lista desde el principio, como
+<strong>Evey project</strong>. La clave de otro editor se puede aprobar desde la vista
+previa de instalación, antes de instalar nada.</p>
 <p>Una firma demuestra que el paquete es el que su editor publicó, y que una
 actualización viene del mismo editor. No dice nada del código, que juzgan el
 análisis, los permisos y el sandbox.</p>
@@ -4500,7 +4503,7 @@ se rechazan, binarios compilados incluidos.</p>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
-<td><code>warn</code></td>
+<td><code>enforce</code></td>
 <td><code>off</code>, <code>warn</code> o <code>enforce</code>.</td>
 </tr>
 <tr>

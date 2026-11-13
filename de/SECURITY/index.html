@@ -4035,15 +4035,19 @@ Daraus folgen drei Dinge:</p>
 <td>Die Signatur wird nicht geprüft und nichts wird festgehalten.</td>
 </tr>
 <tr>
-<td><code>warn</code> (Standard)</td>
+<td><code>warn</code></td>
 <td>Das Urteil wird festgehalten und angezeigt; unsignierte, nicht vertraute und ungültige Pakete werden installiert.</td>
 </tr>
 <tr>
-<td><code>enforce</code></td>
+<td><code>enforce</code> (Standard)</td>
 <td>Nur ein Paket, das von einem vertrauenswürdigen Herausgeber signiert ist, wird installiert oder aktualisiert.</td>
 </tr>
 </tbody>
 </table>
+<p>Der Schlüssel des Evey-Projekts selbst steht von Anfang an in der Liste,
+als <strong>Evey project</strong>. Den Schlüssel eines anderen Herausgebers kann man schon
+in der Installationsvorschau als vertrauenswürdig markieren, bevor etwas
+installiert ist.</p>
 <p>Eine Signatur beweist, dass das Paket dasjenige ist, das sein Herausgeber
 veröffentlicht hat, und dass ein Update vom selben Herausgeber stammt. Über
 den Code sagt sie nichts; den beurteilen die Analyse, die Berechtigungen und
@@ -4511,7 +4515,7 @@ Systemaufrufe werden abgelehnt, auch für kompilierte Binärdateien.</p>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
-<td><code>warn</code></td>
+<td><code>enforce</code></td>
 <td><code>off</code>, <code>warn</code> oder <code>enforce</code>.</td>
 </tr>
 <tr>

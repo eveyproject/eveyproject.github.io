@@ -3369,10 +3369,12 @@ desconocida</strong> con su huella en caso contrario (un clic confía en ella),
 <strong>Sin firma</strong> o <strong>No válida</strong>. Una actualización que cambia de clave, o que
 abandona la firma, espera tu aceptación explícita. La política decide el
 resto:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (por defecto) | enforce</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>enforce<span class="w">   </span><span class="c1"># off | warn | enforce (por defecto)</span>
 </span></code></pre></div>
-<p>Con <code>warn</code>, el veredicto se muestra y no se bloquea nada; con <code>enforce</code>,
-solo se instalan los editores de confianza. Para los autores: consulta
+<p>Con <code>enforce</code>, solo se instalan los editores de confianza: la clave del
+proyecto Evey es de confianza desde el principio, y la de otro editor se
+aprueba desde la vista previa de instalación. Con <code>warn</code>, el veredicto se
+muestra y no se bloquea nada. Para los autores: consulta
 <a href="dev-setup/#7-sign-your-plugin">Firma tu plugin</a>.</p>
 </div>
 <h2 id="update-a-plugin">Actualizar un plugin<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>

@@ -3372,10 +3372,12 @@ Fingerabdruck (ein Klick vertraut ihm), <strong>Nicht signiert</strong> oder
 <strong>Ungültig</strong>. Ein Update, das den Schlüssel wechselt oder die Signatur
 weglässt, wartet auf Ihre ausdrückliche Zustimmung. Die Regel entscheidet
 den Rest:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>warn<span class="w">      </span><span class="c1"># off | warn (Standard) | enforce</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EVEY_PLUGINS_COSIGN_POLICY</span><span class="o">=</span>enforce<span class="w">   </span><span class="c1"># off | warn | enforce (Standard)</span>
 </span></code></pre></div>
-<p>Mit <code>warn</code> wird das Urteil angezeigt und nichts blockiert; mit <code>enforce</code>
-werden nur vertrauenswürdige Herausgeber installiert. Für Autoren: siehe
+<p>Mit <code>enforce</code> werden nur vertrauenswürdige Herausgeber installiert: Dem
+Schlüssel des Evey-Projekts wird von Anfang an vertraut, den eines anderen
+Herausgebers markiert man in der Installationsvorschau als vertrauenswürdig.
+Mit <code>warn</code> wird das Urteil angezeigt und nichts blockiert. Für Autoren: siehe
 <a href="dev-setup/#7-sign-your-plugin">Ihr Plugin signieren</a>.</p>
 </div>
 <h2 id="update-a-plugin">Ein Plugin aktualisieren<a class="headerlink" href="#update-a-plugin" title="Permanent link">¶</a></h2>

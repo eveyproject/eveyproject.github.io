@@ -4019,15 +4019,18 @@ fingerprint (<code>sha256:</code> over the DER public key). Three facts follow f
 <td>The signature is not checked and nothing is recorded.</td>
 </tr>
 <tr>
-<td><code>warn</code> (default)</td>
+<td><code>warn</code></td>
 <td>The verdict is recorded and shown; unsigned, untrusted and invalid packages install.</td>
 </tr>
 <tr>
-<td><code>enforce</code></td>
+<td><code>enforce</code> (default)</td>
 <td>Only a package signed by a trusted publisher installs or updates.</td>
 </tr>
 </tbody>
 </table>
+<p>The Evey project's own key is in the list from the start, under <strong>Evey
+project</strong>. Another publisher's key can be trusted from the install preview,
+before anything is installed.</p>
 <p>What a signature proves is that the package is the one its publisher
 released, and that an update comes from the same publisher. It says nothing
 about the code, which the analysis, the permissions and the sandbox judge.</p>
@@ -4474,7 +4477,7 @@ included.</p>
 </tr>
 <tr>
 <td><code>EVEY_PLUGINS_COSIGN_POLICY</code></td>
-<td><code>warn</code></td>
+<td><code>enforce</code></td>
 <td><code>off</code>, <code>warn</code> or <code>enforce</code>.</td>
 </tr>
 <tr>
