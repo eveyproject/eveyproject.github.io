@@ -2969,6 +2969,8 @@
       
         
       
+        
+      
     
     
     
@@ -3113,6 +3115,34 @@
     
   
     सुरक्षा मॉडल और प्लगइन सैंडबॉक्स
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ऐप अपडेट
   
 
     
@@ -3413,12 +3443,81 @@ interpreter चाहिए; <code>go</code> एक compiled binary लाता
 Python और Node.js रहते हैं और <code>-lean</code> इमेज में सिर्फ़ Python रहता है। जो manifest ऐसा runtime बताता है
 जो इमेज में नहीं है, वह इंस्टॉल के समय मना कर दिया जाता है, और उपलब्ध runtime की
 सूची दिखाई जाती है।</p>
+<p>हर इमेज प्लगइन को क्या देती है, <code>language</code> के हिसाब से:</p>
+<table>
+<thead>
+<tr>
+<th><code>language</code></th>
+<th>इमेज</th>
+<th>interpreter</th>
+<th>इमेज से मिलने वाला gRPC</th>
+<th>पैकेज क्या लाता है</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python</code></td>
+<td>डिफ़ॉल्ट, <code>-nodejs</code>, <code>-lean</code></td>
+<td>Python 3.13</td>
+<td><code>grpcio</code>, <code>protobuf</code></td>
+<td>अपना कोड। सर्वर जनरेट किए हुए stub entrypoint के बगल में कॉपी करता है।</td>
+</tr>
+<tr>
+<td><code>nodejs</code></td>
+<td>डिफ़ॉल्ट, <code>-nodejs</code></td>
+<td>Node.js 20</td>
+<td><code>@grpc/grpc-js</code> 1.14.7, <code>@grpc/proto-loader</code> 0.8.1, 0.1.9 से</td>
+<td>अपना कोड। 0.1.8 तक, दोनों gRPC मॉड्यूल अपने <code>node_modules</code> में।</td>
+</tr>
+<tr>
+<td><code>php</code></td>
+<td>डिफ़ॉल्ट</td>
+<td>PHP 8.4</td>
+<td>कोई नहीं</td>
+<td>एक gRPC implementation और उससे बने stub।</td>
+</tr>
+<tr>
+<td><code>ruby</code></td>
+<td>डिफ़ॉल्ट</td>
+<td>Ruby 3.3</td>
+<td>कोई नहीं</td>
+<td>एक gRPC implementation और उससे बने stub।</td>
+</tr>
+<tr>
+<td><code>lua</code></td>
+<td>डिफ़ॉल्ट</td>
+<td>Lua 5.4</td>
+<td>कोई नहीं</td>
+<td>एक gRPC implementation और उससे बने stub।</td>
+</tr>
+<tr>
+<td><code>bash</code>, <code>sh</code></td>
+<td>तीनों</td>
+<td>bash 5.2, dash</td>
+<td>कोई नहीं</td>
+<td>जो भी gRPC socket को सर्व करे।</td>
+</tr>
+<tr>
+<td><code>go</code></td>
+<td>तीनों</td>
+<td>कोई नहीं, compiled</td>
+<td>ज़रूरी नहीं</td>
+<td>एक static binary, <code>native-binary</code> अनुमति के साथ।</td>
+</tr>
+</tbody>
+</table>
+<p>interpreter और Python मॉड्यूल उस Debian रिलीज़ के पैकेज हैं जिस पर इमेज बनती है, इसलिए उनके
+major वर्ज़न सिर्फ़ उसी रिलीज़ के साथ बदलते हैं। Node.js के दोनों मॉड्यूल
+<code>docker/plugin-runtime-node/package.json</code> में पिन किए गए हैं। इनमें से कोई भी लोड न हो तो
+इमेज का build फ़ेल हो जाता है, इसलिए कोई इमेज इस तालिका के वादे के बिना बाहर नहीं आती।</p>
 <p>gRPC अनुबंध एक ही फ़ाइल है: <code>proto/plugin/v1/plugin_api.proto</code>। सिर्फ़ Python SDK
 जनरेट किए हुए stub के साथ आता है; <code>sdk/&lt;language&gt;/</code> में बाकी भाषाओं के पास <code>.proto</code> है। प्लगइन
 शुरू होने पर सर्वर आपकी भाषा की फ़ाइलें आपके entrypoint के बगल में कॉपी कर देता है।
-इमेज Python प्लगइन को <code>grpcio</code> देती है, इसलिए उन्हें कुछ पैक नहीं करना पड़ता। Node.js
-प्लगइन को अपना <code>node_modules</code> (<code>@grpc/grpc-js</code> और <code>@grpc/proto-loader</code>) पैकेज में
-साथ रखना होगा। किसी और भाषा के लिए <code>protoc</code> से stub बनाएँ और उन्हें ZIP में रखें:</p>
+इमेज Python प्लगइन को <code>grpcio</code> देती है, इसलिए उन्हें कुछ पैक नहीं करना पड़ता। <code>nodejs</code>
+और <code>full</code> इमेज इसी तरह Node.js प्लगइन को <code>@grpc/grpc-js</code> और <code>@grpc/proto-loader</code> देती हैं।
+0.1.8 तक की इमेज ऐसा नहीं करतीं: जिस Node.js प्लगइन को उन पर भी चलना है, वह दोनों को अपने
+पैकेज के <code>node_modules</code> में रखे, और जो इमेज पर निर्भर है वह इसे <code>min_evey_version</code> से बताए।
+पैकेज में दिया गया <code>node_modules</code> हमेशा इमेज वाले से पहले लिया जाता है। किसी और भाषा के लिए <code>protoc</code> से stub बनाएँ और उन्हें ZIP में रखें:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span>proto/plugin/v1/plugin_api.proto

@@ -2900,6 +2900,8 @@
       
         
       
+        
+      
     
     
     
@@ -3044,6 +3046,34 @@
     
   
     Modelo de seguridad y sandbox de plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actualizaciones de las apps
   
 
     
@@ -3312,7 +3342,7 @@ reproductor: <a href="../how-playback-is-decided/">Cómo elige Evey el modo de r
 </tr>
 <tr>
 <td><strong>Subtítulos</strong></td>
-<td>Las pistas de subtítulos incluidas en un MKV se extraen cuando se piden: las de texto a WebVTT y las de imagen (PGS) a imágenes. Cuando el propio índice del archivo (Cues) cubre una pista entera, el servidor lee solo los bloques a los que apunta en lugar de todo el archivo, y guarda ese índice de bloques en su carpeta de datos (<code>subtitle-index/</code>) para la próxima petición. A una pista que todavía necesita una lectura completa se le responde «en preparación» con un plazo para volver a intentarlo, y los reproductores vuelven a preguntar hasta que está lista.</td>
+<td>Las pistas de subtítulos incluidas en un MKV se extraen cuando se piden: las de texto a WebVTT y las de imagen (PGS, VobSub, DVB) a imágenes. Cuando el propio índice del archivo (Cues) cubre una pista entera, el servidor lee solo los bloques a los que apunta en lugar de todo el archivo, y guarda ese índice de bloques en su carpeta de datos (<code>subtitle-index/</code>) para la próxima petición. A una pista que todavía necesita una lectura completa se le responde «en preparación» con un plazo para volver a intentarlo, y los reproductores vuelven a preguntar hasta que está lista.</td>
 <td>ffmpeg extrae la pista leyendo el archivo de principio a fin.</td>
 </tr>
 <tr>

@@ -2919,6 +2919,8 @@
       
         
       
+        
+      
     
     
     
@@ -3063,6 +3065,34 @@
     
   
     安全模型与插件沙箱
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用更新
   
 
     
@@ -3288,6 +3318,12 @@
 <td>无</td>
 </tr>
 <tr>
+<td><code>EVEY_CLIENT_UPDATES_DIR</code></td>
+<td><code>/app/client-updates</code></td>
+<td>服务器读取 Android 应用代码的文件夹（<a href="../../client-updates/">由实例提供的应用更新</a>）。发布的镜像会填好它；文件夹为空或不存在时不提供任何内容。</td>
+<td>无</td>
+</tr>
+<tr>
 <td><code>EVEY_SERVER_NAME</code></td>
 <td><code>Evey</code></td>
 <td>显示在登录页面、应用的服务器列表和邮件里的名称。</td>
@@ -3431,7 +3467,7 @@
 </tbody>
 </table>
 <!-- sources
-internal/config/config.go - EVEY_SERVER_BASE_URL, EVEY_SERVER_PORT, EVEY_GRPC_BIND, EVEY_SERVER_NAME, EVEY_REAL_IP_HEADER, EVEY_RATELIMIT_LOGIN_MAX, EVEY_RATELIMIT_GLOBAL_MAX, EVEY_REMOTE_ACCESS_*, EVEY_DEMO, forwardedProtoFromEnv, EffectiveBaseURL
+internal/config/config.go - EVEY_CLIENT_UPDATES_DIR, EVEY_SERVER_BASE_URL, EVEY_SERVER_PORT, EVEY_GRPC_BIND, EVEY_SERVER_NAME, EVEY_REAL_IP_HEADER, EVEY_RATELIMIT_LOGIN_MAX, EVEY_RATELIMIT_GLOBAL_MAX, EVEY_REMOTE_ACCESS_*, EVEY_DEMO, forwardedProtoFromEnv, EffectiveBaseURL
 trusted proxies: internal/config/trusted_proxies.go (loopback baseline, malformed entry is an error) ; cmd/evey/admin_ops.go
 remote access inference: internal/config/remote_access_resolve.go ; cmd/evey/main.go (RemoteAccessConfigKey loaded from DB)
 panel: internal/adapters/driving/http/settings_handler.go (server.name, ratelimit.* live via SetLimit) ; i18n admin.remoteAccess.*, admin.serverSettings.*

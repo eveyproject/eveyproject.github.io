@@ -2969,6 +2969,8 @@
       
         
       
+        
+      
     
     
     
@@ -3113,6 +3115,34 @@
     
   
     Modelo de seguridad y sandbox de plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actualizaciones de las apps
   
 
     
@@ -3414,13 +3444,86 @@ permiso <code>native-binary</code>. La imagen por defecto lleva Python, Node.js,
 <code>-nodejs</code> conserva Python y Node.js y la imagen <code>-lean</code> solo Python. Un
 manifiesto que nombra un runtime que la imagen no tiene se rechaza al
 instalar, con la lista de los runtimes disponibles.</p>
+<p>Lo que cada imagen da a un plugin, según <code>language</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>language</code></th>
+<th>Imágenes</th>
+<th>Intérprete</th>
+<th>gRPC aportado por la imagen</th>
+<th>Lo que trae el paquete</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python</code></td>
+<td>por defecto, <code>-nodejs</code>, <code>-lean</code></td>
+<td>Python 3.13</td>
+<td><code>grpcio</code>, <code>protobuf</code></td>
+<td>Su código. El servidor copia los stubs generados junto al entrypoint.</td>
+</tr>
+<tr>
+<td><code>nodejs</code></td>
+<td>por defecto, <code>-nodejs</code></td>
+<td>Node.js 20</td>
+<td><code>@grpc/grpc-js</code> 1.14.7, <code>@grpc/proto-loader</code> 0.8.1, desde la 0.1.9</td>
+<td>Su código. Hasta la 0.1.8, los dos módulos gRPC en su <code>node_modules</code>.</td>
+</tr>
+<tr>
+<td><code>php</code></td>
+<td>por defecto</td>
+<td>PHP 8.4</td>
+<td>ninguno</td>
+<td>Una implementación gRPC y los stubs que generó.</td>
+</tr>
+<tr>
+<td><code>ruby</code></td>
+<td>por defecto</td>
+<td>Ruby 3.3</td>
+<td>ninguno</td>
+<td>Una implementación gRPC y los stubs que generó.</td>
+</tr>
+<tr>
+<td><code>lua</code></td>
+<td>por defecto</td>
+<td>Lua 5.4</td>
+<td>ninguno</td>
+<td>Una implementación gRPC y los stubs que generó.</td>
+</tr>
+<tr>
+<td><code>bash</code>, <code>sh</code></td>
+<td>las tres</td>
+<td>bash 5.2, dash</td>
+<td>ninguno</td>
+<td>Lo que atiende el socket gRPC.</td>
+</tr>
+<tr>
+<td><code>go</code></td>
+<td>las tres</td>
+<td>ninguno, compilado</td>
+<td>no hace falta</td>
+<td>Un binario estático, con el permiso <code>native-binary</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Los intérpretes y los módulos de Python son los paquetes de la versión de
+Debian sobre la que se construye la imagen, así que sus versiones mayores solo
+cambian con ella. Los dos módulos de Node.js están fijados en
+<code>docker/plugin-runtime-node/package.json</code>. La construcción de la imagen falla
+si alguno no se puede cargar: una imagen nunca sale sin lo que esta tabla
+promete.</p>
 <p>El contrato gRPC es un solo archivo, <code>proto/plugin/v1/plugin_api.proto</code>. Solo
 el SDK de Python incluye stubs generados; los demás lenguajes en
 <code>sdk/&lt;language&gt;/</code> contienen el <code>.proto</code>. El servidor copia los archivos de tu
 lenguaje junto a tu entrypoint cuando arranca el plugin. La imagen aporta
-<code>grpcio</code> a los plugins de Python, que no tienen que incluir nada. Un plugin
-Node.js debe incluir su <code>node_modules</code> (<code>@grpc/grpc-js</code> y
-<code>@grpc/proto-loader</code>) en el paquete. Para otro lenguaje, genera los stubs con <code>protoc</code> e inclúyelos en el ZIP:</p>
+<code>grpcio</code> a los plugins de Python, que no tienen que incluir nada. Las imágenes
+<code>nodejs</code> y <code>full</code> aportan del mismo modo <code>@grpc/grpc-js</code> y <code>@grpc/proto-loader</code>
+a los plugins Node.js. Las imágenes hasta la 0.1.8 no lo hacen: un plugin
+Node.js que también deba funcionar en ellas conserva ambos en el <code>node_modules</code>
+de su paquete, y el que cuenta con la imagen lo declara con <code>min_evey_version</code>.
+Un <code>node_modules</code> incluido en el paquete siempre tiene prioridad sobre el de la
+imagen. Para otro lenguaje, genera los stubs con <code>protoc</code> e inclúyelos en el ZIP:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span>proto/plugin/v1/plugin_api.proto

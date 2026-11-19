@@ -2900,6 +2900,8 @@
       
         
       
+        
+      
     
     
     
@@ -3044,6 +3046,34 @@
     
   
     Modèle de sécurité et sandbox des plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mises à jour des applications
   
 
     
@@ -3313,7 +3343,7 @@ lecteur sait décoder :
 </tr>
 <tr>
 <td><strong>Sous-titres</strong></td>
-<td>Les pistes de sous-titres intégrées à un MKV sont extraites à la demande, les pistes texte en WebVTT et les pistes image (PGS) en images. Quand l'index propre du fichier (les Cues) couvre entièrement une piste, le serveur ne lit que les blocs qu'il désigne au lieu du fichier entier, et garde cet index des blocs sous son répertoire de données (<code>subtitle-index/</code>) pour la demande suivante. Une piste qui demande encore une lecture complète reçoit une réponse « en préparation » avec un délai de nouvel essai, et les lecteurs réinterrogent jusqu'à ce qu'elle soit prête.</td>
+<td>Les pistes de sous-titres intégrées à un MKV sont extraites à la demande, les pistes texte en WebVTT et les pistes image (PGS, VobSub, DVB) en images. Quand l'index propre du fichier (les Cues) couvre entièrement une piste, le serveur ne lit que les blocs qu'il désigne au lieu du fichier entier, et garde cet index des blocs sous son répertoire de données (<code>subtitle-index/</code>) pour la demande suivante. Une piste qui demande encore une lecture complète reçoit une réponse « en préparation » avec un délai de nouvel essai, et les lecteurs réinterrogent jusqu'à ce qu'elle soit prête.</td>
 <td>ffmpeg extrait la piste en lisant le fichier de bout en bout.</td>
 </tr>
 <tr>

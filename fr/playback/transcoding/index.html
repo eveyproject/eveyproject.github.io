@@ -2911,6 +2911,8 @@
       
         
       
+        
+      
     
     
     
@@ -3055,6 +3057,34 @@
     
   
     Modèle de sécurité et sandbox des plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mises à jour des applications
   
 
     
@@ -3320,6 +3350,16 @@ HDR ou une sortie HEVC, par exemple), ou le processeur. Le processeur et les
 accélérateurs forment deux réserves distinctes, et un flux sur la carte
 graphique consomme encore un peu de processeur pour son audio et son
 empaquetage.</p>
+<p>La capacité compte les deux réserves ensemble : les flux que les
+accélérateurs peuvent accueillir, plus ceux que le processeur accueille encore
+à côté d'eux. <strong>Administration → Santé du système</strong> indique, pour chaque
+résolution de sortie, combien de flux chaque réserve peut accueillir.</p>
+<p>Des flux qui démarrent au même instant sont planifiés les uns à côté des
+autres : les premiers prennent l'accélérateur, les suivants vont sur le
+processeur, et aucun n'est refusé tant qu'il reste de la place. Un flux servi
+depuis le cache garde son plan alors qu'il n'encode rien. Il peut envoyer un
+nouveau venu sur le processeur alors que la carte graphique est libre ; il ne
+provoque jamais de refus.</p>
 <p>Quand la place vient à manquer, le serveur répond dans cet ordre :</p>
 <ol>
 <li><strong>Une qualité plus basse.</strong> Un nouveau flux dont la qualité la plus haute

@@ -2919,6 +2919,8 @@
       
         
       
+        
+      
     
     
     
@@ -3063,6 +3065,34 @@
     
   
     Sicherheitsmodell und Plugin-Sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App-Updates
   
 
     
@@ -3290,6 +3320,12 @@ der <a href="../../configuration/">Konfigurationsreferenz</a> erklärt.</p>
 <td>keine</td>
 </tr>
 <tr>
+<td><code>EVEY_CLIENT_UPDATES_DIR</code></td>
+<td><code>/app/client-updates</code></td>
+<td>Der Ordner, aus dem der Server den Code der Android-Apps liest (<a href="../../client-updates/">App-Updates von der Instanz</a>). Die veröffentlichten Images füllen ihn; ist er leer oder fehlt er, wird nichts ausgeliefert.</td>
+<td>keine</td>
+</tr>
+<tr>
 <td><code>EVEY_SERVER_NAME</code></td>
 <td><code>Evey</code></td>
 <td>Der Name auf der Anmeldeseite, in der Serverliste der Apps und in E-Mails.</td>
@@ -3434,7 +3470,7 @@ die Sperre entscheidet: <a href="../../administration/remote-access/">Fernzugrif
 </tbody>
 </table>
 <!-- sources
-internal/config/config.go - EVEY_SERVER_BASE_URL, EVEY_SERVER_PORT, EVEY_GRPC_BIND, EVEY_SERVER_NAME, EVEY_REAL_IP_HEADER, EVEY_RATELIMIT_LOGIN_MAX, EVEY_RATELIMIT_GLOBAL_MAX, EVEY_REMOTE_ACCESS_*, EVEY_DEMO, forwardedProtoFromEnv, EffectiveBaseURL
+internal/config/config.go - EVEY_CLIENT_UPDATES_DIR, EVEY_SERVER_BASE_URL, EVEY_SERVER_PORT, EVEY_GRPC_BIND, EVEY_SERVER_NAME, EVEY_REAL_IP_HEADER, EVEY_RATELIMIT_LOGIN_MAX, EVEY_RATELIMIT_GLOBAL_MAX, EVEY_REMOTE_ACCESS_*, EVEY_DEMO, forwardedProtoFromEnv, EffectiveBaseURL
 trusted proxies: internal/config/trusted_proxies.go (loopback baseline, malformed entry is an error) ; cmd/evey/admin_ops.go
 remote access inference: internal/config/remote_access_resolve.go ; cmd/evey/main.go (RemoteAccessConfigKey loaded from DB)
 panel: internal/adapters/driving/http/settings_handler.go (server.name, ratelimit.* live via SetLimit) ; i18n admin.remoteAccess.*, admin.serverSettings.*

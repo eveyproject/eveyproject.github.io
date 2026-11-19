@@ -2889,6 +2889,8 @@
       
         
       
+        
+      
     
     
     
@@ -3033,6 +3035,34 @@
     
   
     Modelo de seguridad y sandbox de plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actualizaciones de las apps
   
 
     
@@ -3214,11 +3244,11 @@ elige <strong>Subtítulos</strong>. Para tenerlos siempre en tu idioma, configur
   aparecen solos. En una película muy grande esto puede tardar unos minutos,
   una sola vez: después, se muestran al momento para todo el mundo. Consulta
   <a href="#the-first-time-a-subtitle-is-shown">La primera vez que se muestra un subtítulo</a>.</li>
-<li><strong>Los subtítulos de DVD y de emisiones de TV</strong> son imágenes, no texto. El
-  servidor los dibuja dentro del propio vídeo, lo que le hace trabajar mucho
-  más. El ajuste de perfil <strong>Incrustar subtítulos</strong> (<strong>Ajustes →
-  Reproducción</strong>) puede negarse a hacerlo, pero entonces esos subtítulos no
-  se pueden mostrar. Consulta <a href="#subtitle-burn-in">Incrustar subtítulos</a>.</li>
+<li><strong>Los subtítulos de Blu-ray, de DVD y de emisiones de TV</strong> son imágenes,
+  no texto. El servidor los convierte en imágenes una vez y el reproductor los
+  dibuja, igual que el texto. Solo el raro formato XSUB lo sigue dibujando el
+  servidor dentro del vídeo, lo que le hace trabajar mucho más. Consulta
+  <a href="#subtitle-burn-in">Incrustar subtítulos</a>.</li>
 </ul>
 <p>El resto de la página explica cada formato de subtítulos y lo que cambia para
 el servidor.</p>
@@ -3240,62 +3270,69 @@ el servidor.</p>
 <td>Ninguno</td>
 </tr>
 <tr>
-<td>PGS (Blu-ray)</td>
-<td><code>hdmv_pgs_subtitle</code></td>
+<td>Formatos de imagen</td>
+<td>PGS (Blu-ray), VobSub (DVD), DVB (emisiones de TV), dentro de un archivo MKV o como archivo <code>.sup</code> o <code>.idx</code>/<code>.sub</code> a su lado</td>
 <td>El servidor lo convierte en imágenes una vez, las guarda en caché, y el reproductor las dibuja tal cual</td>
 <td>Ninguno</td>
 </tr>
 <tr>
-<td>Otros formatos de imagen</td>
-<td>VobSub (DVD), DVB, XSUB</td>
+<td>XSUB</td>
+<td>XSUB (algunos archivos DivX)</td>
 <td>El servidor lo incrusta en la imagen</td>
 <td>El vídeo se vuelve a codificar</td>
 </tr>
 </tbody>
 </table>
 <p>Todos los reproductores (web, Android, Android TV) dibujan ellos mismos los
-subtítulos de texto y PGS, así que elegir uno nunca cambia la forma en que se
+subtítulos de texto y de imagen, así que elegir uno nunca cambia la forma en que se
 entrega el vídeo. Solo la última fila lo cambia: incrustar subtítulos en la
 imagen obliga a decodificar y volver a codificar el vídeo, así que un título
 que se reproducía de forma directa pasa a transcodificarse. La Información
 del flujo muestra entonces <strong>Subtítulos incrustados en la imagen</strong>.</p>
-<p>Un subtítulo de imagen solo se incrusta cuando lo eliges de verdad. Un
+<p>Un subtítulo de imagen dentro de otro tipo de archivo (una grabación de TV en
+<code>.ts</code>, un AVI, un MP4) no lo puede decodificar el servidor, así que se
+incrusta como XSUB.</p>
+<p>Un subtítulo XSUB solo se incrusta cuando lo eliges de verdad. Un
 archivo que simplemente lo lleva, o que lo marca como predeterminado, sigue
 en Reproducción directa.</p>
 <h2 id="subtitle-burn-in">Incrustar subtítulos<a class="headerlink" href="#subtitle-burn-in" title="Permanent link">¶</a></h2>
 <p>El ajuste de perfil <strong>Incrustar subtítulos</strong> (<strong>Ajustes → Reproducción</strong>)
-controla los formatos de la última fila:</p>
+decide qué subtítulos de imagen incrusta el servidor en el vídeo:</p>
 <table>
 <thead>
 <tr>
 <th>Ajuste</th>
-<th>Una pista VobSub, DVB o XSUB elegida</th>
-<th>Texto y PGS</th>
+<th>Una pista XSUB elegida</th>
+<th>Una pista PGS, VobSub o DVB elegida</th>
+<th>Texto</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Auto</strong></td>
 <td>Se incrusta y el vídeo se vuelve a codificar.</td>
-<td>Los dibuja el reproductor.</td>
+<td>La dibuja el reproductor.</td>
+<td>Lo dibuja el reproductor.</td>
 </tr>
 <tr>
 <td><strong>Incrustar siempre</strong></td>
-<td>Igual que Auto.</td>
-<td>Los dibuja el reproductor: el texto nunca se incrusta, sea cual sea el ajuste.</td>
+<td>Se incrusta y el vídeo se vuelve a codificar.</td>
+<td>Se incrusta y el vídeo se vuelve a codificar. Un archivo <code>.sup</code> o <code>.idx</code>/<code>.sub</code> junto al vídeo lo sigue dibujando el reproductor.</td>
+<td>Lo dibuja el reproductor: el texto nunca se incrusta.</td>
 </tr>
 <tr>
 <td><strong>Nunca incrustar</strong></td>
 <td>No se puede mostrar: el vídeo nunca se vuelve a codificar por un subtítulo.</td>
-<td>Los dibuja el reproductor.</td>
+<td>La dibuja el reproductor.</td>
+<td>Lo dibuja el reproductor.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="the-first-time-a-subtitle-is-shown">La primera vez que se muestra un subtítulo<a class="headerlink" href="#the-first-time-a-subtitle-is-shown" title="Permanent link">¶</a></h2>
-<p>Un subtítulo que va dentro del archivo (texto o PGS) lo extrae el servidor la
+<p>Un subtítulo que va dentro del archivo (texto o imagen) lo extrae el servidor la
 primera vez que alguien lo elige, y luego lo guarda: las veces siguientes,
 sea quien sea, aparece al momento. Cuando el índice del propio archivo cubre
-la pista, el servidor lee solo los bloques del subtítulo y tarda unos
+una pista de texto o de imagen, el servidor lee solo los bloques del subtítulo y tarda unos
 segundos. Sin ese índice, lee el archivo entero: varios minutos para una
 película grande (unos minutos para un archivo muy grande, más si el mismo servidor está emitiendo vídeo a la vez).</p>
 <p>Mientras tanto, el reproductor muestra <strong>Preparando subtítulos…</strong> donde
@@ -3318,8 +3355,8 @@ cuándo.</p>
   subtítulos del título actual (con valores positivos aparecen más tarde). Se
   aplica al momento.</li>
 <li><strong>Estilo de subtítulos</strong> define el tamaño, el color del texto, el fondo, la
-  fuente, la sombra y la posición de los subtítulos de texto. Las imágenes
-  PGS se dibujan tal cual.</li>
+  fuente, la sombra y la posición de los subtítulos de texto. Los subtítulos
+  de imagen se dibujan tal cual.</li>
 <li><strong>Subir subtítulo…</strong> añade un archivo para el título.</li>
 <li>Con una clave de OpenSubtitles (consulta <a href="../../administration/libraries/#metadata-keys">Bibliotecas y metadatos</a>),
   la API del servidor puede buscar y descargar un subtítulo que el archivo no

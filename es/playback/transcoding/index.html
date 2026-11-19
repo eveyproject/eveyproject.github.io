@@ -2911,6 +2911,8 @@
       
         
       
+        
+      
     
     
     
@@ -3055,6 +3057,34 @@
     
   
     Modelo de seguridad y sandbox de plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actualizaciones de las apps
   
 
     
@@ -3322,6 +3352,15 @@ un acelerador medido en lo que necesita el flujo (por ejemplo, convertir HDR
 a SDR, o sacar HEVC), o el procesador. El procesador y los aceleradores son
 dos reservas separadas, y un flujo en la tarjeta gráfica sigue gastando un
 poco de procesador para su audio y su empaquetado.</p>
+<p>La capacidad cuenta las dos reservas juntas: los flujos que caben en los
+aceleradores, más los que todavía caben en el procesador a su lado.
+<strong>Administración → Estado del sistema</strong> indica, para cada resolución de
+salida, cuántos flujos caben en cada reserva.</p>
+<p>Los flujos que empiezan en el mismo instante se planifican unos al lado de
+otros: los primeros toman el acelerador, los siguientes van al procesador, y
+ninguno se rechaza mientras quede sitio. Un flujo servido desde la caché
+conserva su plan aunque no codifique nada. Puede enviar a un recién llegado al
+procesador con la tarjeta gráfica libre; nunca provoca un rechazo.</p>
 <p>Cuando falta sitio, el servidor responde en este orden:</p>
 <ol>
 <li><strong>Una calidad más baja.</strong> Un flujo nuevo cuya calidad más alta no cabe se

@@ -2969,6 +2969,8 @@
       
         
       
+        
+      
     
     
     
@@ -3113,6 +3115,34 @@
     
   
     安全模型与插件沙箱
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用更新
   
 
     
@@ -3404,9 +3434,77 @@
 <p>从服务器能启动的运行时里选择插件的语言：<code>python</code>、<code>nodejs</code>、<code>php</code>、<code>ruby</code>、<code>lua</code>、<code>bash</code> 和 <code>sh</code> 需要镜像里有对应的解释器；
 <code>go</code> 提供编译好的二进制文件，需要 <code>native-binary</code> 权限。默认镜像带有 Python、Node.js、PHP、Ruby 和 Lua；<code>-nodejs</code> 镜像保留 Python 和 Node.js，<code>-lean</code> 镜像只保留 Python。
 如果清单写了镜像里没有的运行时，安装时就会被拒绝，并列出可用的运行时。</p>
+<p>各镜像按 <code>language</code> 为插件提供的内容：</p>
+<table>
+<thead>
+<tr>
+<th><code>language</code></th>
+<th>镜像</th>
+<th>解释器</th>
+<th>镜像提供的 gRPC</th>
+<th>插件包自带的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python</code></td>
+<td>默认、<code>-nodejs</code>、<code>-lean</code></td>
+<td>Python 3.13</td>
+<td><code>grpcio</code>、<code>protobuf</code></td>
+<td>自己的代码。服务器会把生成的存根复制到入口文件旁边。</td>
+</tr>
+<tr>
+<td><code>nodejs</code></td>
+<td>默认、<code>-nodejs</code></td>
+<td>Node.js 20</td>
+<td><code>@grpc/grpc-js</code> 1.14.7、<code>@grpc/proto-loader</code> 0.8.1，从 0.1.9 起</td>
+<td>自己的代码。0.1.8 及更早：两个 gRPC 模块放在自己的 <code>node_modules</code> 里。</td>
+</tr>
+<tr>
+<td><code>php</code></td>
+<td>默认</td>
+<td>PHP 8.4</td>
+<td>无</td>
+<td>一个 gRPC 实现以及用它生成的存根。</td>
+</tr>
+<tr>
+<td><code>ruby</code></td>
+<td>默认</td>
+<td>Ruby 3.3</td>
+<td>无</td>
+<td>一个 gRPC 实现以及用它生成的存根。</td>
+</tr>
+<tr>
+<td><code>lua</code></td>
+<td>默认</td>
+<td>Lua 5.4</td>
+<td>无</td>
+<td>一个 gRPC 实现以及用它生成的存根。</td>
+</tr>
+<tr>
+<td><code>bash</code>、<code>sh</code></td>
+<td>全部三个</td>
+<td>bash 5.2、dash</td>
+<td>无</td>
+<td>负责 gRPC 套接字的程序。</td>
+</tr>
+<tr>
+<td><code>go</code></td>
+<td>全部三个</td>
+<td>无，已编译</td>
+<td>不需要</td>
+<td>一个静态二进制文件，需要 <code>native-binary</code> 权限。</td>
+</tr>
+</tbody>
+</table>
+<p>解释器和 Python 模块来自镜像所基于的 Debian 版本的软件包，因此它们的主版本只会随该版本变化。
+两个 Node.js 模块固定在 <code>docker/plugin-runtime-node/package.json</code> 中。
+其中任何一个无法加载，镜像构建就会失败：镜像发布时一定带有本表承诺的内容。</p>
 <p>gRPC 约定只有一个文件：<code>proto/plugin/v1/plugin_api.proto</code>。只有 Python SDK 附带生成好的存根；<code>sdk/&lt;language&gt;/</code> 下其他语言的目录里是 <code>.proto</code>。
 插件启动时，服务器会把对应语言的文件复制到您的入口文件旁边。镜像为 Python 插件提供了 <code>grpcio</code>，所以 Python 插件不需要自带任何依赖。
-Node.js 插件必须把自己的 <code>node_modules</code>（<code>@grpc/grpc-js</code> 和 <code>@grpc/proto-loader</code>）放进包里。
+<code>nodejs</code> 和 <code>full</code> 镜像以同样的方式为 Node.js 插件提供 <code>@grpc/grpc-js</code> 和 <code>@grpc/proto-loader</code>。
+0.1.8 及更早的镜像不提供：需要在这些镜像上运行的 Node.js 插件要把这两个依赖保留在包内的 <code>node_modules</code> 里，依赖镜像的插件则用 <code>min_evey_version</code> 声明。
+包内自带的 <code>node_modules</code> 始终优先于镜像提供的。
 其他语言请用 <code>protoc</code> 生成存根，并放进 ZIP 包里：</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>

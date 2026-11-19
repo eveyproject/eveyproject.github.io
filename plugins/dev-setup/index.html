@@ -2969,6 +2969,8 @@
       
         
       
+        
+      
     
     
     
@@ -3113,6 +3115,34 @@
     
   
     Security model and plugin sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App updates
   
 
     
@@ -3412,14 +3442,86 @@ interpreter in the image, <code>go</code> ships a compiled binary and needs the
 <code>-nodejs</code> image keeps Python and Node.js and the <code>-lean</code> image keeps Python only. A
 manifest that names a runtime the image lacks is refused at install, with the
 list of the runtimes available.</p>
+<p>What each image gives a plugin, by <code>language</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>language</code></th>
+<th>Images</th>
+<th>Interpreter</th>
+<th>gRPC provided by the image</th>
+<th>What the package brings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python</code></td>
+<td>default, <code>-nodejs</code>, <code>-lean</code></td>
+<td>Python 3.13</td>
+<td><code>grpcio</code>, <code>protobuf</code></td>
+<td>Its code. The server copies the generated stubs next to the entrypoint.</td>
+</tr>
+<tr>
+<td><code>nodejs</code></td>
+<td>default, <code>-nodejs</code></td>
+<td>Node.js 20</td>
+<td><code>@grpc/grpc-js</code> 1.14.7, <code>@grpc/proto-loader</code> 0.8.1, from 0.1.9</td>
+<td>Its code. Up to 0.1.8, both gRPC modules in its <code>node_modules</code>.</td>
+</tr>
+<tr>
+<td><code>php</code></td>
+<td>default</td>
+<td>PHP 8.4</td>
+<td>none</td>
+<td>A gRPC implementation and the stubs it generated.</td>
+</tr>
+<tr>
+<td><code>ruby</code></td>
+<td>default</td>
+<td>Ruby 3.3</td>
+<td>none</td>
+<td>A gRPC implementation and the stubs it generated.</td>
+</tr>
+<tr>
+<td><code>lua</code></td>
+<td>default</td>
+<td>Lua 5.4</td>
+<td>none</td>
+<td>A gRPC implementation and the stubs it generated.</td>
+</tr>
+<tr>
+<td><code>bash</code>, <code>sh</code></td>
+<td>all three</td>
+<td>bash 5.2, dash</td>
+<td>none</td>
+<td>Whatever serves the gRPC socket.</td>
+</tr>
+<tr>
+<td><code>go</code></td>
+<td>all three</td>
+<td>none, compiled</td>
+<td>not needed</td>
+<td>A static binary, with the <code>native-binary</code> permission.</td>
+</tr>
+</tbody>
+</table>
+<p>The interpreters and the Python modules are the packages of the Debian
+release the image is built on, so their major versions only move with that
+release; the two Node.js modules are pinned in
+<code>docker/plugin-runtime-node/package.json</code>. The image build fails when one of
+them cannot be loaded, so an image never ships without what this table
+promises.</p>
 <p>The gRPC contract is one file, <code>proto/plugin/v1/plugin_api.proto</code>. Only
 the Python SDK ships generated stubs; the other languages under
 <code>sdk/&lt;language&gt;/</code> hold the <code>.proto</code>. The server copies the files of your
 language next to your entrypoint when the plugin starts. The image provides
-<code>grpcio</code> to Python plugins, so a Python plugin has nothing to vendor. A
-Node.js plugin must vendor its <code>node_modules</code> (<code>@grpc/grpc-js</code> and
-<code>@grpc/proto-loader</code>) in the package. For another language, generate stubs
-with <code>protoc</code> and ship them in the ZIP:</p>
+<code>grpcio</code> to Python plugins, so a Python plugin has nothing to vendor. The
+<code>nodejs</code> and <code>full</code> images provide <code>@grpc/grpc-js</code> and <code>@grpc/proto-loader</code>
+to Node.js plugins the same way. The images up to 0.1.8 do not: a Node.js
+plugin that must also run on them keeps both in the <code>node_modules</code> of its
+package, and one that relies on the image says so with <code>min_evey_version</code>.
+A <code>node_modules</code> shipped in the package always wins over the image's. For
+another language, generate stubs with <code>protoc</code> and ship them in the ZIP:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span>proto/plugin/v1/plugin_api.proto
@@ -3794,7 +3896,7 @@ tag is pushed.</p>
 </table>
 <!-- sources
 runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries, compiledLanguages ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full)
-stubs copied at start, NODE_PATH: internal/adapters/driven/filesystem/plugin_fs.go - CopySDKStubs ; internal/adapters/driven/pluginrunner/runner_start.go ; sdk/python/README.md ; examples/plugins/nodejs-example/package.json
+stubs copied at start, NODE_PATH: internal/adapters/driven/filesystem/plugin_fs.go - CopySDKStubs ; internal/adapters/driven/pluginrunner/runner_start.go ; sdk/python/README.md ; examples/plugins/nodejs-example/package.json ; docker/plugin-runtime-node/package.json ; Dockerfile (plugin-runtime-node stage)
 dev stack: DEV.md (Quick Start) ; Makefile - setup, dev ; docker-compose.yml (evey-data/plugins:/data/plugins)
 example: examples/plugins/nodejs-example/main.js, plugin.yaml
 env vars: internal/adapters/driven/pluginrunner/runner_start.go (EVEY_PLUGIN_ID, EVEY_PLUGIN_SOCK, EVEY_HOST_SOCK)

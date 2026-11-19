@@ -2919,6 +2919,8 @@
       
         
       
+        
+      
     
     
     
@@ -3063,6 +3065,34 @@
     
   
     सुरक्षा मॉडल और प्लगइन सैंडबॉक्स
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ऐप अपडेट
   
 
     
@@ -3290,6 +3320,12 @@
 <td>कोई नहीं</td>
 </tr>
 <tr>
+<td><code>EVEY_CLIENT_UPDATES_DIR</code></td>
+<td><code>/app/client-updates</code></td>
+<td>वह फ़ोल्डर जहाँ से सर्वर Android ऐप का कोड पढ़ता है (<a href="../../client-updates/">इंस्टेंस से मिलने वाले ऐप अपडेट</a>)। प्रकाशित इमेज इसे भरती हैं; खाली या न होने पर कुछ नहीं दिया जाता।</td>
+<td>कोई नहीं</td>
+</tr>
+<tr>
 <td><code>EVEY_SERVER_NAME</code></td>
 <td><code>Evey</code></td>
 <td>वह नाम जो साइन-इन पेज पर, ऐप की सर्वर सूची में और ई-मेल में दिखता है।</td>
@@ -3435,7 +3471,7 @@
 </tbody>
 </table>
 <!-- sources
-internal/config/config.go - EVEY_SERVER_BASE_URL, EVEY_SERVER_PORT, EVEY_GRPC_BIND, EVEY_SERVER_NAME, EVEY_REAL_IP_HEADER, EVEY_RATELIMIT_LOGIN_MAX, EVEY_RATELIMIT_GLOBAL_MAX, EVEY_REMOTE_ACCESS_*, EVEY_DEMO, forwardedProtoFromEnv, EffectiveBaseURL
+internal/config/config.go - EVEY_CLIENT_UPDATES_DIR, EVEY_SERVER_BASE_URL, EVEY_SERVER_PORT, EVEY_GRPC_BIND, EVEY_SERVER_NAME, EVEY_REAL_IP_HEADER, EVEY_RATELIMIT_LOGIN_MAX, EVEY_RATELIMIT_GLOBAL_MAX, EVEY_REMOTE_ACCESS_*, EVEY_DEMO, forwardedProtoFromEnv, EffectiveBaseURL
 trusted proxies: internal/config/trusted_proxies.go (loopback baseline, malformed entry is an error) ; cmd/evey/admin_ops.go
 remote access inference: internal/config/remote_access_resolve.go ; cmd/evey/main.go (RemoteAccessConfigKey loaded from DB)
 panel: internal/adapters/driving/http/settings_handler.go (server.name, ratelimit.* live via SetLimit) ; i18n admin.remoteAccess.*, admin.serverSettings.*

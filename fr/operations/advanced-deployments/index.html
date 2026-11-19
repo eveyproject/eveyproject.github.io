@@ -2947,6 +2947,8 @@
       
         
       
+        
+      
     
     
     
@@ -3091,6 +3093,34 @@
     
   
     Modèle de sécurité et sandbox des plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mises à jour des applications
   
 
     
@@ -3499,6 +3529,21 @@ environnements d'exécution de plugins (Python 3, Node.js, PHP, Ruby et Lua),
 <code>latest-lean</code>). Ne choisissez une variante plus légère que si la taille de
 l'image compte : l'installateur refuse un plugin dont le langage déclaré manque
 à l'image, avec un message qui nomme l'image par défaut.</p>
+<p>Seule une image publiée par un tag de release ou de pré-release embarque le
+code que les applications Android prennent sur leur serveur
+(<a href="../../client-updates/">Mises à jour des applications servies par l'instance</a>).
+Une build de branche ou une image construite soi-même n'en sert aucun, et les
+applications gardent le code qu'elles ont.</p>
+<p>Les images publiées sont signées avec cosign, sans clé à distribuer : le
+signataire est le workflow du dépôt qui a construit l'image. Pour vérifier une
+release, avec cosign 3 ou plus récent :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cosign<span class="w"> </span>verify<span class="w"> </span>eveyproject/evey:X.Y.Z<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--certificate-identity<span class="w"> </span>https://github.com/eveyproject/evey/.github/workflows/ci.yml@refs/tags/vX.Y.Z<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span>https://token.actions.githubusercontent.com
+</span></code></pre></div>
+<p>Les releases 0.1.5 à 0.1.8 ont été signées après leur publication, par
+<code>sign-published-images.yml@refs/heads/master</code> à la place de
+<code>ci.yml@refs/tags/vX.Y.Z</code>. Les releases antérieures ne sont pas signées.</p>
 <p>Les images publiées embarquent les pilotes de chaque génération Intel et AMD
 prise en charge. Une image construite soi-même peut ne garder qu'une famille
 avec <code>docker build --build-arg GPU=intel-legacy .</code> (Intel Gen9 à Gen11),
@@ -3519,6 +3564,7 @@ embedded db, import, major upgrade, embedded meili: docker/entrypoint.sh (PG_MAJ
 external db switch and default password refusal: internal/config/config.go (EVEY_DB_HOST, hardFail on "evey")
 reindex: cmd/evey/admin.go - adminReindexSearch
 arm, variants, GPU families: Dockerfile (TARGETARCH, RUNTIMES, GPU) ; .github/workflows/ci.yml (tags, flavor suffix, platforms) ; internal/adapters/driven/ffmpeg/hwdetect.go - detectRKMPP
+app code and image signature: .github/workflows/ci.yml (client-updates-build, client-updates-sign, docker-sign) ; .github/workflows/sign-published-images.yml ; Dockerfile (COPY client-updates)
 sandbox auto: internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode ; i18n/fr/admin.yaml - plugins.security.title
 -->
 

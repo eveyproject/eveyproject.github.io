@@ -2909,6 +2909,8 @@
       
         
       
+        
+      
     
     
     
@@ -3053,6 +3055,34 @@
     
   
     सुरक्षा मॉडल और प्लगइन सैंडबॉक्स
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ऐप अपडेट
   
 
     
@@ -3286,6 +3316,8 @@
 <li>आपकी मीडिया फ़ाइलें;</li>
 <li>वीडियो कैश (वह अपने-आप फिर भर जाता है);</li>
 <li>सर्च इंडेक्स (डेटाबेस से फिर बन जाता है);</li>
+<li>इंट्रो पहचान के फ़िंगरप्रिंट, जो <code>./evey-data/fingerprints</code> में रखे जाते हैं
+  (न मिलने पर मीडिया फ़ाइलों से फिर से गणना किए जाते हैं);</li>
 <li><code>./evey-data</code> में रखी कुंजियाँ: <code>jwt.key</code>, जो हर साइन-इन की रक्षा करती है,
   <code>keys</code> फ़ोल्डर (डेटाबेस का पासवर्ड, सर्च की कुंजी), और <code>hls_aes.key</code>, वह कुंजी जो
   स्ट्रीमिंग सेगमेंट को एन्क्रिप्ट करती है (पहली बार शुरू होने पर बनती है, मोड 0600);</li>
@@ -3333,6 +3365,10 @@
   लगता है, तो वह healthy दिखाता है।</li>
 <li><strong>अपडेट आने पर Evey बताता है।</strong> वह हर घंटे जाँचता है कि कोई नई इमेज आई है
   या नहीं, और एडमिन पैनल में बताता है। वह खुद को कभी अपडेट नहीं करता।</li>
+<li><strong>Android ऐप साथ चलते हैं।</strong> रिलीज़ की इमेज में Android और Android TV ऐप
+  का वह कोड होता है जो उसके साथ चलता है, और आपके सर्वर से जुड़े ऐप उसे खुद ले
+  लेते हैं
+  (<a href="../getting-started/apps/#keeping-the-apps-up-to-date">ऐप को अपडेट रखना</a>)।</li>
 <li><strong>कौन सा वर्ज़न चल रहा है:</strong> <code>docker exec evey-server evey version</code> वर्ज़न
   और commit छापता है।</li>
 </ul>
@@ -3352,6 +3388,15 @@
    ठीक-ठीक कदम छापता है।</li>
 <li><code>docker compose up -d</code> चलाएँ।</li>
 </ol>
+<p>इंट्रो पहचान के फ़िंगरप्रिंट ही अकेला डेटा हैं जो आपके साथ वापस नहीं आतीं।
+जो वर्ज़न उन्हें <code>./evey-data/fingerprints</code> में रखता है, उसका पहला स्टार्ट उन्हें
+डेटाबेस से वहाँ ले जाता है और ले जाई गई पंक्तियाँ मिटा देता है। पुराना वर्ज़न
+उन्हें सिर्फ़ डेटाबेस में पढ़ता है, कोई नहीं पाता, और इंट्रो पहचान चलने के साथ
+उन्हें मीडिया फ़ाइलों से दोबारा बनाता है: कुछ खोता नहीं, पर सर्वर कुछ समय तक
+ज़्यादा व्यस्त रहता है। अपडेट से पहले बना बैकअप उन पंक्तियों को अब भी रखता है,
+और उसे वापस लाने से वे लौट आती हैं।</p>
+<p>Android ऐप सर्वर के साथ पीछे नहीं जाते: वे सबसे नया ऐप कोड रखते हैं जो उन्होंने
+चलाया है, और पुराने सर्वर को उसी के साथ काम करना होता है।</p>
 <p>इमेज टैग, दूसरे रूप और ग्राफ़िक्स कार्ड वाले build
 <a href="../operations/advanced-deployments/#image-tags-and-variants">एडवांस्ड डिप्लॉयमेंट</a>
 में बताए गए हैं।</p>
@@ -3363,6 +3408,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
+app code in the image, apps never go back: Dockerfile (COPY client-updates) ; docs/client-updates.md ; frontend/packages/client/src/native/clientUpdates.test.ts
 rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->

@@ -2889,6 +2889,8 @@
       
         
       
+        
+      
     
     
     
@@ -3033,6 +3035,34 @@
     
   
     Modèle de sécurité et sandbox des plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mises à jour des applications
   
 
     
@@ -3216,12 +3246,11 @@ différents :</p>
   minutes, une seule fois : ensuite, ils s'affichent tout de suite pour tout
   le monde. Voir
   <a href="#the-first-time-a-subtitle-is-shown">La première fois qu'un sous-titre s'affiche</a>.</li>
-<li><strong>Les sous-titres des DVD et de la télévision</strong> sont des images, pas du
-  texte. Le serveur les dessine dans la vidéo elle-même, ce qui le fait
-  beaucoup plus travailler. Le réglage de profil <strong>Incrustation des
-  sous-titres</strong> (<strong>Paramètres → Lecture</strong>) peut refuser cela, mais ces
-  sous-titres ne peuvent alors pas s'afficher. Voir
-  <a href="#subtitle-burn-in">Incrustation des sous-titres</a>.</li>
+<li><strong>Les sous-titres des Blu-ray, des DVD et de la télévision</strong> sont des
+  images, pas du texte. Le serveur les transforme une fois en images et le
+  lecteur les dessine, comme du texte. Seul le rare format XSUB est encore
+  dessiné dans la vidéo par le serveur, ce qui le fait beaucoup plus
+  travailler. Voir <a href="#subtitle-burn-in">Incrustation des sous-titres</a>.</li>
 </ul>
 <p>La suite de cette page explique chaque format de sous-titres et ce qu'il
 change pour le serveur.</p>
@@ -3243,62 +3272,69 @@ change pour le serveur.</p>
 <td>Aucun</td>
 </tr>
 <tr>
-<td>PGS (Blu-ray)</td>
-<td><code>hdmv_pgs_subtitle</code></td>
+<td>Formats image</td>
+<td>PGS (Blu-ray), VobSub (DVD), DVB (télévision), dans un fichier MKV ou en fichier <code>.sup</code> ou <code>.idx</code>/<code>.sub</code> à côté</td>
 <td>Décodé en images une fois par le serveur, mis en cache, puis dessiné tel quel par le lecteur</td>
 <td>Aucun</td>
 </tr>
 <tr>
-<td>Autres formats image</td>
-<td>VobSub (DVD), DVB, XSUB</td>
+<td>XSUB</td>
+<td>XSUB (certains fichiers DivX)</td>
 <td>Incrusté dans l'image par le serveur</td>
 <td>La vidéo est réencodée</td>
 </tr>
 </tbody>
 </table>
 <p>Tous les lecteurs (web, Android, Android TV) dessinent eux-mêmes les
-sous-titres texte et PGS : en choisir un ne change jamais la façon dont la
+sous-titres texte et image : en choisir un ne change jamais la façon dont la
 vidéo est livrée. Seule la dernière ligne a un effet : incruster des
 sous-titres dans l'image oblige à décoder puis réencoder la vidéo, si bien
 qu'un titre lu en lecture directe passe en transcodage. Les Infos du flux
 affichent alors <strong>Sous-titres incrustés dans l'image</strong>.</p>
-<p>Un sous-titre image n'est incrusté que si vous le sélectionnez réellement. Un
+<p>Un sous-titre image dans un autre type de fichier (un enregistrement TV en
+<code>.ts</code>, un AVI, un MP4) ne peut pas être décodé par le serveur : il est donc
+incrusté comme un XSUB.</p>
+<p>Un sous-titre XSUB n'est incrusté que si vous le sélectionnez réellement. Un
 fichier qui se contente d'en contenir un, ou de le marquer par défaut, garde
 sa lecture directe.</p>
 <h2 id="subtitle-burn-in">Incrustation des sous-titres<a class="headerlink" href="#subtitle-burn-in" title="Permanent link">¶</a></h2>
 <p>Le réglage de profil <strong>Incrustation des sous-titres</strong> (<strong>Paramètres →
-Lecture</strong>) s'applique aux formats de la dernière ligne :</p>
+Lecture</strong>) décide quels sous-titres image le serveur incruste dans la vidéo :</p>
 <table>
 <thead>
 <tr>
 <th>Réglage</th>
-<th>Une piste VobSub, DVB ou XSUB sélectionnée</th>
-<th>Texte et PGS</th>
+<th>Une piste XSUB sélectionnée</th>
+<th>Une piste PGS, VobSub ou DVB sélectionnée</th>
+<th>Texte</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Auto</strong></td>
 <td>Incrustée, la vidéo est réencodée.</td>
-<td>Dessinés par le lecteur.</td>
+<td>Dessinée par le lecteur.</td>
+<td>Dessiné par le lecteur.</td>
 </tr>
 <tr>
 <td><strong>Toujours incruster</strong></td>
-<td>Comme Auto.</td>
-<td>Dessinés par le lecteur : le texte n'est jamais incrusté, quel que soit le réglage.</td>
+<td>Incrustée, la vidéo est réencodée.</td>
+<td>Incrustée, la vidéo est réencodée. Un fichier <code>.sup</code> ou <code>.idx</code>/<code>.sub</code> à côté de la vidéo reste dessiné par le lecteur.</td>
+<td>Dessiné par le lecteur : le texte n'est jamais incrusté.</td>
 </tr>
 <tr>
 <td><strong>Jamais incruster</strong></td>
 <td>Ne peut pas s'afficher : la vidéo n'est jamais réencodée pour un sous-titre.</td>
-<td>Dessinés par le lecteur.</td>
+<td>Dessinée par le lecteur.</td>
+<td>Dessiné par le lecteur.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="the-first-time-a-subtitle-is-shown">La première fois qu'un sous-titre s'affiche<a class="headerlink" href="#the-first-time-a-subtitle-is-shown" title="Permanent link">¶</a></h2>
-<p>Un sous-titre contenu dans le fichier (texte ou PGS) est extrait par le
+<p>Un sous-titre contenu dans le fichier (texte ou image) est extrait par le
 serveur la première fois que quelqu'un le choisit, puis conservé : tous les
 visionnages suivants, par n'importe qui, l'obtiennent aussitôt. Quand l'index
-du fichier couvre la piste, le serveur ne lit que les blocs du sous-titre et
+du fichier couvre une piste texte ou image, le serveur ne lit que les blocs du sous-titre et
 cela prend quelques secondes. Sans cet index, il lit tout le fichier :
 plusieurs minutes pour un gros film (quelques minutes pour un très gros fichier, davantage quand le même serveur diffuse en parallèle).</p>
 <p>Pendant ce temps, le lecteur affiche <strong>Sous-titres en préparation…</strong> à
@@ -3319,8 +3355,8 @@ mise à jour de MKVGo, la bibliothèque qui l'extrait, retente. Voir
   en cours (une valeur positive les affiche plus tard). L'effet est
   immédiat.</li>
 <li><strong>Style des sous-titres</strong> règle la taille, la couleur du texte, le fond, la
-  police, l'ombre et la position des sous-titres texte. Les images PGS sont
-  dessinées telles quelles.</li>
+  police, l'ombre et la position des sous-titres texte. Les sous-titres image
+  sont dessinés tels quels.</li>
 <li><strong>Téléverser un sous-titre…</strong> ajoute un fichier au titre.</li>
 <li>Avec une clé OpenSubtitles (voir
   <a href="../../administration/libraries/#metadata-keys">Bibliothèques et métadonnées</a>),

@@ -2909,6 +2909,8 @@
       
         
       
+        
+      
     
     
     
@@ -3053,6 +3055,34 @@
     
   
     Sicherheitsmodell und Plugin-Sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App-Updates
   
 
     
@@ -3294,6 +3324,8 @@ API-Schlüssel, Benachrichtigungen und Audit-Protokolle.</p>
 <li>Ihre Mediendateien;</li>
 <li>den Video-Cache (er füllt sich von selbst wieder);</li>
 <li>den Suchindex (er wird aus der Datenbank neu aufgebaut);</li>
+<li>die Fingerabdrücke der Intro-Erkennung in <code>./evey-data/fingerprints</code>
+  (sie werden aus den Mediendateien neu berechnet, wenn sie fehlen);</li>
 <li>die Schlüssel in <code>./evey-data</code>: <code>jwt.key</code>, der jede Anmeldung schützt, und
   den Ordner <code>keys</code> (Datenbankpasswort, Suchschlüssel) und <code>hls_aes.key</code>, den
   Schlüssel, der die Streaming-Segmente verschlüsselt (beim ersten Start
@@ -3346,6 +3378,10 @@ siehe <a href="../runbooks/recovery/">Wiederherstellung</a>.</p>
 <li><strong>Evey sagt Ihnen, wenn es ein Update gibt.</strong> Es prüft jede Stunde, ob ein
   neueres Image veröffentlicht ist, und zeigt das im Verwaltungsbereich an. Es
   aktualisiert sich nie selbst.</li>
+<li><strong>Die Android-Apps ziehen nach.</strong> Ein Release-Image bringt den Code der
+  Apps für Android und Android TV mit, der zu ihm gehört, und die mit Ihrem
+  Server verbundenen Apps holen ihn sich selbst
+  (<a href="../getting-started/apps/#keeping-the-apps-up-to-date">Die Apps aktuell halten</a>).</li>
 <li><strong>Welche Version läuft:</strong> <code>docker exec evey-server evey version</code> gibt die
   Version und den Commit aus.</li>
 </ul>
@@ -3367,6 +3403,17 @@ Die Tabelle unter <a href="../installation/#common-variations">Installation</a> 
    aus, mit dem Pfad der Datei.</li>
 <li>Führen Sie <code>docker compose up -d</code> aus.</li>
 </ol>
+<p>Die Fingerabdrücke der Intro-Erkennung sind die einzigen Daten, die Ihnen nicht
+folgen. Der erste Start einer Version, die sie in <code>./evey-data/fingerprints</code>
+ablegt, verschiebt sie dorthin aus der Datenbank und löscht die verschobenen
+Zeilen. Eine ältere Version liest sie nur aus der Datenbank, findet keine und
+berechnet sie während der Intro-Erkennung aus den Mediendateien neu: Es geht
+nichts verloren, aber der Server ist eine Weile stärker ausgelastet. Eine vor
+dem Update angelegte Sicherung enthält die Zeilen noch, und ihre
+Wiederherstellung bringt sie zurück.</p>
+<p>Die Android-Apps gehen nicht mit dem Server zurück: Sie behalten den neuesten
+App-Code, den sie ausgeführt haben, und der ältere Server muss damit
+zurechtkommen.</p>
 <p>Image-Tags, weitere Varianten und Builds für Grafikkarten sind unter
 <a href="../operations/advanced-deployments/#image-tags-and-variants">Fortgeschrittene Bereitstellungen</a>
 beschrieben.</p>
@@ -3378,6 +3425,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
+app code in the image, apps never go back: Dockerfile (COPY client-updates) ; docs/client-updates.md ; frontend/packages/client/src/native/clientUpdates.test.ts
 rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->

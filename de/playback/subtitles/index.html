@@ -2889,6 +2889,8 @@
       
         
       
+        
+      
     
     
     
@@ -3033,6 +3035,34 @@
     
   
     Sicherheitsmodell und Plugin-Sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App-Updates
   
 
     
@@ -3214,11 +3244,11 @@ Sie <strong>Einstellungen → Wiedergabe → Standard-Untertitelsprache</strong>
   von selbst. Bei einem sehr großen Film kann das einige Minuten dauern,
   einmalig: Danach erscheinen sie für alle sofort. Siehe
   <a href="#the-first-time-a-subtitle-is-shown">Wenn ein Untertitel zum ersten Mal gezeigt wird</a>.</li>
-<li><strong>Untertitel von DVDs und aus dem Fernsehen</strong> sind Bilder, kein Text. Der
-  Server brennt sie direkt ins Video ein, was für ihn deutlich mehr Rechenaufwand bedeutet. Die
-  Profileinstellung <strong>Untertitel einbrennen</strong> (<strong>Einstellungen → Wiedergabe</strong>)
-  kann das ablehnen, aber dann können diese Untertitel nicht angezeigt
-  werden. Siehe <a href="#subtitle-burn-in">Untertitel einbrennen</a>.</li>
+<li><strong>Untertitel von Blu-rays, DVDs und aus dem Fernsehen</strong> sind Bilder, kein
+  Text. Der Server wandelt sie einmal in Bilder um, und der Player stellt sie
+  dar wie Text. Nur das seltene Format XSUB brennt der Server noch ins Video
+  ein, was für ihn deutlich mehr Rechenaufwand bedeutet. Siehe
+  <a href="#subtitle-burn-in">Untertitel einbrennen</a>.</li>
 </ul>
 <p>Der Rest dieser Seite erklärt jedes Untertitelformat und was es für den
 Server ändert.</p>
@@ -3240,37 +3270,42 @@ Server ändert.</p>
 <td>Keine</td>
 </tr>
 <tr>
-<td>PGS (Blu-ray)</td>
-<td><code>hdmv_pgs_subtitle</code></td>
+<td>Bildformate</td>
+<td>PGS (Blu-ray), VobSub (DVD), DVB (Fernsehen), in einer MKV-Datei oder als <code>.sup</code>- oder <code>.idx</code>/<code>.sub</code>-Datei daneben</td>
 <td>Einmal vom Server in Bilder umgewandelt, zwischengespeichert und vom Player unverändert dargestellt</td>
 <td>Keine</td>
 </tr>
 <tr>
-<td>Andere Bildformate</td>
-<td>VobSub (DVD), DVB, XSUB</td>
+<td>XSUB</td>
+<td>XSUB (manche DivX-Dateien)</td>
 <td>Vom Server ins Bild eingebrannt</td>
 <td>Das Video wird neu kodiert</td>
 </tr>
 </tbody>
 </table>
-<p>Jeder Player (Web, Android, Android TV) stellt Text- und PGS-Untertitel
+<p>Jeder Player (Web, Android, Android TV) stellt Text- und Bild-Untertitel
 selbst dar. Einen davon zu wählen, ändert also nie, wie das Video geliefert wird.
 Nur die letzte Zeile tut das: Untertitel ins Bild einzubrennen heißt, das
 Video zu dekodieren und neu zu kodieren. Ein Titel, der direkt abgespielt
 wurde, wird so zu einer Transkodierung. Die Stream-Info zeigt dann
 <strong>Untertitel ins Bild eingebrannt</strong>.</p>
-<p>Ein Bild-Untertitel wird nur eingebrannt, wenn Sie ihn wirklich auswählen.
+<p>Ein Bild-Untertitel in einer anderen Art von Datei (eine TV-Aufnahme als
+<code>.ts</code>, eine AVI, eine MP4) kann der Server nicht dekodieren, deshalb wird er
+wie XSUB eingebrannt.</p>
+<p>Ein XSUB-Untertitel wird nur eingebrannt, wenn Sie ihn wirklich auswählen.
 Eine Datei, die nur einen enthält oder ihn als Standard markiert, bleibt bei
 der Direktwiedergabe.</p>
 <h2 id="subtitle-burn-in">Untertitel einbrennen<a class="headerlink" href="#subtitle-burn-in" title="Permanent link">¶</a></h2>
 <p>Die Profileinstellung <strong>Untertitel einbrennen</strong> (<strong>Einstellungen →
-Wiedergabe</strong>) gilt für die Formate der letzten Zeile:</p>
+Wiedergabe</strong>) entscheidet, welche Bild-Untertitel der Server ins Video
+einbrennt:</p>
 <table>
 <thead>
 <tr>
 <th>Einstellung</th>
-<th>Eine ausgewählte VobSub-, DVB- oder XSUB-Spur</th>
-<th>Text und PGS</th>
+<th>Eine ausgewählte XSUB-Spur</th>
+<th>Eine ausgewählte PGS-, VobSub- oder DVB-Spur</th>
+<th>Text</th>
 </tr>
 </thead>
 <tbody>
@@ -3278,24 +3313,27 @@ Wiedergabe</strong>) gilt für die Formate der letzten Zeile:</p>
 <td><strong>Auto</strong></td>
 <td>Eingebrannt, das Video wird neu kodiert.</td>
 <td>Vom Player dargestellt.</td>
+<td>Vom Player dargestellt.</td>
 </tr>
 <tr>
 <td><strong>Immer einbrennen</strong></td>
-<td>Wie Auto.</td>
-<td>Vom Player dargestellt: Text wird nie eingebrannt, egal bei welcher Einstellung.</td>
+<td>Eingebrannt, das Video wird neu kodiert.</td>
+<td>Eingebrannt, das Video wird neu kodiert. Eine <code>.sup</code>- oder <code>.idx</code>/<code>.sub</code>-Datei neben dem Video stellt weiterhin der Player dar.</td>
+<td>Vom Player dargestellt: Text wird nie eingebrannt.</td>
 </tr>
 <tr>
 <td><strong>Nie einbrennen</strong></td>
 <td>Kann nicht angezeigt werden: Das Video wird für einen Untertitel nie neu kodiert.</td>
 <td>Vom Player dargestellt.</td>
+<td>Vom Player dargestellt.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="the-first-time-a-subtitle-is-shown">Wenn ein Untertitel zum ersten Mal gezeigt wird<a class="headerlink" href="#the-first-time-a-subtitle-is-shown" title="Permanent link">¶</a></h2>
-<p>Ein Untertitel in der Datei (Text oder PGS) wird vom Server extrahiert, wenn
+<p>Ein Untertitel in der Datei (Text oder Bild) wird vom Server extrahiert, wenn
 ihn jemand zum ersten Mal wählt, und dann aufbewahrt: Bei jeder späteren
-Wiedergabe, egal durch wen, erscheint er sofort. Deckt der eigene Index der Datei die
-Spur ab, liest der Server nur die Blöcke des Untertitels, und das dauert
+Wiedergabe, egal durch wen, erscheint er sofort. Deckt der eigene Index der Datei eine
+Text- oder Bildspur ab, liest der Server nur die Blöcke des Untertitels, und das dauert
 Sekunden. Ohne diesen Index liest er die ganze Datei: einige Minuten bei
 einem großen Film (einige Minuten bei einer sehr großen Datei, länger, wenn derselbe Server gleichzeitig streamt).</p>
 <p>Währenddessen zeigt der Player <strong>Untertitel werden vorbereitet…</strong> dort, wo
@@ -3316,7 +3354,7 @@ wann gelesen wird.</p>
 <li><strong>Untertitel-Synchronisation</strong> im Player verschiebt die Untertitel für den
   laufenden Titel (positive Werte zeigen sie später). Das wirkt sofort.</li>
 <li><strong>Untertitel-Stil</strong> stellt Größe, Textfarbe, Hintergrund, Schrift, Schatten
-  und Position von Text-Untertiteln ein. PGS-Bilder werden unverändert
+  und Position von Text-Untertiteln ein. Bild-Untertitel werden unverändert
   dargestellt.</li>
 <li><strong>Untertitel hochladen…</strong> fügt dem Titel eine Datei hinzu.</li>
 <li>Mit einem OpenSubtitles-Schlüssel (siehe <a href="../../administration/libraries/#metadata-keys">Bibliotheken und Metadaten</a>)

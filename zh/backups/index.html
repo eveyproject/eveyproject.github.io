@@ -2909,6 +2909,8 @@
       
         
       
+        
+      
     
     
     
@@ -3053,6 +3055,34 @@
     
   
     安全模型与插件沙箱
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用更新
   
 
     
@@ -3275,6 +3305,7 @@
 <li>您的媒体文件；</li>
 <li>视频缓存（它会自动重新生成）；</li>
 <li>搜索索引（会根据数据库重建）；</li>
+<li>片头检测的指纹，保存在 <code>./evey-data/fingerprints</code> 里（缺失时会根据媒体文件重新计算）；</li>
 <li>保存在 <code>./evey-data</code> 里的密钥：保护每次登录的 <code>jwt.key</code>，<code>keys</code> 文件夹（数据库密码、搜索密钥），以及 <code>hls_aes.key</code>（加密流媒体分段的密钥，首次启动时创建，权限 0600）；</li>
 <li>已安装的插件文件。</li>
 </ul>
@@ -3301,6 +3332,7 @@
 <li><strong>您的数据会先被保存。</strong> 如果新版本需要修改数据库，它会先把副本写到 <code>./evey-data/backups/pre-migration-*.sql.gz</code>（保留最近的三份），然后在启动时进行修改。</li>
 <li>片库很大时，<strong>可能需要几分钟</strong>。容器重新开始应答后，会报告为健康状态。</li>
 <li><strong>有更新时 Evey 会告诉您。</strong> 它每小时检查一次是否发布了更新的镜像，并在管理面板里提示。它从不自动更新自己。</li>
+<li><strong>Android 应用会跟上。</strong> 正式版本的镜像带有与它配套的 Android 和 Android TV 应用代码，连接到您服务器的应用会自行取用（<a href="../getting-started/apps/#keeping-the-apps-up-to-date">让应用保持最新</a>）。</li>
 <li><strong>正在运行哪个版本：</strong> <code>docker exec evey-server evey version</code> 会显示版本号和提交（commit）。</li>
 </ul>
 <details class="info">
@@ -3313,6 +3345,8 @@
 <li>如果新版本修改过数据库，请先恢复它在更新前保存的副本：<code>docker exec evey-server evey admin rollback</code> 会列出具体步骤和文件路径。</li>
 <li>运行 <code>docker compose up -d</code>。</li>
 </ol>
+<p>片头检测的指纹是唯一不会随您退回的数据。把它们保存在 <code>./evey-data/fingerprints</code> 的版本第一次启动时，会把它们从数据库移到那里，并删除已移走的行。旧版本只从数据库读取它们，找不到任何指纹，于是会在片头检测运行时根据媒体文件重新计算：不会丢失任何东西，但服务器会忙一段时间。更新前做的备份仍然包含这些行，恢复该备份即可找回它们。</p>
+<p>Android 应用不会随服务器一起回退：它们保留自己运行过的最新应用代码，旧版服务器需要能与之配合。</p>
 <p>镜像标签、其他变体和显卡版本的说明见<a href="../operations/advanced-deployments/#image-tags-and-variants">高级部署</a>。</p>
 <!-- sources
 contents: internal/app/backup/service.go - BackupTables, CreateBackup (sha256 + schema version in manifest), RestoreBackup (checksum + schema guard), CleanupOldBackups ; internal/adapters/driven/filesystem/backup_store.go
@@ -3322,6 +3356,7 @@ command-line backup: cmd/evey/admin_backup.go - adminBackup (--include-telemetry
 keys outside the dump: internal/config/config.go (EVEY_JWT_PRIVATE_KEY_PATH /data/jwt.key, /data/keys)
 pre-migration dump at boot, 3 kept: cmd/evey/database.go - RunMigrations BackupOpts Retention 3 ; internal/adapters/driven/postgres/migrate_backup.go (pre-migration-<stamp>.sql.gz, EVEY_BACKUP_DIR default /data/backups)
 update check hourly, never self-updates: internal/app/updatecheck/service.go - checkInterval, firstCheck
+app code in the image, apps never go back: Dockerfile (COPY client-updates) ; docs/client-updates.md ; frontend/packages/client/src/native/clientUpdates.test.ts
 rollback advisor: cmd/evey/admin_commands.go - adminRollback ; image tags: .github/workflows/ci.yml (sha-<short>, latest gated on vX.Y.Z)
 schedule card controls (Enabled, Save, Run now): frontend/apps/web/src/routes/_auth/admin/backup.lazy.tsx ; i18n admin.backup.schedule.enabledLabel, save, cronHelp
 -->

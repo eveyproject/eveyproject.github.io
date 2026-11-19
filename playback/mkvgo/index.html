@@ -2900,6 +2900,8 @@
       
         
       
+        
+      
     
     
     
@@ -3044,6 +3046,34 @@
     
   
     Security model and plugin sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App updates
   
 
     
@@ -3310,7 +3340,7 @@ path depends on what the player decodes:
 </tr>
 <tr>
 <td><strong>Subtitles</strong></td>
-<td>Subtitle tracks embedded in an MKV are extracted on request, text tracks to WebVTT and bitmap tracks (PGS) to images. Where the file's own index (Cues) covers a track completely, the server reads only the blocks it points to instead of the whole file, and keeps that block index under its data directory (<code>subtitle-index/</code>) for the next request. A track that still needs a full read is answered "being prepared" with a retry delay, and the players poll until it is ready.</td>
+<td>Subtitle tracks embedded in an MKV are extracted on request, text tracks to WebVTT and bitmap tracks (PGS, VobSub, DVB) to images. Where the file's own index (Cues) covers a track completely, the server reads only the blocks it points to instead of the whole file, and keeps that block index under its data directory (<code>subtitle-index/</code>) for the next request. A track that still needs a full read is answered "being prepared" with a retry delay, and the players poll until it is ready.</td>
 <td>ffmpeg extracts the track, reading the file through.</td>
 </tr>
 <tr>

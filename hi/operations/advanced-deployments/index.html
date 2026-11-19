@@ -2947,6 +2947,8 @@
       
         
       
+        
+      
     
     
     
@@ -3091,6 +3093,34 @@
     
   
     सुरक्षा मॉडल और प्लगइन सैंडबॉक्स
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ऐप अपडेट
   
 
     
@@ -3492,6 +3522,20 @@ dump का अपना तरीका), उसे अपनी अलग स�
 <code>-lean</code> में सिर्फ़ Python रहता है (जैसे <code>latest-lean</code>)। हल्का रूप सिर्फ़ तब चुनें
 जब इमेज का आकार मायने रखता हो: installer उस प्लगइन को मना कर देता है जिसकी
 बताई गई भाषा इमेज में नहीं है, और संदेश में डिफ़ॉल्ट इमेज का नाम बताता है।</p>
+<p>सिर्फ़ release या pre-release tag से प्रकाशित इमेज में वह कोड होता है जो Android
+ऐप अपने सर्वर से लेते हैं
+(<a href="../../client-updates/">इंस्टेंस से मिलने वाले ऐप अपडेट</a>)। branch का build या
+खुद बनाई गई इमेज कोई कोड नहीं देती, और ऐप वही कोड रखते हैं जो उनके पास है।</p>
+<p>प्रकाशित इमेज cosign से साइन की जाती हैं, बाँटने के लिए कोई कुंजी नहीं होती:
+साइन करने वाला रिपॉज़िटरी का वह workflow है जिसने इमेज बनाई। किसी रिलीज़ को
+जाँचने के लिए, cosign 3 या उससे नए के साथ:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cosign<span class="w"> </span>verify<span class="w"> </span>eveyproject/evey:X.Y.Z<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--certificate-identity<span class="w"> </span>https://github.com/eveyproject/evey/.github/workflows/ci.yml@refs/tags/vX.Y.Z<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span>https://token.actions.githubusercontent.com
+</span></code></pre></div>
+<p>रिलीज़ 0.1.5 से 0.1.8 प्रकाशन के बाद साइन की गईं, <code>ci.yml@refs/tags/vX.Y.Z</code> की
+जगह <code>sign-published-images.yml@refs/heads/master</code> से। इनसे पहले की रिलीज़ साइन
+नहीं हैं।</p>
 <p>प्रकाशित इमेज में हर समर्थित Intel और AMD पीढ़ी के ड्राइवर होते हैं। खुद बनाई
 गई इमेज में एक ही परिवार रखा जा सकता है: <code>docker build
 --build-arg GPU=intel-legacy .</code> (Intel Gen9 से Gen11), <code>GPU=intel</code> (Gen12 और नए),
@@ -3511,6 +3555,7 @@ embedded db, import, major upgrade, embedded meili: docker/entrypoint.sh (PG_MAJ
 external db switch and default password refusal: internal/config/config.go (EVEY_DB_HOST, hardFail on "evey")
 reindex: cmd/evey/admin.go - adminReindexSearch
 arm, variants, GPU families: Dockerfile (TARGETARCH, RUNTIMES, GPU) ; .github/workflows/ci.yml (tags, flavor suffix, platforms) ; internal/adapters/driven/ffmpeg/hwdetect.go - detectRKMPP
+app code and image signature: .github/workflows/ci.yml (client-updates-build, client-updates-sign, docker-sign) ; .github/workflows/sign-published-images.yml ; Dockerfile (COPY client-updates)
 sandbox auto: internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode ; i18n/en/admin.yaml - plugins.security.title
 -->
 

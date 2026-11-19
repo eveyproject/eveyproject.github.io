@@ -2969,6 +2969,8 @@
       
         
       
+        
+      
     
     
     
@@ -3113,6 +3115,34 @@
     
   
     Sicherheitsmodell und Plugin-Sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App-Updates
   
 
     
@@ -3415,14 +3445,86 @@ Standard-Image enthält Python, Node.js, PHP, Ruby und Lua. Das Image <code>-nod
 behält Python und Node.js, das Image <code>-lean</code> nur Python. Ein Manifest, das eine Laufzeit
 nennt, die dem Image fehlt, wird bei der Installation abgelehnt, mit der
 Liste der verfügbaren Laufzeiten.</p>
+<p>Was jedes Image einem Plugin bereitstellt, nach <code>language</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>language</code></th>
+<th>Images</th>
+<th>Interpreter</th>
+<th>gRPC aus dem Image</th>
+<th>Was das Paket mitbringt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python</code></td>
+<td>Standard, <code>-nodejs</code>, <code>-lean</code></td>
+<td>Python 3.13</td>
+<td><code>grpcio</code>, <code>protobuf</code></td>
+<td>Seinen Code. Der Server kopiert die erzeugten Stubs neben den Einstiegspunkt.</td>
+</tr>
+<tr>
+<td><code>nodejs</code></td>
+<td>Standard, <code>-nodejs</code></td>
+<td>Node.js 20</td>
+<td><code>@grpc/grpc-js</code> 1.14.7, <code>@grpc/proto-loader</code> 0.8.1, ab 0.1.9</td>
+<td>Seinen Code. Bis 0.1.8 beide gRPC-Module in seinem <code>node_modules</code>.</td>
+</tr>
+<tr>
+<td><code>php</code></td>
+<td>Standard</td>
+<td>PHP 8.4</td>
+<td>keines</td>
+<td>Eine gRPC-Implementierung und die damit erzeugten Stubs.</td>
+</tr>
+<tr>
+<td><code>ruby</code></td>
+<td>Standard</td>
+<td>Ruby 3.3</td>
+<td>keines</td>
+<td>Eine gRPC-Implementierung und die damit erzeugten Stubs.</td>
+</tr>
+<tr>
+<td><code>lua</code></td>
+<td>Standard</td>
+<td>Lua 5.4</td>
+<td>keines</td>
+<td>Eine gRPC-Implementierung und die damit erzeugten Stubs.</td>
+</tr>
+<tr>
+<td><code>bash</code>, <code>sh</code></td>
+<td>alle drei</td>
+<td>bash 5.2, dash</td>
+<td>keines</td>
+<td>Das, was den gRPC-Socket bedient.</td>
+</tr>
+<tr>
+<td><code>go</code></td>
+<td>alle drei</td>
+<td>keiner, kompiliert</td>
+<td>nicht nötig</td>
+<td>Eine statische Binärdatei, mit der Berechtigung <code>native-binary</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Die Interpreter und die Python-Module sind die Pakete der Debian-Version, auf
+der das Image gebaut wird; ihre Hauptversionen ändern sich nur mit ihr. Die
+beiden Node.js-Module sind in <code>docker/plugin-runtime-node/package.json</code>
+festgelegt. Der Image-Build schlägt fehl, wenn eines davon nicht geladen
+werden kann: Ein Image erscheint nie ohne das, was diese Tabelle verspricht.</p>
 <p>Die gRPC-Schnittstelle ist in einer einzigen Datei definiert, <code>proto/plugin/v1/plugin_api.proto</code>.
 Nur
 das Python-SDK liefert erzeugte Stubs; die anderen Sprachen unter
 <code>sdk/&lt;language&gt;/</code> enthalten die <code>.proto</code>. Der Server kopiert die Dateien Ihrer
 Sprache beim Start des Plugins neben Ihren Einstiegspunkt. Das Image stellt
-Python-Plugins <code>grpcio</code> bereit, sie müssen also nichts mitliefern. Ein
-Node.js-Plugin muss sein <code>node_modules</code> (<code>@grpc/grpc-js</code> und
-<code>@grpc/proto-loader</code>) im Paket mitliefern. Für eine andere Sprache erzeugen Sie die Stubs mit <code>protoc</code> und legen sie ins
+Python-Plugins <code>grpcio</code> bereit, sie müssen also nichts mitliefern. Die Images
+<code>nodejs</code> und <code>full</code> stellen Node.js-Plugins auf dieselbe Weise <code>@grpc/grpc-js</code>
+und <code>@grpc/proto-loader</code> bereit. Die Images bis 0.1.8 tun das nicht: Ein
+Node.js-Plugin, das auch darauf laufen soll, behält beide im <code>node_modules</code>
+seines Pakets, und eines, das sich auf das Image verlässt, erklärt das mit
+<code>min_evey_version</code>. Ein im Paket mitgeliefertes <code>node_modules</code> hat immer Vorrang
+vor dem des Images. Für eine andere Sprache erzeugen Sie die Stubs mit <code>protoc</code> und legen sie ins
 ZIP:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>protoc<span class="w"> </span>--proto_path<span class="o">=</span>proto<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">       </span>--&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span>--grpc_&lt;lang&gt;_out<span class="o">=</span>OUT_DIR<span class="w"> </span><span class="se">\</span>

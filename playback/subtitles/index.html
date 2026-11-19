@@ -2889,6 +2889,8 @@
       
         
       
+        
+      
     
     
     
@@ -3033,6 +3035,34 @@
     
   
     Security model and plugin sandbox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../client-updates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App updates
   
 
     
@@ -3214,11 +3244,10 @@ Playback → Default Subtitle Language</strong>.</p>
   themselves. On a very large film this can take a few minutes, once: after
   that, they show at once for everyone. See
   <a href="#the-first-time-a-subtitle-is-shown">The first time a subtitle is shown</a>.</li>
-<li><strong>DVD and TV-broadcast subtitles</strong> are pictures, not text. The server
-  draws them into the video itself, which makes it work much harder. The
-  profile setting <strong>Subtitle Burn-in</strong> (<strong>Settings → Playback</strong>) can refuse
-  this, but then those subtitles cannot be shown. See
-  <a href="#subtitle-burn-in">Subtitle Burn-in</a>.</li>
+<li><strong>Blu-ray, DVD and TV-broadcast subtitles</strong> are pictures, not text. The
+  server turns them into images once and the player draws them, like text.
+  Only the rare XSUB format is still drawn into the video by the server,
+  which makes it work much harder. See <a href="#subtitle-burn-in">Subtitle Burn-in</a>.</li>
 </ul>
 <p>The rest of this page explains each subtitle format and what it changes for
 the server.</p>
@@ -3240,35 +3269,38 @@ the server.</p>
 <td>None</td>
 </tr>
 <tr>
-<td>PGS (Blu-ray)</td>
-<td><code>hdmv_pgs_subtitle</code></td>
+<td>Picture formats</td>
+<td>PGS (Blu-ray), VobSub (DVD), DVB (TV broadcast), inside an MKV file or as a <code>.sup</code> or <code>.idx</code>/<code>.sub</code> file beside it</td>
 <td>Decoded into images once by the server, cached, and drawn by the player as they are</td>
 <td>None</td>
 </tr>
 <tr>
-<td>Other picture formats</td>
-<td>VobSub (DVD), DVB, XSUB</td>
+<td>XSUB</td>
+<td>XSUB (some DivX files)</td>
 <td>Burned into the picture by the server</td>
 <td>The video is re-encoded</td>
 </tr>
 </tbody>
 </table>
-<p>Every player (web, Android, Android TV) draws text and PGS subtitles itself,
+<p>Every player (web, Android, Android TV) draws text and picture subtitles itself,
 so choosing one never changes how the video is delivered. Only the last row
 does: burning subtitles into the picture requires decoding and re-encoding the
 video, so a title that played directly becomes a transcode. Stream info then
 lists <strong>Subtitles burned into the picture</strong>.</p>
-<p>A picture subtitle is burned in only when you actually select it. A file that
+<p>A picture subtitle inside another kind of file (a TV recording in <code>.ts</code>, an
+AVI, an MP4) cannot be decoded by the server, so it is burned in like XSUB.</p>
+<p>An XSUB subtitle is burned in only when you actually select it. A file that
 merely carries one, or marks it as default, keeps its Direct Play.</p>
 <h2 id="subtitle-burn-in">Subtitle Burn-in<a class="headerlink" href="#subtitle-burn-in" title="Permanent link">¶</a></h2>
-<p>The profile setting <strong>Subtitle Burn-in</strong> (<strong>Settings → Playback</strong>) governs the
-formats of the last row:</p>
+<p>The profile setting <strong>Subtitle Burn-in</strong> (<strong>Settings → Playback</strong>) decides
+which picture subtitles the server burns into the video:</p>
 <table>
 <thead>
 <tr>
 <th>Setting</th>
-<th>A selected VobSub, DVB or XSUB track</th>
-<th>Text and PGS</th>
+<th>A selected XSUB track</th>
+<th>A selected PGS, VobSub or DVB track</th>
+<th>Text</th>
 </tr>
 </thead>
 <tbody>
@@ -3276,24 +3308,27 @@ formats of the last row:</p>
 <td><strong>Auto</strong></td>
 <td>Burned in, the video is re-encoded.</td>
 <td>Drawn by the player.</td>
+<td>Drawn by the player.</td>
 </tr>
 <tr>
 <td><strong>Always burn in</strong></td>
-<td>Same as Auto.</td>
-<td>Drawn by the player: text is never burned in, whatever the setting.</td>
+<td>Burned in, the video is re-encoded.</td>
+<td>Burned in, the video is re-encoded. A <code>.sup</code> or <code>.idx</code>/<code>.sub</code> file beside the video is still drawn by the player.</td>
+<td>Drawn by the player: text is never burned in.</td>
 </tr>
 <tr>
 <td><strong>Never burn in</strong></td>
 <td>Cannot be shown: the video is never re-encoded for a subtitle.</td>
 <td>Drawn by the player.</td>
+<td>Drawn by the player.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="the-first-time-a-subtitle-is-shown">The first time a subtitle is shown<a class="headerlink" href="#the-first-time-a-subtitle-is-shown" title="Permanent link">¶</a></h2>
-<p>A subtitle carried inside the file (text or PGS) is extracted by the server the
+<p>A subtitle carried inside the file (text or picture) is extracted by the server the
 first time someone selects it, then kept: every later viewing, by anyone, gets
-it at once. When the file's own index covers the track, the server reads only
-the subtitle's blocks and it takes seconds. Without that index it reads the
+it at once. When the file's own index covers a text or picture track, the server
+reads only the subtitle's blocks and it takes seconds. Without that index it reads the
 whole file: several minutes for a large film (a few minutes for a very
 large file, longer while the same server is streaming).</p>
 <p>Meanwhile the player shows <strong>Subtitles are being prepared…</strong> where the
@@ -3313,7 +3348,7 @@ library that extracts it, tries again. See
 <li><strong>Subtitle sync</strong> in the player shifts the subtitles for the current title
   (positive values show them later). It applies at once.</li>
 <li><strong>Subtitle Style</strong> sets the size, text colour, background, font, shadow and
-  position of text subtitles. PGS images are drawn as they are.</li>
+  position of text subtitles. Picture subtitles are drawn as they are.</li>
 <li><strong>Upload subtitle…</strong> adds a file for the title.</li>
 <li>With an OpenSubtitles key (see <a href="../../administration/libraries/#metadata-keys">Libraries and metadata</a>),
   the server API can search for and download a subtitle the file does not carry
@@ -3323,7 +3358,7 @@ library that extracts it, tries again. See
 </ul>
 <!-- sources
 decision: internal/app/transcoding/decision.go - evaluateSubtitle, forceBurnVideoTranscode
-client-drawn pgs, burn-in formats: frontend/packages/api/src/imageSubtitles.ts - isImageSubtitle, isClientDrawableSubtitle, isBurnInSubtitle ; internal/adapters/driving/http/subtitle_pgs.go
+client-drawn pictures, burn-in formats: frontend/packages/api/src/imageSubtitles.ts - isImageSubtitle, isClientDrawableSubtitle, isBurnInSubtitle ; internal/adapters/driving/http/subtitle_pgs.go ; internal/adapters/driving/http/subtitle_bitmap.go - bitmapServable
 only when selected: frontend/packages/api/src/clientSubtitleTrack.ts - burnInSubtitleIndex ; frontend/packages/client/src/hooks/usePlayerTrackSelection.ts (profile languages, then the file's default; hand pick never overridden)
 players: frontend/apps/mobile/src/components/player/SubtitleOverlay.tsx ; frontend/apps/tv/src/components/SubtitleOverlay.tsx ; frontend/apps/web/src/features/playback/PGSSubtitleOverlay.tsx
 opensubtitles: internal/app/subtitle/service.go (.subtitles folder) ; internal/adapters/driving/http/subtitle_handler.go - registerSubtitleRoutes (no client calls search/download)
