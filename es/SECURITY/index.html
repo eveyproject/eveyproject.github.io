@@ -4439,10 +4439,16 @@ host</strong> de <strong>Administración → Plugins → Panel de seguridad</str
   lanzador. Las carpetas del sistema (<code>/usr</code>, <code>/lib</code>, <code>/lib64</code>, <code>/bin</code>,
   <code>/sbin</code>, <code>/etc</code>, <code>/app</code>) en solo lectura; de <code>/dev</code>, solo <code>null</code>, <code>zero</code>,
   <code>full</code>, <code>random</code> y <code>urandom</code>, así que los nodos de la tarjeta gráfica y el
-  terminal del servidor quedan fuera de alcance; la carpeta del plugin y la
-  de su socket en lectura y escritura; todo lo demás, incluidos <code>/data</code> y los
-  otros plugins, denegado. Un plugin con <code>hardware.gpu</code> recibe su nodo de
-  renderizado como única excepción.</li>
+  terminal del servidor quedan fuera de alcance; de <code>/proc</code>, solo el <code>maps</code>
+  del propio plugin, así que las conexiones del contenedor (<code>net/tcp</code>), sus
+  puntos de montaje y los demás procesos quedan fuera de alcance; la carpeta
+  del plugin y la de su socket en lectura y escritura; todo lo demás,
+  incluidos <code>/data</code> y los otros plugins, denegado. Un plugin que arranca un
+  entorno de ejecución instalado en una carpeta propia bajo <code>/opt</code> lee también
+  esa carpeta; un entorno instalado en cualquier otro lugar fuera de las
+  carpetas del sistema, o cuya carpeta contendría los plugins o el servidor, se
+  rechaza. Un plugin con <code>hardware.gpu</code> recibe su
+  nodo de renderizado como única excepción.</li>
 <li><strong>Red:</strong> <code>-restrict-net</code> y <code>-deny-inet</code>; salida solo por <code>Fetch</code>.</li>
 <li><strong>Llamadas al sistema:</strong> el filtro del núcleo y el filtro <code>LD_PRELOAD</code>.</li>
 <li><strong>Requiere:</strong> un núcleo 5.13 o posterior con Landlock en la lista de LSM
@@ -4502,7 +4508,10 @@ host</strong> de <strong>Administración → Plugins → Panel de seguridad</str
   <code>mount</code>/<code>unshare</code>. En Docker eso exige un perfil de seguridad relajado, así
   que en la práctica es un modo para instalaciones sin contenedor.</p>
 <h3 id="strict"><code>strict</code><a class="headerlink" href="#strict" title="Permanent link">¶</a></h3>
-<p><code>bubblewrap</code> más el filtro <code>LD_PRELOAD</code> (solo plugins interpretados).</p>
+<p><code>bubblewrap</code> más el filtro <code>LD_PRELOAD</code>, cargado por el propio plugin dentro del
+sandbox (plugins que no declaran <code>subprocess</code>). Hasta la 0.1.9, este modo
+rechazaba todos los plugins al arrancar: el filtro lo cargaba el propio <code>bwrap</code>
+y denegaba los espacios de nombres que este crea.</p>
 <h3 id="basic"><code>basic</code><a class="headerlink" href="#basic" title="Permanent link">¶</a></h3>
 <p>El último recurso de <code>auto</code>: el usuario aparte, el filtro del núcleo, el
 filtro <code>LD_PRELOAD</code>, <code>-deny-inet</code> y Landlock si el núcleo lo tiene. En un
@@ -4641,7 +4650,7 @@ tuyas.</p>
 <!-- sources
 install checks: internal/adapters/driven/pluginrunner/zip.go ; internal/adapters/driven/pluginrunner/analyzer.go ; internal/adapters/driven/pluginrunner/cosign.go ; internal/app/plugin/install.go ; internal/adapters/driving/grpcapi/plugin_interceptor.go - PluginPermissionInterceptor
 package source: internal/app/plugin/install.go - CheckRequestedSource, ErrInsecureSource, downloadIfURL (http and redirect refusal, 100 MB) ; installer_service.go - SafeHTTPClientNoProxy ; internal/adapters/driving/grpcapi/admin_plugin.go - InstallPlugin, PreviewPluginUpdate, ApplyPluginUpdate ; internal/adapters/driving/http/plugin_asset_handler.go - preview JSON source ; internal/pkg/ssrf/dialer.go
-runtime: internal/adapters/driven/pluginrunner/runner_sandbox.go - applySandbox ; internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode, launcherPath, systemReadOnlyDirs, safeDevNodes ; cmd/evey-plugin-launcher/seccomp_linux.go - deniedSyscalls, selfSignalSyscalls, cloneNamespaceFlags, appendDenyForkRules ; cmd/evey-plugin-launcher/droppriv_linux.go ; sandbox/sandbox.c ; internal/adapters/driven/pluginrunner/runner_bwrap.go - buildBwrapCmd ; internal/adapters/driven/pluginrunner/sandbox_probe.go - ProbeSandbox ; internal/adapters/driving/pluginhost/fetch.go - Fetch, maxFetchBytes, maxFetchHeaderBytes, fetchTimeout ; cmd/evey/hardening_linux.go
+runtime: internal/adapters/driven/pluginrunner/runner_sandbox.go - applySandbox ; internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode, launcherPath, systemReadOnlyDirs, safeDevNodes, safeProcFiles ; launcher_resolve.go - computeRuntimeReadPaths, runtimeRootExposable ; runner_sandbox.go - applyBwrapSandbox, runner_bwrap.go - withBwrapPreload (strict) ; cmd/evey-plugin-launcher/seccomp_linux.go - deniedSyscalls, selfSignalSyscalls, cloneNamespaceFlags, appendDenyForkRules ; cmd/evey-plugin-launcher/droppriv_linux.go ; sandbox/sandbox.c ; internal/adapters/driven/pluginrunner/runner_bwrap.go - buildBwrapCmd ; internal/adapters/driven/pluginrunner/sandbox_probe.go - ProbeSandbox ; internal/adapters/driving/pluginhost/fetch.go - Fetch, maxFetchBytes, maxFetchHeaderBytes, fetchTimeout ; cmd/evey/hardening_linux.go
 resource monitor: internal/adapters/driven/pluginrunner/runner_resmon.go - defaultMemBytes, defaultPIDsMax, resMonInterval, resMonDiskEveryN, resMonCPUPegPct, resMonGPUPegPct ; internal/app/plugin/resource_config.go - ResolveResourceConfig
 bridge: frontend/packages/client/src/plugins/hostProtocol.ts - ALLOWED_NAV_PREFIXES, SLOT_MAX_HEIGHT, TOAST_MAX, TOAST_WINDOW_MS, TOAST_MAX_LENGTH ; frontend/packages/client/src/web/PluginIframe.tsx - MIN_SLOT_HEIGHT ; frontend/packages/client/src/native/PluginWebView.tsx
 config: internal/config/config.go - EVEY_PLUGINS_SANDBOX_MODE, EVEY_PLUGINS_UID_SEPARATION, EVEY_PLUGINS_COSIGN_POLICY, EVEY_PLUGINS_COSIGN_PUBLIC_KEY, EVEY_PLUGINS_MEMORY_MB, EVEY_PLUGINS_PIDS_MAX, EVEY_PLUGINS_DISK_MAX_MB, EVEY_PLUGINS_CPU_NICE, EVEY_SERVER_PORT, EVEY_GRPC_BIND

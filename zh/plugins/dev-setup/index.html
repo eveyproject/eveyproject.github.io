@@ -2540,6 +2540,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. 准备工作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-runtime-the-image-does-not-carry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        镜像里没有的运行时
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3254,6 +3271,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. 准备工作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-runtime-the-image-does-not-carry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        镜像里没有的运行时
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3431,9 +3465,7 @@
 </tr>
 </tbody>
 </table>
-<p>从服务器能启动的运行时里选择插件的语言：<code>python</code>、<code>nodejs</code>、<code>php</code>、<code>ruby</code>、<code>lua</code>、<code>bash</code> 和 <code>sh</code> 需要镜像里有对应的解释器；
-<code>go</code> 提供编译好的二进制文件，需要 <code>native-binary</code> 权限。默认镜像带有 Python、Node.js、PHP、Ruby 和 Lua；<code>-nodejs</code> 镜像保留 Python 和 Node.js，<code>-lean</code> 镜像只保留 Python。
-如果清单写了镜像里没有的运行时，安装时就会被拒绝，并列出可用的运行时。</p>
+<p>选择插件的语言。入口写明由什么来运行它：镜像里的一个运行时（<code>node main.js</code>、<code>python3 main.py</code>、<code>java -jar plugin.jar</code>、<code>dotnet plugin.dll</code>），或者插件包自带的二进制文件（<code>go</code>，需要 <code>native-binary</code> 权限）。默认镜像带有 Python、Node.js、PHP、Ruby 和 Lua；<code>-nodejs</code> 镜像保留 Python 和 Node.js，<code>-lean</code> 镜像只保留 Python。其他任何运行时都要加进镜像（<a href="#a-runtime-the-image-does-not-carry">见下文</a>）。如果入口写的命令镜像里没有、插件包也没有自带，安装时就会被拒绝。</p>
 <p>各镜像按 <code>language</code> 为插件提供的内容：</p>
 <table>
 <thead>
@@ -3511,12 +3543,35 @@
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">       </span>proto/plugin/v1/plugin_api.proto
 </span></code></pre></div>
 <p><code>make plugin-sdk</code> 会重新生成随附的存根；每个 <code>sdk/&lt;lang&gt;/README.md</code> 都写明了该语言需要哪个 gRPC 插件。</p>
+<h3 id="a-runtime-the-image-does-not-carry">镜像里没有的运行时<a class="headerlink" href="#a-runtime-the-image-does-not-carry" title="Permanent link">¶</a></h3>
+<p>把运行时安装进一个基于 Evey 镜像构建的镜像，并在您的 <code>compose.yaml</code> 里使用这个镜像。服务器能启动其 <code>PATH</code> 里的任何命令，所以其他地方都不用改。下面是两个例子：用于以 <code>.jar</code> 发布的插件的 JRE，和用于以 <code>.dll</code> 发布的插件的 .NET 运行时：</p>
+<div class="language-dockerfile highlight"><span class="filename">Dockerfile</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">eveyproject/evey:latest</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Java: plugins shipped as a .jar, started by "java -jar plugin.jar"</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># (the JRE's install script links its manual page, a slim image has no man1)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">RUN</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/share/man/man1<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span>openjdk-21-jre-headless<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># .NET: plugins shipped as a .dll, started by "dotnet plugin.dll"</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb<span class="w"> </span>-o<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span>dotnet-runtime-8.0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span></code></pre></div>
+<p>插件的清单在入口里写明运行时。静态分析读不了 <code>.jar</code> 或 <code>.dll</code>，所以插件包要声明 <code>native-binary</code>，和编译好的 Go 插件一样：</p>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java</span><span class="w">                  </span><span class="c1"># a label: no stubs are copied for it</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java -jar plugin.jar</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native-binary</span>
+</span></code></pre></div>
+<p>插件包自带 gRPC 实现（<code>.jar</code> 里的 grpc-java，<code>.dll</code> 文件夹里的 Grpc.Net）。在沙箱里，插件除了常规的系统目录，还能看到运行时的安装目录（当它位于 <code>/opt</code> 下时），以及运行时的软件包所链接到的 <code>/etc</code> 下的目录（<code>/etc/alternatives</code>、<code>/etc/java-21-openjdk</code>），仅此而已。安装在系统目录之外其他任何位置、或安装在同时存放插件或服务器的目录中的运行时会被拒绝：请把它安装在 <code>/usr</code> 下，或 <code>/opt</code> 下它自己的目录里。JVM 和 .NET 的垃圾回收器根据插件的内存上限（<strong>资源限制</strong>里的<strong>最大内存（MiB）</strong>）来确定堆大小，而不是根据主机的内存；对 Java 来说，入口上的 <code>-Xmx</code> 仍然优先。</p>
 <h2 id="2-bring-up-evey-locally">2. 在本地启动 Evey<a class="headerlink" href="#2-bring-up-evey-locally" title="Permanent link">¶</a></h2>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:eveyproject/evey.git
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>evey
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cp<span class="w"> </span>.env.dev.example<span class="w"> </span>.env.dev<span class="w">   </span><span class="c1"># 然后设置 MEDIA_DIR、EVEY_DB_PASSWORD、MEILI_MASTER_KEY</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>make<span class="w"> </span>setup<span class="w">                      </span><span class="c1"># 只需一次：把 evey.test 加进 /etc/hosts</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres、meilisearch、服务器（Air）、网页应用（Vite）</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:eveyproject/evey.git
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>evey
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cp<span class="w"> </span>.env.dev.example<span class="w"> </span>.env.dev<span class="w">   </span><span class="c1"># 然后设置 MEDIA_DIR、EVEY_DB_PASSWORD、MEILI_MASTER_KEY</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>make<span class="w"> </span>setup<span class="w">                      </span><span class="c1"># 只需一次：把 evey.test 加进 /etc/hosts</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres、meilisearch、服务器（Air）、网页应用（Vite）</span>
 </span></code></pre></div>
 <p>打开 <code>https://evey.test</code>。第一次启动时，设置向导会创建管理员账户，见<a href="../../getting-started/first-setup/">首次设置</a>。
 在这个开发环境里，插件文件放在 <code>./plugins/&lt;plugin-id&gt;/</code>，在容器里挂载为 <code>/data/plugins</code>。</p>
@@ -3526,46 +3581,46 @@
 <ol>
 <li>
 <p><strong>复制示例。</strong></p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>-r<span class="w"> </span>examples/plugins/nodejs-example<span class="w"> </span>~/hello-plugin
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>~/hello-plugin
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>-r<span class="w"> </span>examples/plugins/nodejs-example<span class="w"> </span>~/hello-plugin
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">cd</span><span class="w"> </span>~/hello-plugin
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>为它命名。</strong> 编辑 <code>plugin.yaml</code>：</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-plugin</span><span class="w">          </span><span class="c1"># 唯一，kebab-case 格式</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">              </span><span class="c1"># semver：每次上传都要调高</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Says hello in its log</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">            </span><span class="c1"># 服务器必须具备的运行时</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node main.js</span><span class="w">    </span><span class="c1"># 服务器执行的命令行</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">permissions</span><span class="p">:</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.library</span><span class="w">             </span><span class="c1"># 允许后端读取媒体条目</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-plugin</span><span class="w">          </span><span class="c1"># 唯一，kebab-case 格式</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">              </span><span class="c1"># semver：每次上传都要调高</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Says hello in its log</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">            </span><span class="c1"># 服务器必须具备的运行时</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node main.js</span><span class="w">    </span><span class="c1"># 服务器执行的命令行</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.library</span><span class="w">             </span><span class="c1"># 允许后端读取媒体条目</span>
 </span></code></pre></div>
-<p><code>language</code> 告诉服务器要检查哪个运行时、复制哪些存根；<code>entrypoint</code> 是它要执行的命令，
-在插件的目录里运行，并带有下一步介绍的环境变量。</p>
+<p><code>language</code> 告诉服务器要复制哪些存根；<code>entrypoint</code> 是它要执行的命令，
+在插件的目录里运行，并带有下一步介绍的环境变量。它的第一个词是镜像里的命令（<code>node</code>）或插件包里的文件。</p>
 </li>
 <li>
 <p><strong>阅读 <code>main.js</code>。</strong> 服务器给进程传三个变量：<code>EVEY_PLUGIN_ID</code>、<code>EVEY_PLUGIN_SOCK</code>（<em>您的</em>进程必须在这个套接字上监听，提供 <code>PluginService</code>）
    和 <code>EVEY_HOST_SOCK</code>（您连接这个套接字来调用 <code>HostService</code>）。示例从自己的目录加载 <code>plugin_api.proto</code>（服务器把它复制到了那里），
    并实现了 <code>PluginService</code> 的五个方法。改一下 <code>Initialize</code> 里的消息：</p>
-<div class="language-js highlight"><span class="filename">main.js（节选）</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">Initialize</span><span class="p">(</span><span class="nx">call</span><span class="p">,</span><span class="w"> </span><span class="nx">callback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">hostLog</span><span class="p">(</span><span class="s2">"LOG_LEVEL_INFO"</span><span class="p">,</span><span class="w"> </span><span class="sb">`hello from </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EVEY_PLUGIN_ID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">},</span>
+<div class="language-js highlight"><span class="filename">main.js（节选）</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">Initialize</span><span class="p">(</span><span class="nx">call</span><span class="p">,</span><span class="w"> </span><span class="nx">callback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">hostLog</span><span class="p">(</span><span class="s2">"LOG_LEVEL_INFO"</span><span class="p">,</span><span class="w"> </span><span class="sb">`hello from </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EVEY_PLUGIN_ID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">},</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>打包成 ZIP。</strong> 清单必须位于压缩包的根目录，不能放在子目录里：</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>安装它。</strong> 在<strong>管理 → 插件</strong>里点<strong>安装插件</strong>，选择 ZIP 包，再点<strong>预览并安装</strong>：预览会列出 <code>api.library</code> 以及静态分析的结果。
    通过 API 进行同样的上传：</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s2">"plugin=@hello-plugin.zip"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$EVEY_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">     </span>https://evey.test/api/v1/admin/plugins/upload
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s2">"plugin=@hello-plugin.zip"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$EVEY_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">     </span>https://evey.test/api/v1/admin/plugins/upload
 </span></code></pre></div>
 </li>
 <li>
@@ -3591,23 +3646,23 @@
 <a href="../api-reference/#hostservice-what-the-plugin-can-call">插件 API 参考</a>。</p>
 <h2 id="5-add-an-interface">5. 添加界面<a class="headerlink" href="#5-add-an-interface" title="Permanent link">¶</a></h2>
 <p>界面是一个 JavaScript 模块，页面把它加载到一个沙箱化的框架里，放在服务器允许的某个插槽中。声明文件在哪里、模块放在哪里：</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">web_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span><span class="w">               </span><span class="c1"># 作为静态资源提供的目录</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">frontend</span><span class="p">:</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">slot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">home.section</span><span class="w">       </span><span class="c1"># 见插槽列表</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/index.js</span><span class="w">       </span><span class="c1"># 必须位于 web_root 之下</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">web_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span><span class="w">               </span><span class="c1"># 作为静态资源提供的目录</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">frontend</span><span class="p">:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">slot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">home.section</span><span class="w">       </span><span class="c1"># 见插槽列表</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/index.js</span><span class="w">       </span><span class="c1"># 必须位于 web_root 之下</span>
 </span></code></pre></div>
 <p>模块会拿到一个 <code>window.evey</code> 桥接接口：<code>evey.onInit</code> 把插件的配置、语言区域、主题以及它所在的界面类型交给它；
 <code>evey.resize</code>、<code>evey.toast</code> 和 <code>evey.navigate</code> 在固定的限度内操作页面；当清单声明了 <code>prefs</code> 或 <code>public</code> 时，
 <code>evey.prefs.*</code> 和 <code>evey.media.*</code> 会借助宿主为框架持有的一个短期令牌访问服务器。
-<code>examples/plugins/weather</code> 是一个带构建步骤的完整小组件；<code>examples/plugins/data-demo</code> 演示了 <code>prefs</code>、<code>public</code> 和 <code>admin.nav</code> 插槽。
+<a href="https://github.com/eveyproject/evey-plugin-weather">evey-plugin-weather</a> 是一个带构建步骤的完整小组件；<code>examples/plugins/data-demo</code> 演示了 <code>prefs</code>、<code>public</code> 和 <code>admin.nav</code> 插槽。
 桥接接口和插槽的说明见<a href="../api-reference/#frontend-api">插件 API 参考</a>。</p>
 <h2 id="6-reach-the-outside-world">6. 与外界通信<a class="headerlink" href="#6-reach-the-outside-world" title="Permanent link">¶</a></h2>
 <p>在启动器运行的每一种模式下，插件进程都不能打开通向互联网的套接字（没有启动器的 <code>basic</code> 只拒绝 <code>execve</code>）。唯一的途径是 <code>HostService</code> 的 <code>Fetch</code> 调用：
 服务器按清单检查目标，然后由它自己发出请求。</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">permissions</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">external_fetch</span><span class="p">:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.open-meteo.com</span><span class="w">       </span><span class="c1"># 单纯的主机名：不带协议、不用通配符、不写 IP</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nt">external_fetch</span><span class="p">:</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.open-meteo.com</span><span class="w">       </span><span class="c1"># 单纯的主机名：不带协议、不用通配符、不写 IP</span>
 </span></code></pre></div>
 <p>声明了 <code>network</code> 却没有 <code>external_fetch</code>，安装会被拒绝。运行时，代理只接受 <code>http</code> 和 <code>https</code>、<code>GET</code> 和 <code>HEAD</code>，
 在 20 秒内返回最多 8 MiB 的响应，并且拒绝私有或保留地址，经过重定向也一样。界面的框架拿到同一份主机列表作为它的 <code>connect-src</code>，
@@ -3631,26 +3686,26 @@
 <ol>
 <li>
 <p><strong>只需一次：生成一对密钥。</strong></p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 请设置一个真正的口令；cosign.key 必须保密，绝不要提交到仓库</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>generate-key-pair
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># -&gt; cosign.key（私钥）和 cosign.pub（您分发出去的文件）</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 请设置一个真正的口令；cosign.key 必须保密，绝不要提交到仓库</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>generate-key-pair
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># -&gt; cosign.key（私钥）和 cosign.pub（您分发出去的文件）</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>每次发布：把您的公钥放在插件根目录，再打包，再签名</strong>，签的必须是您要分发的那个文件。</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>hello-plugin.zip
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>hello-plugin.zip
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>发出之前先检查</strong>，用和服务器相同的验证方式：</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>--signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--insecure-ignore-tlog<span class="w"> </span>hello-plugin.zip<span class="w">      </span><span class="c1"># -&gt; Verified OK</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>--signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--insecure-ignore-tlog<span class="w"> </span>hello-plugin.zip<span class="w">      </span><span class="c1"># -&gt; Verified OK</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3677,7 +3732,7 @@
 <p>每一步都可能拒绝这个包；管理员会看到原因，服务器日志里有详细信息。</p>
 <ol>
 <li><strong>清单。</strong> 直接从 ZIP 包里读取 <code>plugin.yaml</code>：必填字段、semver 版本号、已知的权限和能力、插槽在允许列表里、
-   <code>external_fetch</code> 的条目是纯主机名、声明了 <code>frontend</code> 时有 <code>web_root</code>。声明的 <code>language</code> 必须是镜像里有的运行时。</li>
+   <code>external_fetch</code> 的条目是纯主机名、声明了 <code>frontend</code> 时有 <code>web_root</code>。入口必须能启动：它的第一个词是插件包里的文件或镜像里的命令，通过 shebang 启动的脚本（<code>entrypoint: main.py</code>）还要求镜像里有其 <code>language</code> 对应的解释器。</li>
 <li><strong>版本和权限升级。</strong> 对于已经安装的插件，新版本必须更高；任何新增的权限、能力、插槽或主机，都会让安装停在这一步，
    直到管理员批准这些差异（上传路由上的 <code>accept_permission_changes=true</code>）。</li>
 <li><strong>签名和哈希。</strong> 除非策略为 <code>off</code>，签名会根据插件包自带的 <code>cosign.pub</code> 来验证；只有在 <code>enforce</code> 下，验证失败才会阻止安装。ZIP 包的哈希会被记录下来，
@@ -3735,9 +3790,9 @@
 </thead>
 <tbody>
 <tr>
-<td><code>plugin requires "nodejs" runtime which is not installed in this image</code></td>
-<td>这个镜像版本缺少对应的解释器。</td>
-<td>使用默认镜像或 <code>-nodejs</code> 镜像，或者用 Python 编写插件。</td>
+<td><code>plugin (language "nodejs", entrypoint "node main.js") cannot run on this image: the entrypoint runs "node", which is neither installed in this image nor shipped by the plugin</code></td>
+<td>这个镜像缺少入口所写的运行时。</td>
+<td>使用默认镜像或 <code>-nodejs</code> 镜像，<a href="#a-runtime-the-image-does-not-carry">把运行时加进镜像</a>，或者用 Python 编写插件。</td>
 </tr>
 <tr>
 <td><code>manifest: external_fetch entry "*.tmdb.org" is a wildcard - use explicit hostnames</code></td>
@@ -3787,7 +3842,7 @@
 </tbody>
 </table>
 <!-- sources
-runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries, compiledLanguages ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full)
+runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - CheckEntrypoint, shebangInterpreters ; launcher_resolve.go - lookupLauncher, computeRuntimeReadPaths, runtimeRootExposable ; runner_start.go - resolveCommand, buildPluginEnv (JAVA_TOOL_OPTIONS, DOTNET_GCHeapHardLimit) ; runner_landlock.go - safeProcFiles ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full) ; added runtimes measured by pluginrunner/runner_runtimes_test.go - TestRuntimeLaunchers (scripts/plugin-runtimes-itest.sh, testdata/runtimes/Dockerfile)
 stubs copied at start, NODE_PATH: internal/adapters/driven/filesystem/plugin_fs.go - CopySDKStubs ; internal/adapters/driven/pluginrunner/runner_start.go ; sdk/python/README.md ; examples/plugins/nodejs-example/package.json
 dev stack: DEV.md (Quick Start) ; Makefile - setup, dev ; docker-compose.yml (evey-data/plugins:/data/plugins)
 example: examples/plugins/nodejs-example/main.js, plugin.yaml

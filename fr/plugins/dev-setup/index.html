@@ -2540,6 +2540,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. Prérequis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-runtime-the-image-does-not-carry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Un environnement que l'image n'embarque pas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3254,6 +3271,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. Prérequis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-runtime-the-image-does-not-carry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Un environnement que l'image n'embarque pas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3437,13 +3471,7 @@ les hôtes qu'il a déclarés.</p>
 </tr>
 </tbody>
 </table>
-<p>Choisissez le langage de votre plugin parmi les environnements que le serveur
-sait lancer : <code>python</code>, <code>nodejs</code>, <code>php</code>, <code>ruby</code>, <code>lua</code>, <code>bash</code> et <code>sh</code> ont
-besoin de leur interpréteur dans l'image, <code>go</code> livre un binaire compilé et
-demande la permission <code>native-binary</code>. L'image par défaut embarque
-Python, Node.js, PHP, Ruby et Lua ; l'image <code>-nodejs</code> garde Python et Node.js
-et l'image <code>-lean</code> ne garde que Python. Un manifeste qui nomme un environnement absent de l'image est refusé
-à l'installation, avec la liste des environnements disponibles.</p>
+<p>Choisissez le langage de votre plugin. Le point d'entrée nomme ce qui le lance : un environnement de l'image (<code>node main.js</code>, <code>python3 main.py</code>, <code>java -jar plugin.jar</code>, <code>dotnet plugin.dll</code>) ou un binaire que le paquet livre (<code>go</code>, avec la permission <code>native-binary</code>). L'image par défaut embarque Python, Node.js, PHP, Ruby et Lua ; l'image <code>-nodejs</code> garde Python et Node.js et l'image <code>-lean</code> ne garde que Python. Tout autre environnement s'ajoute à l'image (<a href="#a-runtime-the-image-does-not-carry">ci-dessous</a>). Un plugin dont le point d'entrée nomme une commande absente de l'image, et que son paquet ne livre pas, est refusé à l'installation.</p>
 <p>Ce que chaque image fournit à un plugin, selon <code>language</code> :</p>
 <table>
 <thead>
@@ -3531,12 +3559,35 @@ livrez-les dans le ZIP :</p>
 </span></code></pre></div>
 <p><code>make plugin-sdk</code> régénère les stubs fournis ; chaque <code>sdk/&lt;lang&gt;/README.md</code>
 nomme le plugin gRPC dont son langage a besoin.</p>
+<h3 id="a-runtime-the-image-does-not-carry">Un environnement que l'image n'embarque pas<a class="headerlink" href="#a-runtime-the-image-does-not-carry" title="Permanent link">¶</a></h3>
+<p>Installez l'environnement dans une image construite par-dessus celle d'Evey, et utilisez cette image dans votre <code>compose.yaml</code>. Le serveur lance n'importe quelle commande de son <code>PATH</code>, rien d'autre ne change. Deux exemples, un JRE pour les plugins livrés en <code>.jar</code> et l'environnement .NET pour les plugins livrés en <code>.dll</code> :</p>
+<div class="language-dockerfile highlight"><span class="filename">Dockerfile</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">eveyproject/evey:latest</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Java: plugins shipped as a .jar, started by "java -jar plugin.jar"</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># (the JRE's install script links its manual page, a slim image has no man1)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">RUN</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/share/man/man1<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span>openjdk-21-jre-headless<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># .NET: plugins shipped as a .dll, started by "dotnet plugin.dll"</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb<span class="w"> </span>-o<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span>dotnet-runtime-8.0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span></code></pre></div>
+<p>Le manifeste du plugin nomme l'environnement dans son point d'entrée. L'analyse statique ne sait pas lire un <code>.jar</code> ni une <code>.dll</code> ; le paquet déclare donc <code>native-binary</code>, comme un plugin Go compilé :</p>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java</span><span class="w">                  </span><span class="c1"># a label: no stubs are copied for it</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java -jar plugin.jar</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native-binary</span>
+</span></code></pre></div>
+<p>Le paquet apporte sa propre implémentation gRPC (grpc-java dans le <code>.jar</code>, Grpc.Net dans le dossier de la <code>.dll</code>). Dans la sandbox, le plugin voit, en plus des dossiers système habituels, le dossier d'installation de l'environnement quand il se trouve sous <code>/opt</code> et les dossiers de <code>/etc</code> vers lesquels le paquet de l'environnement pointe (<code>/etc/alternatives</code>, <code>/etc/java-21-openjdk</code>), rien de plus. Un runtime installé ailleurs en dehors des dossiers système, ou dans un dossier qui contient aussi les plugins ou le serveur, est refusé : installez-le sous <code>/usr</code> ou dans un dossier à lui sous <code>/opt</code>. La JVM et le ramasse-miettes de .NET dimensionnent leur tas d'après la limite de mémoire du plugin (<strong>Mémoire max (Mio)</strong> dans <strong>Limites de ressources</strong>), pas d'après la mémoire de l'hôte ; un <code>-Xmx</code> sur le point d'entrée garde la priorité pour Java.</p>
 <h2 id="2-bring-up-evey-locally">2. Lancer Evey en local<a class="headerlink" href="#2-bring-up-evey-locally" title="Permanent link">¶</a></h2>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:eveyproject/evey.git
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>evey
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cp<span class="w"> </span>.env.dev.example<span class="w"> </span>.env.dev<span class="w">   </span><span class="c1"># puis renseignez MEDIA_DIR, EVEY_DB_PASSWORD, MEILI_MASTER_KEY</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>make<span class="w"> </span>setup<span class="w">                      </span><span class="c1"># une fois : ajoute evey.test à /etc/hosts</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres, meilisearch, le serveur (Air), l'application web (Vite)</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:eveyproject/evey.git
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>evey
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cp<span class="w"> </span>.env.dev.example<span class="w"> </span>.env.dev<span class="w">   </span><span class="c1"># puis renseignez MEDIA_DIR, EVEY_DB_PASSWORD, MEILI_MASTER_KEY</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>make<span class="w"> </span>setup<span class="w">                      </span><span class="c1"># une fois : ajoute evey.test à /etc/hosts</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres, meilisearch, le serveur (Air), l'application web (Vite)</span>
 </span></code></pre></div>
 <p>Ouvrez <code>https://evey.test</code>. L'assistant d'installation crée le compte
 administrateur au premier lancement, comme décrit dans
@@ -3551,25 +3602,26 @@ et l'installons.</p>
 <ol>
 <li>
 <p><strong>Copiez l'exemple.</strong></p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>-r<span class="w"> </span>examples/plugins/nodejs-example<span class="w"> </span>~/hello-plugin
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>~/hello-plugin
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>-r<span class="w"> </span>examples/plugins/nodejs-example<span class="w"> </span>~/hello-plugin
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">cd</span><span class="w"> </span>~/hello-plugin
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Donnez-lui un nom.</strong> Modifiez <code>plugin.yaml</code> :</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-plugin</span><span class="w">          </span><span class="c1"># unique, en kebab-case</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">              </span><span class="c1"># semver : à incrémenter à chaque envoi</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dit bonjour dans son journal</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vous</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">            </span><span class="c1"># l'environnement que le serveur doit avoir</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node main.js</span><span class="w">    </span><span class="c1"># la ligne de commande que le serveur lance</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">permissions</span><span class="p">:</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.library</span><span class="w">             </span><span class="c1"># laisse le backend lire les médias</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-plugin</span><span class="w">          </span><span class="c1"># unique, en kebab-case</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">              </span><span class="c1"># semver : à incrémenter à chaque envoi</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dit bonjour dans son journal</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vous</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">            </span><span class="c1"># l'environnement que le serveur doit avoir</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node main.js</span><span class="w">    </span><span class="c1"># la ligne de commande que le serveur lance</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.library</span><span class="w">             </span><span class="c1"># laisse le backend lire les médias</span>
 </span></code></pre></div>
-<p><code>language</code> indique au serveur quel environnement vérifier et quels stubs
-copier ; <code>entrypoint</code> est ce qu'il lance, dans le dossier du plugin, avec
-l'environnement de l'étape suivante.</p>
+<p><code>language</code> indique au serveur quels stubs copier ; <code>entrypoint</code> est ce
+qu'il lance, dans le dossier du plugin, avec l'environnement de l'étape
+suivante. Son premier mot est une commande de l'image (<code>node</code>) ou un
+fichier du paquet.</p>
 </li>
 <li>
 <p><strong>Lisez <code>main.js</code>.</strong> Le serveur passe trois variables au processus :
@@ -3579,16 +3631,16 @@ l'environnement de l'étape suivante.</p>
    L'exemple charge <code>plugin_api.proto</code> depuis son propre dossier, où le
    serveur l'a copié, et implémente les cinq méthodes de <code>PluginService</code>.
    Changez le message dans <code>Initialize</code> :</p>
-<div class="language-js highlight"><span class="filename">main.js (extrait)</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">Initialize</span><span class="p">(</span><span class="nx">call</span><span class="p">,</span><span class="w"> </span><span class="nx">callback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">hostLog</span><span class="p">(</span><span class="s2">"LOG_LEVEL_INFO"</span><span class="p">,</span><span class="w"> </span><span class="sb">`bonjour de </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EVEY_PLUGIN_ID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">},</span>
+<div class="language-js highlight"><span class="filename">main.js (extrait)</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">Initialize</span><span class="p">(</span><span class="nx">call</span><span class="p">,</span><span class="w"> </span><span class="nx">callback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">hostLog</span><span class="p">(</span><span class="s2">"LOG_LEVEL_INFO"</span><span class="p">,</span><span class="w"> </span><span class="sb">`bonjour de </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EVEY_PLUGIN_ID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">},</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Compressez-le.</strong> Le manifeste doit être à la racine de l'archive, pas
    dans un sous-dossier :</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3596,9 +3648,9 @@ l'environnement de l'étape suivante.</p>
    choisissez le ZIP puis <strong>Aperçu et installation</strong> : l'aperçu liste
    <code>api.library</code> et le résultat de l'analyse statique. Par l'API, le même
    envoi s'écrit :</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s2">"plugin=@hello-plugin.zip"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$EVEY_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">     </span>https://evey.test/api/v1/admin/plugins/upload
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s2">"plugin=@hello-plugin.zip"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$EVEY_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">     </span>https://evey.test/api/v1/admin/plugins/upload
 </span></code></pre></div>
 </li>
 <li>
@@ -3638,10 +3690,10 @@ dans le contrat mais pas encore servies, est dans la
 <p>Une interface est un module JavaScript que la page charge dans un cadre isolé,
 dans l'un des emplacements que le serveur autorise. Déclarez où sont les
 fichiers et où va le module :</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">web_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span><span class="w">               </span><span class="c1"># le dossier servi comme ressources statiques</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">frontend</span><span class="p">:</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">slot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">home.section</span><span class="w">       </span><span class="c1"># voir la liste des emplacements</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/index.js</span><span class="w">       </span><span class="c1"># doit être sous web_root</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">web_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span><span class="w">               </span><span class="c1"># le dossier servi comme ressources statiques</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">frontend</span><span class="p">:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">slot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">home.section</span><span class="w">       </span><span class="c1"># voir la liste des emplacements</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/index.js</span><span class="w">       </span><span class="c1"># doit être sous web_root</span>
 </span></code></pre></div>
 <p>Le module reçoit un pont <code>window.evey</code> : <code>evey.onInit</code> lui remet la
 configuration du plugin, la langue, le thème et la surface sur laquelle il
@@ -3649,7 +3701,7 @@ s'affiche ; <code>evey.resize</code>, <code>evey.toast</code> et <code>evey.navi
 page dans des limites fixes ; et, quand le manifeste déclare <code>prefs</code> ou
 <code>public</code>, <code>evey.prefs.*</code> et <code>evey.media.*</code> atteignent le serveur par un jeton
 de courte durée que l'hôte détient pour le cadre.
-<code>examples/plugins/weather</code> est un widget complet avec une étape de build ;
+<a href="https://github.com/eveyproject/evey-plugin-weather">evey-plugin-weather</a> est un widget complet avec une étape de build ;
 <code>examples/plugins/data-demo</code> montre <code>prefs</code>, <code>public</code> et l'emplacement
 <code>admin.nav</code>. Le pont et les emplacements sont décrits dans la
 <a href="../api-reference/#frontend-api">référence de l'API</a>.</p>
@@ -3658,10 +3710,10 @@ de courte durée que l'hôte détient pour le cadre.
 les modes où le lanceur tourne (<code>basic</code> sans le lanceur interdit seulement <code>execve</code>). Le seul accès possible est l'appel <code>Fetch</code> de
 <code>HostService</code> : le serveur vérifie la cible contre le manifeste, puis fait la
 requête lui-même.</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">permissions</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">external_fetch</span><span class="p">:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.open-meteo.com</span><span class="w">       </span><span class="c1"># noms d'hôte nus : pas de schéma, pas de joker, pas d'IP</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nt">external_fetch</span><span class="p">:</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.open-meteo.com</span><span class="w">       </span><span class="c1"># noms d'hôte nus : pas de schéma, pas de joker, pas d'IP</span>
 </span></code></pre></div>
 <p><code>network</code> sans <code>external_fetch</code> est refusé à l'installation. À l'exécution, le
 courtier accepte <code>http</code> et <code>https</code>, <code>GET</code> et <code>HEAD</code>, répond jusqu'à 8 Mio en
@@ -3699,28 +3751,28 @@ lesquelles le format d'Evey est vérifié.</p>
 <ol>
 <li>
 <p><strong>Une fois : générez une paire de clés.</strong></p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># choisissez une vraie phrase de passe ; cosign.key reste privée, ne la committez jamais</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"votre-phrase-de-passe"</span><span class="w"> </span>cosign<span class="w"> </span>generate-key-pair
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># -&gt; cosign.key (privée) et cosign.pub (le fichier que vous distribuez)</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># choisissez une vraie phrase de passe ; cosign.key reste privée, ne la committez jamais</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"votre-phrase-de-passe"</span><span class="w"> </span>cosign<span class="w"> </span>generate-key-pair
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># -&gt; cosign.key (privée) et cosign.pub (le fichier que vous distribuez)</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>À chaque version : placez votre clé publique à la racine du plugin,
    compressez, puis signez</strong> le fichier exact que vous distribuerez.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"votre-phrase-de-passe"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>hello-plugin.zip
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"votre-phrase-de-passe"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>hello-plugin.zip
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Vérifiez avant de livrer</strong>, avec la même vérification que fait le
    serveur :</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>--signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--insecure-ignore-tlog<span class="w"> </span>hello-plugin.zip<span class="w">      </span><span class="c1"># -&gt; Verified OK</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>--signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--insecure-ignore-tlog<span class="w"> </span>hello-plugin.zip<span class="w">      </span><span class="c1"># -&gt; Verified OK</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3780,8 +3832,10 @@ journal du serveur contient le détail.</p>
 <li><strong>Manifeste.</strong> <code>plugin.yaml</code> est lu directement dans le ZIP : champs
    obligatoires, semver, permissions et capacités connues, emplacements dans
    la liste autorisée, entrées <code>external_fetch</code> qui sont des noms d'hôte nus,
-   <code>web_root</code> présent quand <code>frontend</code> est déclaré. Le <code>language</code> déclaré doit
-   être un environnement de l'image.</li>
+   <code>web_root</code> présent quand <code>frontend</code> est déclaré. Le point d'entrée doit
+   pouvoir démarrer : son premier mot est un fichier du paquet ou une commande
+   de l'image, et un script lancé par son shebang (<code>entrypoint: main.py</code>)
+   demande l'interpréteur de son <code>language</code> dans l'image.</li>
 <li><strong>Version et escalade.</strong> Pour un plugin déjà installé, la nouvelle version
    doit être supérieure, et toute nouvelle permission, capacité, emplacement
    ou hôte arrête l'installation ici tant que l'administrateur n'a pas
@@ -3870,9 +3924,9 @@ version est poussée.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>plugin requires "nodejs" runtime which is not installed in this image</code></td>
-<td>La variante d'image n'a pas l'interpréteur.</td>
-<td>Utilisez l'image par défaut ou <code>-nodejs</code>, ou écrivez le plugin en Python.</td>
+<td><code>plugin (language "nodejs", entrypoint "node main.js") cannot run on this image: the entrypoint runs "node", which is neither installed in this image nor shipped by the plugin</code></td>
+<td>L'image n'a pas l'environnement que nomme le point d'entrée.</td>
+<td>Utilisez l'image par défaut ou <code>-nodejs</code>, <a href="#a-runtime-the-image-does-not-carry">ajoutez l'environnement à l'image</a>, ou écrivez le plugin en Python.</td>
 </tr>
 <tr>
 <td><code>manifest: external_fetch entry "*.tmdb.org" is a wildcard - use explicit hostnames</code></td>
@@ -3922,7 +3976,7 @@ version est poussée.</p>
 </tbody>
 </table>
 <!-- sources
-runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries, compiledLanguages ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full)
+runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - CheckEntrypoint, shebangInterpreters ; launcher_resolve.go - lookupLauncher, computeRuntimeReadPaths, runtimeRootExposable ; runner_start.go - resolveCommand, buildPluginEnv (JAVA_TOOL_OPTIONS, DOTNET_GCHeapHardLimit) ; runner_landlock.go - safeProcFiles ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full) ; added runtimes measured by pluginrunner/runner_runtimes_test.go - TestRuntimeLaunchers (scripts/plugin-runtimes-itest.sh, testdata/runtimes/Dockerfile)
 stubs copied at start, NODE_PATH: internal/adapters/driven/filesystem/plugin_fs.go - CopySDKStubs ; internal/adapters/driven/pluginrunner/runner_start.go ; sdk/python/README.md ; examples/plugins/nodejs-example/package.json
 dev stack: DEV.md (Quick Start) ; Makefile - setup, dev ; docker-compose.yml (evey-data/plugins:/data/plugins)
 example: examples/plugins/nodejs-example/main.js, plugin.yaml

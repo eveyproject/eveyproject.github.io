@@ -2504,6 +2504,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#official-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        官方插件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3219,6 +3230,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#official-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        官方插件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3353,6 +3375,53 @@
 <figcaption>装了示例天气插件：最上面多了一个栏目，在它自己的框架里绘制（界面为英文）。</figcaption>
 </figure>
 </div>
+<h2 id="official-plugins">官方插件<a class="headerlink" href="#official-plugins" title="Permanent link">¶</a></h2>
+<p>Evey 项目发布了下面这些插件和主题，每个都有自己的仓库。要安装其中一个，
+把它的仓库链接粘贴到<strong>安装插件</strong>的<strong>从 URL 安装</strong>选项卡里：服务器会取最新的 release，
+之后安装包会关联这个仓库来获取更新。它们的 release 用项目的密钥签名，这个密钥从一开始就受信任。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>作用</th>
+<th>仓库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>天气</td>
+<td>插件</td>
+<td>在首页显示本地天气，背景是与之相符的天空。</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-weather">evey-plugin-weather</a></td>
+</tr>
+<tr>
+<td>Marquee</td>
+<td>插件</td>
+<td>用您的媒体库拼成的海报墙，还有一个轮盘帮您挑选今晚看什么。</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-marquee">evey-plugin-marquee</a></td>
+</tr>
+<tr>
+<td>Librarian</td>
+<td>插件</td>
+<td>列出可能重复的影片，以及带编号的系列中缺少的影片。它只读取媒体库，从不改动任何文件。</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-librarian">evey-plugin-librarian</a></td>
+</tr>
+<tr>
+<td>CShell</td>
+<td>主题</td>
+<td>终端风格：纯黑、琥珀色、等宽字体。</td>
+<td><a href="https://github.com/eveyproject/evey-theme-cshell">evey-theme-cshell</a></td>
+</tr>
+<tr>
+<td>深蓝</td>
+<td>主题</td>
+<td>一个深蓝色的配色主题。</td>
+<td><a href="https://github.com/eveyproject/evey-theme-dark-blue">evey-theme-dark-blue</a></td>
+</tr>
+</tbody>
+</table>
+<p>想自己写一个，可以从 <a href="https://github.com/eveyproject/evey-plugin-template">evey-plugin-template</a> 这个仓库开始：一个最小的插件、它的测试，以及为其 release 签名的 workflow。</p>
 <h2 id="install-a-plugin">安装插件<a class="headerlink" href="#install-a-plugin" title="Permanent link">¶</a></h2>
 <ol>
 <li>在<strong>管理 → 插件</strong>里，打开<strong>安装插件</strong>，选择<strong>插件文件 (.zip)</strong>。如果作者提供了签名，
@@ -3373,8 +3442,9 @@
 <figcaption><strong>管理 → 插件</strong>：可用的运行时、资源限制，以及每个插件各一张卡片（界面为英文）。</figcaption>
 </figure>
 <p>如果分析在安装包里发现了严重的问题，不管您怎么回答，安装都会被拒绝。警告会显示出来，由您决定。
-插件使用的语言必须在服务器的<strong>可用运行时</strong>里：默认镜像带有 Python、Node.js、PHP、Ruby 和 Lua，<code>-nodejs</code> 镜像保留 Python 和 Node.js，
-<code>-lean</code> 镜像只保留 Python。</p>
+启动插件的运行时必须在服务器的镜像里：默认镜像带有 Python、Node.js、PHP、Ruby 和 Lua，<code>-nodejs</code> 镜像保留 Python 和 Node.js，
+<code>-lean</code> 镜像只保留 Python，<a href="dev-setup/#a-runtime-the-image-does-not-carry">其他运行时则要加进镜像</a>。
+<strong>可用运行时</strong>列出服务器找到的运行时，以及每个已安装插件所用的那个。</p>
 <div class="admonition tip">
 <p class="admonition-title">签名的插件</p>
 <p>插件作者可以用 <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a> 给 ZIP 签名，
@@ -3538,6 +3608,7 @@ CPU 优先级对之后启动的插件生效；更改沙箱模式会立即重启�
 <p>主题是一个 <code>kind: theme</code> 的安装包，没有进程：一个样式表，还可以带一个在隐藏框架中受限运行的脚本。
 它也是通过同一个<strong>安装插件</strong>对话框安装的；样式表在安装时会被清理。之后，每个用户在<strong>设置 → 外观 → 主题</strong>里选择它。
 主题可以包含什么，见<a href="../themes/">主题</a>。</p>
+<p>项目自己的主题列在<a href="#official-plugins">官方插件</a>里。</p>
 <h2 id="writing-a-plugin">编写插件<a class="headerlink" href="#writing-a-plugin" title="Permanent link">¶</a></h2>
 <table>
 <thead>

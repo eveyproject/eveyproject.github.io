@@ -3598,7 +3598,7 @@
 <div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-plugin</span><span class="w">              </span><span class="c1"># 必填；唯一，kebab-case 格式</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2.3</span><span class="w">               </span><span class="c1"># 必填；semver，X.Y.Z 或 X.Y.Z-label</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span><span class="w">                 </span><span class="c1"># 必填；"plugin" 或 "theme"</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">             </span><span class="c1"># 插件必填；镜像里的一个运行时</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">             </span><span class="c1"># 插件必填；决定复制哪些存根</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node index.js</span><span class="w">    </span><span class="c1"># 插件必填；服务器执行的命令行</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">My Plugin</span><span class="w">      </span><span class="c1"># 可选；一个字符串，或一个映射 {en: ..., fr: ...}</span>
@@ -3647,11 +3647,11 @@
 </tr>
 <tr>
 <td><code>language</code></td>
-<td><code>kind: plugin</code> 必填：<code>python</code>、<code>nodejs</code>、<code>php</code>、<code>ruby</code>、<code>lua</code>、<code>bash</code>、<code>sh</code> 或 <code>go</code>。它决定检查哪个运行时、把哪些存根复制到入口旁边；它本身不启动任何东西。</td>
+<td><code>kind: plugin</code> 必填，可以是任意值。它决定把哪些存根复制到入口旁边（即 <code>sdk/&lt;language&gt;/</code> 里的）。对于通过 shebang 启动的脚本（<code>entrypoint: main.py</code>），<code>python</code>、<code>nodejs</code>、<code>php</code>、<code>ruby</code>、<code>lua</code>、<code>bash</code> 和 <code>sh</code> 还要求镜像里有对应的解释器。它本身不启动任何东西。</td>
 </tr>
 <tr>
 <td><code>entrypoint</code></td>
-<td><code>kind: plugin</code> 必填。第一个词是解释器（声明了 <code>native-binary</code> 时是二进制文件），其余是它的参数；进程在插件的目录里运行。</td>
+<td><code>kind: plugin</code> 必填。第一个词是插件包里的文件（二进制文件，声明了 <code>native-binary</code> 时；或脚本），或者是镜像里能在其 <code>PATH</code> 中找到的命令（<code>node</code>、<code>python3</code>、<code>java</code>、<code>dotnet</code>），其余是它的参数；命令找不到会让安装被拒绝。进程在插件的目录里运行。</td>
 </tr>
 <tr>
 <td><code>permissions</code></td>
@@ -3923,7 +3923,7 @@
 <li><strong>没有焦点，也没有指针。</strong> 小组件永远不会获得方向键的焦点，也没有悬停效果；任何需要交互的东西都应放在网页和移动端。</li>
 <li><strong>文字不要贴着边缘。</strong> 电视会过扫描：每一边都留出大约 5% 的宽度和高度。</li>
 <li><strong>在真实的电视盒上测试 WebGL。</strong> 着色器运行在电视盒自己的 GPU 和驱动上，而不是您电脑上的；噪声坐标要保持在有限范围内。
-  <code>tests/plugins/weather-v2</code> 是以上所有要点的参考小组件。</li>
+  <a href="https://github.com/eveyproject/evey-plugin-weather">eveyproject/evey-plugin-weather</a> 是以上所有要点的参考小组件。</li>
 </ul>
 <h2 id="slots">插槽<a class="headerlink" href="#slots" title="Permanent link">¶</a></h2>
 <table>
@@ -3988,12 +3988,12 @@
 </div>
 <h2 id="examples">示例<a class="headerlink" href="#examples" title="Permanent link">¶</a></h2>
 <p><code>examples/plugins/</code> 里有按当前清单格式编写、可以直接运行的插件：Node.js 和 Python 的入门示例（<code>nodejs-example</code>、<code>python-example</code>）、
-一个元数据提供方（<code>metadata-example</code>）、一个 Webhook 接收端（<code>webhook-receiver</code>）、一个带构建步骤的首页小组件（<code>weather</code>）、
-一个演示数据存储、<code>public</code> 和 <code>prefs</code> 权限以及 <code>admin.nav</code> 插槽的示例（<code>data-demo</code>）、一个展示所有 <code>config_schema</code> 字段类型的示例，带有一个 <code>admin.nav</code> 页面（<code>config-demo</code>），
-以及两个主题（<code>theme-dark-blue</code>、<code>open-workshop</code>）。<code>make plugin-zips</code> 会把它们全部打包。</p>
+一个元数据提供方（<code>metadata-example</code>）、一个 Webhook 接收端（<code>webhook-receiver</code>）、
+一个演示数据存储、<code>public</code> 和 <code>prefs</code> 权限以及 <code>admin.nav</code> 插槽的示例（<code>data-demo</code>），以及一个展示所有 <code>config_schema</code> 字段类型的示例，带有一个 <code>admin.nav</code> 页面（<code>config-demo</code>）。
+<code>make plugin-zips</code> 会把它们全部打包。项目自己的插件和主题（天气小组件、CShell、Dark Blue 等）各自位于 <a href="https://github.com/eveyproject">eveyproject</a> 下的独立仓库中。</p>
 <!-- sources
 manifest fields, validation: internal/domain/plugin/model.go - PluginManifest, Validate, validateWebRoot, validateSrcUnderWebRoot, IsSecretConfigField ; internal/adapters/driven/pluginrunner/manifest.go - Parse, validateManifest, validateExternalFetch ; capabilities.go - KnownCapabilities, KnownPermissions
-runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go ; interpreters: runner_start.go - knownInterpreters
+runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go - CheckEntrypoint ; launchers: runner_start.go - resolveCommand ; launcher_resolve.go - lookupLauncher
 config field types: frontend/apps/web/src/features/admin/PluginCard.tsx ; examples/plugins/config-demo/plugin.yaml
 secrets masked: internal/adapters/driving/grpcapi/admin_plugin.go (SecretMask)
 env vars, Initialize call: internal/adapters/driven/pluginrunner/runner_start.go ; ipc_client.go - Initialize, Shutdown, HealthCheck, OnEvent ; runner_control.go - SendEvent (no caller)

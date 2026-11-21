@@ -4301,8 +4301,8 @@ link-local 地址。它不使用环境变量里的代理（<code>HTTPS_PROXY</co
 <h3 id="landlock"><code>landlock</code><a class="headerlink" href="#landlock" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>文件系统：</strong> 由启动器应用的 Landlock 允许列表。系统目录（<code>/usr</code>、<code>/lib</code>、<code>/lib64</code>、<code>/bin</code>、<code>/sbin</code>、<code>/etc</code>、<code>/app</code>）只读；
-  <code>/dev</code> 里只有 <code>null</code>、<code>zero</code>、<code>full</code>、<code>random</code> 和 <code>urandom</code>，所以显卡节点和服务器的终端都无法访问；插件的目录和套接字目录可读写；
-  其他一切，包括 <code>/data</code> 和其他插件，一律拒绝。获得了 <code>hardware.gpu</code> 权限的插件，作为唯一的例外，可以访问它的渲染节点。</li>
+  <code>/dev</code> 里只有 <code>null</code>、<code>zero</code>、<code>full</code>、<code>random</code> 和 <code>urandom</code>，所以显卡节点和服务器的终端都无法访问；<code>/proc</code> 里只有插件自己的 <code>maps</code>，所以容器的连接（<code>net/tcp</code>）、挂载点和其他进程都无法访问；插件的目录和套接字目录可读写；
+  其他一切，包括 <code>/data</code> 和其他插件，一律拒绝。由安装在 <code>/opt</code> 下它自己目录里的运行时启动的插件，还可以读取该目录；安装在系统目录之外其他任何位置、或其目录会包含插件或服务器的运行时，会被拒绝。获得了 <code>hardware.gpu</code> 权限的插件，作为唯一的例外，可以访问它的渲染节点。</li>
 <li><strong>网络：</strong> <code>-restrict-net</code> 和 <code>-deny-inet</code>；只能通过 <code>Fetch</code> 外连。</li>
 <li><strong>系统调用：</strong> 内核过滤器和 <code>LD_PRELOAD</code> 过滤器。</li>
 <li><strong>要求：</strong> 5.13 或更新的内核，且 Landlock 在已启用的 LSM 列表里，再加上启动器（在较新的宿主上使用官方镜像时，两者都满足）。
@@ -4353,7 +4353,8 @@ link-local 地址。它不使用环境变量里的代理（<code>HTTPS_PROXY</co
 - <strong>系统调用：</strong> 没有 seccomp 过滤器；隔离由命名空间提供。
 - <strong>要求：</strong> <code>bwrap</code> 二进制文件，以及 <code>mount</code>/<code>unshare</code> 系统调用。在 Docker 里这需要放宽安全配置，所以实际上这是一种裸机模式。</p>
 <h3 id="strict"><code>strict</code><a class="headerlink" href="#strict" title="Permanent link">¶</a></h3>
-<p><code>bubblewrap</code> 加上 <code>LD_PRELOAD</code> 过滤器（只对解释型插件）。</p>
+<p><code>bubblewrap</code> 加上 <code>LD_PRELOAD</code> 过滤器，由插件自己在沙箱内加载（针对未声明 <code>subprocess</code> 的插件）。
+到 0.1.9 为止，这个模式在启动时会拒绝所有插件：过滤器由 <code>bwrap</code> 自己加载，会拒绝它创建的命名空间。</p>
 <h3 id="basic"><code>basic</code><a class="headerlink" href="#basic" title="Permanent link">¶</a></h3>
 <p><code>auto</code> 的最后选择：独立的用户、内核过滤器、<code>LD_PRELOAD</code> 过滤器、<code>-deny-inet</code>，内核支持时还有 Landlock。
 在没有 Landlock 的内核上，没有按路径的限制：插件可以读取不敏感、所有人可读的文件，也能看到进程列表。
@@ -4465,7 +4466,7 @@ link-local 地址。它不使用环境变量里的代理（<code>HTTPS_PROXY</co
 <!-- sources
 install checks: internal/adapters/driven/pluginrunner/zip.go ; internal/adapters/driven/pluginrunner/analyzer.go ; internal/adapters/driven/pluginrunner/cosign.go ; internal/app/plugin/install.go ; internal/adapters/driving/grpcapi/plugin_interceptor.go - PluginPermissionInterceptor
 package source: internal/app/plugin/install.go - CheckRequestedSource, ErrInsecureSource, downloadIfURL (http and redirect refusal, 100 MB) ; installer_service.go - SafeHTTPClientNoProxy ; internal/adapters/driving/grpcapi/admin_plugin.go - InstallPlugin, PreviewPluginUpdate, ApplyPluginUpdate ; internal/adapters/driving/http/plugin_asset_handler.go - preview JSON source ; internal/pkg/ssrf/dialer.go
-runtime: internal/adapters/driven/pluginrunner/runner_sandbox.go - applySandbox ; internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode, launcherPath, systemReadOnlyDirs, safeDevNodes ; cmd/evey-plugin-launcher/seccomp_linux.go - deniedSyscalls, selfSignalSyscalls, cloneNamespaceFlags, appendDenyForkRules ; cmd/evey-plugin-launcher/droppriv_linux.go ; sandbox/sandbox.c ; internal/adapters/driven/pluginrunner/runner_bwrap.go - buildBwrapCmd ; internal/adapters/driven/pluginrunner/sandbox_probe.go - ProbeSandbox ; internal/adapters/driving/pluginhost/fetch.go - Fetch, maxFetchBytes, maxFetchHeaderBytes, fetchTimeout ; cmd/evey/hardening_linux.go
+runtime: internal/adapters/driven/pluginrunner/runner_sandbox.go - applySandbox ; internal/adapters/driven/pluginrunner/runner_landlock.go - resolveAutoMode, launcherPath, systemReadOnlyDirs, safeDevNodes, safeProcFiles ; launcher_resolve.go - computeRuntimeReadPaths, runtimeRootExposable ; runner_sandbox.go - applyBwrapSandbox, runner_bwrap.go - withBwrapPreload (strict) ; cmd/evey-plugin-launcher/seccomp_linux.go - deniedSyscalls, selfSignalSyscalls, cloneNamespaceFlags, appendDenyForkRules ; cmd/evey-plugin-launcher/droppriv_linux.go ; sandbox/sandbox.c ; internal/adapters/driven/pluginrunner/runner_bwrap.go - buildBwrapCmd ; internal/adapters/driven/pluginrunner/sandbox_probe.go - ProbeSandbox ; internal/adapters/driving/pluginhost/fetch.go - Fetch, maxFetchBytes, maxFetchHeaderBytes, fetchTimeout ; cmd/evey/hardening_linux.go
 resource monitor: internal/adapters/driven/pluginrunner/runner_resmon.go - defaultMemBytes, defaultPIDsMax, resMonInterval, resMonDiskEveryN, resMonCPUPegPct, resMonGPUPegPct ; internal/app/plugin/resource_config.go - ResolveResourceConfig
 bridge: frontend/packages/client/src/plugins/hostProtocol.ts - ALLOWED_NAV_PREFIXES, SLOT_MAX_HEIGHT, TOAST_MAX, TOAST_WINDOW_MS, TOAST_MAX_LENGTH ; frontend/packages/client/src/web/PluginIframe.tsx - MIN_SLOT_HEIGHT ; frontend/packages/client/src/native/PluginWebView.tsx
 config: internal/config/config.go - EVEY_PLUGINS_SANDBOX_MODE, EVEY_PLUGINS_UID_SEPARATION, EVEY_PLUGINS_COSIGN_POLICY, EVEY_PLUGINS_COSIGN_PUBLIC_KEY, EVEY_PLUGINS_MEMORY_MB, EVEY_PLUGINS_PIDS_MAX, EVEY_PLUGINS_DISK_MAX_MB, EVEY_PLUGINS_CPU_NICE, EVEY_SERVER_PORT, EVEY_GRPC_BIND

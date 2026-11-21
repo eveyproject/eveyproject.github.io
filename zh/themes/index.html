@@ -3389,7 +3389,7 @@
 <p>主题选择器用界面语言的 <code>display_name</code> 标注主题，没有则用英文，清单里没有声明时显示 <code>name</code>。
 只写一个字符串（<code>display_name: Aurora</code>）即适用于所有语言。</p>
 <p>ZIP 包的根目录里，在清单旁边放 <code>theme.css</code> 和/或 <code>theme.js</code>。两个都没有的包也能安装，但没有可见效果。
-<code>examples/plugins/theme-dark-blue</code>（一个只覆盖颜色变量的简短 <code>theme.css</code>）和 <code>examples/plugins/open-workshop</code>（一套完整的外观重设计）
+<a href="https://github.com/eveyproject/evey-theme-dark-blue">evey-theme-dark-blue</a>（一个只覆盖颜色变量的简短 <code>theme.css</code>）和 <a href="https://github.com/eveyproject/evey-theme-cshell">evey-theme-cshell</a>（一套完整的外观重设计）
 都能通过清理器，是很好的起点。</p>
 <h2 id="themecss">theme.css<a class="headerlink" href="#themecss" title="Permanent link">¶</a></h2>
 <p>样式表以 <code>&lt;link rel="stylesheet"&gt;</code> 的形式插入每个页面的 head 里，作用于整个文档：自定义属性、
@@ -3397,7 +3397,7 @@
 <code>/api/v1/themes/&lt;id&gt;/theme.css</code> 提供，不需要身份验证，所以浏览器记住的主题在登录之前就会生效。</p>
 <h3 id="start-from-the-custom-properties">从自定义属性入手<a class="headerlink" href="#start-from-the-custom-properties" title="Permanent link">¶</a></h3>
 <p>界面的各种表面、文字、强调色、边框和圆角，都取自 <code>:root</code> 上的一组自定义属性；
-<code>examples/plugins/theme-dark-blue/theme.css</code> 列出了它们，每一个都有注释。覆盖这些属性，就能一次改变所有界面的外观：</p>
+<a href="https://github.com/eveyproject/evey-theme-dark-blue/blob/main/theme.css"><code>theme.css</code> of evey-theme-dark-blue</a> 列出了它们，每一个都有注释。覆盖这些属性，就能一次改变所有界面的外观：</p>
 <div class="language-css highlight"><span class="filename">theme.css</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nv">--bg</span><span class="p">:</span><span class="w"> </span><span class="mh">#0b1120</span><span class="p">;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nv">--surface</span><span class="p">:</span><span class="w"> </span><span class="mh">#162032</span><span class="p">;</span>
@@ -3581,7 +3581,7 @@ theme selection: frontend/apps/web/src/features/user/ThemeSettings.tsx ; i18n co
 routes, auth: internal/adapters/driving/http/theme_asset_handler.go (theme.css open, theme.js authMw)
 link injection, hidden iframe, connect-src none: frontend/apps/web/src/features/themes/ThemeLoader.tsx
 sanitizer: internal/adapters/driven/pluginrunner/css_sanitizer.go - SanitizeCSS, reImport, reURLExternal, reURLExternalUnterminated, reImageSetCandidateExternal, reCustomPropExternalURL, reURLJavascript, reExpression, reMozBinding, reBehavior, reSensitiveSelector, overlaySignals.isOverlay, stripPointerEventsOnInteractive, reZIndex ; written back at install: internal/app/plugin/install.go - validateStagedPlugin
-custom properties: examples/plugins/theme-dark-blue/theme.css
+custom properties: github.com/eveyproject/evey-theme-dark-blue - theme.css
 stable hooks: frontend/apps/web/src (evey-app-header, evey-media-grid, evey-media-card, evey-poster, evey-media-detail)
 theme.js bridge: frontend/apps/web/src/features/themes/theme-bridge.ts - THEME_BRIDGE_SCRIPT ; policy: theme-css-policy.ts - applyThemeCSSPolicy, MAX_DECLARATIONS, MAX_VALUE_LENGTH, FORBIDDEN_IN_VALUE
 scanner: internal/pkg/themejs/scan.go - blockedLiterals, blockedRegex, Scan

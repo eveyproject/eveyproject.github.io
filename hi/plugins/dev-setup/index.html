@@ -2540,6 +2540,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. पहले से क्या चाहिए">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-runtime-the-image-does-not-carry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ऐसा runtime जो इमेज में नहीं है
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3254,6 +3271,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1. पहले से क्या चाहिए">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-runtime-the-image-does-not-carry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ऐसा runtime जो इमेज में नहीं है
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3436,13 +3470,7 @@ gRPC सर्विस देता है और दूसरे socket पर
 </tr>
 </tbody>
 </table>
-<p>अपने प्लगइन की भाषा उन runtime में से चुनें जिन्हें सर्वर शुरू कर सकता है:
-<code>python</code>, <code>nodejs</code>, <code>php</code>, <code>ruby</code>, <code>lua</code>, <code>bash</code> और <code>sh</code> को इमेज में अपना
-interpreter चाहिए; <code>go</code> एक compiled binary लाता है और उसे <code>native-binary</code>
-अनुमति चाहिए। डिफ़ॉल्ट इमेज में Python, Node.js, PHP, Ruby और Lua हैं; <code>-nodejs</code> इमेज में
-Python और Node.js रहते हैं और <code>-lean</code> इमेज में सिर्फ़ Python रहता है। जो manifest ऐसा runtime बताता है
-जो इमेज में नहीं है, वह इंस्टॉल के समय मना कर दिया जाता है, और उपलब्ध runtime की
-सूची दिखाई जाती है।</p>
+<p>अपने प्लगइन की भाषा चुनें। entrypoint बताता है कि उसे क्या चलाता है: इमेज का कोई runtime (<code>node main.js</code>, <code>python3 main.py</code>, <code>java -jar plugin.jar</code>, <code>dotnet plugin.dll</code>) या पैकेज के साथ आने वाला binary (<code>go</code>, <code>native-binary</code> अनुमति के साथ)। डिफ़ॉल्ट इमेज में Python, Node.js, PHP, Ruby और Lua हैं; <code>-nodejs</code> इमेज में Python और Node.js रहते हैं और <code>-lean</code> इमेज में सिर्फ़ Python रहता है। कोई भी दूसरा runtime इमेज में जोड़ा जाता है (<a href="#a-runtime-the-image-does-not-carry">नीचे देखें</a>)। जिस प्लगइन का entrypoint ऐसी कमांड बताता है जो इमेज में नहीं है और जिसे उसका पैकेज भी साथ नहीं लाता, वह इंस्टॉल के समय मना कर दिया जाता है।</p>
 <p>हर इमेज प्लगइन को क्या देती है, <code>language</code> के हिसाब से:</p>
 <table>
 <thead>
@@ -3524,12 +3552,35 @@ major वर्ज़न सिर्फ़ उसी रिलीज़ के 
 </span></code></pre></div>
 <p><code>make plugin-sdk</code> साथ आने वाले stub फिर से बनाता है; हर <code>sdk/&lt;lang&gt;/README.md</code>
 बताता है कि उस भाषा को कौन सा gRPC प्लगइन चाहिए।</p>
+<h3 id="a-runtime-the-image-does-not-carry">ऐसा runtime जो इमेज में नहीं है<a class="headerlink" href="#a-runtime-the-image-does-not-carry" title="Permanent link">¶</a></h3>
+<p>runtime को ऐसी इमेज में इंस्टॉल करें जो Evey की इमेज के ऊपर बनी हो, और अपनी <code>compose.yaml</code> में वही इमेज इस्तेमाल करें। सर्वर अपने <code>PATH</code> की किसी भी कमांड को शुरू कर देता है, इसलिए बाकी कुछ नहीं बदलता। दो उदाहरण: <code>.jar</code> के रूप में आने वाले प्लगइन के लिए JRE, और <code>.dll</code> के रूप में आने वाले प्लगइन के लिए .NET runtime:</p>
+<div class="language-dockerfile highlight"><span class="filename">Dockerfile</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">eveyproject/evey:latest</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Java: plugins shipped as a .jar, started by "java -jar plugin.jar"</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># (the JRE's install script links its manual page, a slim image has no man1)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">RUN</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/share/man/man1<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span>openjdk-21-jre-headless<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># .NET: plugins shipped as a .dll, started by "dotnet plugin.dll"</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb<span class="w"> </span>-o<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/ms.deb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span>dotnet-runtime-8.0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span></code></pre></div>
+<p>प्लगइन का manifest अपने entrypoint में runtime का नाम देता है। <code>.jar</code> या <code>.dll</code> को static analysis नहीं पढ़ सकता, इसलिए पैकेज <code>native-binary</code> घोषित करता है, ठीक compiled Go प्लगइन की तरह:</p>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java</span><span class="w">                  </span><span class="c1"># a label: no stubs are copied for it</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java -jar plugin.jar</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native-binary</span>
+</span></code></pre></div>
+<p>पैकेज अपना gRPC implementation साथ लाता है (<code>.jar</code> के अंदर grpc-java, <code>.dll</code> के फ़ोल्डर में Grpc.Net)। sandbox में प्लगइन को सामान्य सिस्टम डायरेक्टरी के अलावा runtime की इंस्टॉल डायरेक्टरी दिखती है, अगर वह <code>/opt</code> के अंदर हो, और <code>/etc</code> की वे डायरेक्टरी दिखती हैं जिन तक runtime का पैकेज लिंक करता है (<code>/etc/alternatives</code>, <code>/etc/java-21-openjdk</code>), इससे ज़्यादा कुछ नहीं। सिस्टम डायरेक्टरी के बाहर किसी और जगह इंस्टॉल किया गया runtime, या ऐसी डायरेक्टरी में इंस्टॉल किया गया runtime जिसमें प्लगइन या सर्वर भी रहते हों, मना कर दिया जाता है: उसे <code>/usr</code> के अंदर या <code>/opt</code> के अंदर उसकी अपनी डायरेक्टरी में इंस्टॉल करें। JVM और .NET का garbage collector अपना heap प्लगइन की मेमोरी सीमा (<strong>संसाधन सीमाएँ</strong> में <strong>अधिकतम मेमोरी (MiB)</strong>) के हिसाब से तय करते हैं, होस्ट की मेमोरी के हिसाब से नहीं; Java के लिए entrypoint पर लिखा <code>-Xmx</code> फिर भी पहले गिना जाता है।</p>
 <h2 id="2-bring-up-evey-locally">2. Evey को लोकल चलाएँ<a class="headerlink" href="#2-bring-up-evey-locally" title="Permanent link">¶</a></h2>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:eveyproject/evey.git
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>evey
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cp<span class="w"> </span>.env.dev.example<span class="w"> </span>.env.dev<span class="w">   </span><span class="c1"># फिर MEDIA_DIR, EVEY_DB_PASSWORD, MEILI_MASTER_KEY सेट करें</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>make<span class="w"> </span>setup<span class="w">                      </span><span class="c1"># एक बार: /etc/hosts में evey.test जोड़ता है</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres, meilisearch, सर्वर (Air), वेब ऐप (Vite)</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:eveyproject/evey.git
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>evey
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cp<span class="w"> </span>.env.dev.example<span class="w"> </span>.env.dev<span class="w">   </span><span class="c1"># फिर MEDIA_DIR, EVEY_DB_PASSWORD, MEILI_MASTER_KEY सेट करें</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>make<span class="w"> </span>setup<span class="w">                      </span><span class="c1"># एक बार: /etc/hosts में evey.test जोड़ता है</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>make<span class="w"> </span>dev<span class="w">                        </span><span class="c1"># postgres, meilisearch, सर्वर (Air), वेब ऐप (Vite)</span>
 </span></code></pre></div>
 <p><code>https://evey.test</code> खोलें। पहली बार चलाने पर सेटअप विज़ार्ड एडमिन खाता बनाता है,
 जैसा <a href="../../getting-started/first-setup/">पहला सेटअप</a> में बताया गया है। इस dev stack
@@ -3543,25 +3594,26 @@ major वर्ज़न सिर्फ़ उसी रिलीज़ के 
 <ol>
 <li>
 <p><strong>उदाहरण कॉपी करें।</strong></p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>-r<span class="w"> </span>examples/plugins/nodejs-example<span class="w"> </span>~/hello-plugin
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>~/hello-plugin
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>-r<span class="w"> </span>examples/plugins/nodejs-example<span class="w"> </span>~/hello-plugin
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">cd</span><span class="w"> </span>~/hello-plugin
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>इसे एक नाम दें।</strong> <code>plugin.yaml</code> बदलें:</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-plugin</span><span class="w">          </span><span class="c1"># अनोखा, kebab-case</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">              </span><span class="c1"># semver: हर अपलोड पर इसे बढ़ाएँ</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Says hello in its log</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">            </span><span class="c1"># वह runtime जो सर्वर में होना चाहिए</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node main.js</span><span class="w">    </span><span class="c1"># वह कमांड लाइन जो सर्वर चलाता है</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">permissions</span><span class="p">:</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.library</span><span class="w">             </span><span class="c1"># बैकएंड को मीडिया आइटम पढ़ने देता है</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-plugin</span><span class="w">          </span><span class="c1"># अनोखा, kebab-case</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w">              </span><span class="c1"># semver: हर अपलोड पर इसे बढ़ाएँ</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Says hello in its log</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">            </span><span class="c1"># वह runtime जो सर्वर में होना चाहिए</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node main.js</span><span class="w">    </span><span class="c1"># वह कमांड लाइन जो सर्वर चलाता है</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.library</span><span class="w">             </span><span class="c1"># बैकएंड को मीडिया आइटम पढ़ने देता है</span>
 </span></code></pre></div>
-<p><code>language</code> सर्वर को बताता है कि कौन सा runtime जाँचना है और कौन से stub
-कॉपी करने हैं; <code>entrypoint</code> वह है जो सर्वर प्लगइन के फ़ोल्डर में, अगले कदम
-वाले environment के साथ चलाता है।</p>
+<p><code>language</code> सर्वर को बताता है कि कौन से stub कॉपी करने हैं; <code>entrypoint</code>
+वह है जो सर्वर प्लगइन के फ़ोल्डर में, अगले कदम वाले environment के साथ
+चलाता है। उसका पहला शब्द इमेज की कोई कमांड (<code>node</code>) या पैकेज की कोई फ़ाइल
+होता है।</p>
 </li>
 <li>
 <p><strong><code>main.js</code> पढ़ें।</strong> सर्वर प्रोसेस को तीन वेरिएबल देता है:
@@ -3570,25 +3622,25 @@ major वर्ज़न सिर्फ़ उसी रिलीज़ के 
    <code>HostService</code> को कॉल करने के लिए जुड़ते हैं)। उदाहरण <code>plugin_api.proto</code> को
    अपने ही फ़ोल्डर से लोड करता है, जहाँ सर्वर ने उसे कॉपी किया, और
    <code>PluginService</code> के पाँच method लागू करता है। <code>Initialize</code> में संदेश बदलें:</p>
-<div class="language-js highlight"><span class="filename">main.js (excerpt)</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">Initialize</span><span class="p">(</span><span class="nx">call</span><span class="p">,</span><span class="w"> </span><span class="nx">callback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">hostLog</span><span class="p">(</span><span class="s2">"LOG_LEVEL_INFO"</span><span class="p">,</span><span class="w"> </span><span class="sb">`hello from </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EVEY_PLUGIN_ID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">},</span>
+<div class="language-js highlight"><span class="filename">main.js (excerpt)</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">Initialize</span><span class="p">(</span><span class="nx">call</span><span class="p">,</span><span class="w"> </span><span class="nx">callback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">hostLog</span><span class="p">(</span><span class="s2">"LOG_LEVEL_INFO"</span><span class="p">,</span><span class="w"> </span><span class="sb">`hello from </span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">EVEY_PLUGIN_ID</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">},</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>ZIP बनाएँ।</strong> manifest आर्काइव के root में होना चाहिए, किसी सब-फ़ोल्डर में
    नहीं:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span>-x<span class="w"> </span><span class="s2">".*"</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>इंस्टॉल करें।</strong> <strong>एडमिन → प्लगइन</strong> में <strong>प्लगइन इंस्टॉल करें</strong> खोलें, ZIP
    चुनें और <strong>पूर्वावलोकन और इंस्टॉल</strong> दबाएँ: पूर्वावलोकन <code>api.library</code> और
    स्थैतिक विश्लेषण का नतीजा दिखाता है। API से यही अपलोड ऐसे होता है:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s2">"plugin=@hello-plugin.zip"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$EVEY_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">     </span>https://evey.test/api/v1/admin/plugins/upload
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-F<span class="w"> </span><span class="s2">"plugin=@hello-plugin.zip"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$EVEY_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">     </span>https://evey.test/api/v1/admin/plugins/upload
 </span></code></pre></div>
 </li>
 <li>
@@ -3626,27 +3678,27 @@ major वर्ज़न सिर्फ़ उसी रिलीज़ के 
 <p>इंटरफ़ेस एक JavaScript मॉड्यूल है जिसे पेज एक सैंडबॉक्स वाले फ़्रेम में लोड करता
 है, उन स्लॉट में से किसी एक में जिनकी सर्वर अनुमति देता है। बताएँ कि फ़ाइलें कहाँ
 हैं और मॉड्यूल कहाँ जाएगा:</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">web_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span><span class="w">               </span><span class="c1"># वह फ़ोल्डर जो static फ़ाइलों के रूप में दिया जाता है</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">frontend</span><span class="p">:</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">slot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">home.section</span><span class="w">       </span><span class="c1"># स्लॉट की सूची देखें</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/index.js</span><span class="w">       </span><span class="c1"># web_root के अंदर होना चाहिए</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">web_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span><span class="w">               </span><span class="c1"># वह फ़ोल्डर जो static फ़ाइलों के रूप में दिया जाता है</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">frontend</span><span class="p">:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">slot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">home.section</span><span class="w">       </span><span class="c1"># स्लॉट की सूची देखें</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/index.js</span><span class="w">       </span><span class="c1"># web_root के अंदर होना चाहिए</span>
 </span></code></pre></div>
 <p>मॉड्यूल को एक <code>window.evey</code> bridge मिलता है: <code>evey.onInit</code> उसे प्लगइन का
 कॉन्फ़िगरेशन, भाषा, थीम और वह जगह देता है जहाँ वह दिखा है; <code>evey.resize</code>,
 <code>evey.toast</code> और <code>evey.navigate</code> तय सीमाओं के अंदर पेज पर काम करते हैं; और जब
 manifest <code>prefs</code> या <code>public</code> बताता है, तो <code>evey.prefs.*</code> और <code>evey.media.*</code> एक कम
 समय वाले token से सर्वर तक पहुँचते हैं, जिसे होस्ट उस फ़्रेम के लिए रखता है।
-<code>examples/plugins/weather</code> build step वाला एक पूरा विजेट है;
+<a href="https://github.com/eveyproject/evey-plugin-weather">evey-plugin-weather</a> build step वाला एक पूरा विजेट है;
 <code>examples/plugins/data-demo</code> <code>prefs</code>, <code>public</code> और <code>admin.nav</code> स्लॉट दिखाता है। bridge
 और स्लॉट <a href="../api-reference/#frontend-api">प्लगइन API संदर्भ</a> में बताए गए हैं।</p>
 <h2 id="6-reach-the-outside-world">6. इंटरनेट तक पहुँचें<a class="headerlink" href="#6-reach-the-outside-world" title="Permanent link">¶</a></h2>
 <p>प्लगइन का प्रोसेस हर उस मोड में इंटरनेट की ओर कोई socket नहीं खोल
 सकता जिसमें लॉन्चर चलता है (लॉन्चर के बिना <code>basic</code> सिर्फ़ <code>execve</code> को रोकता है)। इंटरनेट तक पहुँचने का एकमात्र तरीका <code>HostService</code> का <code>Fetch</code> कॉल है: सर्वर लक्ष्य को
 manifest से मिलाकर जाँचता है, फिर request खुद भेजता है।</p>
-<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">permissions</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">external_fetch</span><span class="p">:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.open-meteo.com</span><span class="w">       </span><span class="c1"># सिर्फ़ होस्ट का नाम: न scheme, न wildcard, न IP</span>
+<div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">permissions</span><span class="p">:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">network</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nt">external_fetch</span><span class="p">:</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.open-meteo.com</span><span class="w">       </span><span class="c1"># सिर्फ़ होस्ट का नाम: न scheme, न wildcard, न IP</span>
 </span></code></pre></div>
 <p><code>external_fetch</code> के बिना <code>network</code> इंस्टॉल के समय मना कर दिया जाता है। चलते समय
 broker <code>http</code> और <code>https</code>, <code>GET</code> और <code>HEAD</code> स्वीकार करता है, 20 सेकंड के अंदर 8 MiB
@@ -3682,27 +3734,27 @@ transparency log।</p>
 <ol>
 <li>
 <p><strong>एक बार: कुंजी का जोड़ा बनाएँ।</strong></p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># एक असली passphrase चुनें; cosign.key निजी रहती है, इसे कभी commit न करें</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>generate-key-pair
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># -&gt; cosign.key (निजी) और cosign.pub (वह फ़ाइल जो आप बाँटते हैं)</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># एक असली passphrase चुनें; cosign.key निजी रहती है, इसे कभी commit न करें</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>generate-key-pair
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># -&gt; cosign.key (निजी) और cosign.pub (वह फ़ाइल जो आप बाँटते हैं)</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>हर रिलीज़ पर: अपनी public key प्लगइन की जड़ में रखें, ZIP बनाएँ, फिर
    साइन करें</strong>, ठीक उसी फ़ाइल पर जो आप बाँटेंगे।</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>hello-plugin.zip
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cp<span class="w"> </span>cosign.pub<span class="w"> </span>hello-plugin/cosign.pub
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">cd</span><span class="w"> </span>hello-plugin<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>zip<span class="w"> </span>-r<span class="w"> </span>../hello-plugin.zip<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">COSIGN_PASSWORD</span><span class="o">=</span><span class="s2">"your-passphrase"</span><span class="w"> </span>cosign<span class="w"> </span>sign-blob<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>--tlog-upload<span class="o">=</span><span class="nb">false</span><span class="w"> </span>--yes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>--output-signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>hello-plugin.zip
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>भेजने से पहले जाँचें</strong>, उसी जाँच से जो सर्वर करता है:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>--signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--insecure-ignore-tlog<span class="w"> </span>hello-plugin.zip<span class="w">      </span><span class="c1"># -&gt; Verified OK</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>--signature<span class="w"> </span>hello-plugin.zip.sig<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--insecure-ignore-tlog<span class="w"> </span>hello-plugin.zip<span class="w">      </span><span class="c1"># -&gt; Verified OK</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -3754,7 +3806,9 @@ transparency log।</p>
 <li><strong>Manifest।</strong> <code>plugin.yaml</code> सीधे ZIP से पढ़ा जाता है: ज़रूरी फ़ील्ड, semver,
    जानी-पहचानी अनुमतियाँ और क्षमताएँ, अनुमति वाली सूची में मौजूद स्लॉट,
    <code>external_fetch</code> की एंट्री जो सिर्फ़ होस्ट के नाम हों, और <code>frontend</code> बताया हो
-   तो <code>web_root</code> मौजूद हो। बताई गई <code>language</code> इमेज का कोई runtime होनी चाहिए।</li>
+   तो <code>web_root</code> मौजूद हो। entrypoint शुरू हो सकना चाहिए: उसका पहला शब्द पैकेज की
+   फ़ाइल या इमेज की कमांड हो, और shebang से शुरू होने वाली स्क्रिप्ट
+   (<code>entrypoint: main.py</code>) को उसकी <code>language</code> का interpreter इमेज में चाहिए।</li>
 <li><strong>वर्ज़न और नई अनुमतियाँ।</strong> पहले से इंस्टॉल प्लगइन के लिए नया वर्ज़न ऊँचा होना
    चाहिए, और कोई भी नई अनुमति, क्षमता, स्लॉट या होस्ट इंस्टॉल को यहीं रोक देता है,
    जब तक एडमिन फ़र्क को मंज़ूरी न दे (अपलोड route पर
@@ -3837,9 +3891,9 @@ transparency log।</p>
 </thead>
 <tbody>
 <tr>
-<td><code>plugin requires "nodejs" runtime which is not installed in this image</code></td>
-<td>इमेज के इस रूप में interpreter नहीं है।</td>
-<td>डिफ़ॉल्ट या <code>-nodejs</code> इमेज इस्तेमाल करें, या प्लगइन Python में लिखें।</td>
+<td><code>plugin (language "nodejs", entrypoint "node main.js") cannot run on this image: the entrypoint runs "node", which is neither installed in this image nor shipped by the plugin</code></td>
+<td>entrypoint जिस runtime का नाम देता है, वह इमेज में नहीं है।</td>
+<td>डिफ़ॉल्ट या <code>-nodejs</code> इमेज इस्तेमाल करें, <a href="#a-runtime-the-image-does-not-carry">runtime को इमेज में जोड़ें</a>, या प्लगइन Python में लिखें।</td>
 </tr>
 <tr>
 <td><code>manifest: external_fetch entry "*.tmdb.org" is a wildcard - use explicit hostnames</code></td>
@@ -3889,7 +3943,7 @@ transparency log।</p>
 </tbody>
 </table>
 <!-- sources
-runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - runtimeBinaries, compiledLanguages ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full)
+runtimes, image variants: internal/adapters/driven/pluginrunner/runtime_availability.go - CheckEntrypoint, shebangInterpreters ; launcher_resolve.go - lookupLauncher, computeRuntimeReadPaths, runtimeRootExposable ; runner_start.go - resolveCommand, buildPluginEnv (JAVA_TOOL_OPTIONS, DOTNET_GCHeapHardLimit) ; runner_landlock.go - safeProcFiles ; internal/app/plugin/install.go - parseAndValidateManifest ; Dockerfile (RUNTIMES lean/nodejs/full) ; added runtimes measured by pluginrunner/runner_runtimes_test.go - TestRuntimeLaunchers (scripts/plugin-runtimes-itest.sh, testdata/runtimes/Dockerfile)
 stubs copied at start, NODE_PATH: internal/adapters/driven/filesystem/plugin_fs.go - CopySDKStubs ; internal/adapters/driven/pluginrunner/runner_start.go ; sdk/python/README.md ; examples/plugins/nodejs-example/package.json
 dev stack: DEV.md (Quick Start) ; Makefile - setup, dev ; docker-compose.yml (evey-data/plugins:/data/plugins)
 example: examples/plugins/nodejs-example/main.js, plugin.yaml

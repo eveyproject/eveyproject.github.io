@@ -2504,6 +2504,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#official-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugins oficiales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3219,6 +3230,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#official-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugins oficiales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3358,6 +3380,57 @@ página.</p>
 <figcaption>Con el plugin de ejemplo del tiempo: una sección arriba, dibujada en su propio marco.</figcaption>
 </figure>
 </div>
+<h2 id="official-plugins">Plugins oficiales<a class="headerlink" href="#official-plugins" title="Permanent link">¶</a></h2>
+<p>El proyecto Evey publica los plugins y temas de abajo, cada uno en su propio
+repositorio. Para instalar uno, pega el enlace de su repositorio en la pestaña
+<strong>Desde URL</strong> de <strong>Instalar plugin</strong>: el servidor toma la última release, y el
+paquete sigue después ese repositorio para sus actualizaciones. Sus releases
+están firmadas con la clave del proyecto, que es de confianza desde el
+principio.</p>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Tipo</th>
+<th>Qué hace</th>
+<th>Repositorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tiempo</td>
+<td>Plugin</td>
+<td>El tiempo local en la página de inicio, sobre un cielo que le corresponde.</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-weather">evey-plugin-weather</a></td>
+</tr>
+<tr>
+<td>Marquee</td>
+<td>Plugin</td>
+<td>Un muro de carteles hecho con tu biblioteca, con una ruleta para elegir qué ver esta noche.</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-marquee">evey-plugin-marquee</a></td>
+</tr>
+<tr>
+<td>Librarian</td>
+<td>Plugin</td>
+<td>Lista los duplicados probables y las películas que faltan en una saga numerada. Lee la biblioteca y nunca toca un archivo.</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-librarian">evey-plugin-librarian</a></td>
+</tr>
+<tr>
+<td>CShell</td>
+<td>Tema</td>
+<td>Un aspecto de terminal: negro puro, ámbar, fuente monoespaciada.</td>
+<td><a href="https://github.com/eveyproject/evey-theme-cshell">evey-theme-cshell</a></td>
+</tr>
+<tr>
+<td>Azul oscuro</td>
+<td>Tema</td>
+<td>Un tema de color azul oscuro.</td>
+<td><a href="https://github.com/eveyproject/evey-theme-dark-blue">evey-theme-dark-blue</a></td>
+</tr>
+</tbody>
+</table>
+<p>Para escribir el tuyo, <a href="https://github.com/eveyproject/evey-plugin-template">evey-plugin-template</a> es un repositorio del que partir:
+un plugin mínimo, sus pruebas y el workflow que firma sus releases.</p>
 <h2 id="install-a-plugin">Instalar un plugin<a class="headerlink" href="#install-a-plugin" title="Permanent link">¶</a></h2>
 <ol>
 <li>En <strong>Administración → Plugins</strong>, abre <strong>Instalar plugin</strong> y elige el
@@ -3385,10 +3458,13 @@ página.</p>
 <figcaption><strong>Administración → Plugins</strong>: los entornos de ejecución disponibles, los límites de recursos y una tarjeta por plugin (interfaz en inglés).</figcaption>
 </figure>
 <p>Un paquete cuyo análisis encuentra un patrón crítico se rechaza, respondas lo
-que respondas. Los avisos se muestran y la decisión es tuya. El lenguaje del
-plugin tiene que estar entre los <strong>Entornos de ejecución disponibles</strong> del
-servidor: la imagen por defecto trae Python, Node.js, PHP, Ruby y Lua, la imagen
-<code>-nodejs</code> conserva Python y Node.js y la imagen <code>-lean</code> solo Python.</p>
+que respondas. Los avisos se muestran y la decisión es tuya. El entorno de
+ejecución que arranca el plugin tiene que estar en la imagen del servidor: la
+imagen por defecto trae Python, Node.js, PHP, Ruby y Lua, la imagen
+<code>-nodejs</code> conserva Python y Node.js, la imagen <code>-lean</code> solo Python, y
+<a href="dev-setup/#a-runtime-the-image-does-not-carry">cualquier otro se añade a la imagen</a>.
+Los <strong>Entornos de ejecución disponibles</strong> listan los que el servidor ha
+encontrado y aquel con el que arranca cada plugin instalado.</p>
 <div class="admonition tip">
 <p class="admonition-title">Plugins firmados</p>
 <p>El autor de un plugin puede firmar el ZIP con <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a>;
@@ -3613,6 +3689,8 @@ y, opcionalmente, un script aislado en un marco oculto. Se instala desde el
 mismo cuadro <strong>Instalar plugin</strong>; la hoja de estilos se sanea al instalarla.
 Después, cada usuario lo elige en <strong>Ajustes → Apariencia → Tema</strong>. Lo que
 puede contener un tema se describe en <a href="../themes/">Temas</a>.</p>
+<p>Los temas del proyecto aparecen en
+<a href="#official-plugins">Plugins oficiales</a>.</p>
 <h2 id="writing-a-plugin">Escribir un plugin<a class="headerlink" href="#writing-a-plugin" title="Permanent link">¶</a></h2>
 <table>
 <thead>

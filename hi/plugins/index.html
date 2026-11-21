@@ -2504,6 +2504,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#official-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        आधिकारिक प्लगइन
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3219,6 +3230,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#official-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        आधिकारिक प्लगइन
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-a-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3357,6 +3379,56 @@
 <figcaption>उदाहरण वाले मौसम प्लगइन के साथ: सबसे ऊपर एक सेक्शन, उसके अपने फ़्रेम में बना हुआ।</figcaption>
 </figure>
 </div>
+<h2 id="official-plugins">आधिकारिक प्लगइन<a class="headerlink" href="#official-plugins" title="Permanent link">¶</a></h2>
+<p>Evey प्रोजेक्ट नीचे दिए प्लगइन और थीम प्रकाशित करता है, हर एक अपनी अलग
+रिपॉज़िटरी में। किसी को इंस्टॉल करने के लिए, उसकी रिपॉज़िटरी का लिंक <strong>प्लगइन
+इंस्टॉल करें</strong> के <strong>URL से</strong> वाले टैब में चिपकाएँ: सर्वर सबसे नई release लेता है,
+और उसके बाद पैकेज अपने अपडेट के लिए उसी रिपॉज़िटरी को फ़ॉलो करता है। इनकी release
+प्रोजेक्ट की कुंजी से हस्ताक्षरित होती हैं, जिस पर शुरू से ही भरोसा किया जाता है।</p>
+<table>
+<thead>
+<tr>
+<th>नाम</th>
+<th>प्रकार</th>
+<th>यह क्या करता है</th>
+<th>रिपॉज़िटरी</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>मौसम</td>
+<td>प्लगइन</td>
+<td>होम पेज पर स्थानीय मौसम, उससे मेल खाते आसमान के सामने।</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-weather">evey-plugin-weather</a></td>
+</tr>
+<tr>
+<td>Marquee</td>
+<td>प्लगइन</td>
+<td>आपकी लाइब्रेरी से बनी पोस्टरों की दीवार, और आज रात क्या देखें यह चुनने के लिए एक रूलेट।</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-marquee">evey-plugin-marquee</a></td>
+</tr>
+<tr>
+<td>Librarian</td>
+<td>प्लगइन</td>
+<td>संभावित डुप्लिकेट और नंबर वाली फ़िल्म शृंखला में छूटी फ़िल्मों की सूची देता है। यह लाइब्रेरी को पढ़ता है और किसी फ़ाइल को कभी नहीं छूता।</td>
+<td><a href="https://github.com/eveyproject/evey-plugin-librarian">evey-plugin-librarian</a></td>
+</tr>
+<tr>
+<td>CShell</td>
+<td>थीम</td>
+<td>टर्मिनल जैसा रूप: गहरा काला, ऐंबर, मोनोस्पेस फ़ॉन्ट।</td>
+<td><a href="https://github.com/eveyproject/evey-theme-cshell">evey-theme-cshell</a></td>
+</tr>
+<tr>
+<td>गहरा नीला</td>
+<td>थीम</td>
+<td>गहरे नीले रंग की थीम।</td>
+<td><a href="https://github.com/eveyproject/evey-theme-dark-blue">evey-theme-dark-blue</a></td>
+</tr>
+</tbody>
+</table>
+<p>अपना प्लगइन लिखने के लिए, <a href="https://github.com/eveyproject/evey-plugin-template">evey-plugin-template</a> शुरुआत करने की एक रिपॉज़िटरी है:
+एक छोटा-सा प्लगइन, उसके टेस्ट, और वह workflow जो उसकी release पर हस्ताक्षर करता है।</p>
 <h2 id="install-a-plugin">प्लगइन इंस्टॉल करें<a class="headerlink" href="#install-a-plugin" title="Permanent link">¶</a></h2>
 <ol>
 <li><strong>एडमिन → प्लगइन</strong> में <strong>प्लगइन इंस्टॉल करें</strong> खोलें और <strong>प्लगइन फ़ाइल
@@ -3384,9 +3456,12 @@
 </figure>
 <p>जिस पैकेज की जाँच में कोई गंभीर पैटर्न मिलता है, वह मना कर दिया जाता है, आप
 चाहे जो जवाब दें। चेतावनियाँ दिखाई जाती हैं और फ़ैसला आप पर छोड़ा जाता है।
-प्लगइन की भाषा सर्वर के <strong>उपलब्ध रनटाइम</strong> में होनी चाहिए: डिफ़ॉल्ट इमेज में
-Python, Node.js, PHP, Ruby और Lua हैं, <code>-nodejs</code> इमेज में Python और Node.js रहते हैं
-और <code>-lean</code> इमेज में सिर्फ़ Python रहता है।</p>
+प्लगइन को शुरू करने वाला रनटाइम सर्वर की इमेज में होना चाहिए: डिफ़ॉल्ट इमेज में
+Python, Node.js, PHP, Ruby और Lua हैं, <code>-nodejs</code> इमेज में Python और Node.js रहते हैं,
+<code>-lean</code> इमेज में सिर्फ़ Python रहता है, और
+<a href="dev-setup/#a-runtime-the-image-does-not-carry">कोई दूसरा रनटाइम इमेज में जोड़ा जाता है</a>।
+<strong>उपलब्ध रनटाइम</strong> में वे रनटाइम दिखते हैं जो सर्वर को मिले, और वह रनटाइम भी जिससे
+हर इंस्टॉल किया गया प्लगइन शुरू होता है।</p>
 <div class="admonition tip">
 <p class="admonition-title">सिग्नेचर वाले प्लगइन</p>
 <p>प्लगइन बनाने वाला ZIP पर <a href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a>
@@ -3604,6 +3679,7 @@ TMDB से आते हैं। प्लगइन का टेक्स्�
 डायलॉग से इंस्टॉल होती है; इंस्टॉल के समय stylesheet को साफ़ किया जाता है। फिर
 हर उपयोगकर्ता इसे <strong>सेटिंग्स → रूप-रंग → थीम</strong> में चुनता है। थीम में क्या हो
 सकता है, यह <a href="../themes/">थीम</a> में बताया गया है।</p>
+<p>प्रोजेक्ट की थीम <a href="#official-plugins">आधिकारिक प्लगइन</a> में दी गई हैं।</p>
 <h2 id="writing-a-plugin">प्लगइन लिखना<a class="headerlink" href="#writing-a-plugin" title="Permanent link">¶</a></h2>
 <table>
 <thead>

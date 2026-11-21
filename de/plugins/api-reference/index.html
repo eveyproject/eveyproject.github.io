@@ -3602,7 +3602,7 @@ höchstens 1 MB groß.</p>
 <div class="language-yaml highlight"><span class="filename">plugin.yaml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-plugin</span><span class="w">              </span><span class="c1"># Pflicht; eindeutig, kebab-case</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2.3</span><span class="w">               </span><span class="c1"># Pflicht; semver, X.Y.Z oder X.Y.Z-label</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plugin</span><span class="w">                 </span><span class="c1"># Pflicht; "plugin" oder "theme"</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">             </span><span class="c1"># Pflicht für ein Plugin; eine Laufzeit des Images</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodejs</span><span class="w">             </span><span class="c1"># Pflicht für ein Plugin; wählt die kopierten Stubs</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node index.js</span><span class="w">    </span><span class="c1"># Pflicht für ein Plugin; die Befehlszeile, die der Server startet</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">My Plugin</span><span class="w">      </span><span class="c1"># optional; eine Zeichenkette oder eine Map {en: ..., fr: ...}</span>
@@ -3651,11 +3651,11 @@ höchstens 1 MB groß.</p>
 </tr>
 <tr>
 <td><code>language</code></td>
-<td>Pflicht für <code>kind: plugin</code>: <code>python</code>, <code>nodejs</code>, <code>php</code>, <code>ruby</code>, <code>lua</code>, <code>bash</code>, <code>sh</code> oder <code>go</code>. Es bestimmt die Prüfung der Laufzeit und die Stubs, die neben den Einstiegspunkt kopiert werden; es startet selbst nichts.</td>
+<td>Pflicht für <code>kind: plugin</code>, beliebiger Wert. Es bestimmt die Stubs, die neben den Einstiegspunkt kopiert werden (die aus <code>sdk/&lt;language&gt;/</code>). Bei einem Skript, das über seinen Shebang gestartet wird (<code>entrypoint: main.py</code>), verlangen <code>python</code>, <code>nodejs</code>, <code>php</code>, <code>ruby</code>, <code>lua</code>, <code>bash</code> und <code>sh</code> zusätzlich diesen Interpreter im Image. Es startet selbst nichts.</td>
 </tr>
 <tr>
 <td><code>entrypoint</code></td>
-<td>Pflicht für <code>kind: plugin</code>. Das erste Wort ist der Interpreter (oder die Binärdatei, mit <code>native-binary</code>), der Rest sind seine Argumente; der Prozess läuft im Verzeichnis des Plugins.</td>
+<td>Pflicht für <code>kind: plugin</code>. Das erste Wort ist eine Datei des Pakets (eine Binärdatei, mit <code>native-binary</code>, oder ein Skript) oder sonst ein Befehl des Images, der in seinem <code>PATH</code> gefunden wird (<code>node</code>, <code>python3</code>, <code>java</code>, <code>dotnet</code>), der Rest sind seine Argumente; ein fehlender Befehl lehnt die Installation ab. Der Prozess läuft im Verzeichnis des Plugins.</td>
 </tr>
 <tr>
 <td><code>permissions</code></td>
@@ -3983,7 +3983,7 @@ gilt, gilt dort nicht mehr:</p>
   (Overscan): Lassen Sie an jeder Seite etwa 5 % der Breite und Höhe frei.</li>
 <li><strong>Testen Sie WebGL auf einer echten Box.</strong> Ein Shader läuft auf der GPU
   und dem Treiber der Box, nicht auf denen Ihres Rechners; halten Sie
-  Rauschkoordinaten begrenzt. <code>tests/plugins/weather-v2</code> ist das
+  Rauschkoordinaten begrenzt. <a href="https://github.com/eveyproject/evey-plugin-weather">eveyproject/evey-plugin-weather</a> ist das
   Referenz-Widget für all das.</li>
 </ul>
 <h2 id="slots">Slots<a class="headerlink" href="#slots" title="Permanent link">¶</a></h2>
@@ -4066,14 +4066,15 @@ ab, egal welche Bereiche er hat.</p>
 <p><code>examples/plugins/</code> enthält funktionierende Plugins im aktuellen
 Manifestformat: Vorlagen in Node.js und Python (<code>nodejs-example</code>,
 <code>python-example</code>), einen Metadatenanbieter (<code>metadata-example</code>), einen
-Webhook-Empfänger (<code>webhook-receiver</code>), ein Startseiten-Widget mit
-Build-Schritt (<code>weather</code>), den Datenspeicher mit den Berechtigungen <code>public</code>
-und <code>prefs</code> und dem Slot <code>admin.nav</code> (<code>data-demo</code>), einen Rundgang durch
-alle Feldtypen von <code>config_schema</code>, mit einer <code>admin.nav</code>-Seite (<code>config-demo</code>), und zwei Themes
-(<code>theme-dark-blue</code>, <code>open-workshop</code>). <code>make plugin-zips</code> packt sie alle.</p>
+Webhook-Empfänger (<code>webhook-receiver</code>), den Datenspeicher mit den
+Berechtigungen <code>public</code> und <code>prefs</code> und dem Slot <code>admin.nav</code> (<code>data-demo</code>) und
+einen Rundgang durch alle Feldtypen von <code>config_schema</code>, mit einer
+<code>admin.nav</code>-Seite (<code>config-demo</code>). <code>make plugin-zips</code> packt sie alle. Die
+Plugins und Themes des Projekts - das Wetter-Widget, CShell, Dark Blue und die
+anderen - liegen jeweils in einem eigenen Repository unter <a href="https://github.com/eveyproject">eveyproject</a>.</p>
 <!-- sources
 manifest fields, validation: internal/domain/plugin/model.go - PluginManifest, Validate, validateWebRoot, validateSrcUnderWebRoot, IsSecretConfigField ; internal/adapters/driven/pluginrunner/manifest.go - Parse, validateManifest, validateExternalFetch ; capabilities.go - KnownCapabilities, KnownPermissions
-runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go ; interpreters: runner_start.go - knownInterpreters
+runtimes: internal/adapters/driven/pluginrunner/runtime_availability.go - CheckEntrypoint ; launchers: runner_start.go - resolveCommand ; launcher_resolve.go - lookupLauncher
 config field types: frontend/apps/web/src/features/admin/PluginCard.tsx ; examples/plugins/config-demo/plugin.yaml
 secrets masked: internal/adapters/driving/grpcapi/admin_plugin.go (SecretMask)
 env vars, Initialize call: internal/adapters/driven/pluginrunner/runner_start.go ; ipc_client.go - Initialize, Shutdown, HealthCheck, OnEvent ; runner_control.go - SendEvent (no caller)
