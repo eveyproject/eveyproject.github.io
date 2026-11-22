@@ -2721,6 +2721,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyconfigsavevalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.config.save(values) (emplacement admin.plugin.config uniquement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#on-a-television" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3518,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyconfigsavevalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.config.save(values) (emplacement admin.plugin.config uniquement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#on-a-television" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3963,6 +3985,20 @@ d'un <code>&lt;img&gt;</code> ou comme texture.</p>
 URL <code>data:</code> : un fichier écrit par le backend à l'exécution devient utilisable
 dans le cadre sans question d'origine croisée. Seules les ressources du
 plugin sont accessibles.</p>
+<h3 id="eveyconfigsavevalues"><code>evey.config.save(values)</code> (emplacement <code>admin.plugin.config</code> uniquement)<a class="headerlink" href="#eveyconfigsavevalues" title="Permanent link">¶</a></h3>
+<p>Écrit la configuration serveur du plugin, les valeurs qu'un administrateur
+renseigne selon <code>config_schema</code>. Les clés données sont fusionnées dans la
+configuration enregistrée, les autres clés restent telles quelles, et le
+serveur valide le résultat par rapport au schéma exactement comme pour le
+formulaire généré. Les valeurs sont des chaînes, comme dans le formulaire. La
+promesse est résolue avec <code>{ values }</code>, la configuration telle qu'enregistrée
+(champs secrets masqués), et rejetée avec le message du serveur quand une
+valeur est refusée. Partout ailleurs que dans <code>admin.plugin.config</code>, l'appel
+est rejeté.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>Les valeurs actuelles arrivent dans <code>onInit</code> sous le nom <code>config</code>, comme dans
+chaque emplacement.</p>
 <h3 id="on-a-television">Sur une télévision<a class="headerlink" href="#on-a-television" title="Permanent link">¶</a></h3>
 <p>L'application télévision exécute le module dans une WebView, et quelques
 comportements habituels du navigateur n'y sont plus valables :</p>
@@ -4021,14 +4057,22 @@ comportements habituels du navigateur n'y sont plus valables :</p>
 <td><code>admin.nav</code></td>
 <td>Une entrée du menu d'administration, qui ouvre la page du plugin</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>Le panneau de configuration propre au plugin, dans sa carte de l'écran d'administration des plugins</td>
+</tr>
 </tbody>
 </table>
-<p><code>admin.nav</code> est le seul emplacement de la zone d'administration. Il n'injecte
-rien dans les écrans d'administration existants : il ajoute une entrée de
-menu qui ouvre la page du plugin dans le même cadre isolé, sur une route
-réservée aux administrateurs. Le demander apparaît dans la différence
-soumise au consentement. Tout autre emplacement <code>admin.*</code>, <code>login.*</code>,
-<code>setup.*</code> et <code>profile.security.*</code> est refusé à l'installation.</p>
+<p><code>admin.nav</code> et <code>admin.plugin.config</code> sont les seuls emplacements de la zone
+d'administration. Aucun n'injecte rien dans les écrans d'administration
+existants : <code>admin.nav</code> ajoute une entrée de menu qui ouvre la page du plugin
+dans le même cadre isolé, sur une route réservée aux administrateurs ;
+<code>admin.plugin.config</code> prend la place du formulaire généré à partir de
+<code>config_schema</code>, dans la carte du plugin lui-même, pour une valeur qu'un champ
+simple ne sait pas bien choisir (une ville parmi des homonymes, par exemple).
+Demander l'un ou l'autre apparaît dans la différence soumise au consentement.
+Tout autre emplacement <code>admin.*</code>, <code>login.*</code>, <code>setup.*</code> et
+<code>profile.security.*</code> est refusé à l'installation.</p>
 <h2 id="capabilities">Capacités<a class="headerlink" href="#capabilities" title="Permanent link">¶</a></h2>
 <p>Une capacité déclare le rôle que le plugin dit remplir : <code>metadata.provider</code>,
 <code>media.read</code>, <code>media.write</code>, <code>webhook.receiver</code> ou <code>notification.sender</code>.

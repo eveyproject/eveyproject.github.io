@@ -3533,9 +3533,14 @@ absents.</p>
 <td>Oui</td>
 <td>Une entrée de menu dans le panneau d'administration qui ouvre la page isolée du plugin ; n'injecte rien dans les écrans d'administration existants</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>Oui</td>
+<td>Le panneau de configuration propre au plugin, à la place du formulaire généré, dans sa propre carte de l'écran d'administration des plugins</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Jamais autorisés :</strong> <code>admin.*</code> (sauf <code>admin.nav</code>), <code>login.*</code>, <code>setup.*</code>,
+<p><strong>Jamais autorisés :</strong> <code>admin.*</code> (sauf <code>admin.nav</code> et <code>admin.plugin.config</code>), <code>login.*</code>, <code>setup.*</code>,
 <code>profile.security.*</code>. Ces chemins sont critiques pour l'authentification ou
 les privilèges, et une injection à cet endroit est un vecteur d'élévation de
 privilèges ou d'hameçonnage.</p>
@@ -3543,7 +3548,11 @@ privilèges ou d'hameçonnage.</p>
 s'affiche dans un <code>&lt;iframe sandbox="allow-scripts"&gt;</code> sans
 <code>allow-same-origin</code>, dans une page dont la politique est
 <code>default-src 'none'</code>. C'est du contenu tiers affiché dans la zone
-d'administration, pas une capacité d'administration accordée au plugin.</p>
+d'administration, pas une capacité d'administration accordée au plugin. Il en va de même pour
+<code>admin.plugin.config</code>, avec un appel de pont de plus dans cet emplacement :
+<code>evey.config.save</code> écrit la configuration de ce plugin et rien d'autre, avec
+la session de l'administrateur et validée par rapport au schéma comme le
+formulaire généré. L'hôte ne le traite que dans cet emplacement.</p>
 <p>Le pont limite ce qu'un cadre peut demander à la page : <code>evey.toast</code> au plus
 3 messages par seconde, 200 caractères, sans HTML ; <code>evey.navigate</code> seulement
 <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> et <code>/search</code> ;

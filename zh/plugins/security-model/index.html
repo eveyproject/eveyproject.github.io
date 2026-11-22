@@ -3494,12 +3494,19 @@
 <td>是</td>
 <td>管理面板里的一个导航入口，打开插件自己的沙箱页面；它不会注入到已有的管理界面里</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>是</td>
+<td>插件自己的配置面板，取代生成的表单，位于管理员插件界面中它自己的卡片里</td>
+</tr>
 </tbody>
 </table>
-<p><strong>永远不允许：</strong> <code>admin.*</code>（<code>admin.nav</code> 除外）、<code>login.*</code>、<code>setup.*</code>、<code>profile.security.*</code>。
+<p><strong>永远不允许：</strong> <code>admin.*</code>（<code>admin.nav</code> 和 <code>admin.plugin.config</code> 除外）、<code>login.*</code>、<code>setup.*</code>、<code>profile.security.*</code>。
 这些路径事关身份验证或权限，在那里注入内容可能被用来提升权限或钓鱼。</p>
 <p><code>admin.nav</code> 的内容和其他插槽一样在沙箱中运行：它在一个不带 <code>allow-same-origin</code> 的 <code>&lt;iframe sandbox="allow-scripts"&gt;</code> 里渲染，
-所在页面的策略是 <code>default-src 'none'</code>。所以它只是显示在管理区域里的第三方内容，并不是授予插件的管理能力。</p>
+所在页面的策略是 <code>default-src 'none'</code>。所以它只是显示在管理区域里的第三方内容，并不是授予插件的管理能力。<code>admin.plugin.config</code> 同样如此，只是该插槽里多一个桥接调用：
+<code>evey.config.save</code> 只写入这个插件自己的配置，别的什么都不写，使用管理员的会话，并像生成的表单一样按模式校验。
+宿主只在该插槽里响应它。</p>
 <p>桥接层限制了框架能向页面提出的请求：<code>evey.toast</code> 每秒最多 3 条消息，每条 200 个字符，不能含 HTML；
 <code>evey.navigate</code> 只能导航到 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、<code>/settings</code> 和 <code>/search</code>；<code>evey.resize</code> 被限制在 50 到 800 px 之间。
 框架本身不持有令牌：宿主为 <code>public</code> 和 <code>prefs</code> 调用签发一个限定于（插件，用户）、有效期五分钟的令牌，

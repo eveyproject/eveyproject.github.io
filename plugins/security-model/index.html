@@ -3522,15 +3522,24 @@ intentionally absent.</p>
 <td>Yes</td>
 <td>One nav entry in the admin panel opening the plugin's own sandboxed page; it does not inject into existing admin screens</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>Yes</td>
+<td>The plugin's own config panel, in place of the generated form inside its own card on the admin plugins screen</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Never allowed:</strong> <code>admin.*</code> (except <code>admin.nav</code>), <code>login.*</code>, <code>setup.*</code>,
+<p><strong>Never allowed:</strong> <code>admin.*</code> (except <code>admin.nav</code> and <code>admin.plugin.config</code>), <code>login.*</code>, <code>setup.*</code>,
 <code>profile.security.*</code>. These paths are authentication- or privilege-critical,
 and injection there is a privilege-escalation or phishing vector.</p>
 <p><code>admin.nav</code> content is sandboxed like any other slot: it renders in an
 <code>&lt;iframe sandbox="allow-scripts"&gt;</code> without <code>allow-same-origin</code>, in a page
 whose policy is <code>default-src 'none'</code>, so it is third-party content displayed
-in the admin area, not an admin capability granted to the plugin.</p>
+in the admin area, not an admin capability granted to the plugin. The same
+holds for <code>admin.plugin.config</code>, with one more bridge call there:
+<code>evey.config.save</code> writes this plugin's own config and nothing else, on the
+administrator's session, validated against the schema like the generated
+form. The host answers it in that slot only.</p>
 <p>The bridge limits what a frame can ask of the page: <code>evey.toast</code> at most 3
 messages per second, 200 characters, no HTML; <code>evey.navigate</code> only <code>/home</code>,
 <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> and <code>/search</code>; <code>evey.resize</code>

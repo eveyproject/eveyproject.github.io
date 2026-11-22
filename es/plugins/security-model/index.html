@@ -3530,9 +3530,14 @@ explícita. Las rutas críticas no están, a propósito.</p>
 <td>Sí</td>
 <td>Una entrada de navegación en el panel de administración que abre la página propia del plugin, en su sandbox; no inyecta nada en las pantallas de administración existentes</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>Sí</td>
+<td>El panel de configuración propio del plugin, en lugar del formulario generado, dentro de su propia tarjeta de la pantalla de plugins de administración</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Nunca permitidos:</strong> <code>admin.*</code> (salvo <code>admin.nav</code>), <code>login.*</code>, <code>setup.*</code>,
+<p><strong>Nunca permitidos:</strong> <code>admin.*</code> (salvo <code>admin.nav</code> y <code>admin.plugin.config</code>), <code>login.*</code>, <code>setup.*</code>,
 <code>profile.security.*</code>. Son rutas críticas para la autenticación o los
 privilegios, e inyectar algo ahí es una vía para escalar privilegios o hacer
 phishing.</p>
@@ -3540,7 +3545,11 @@ phishing.</p>
 muestra en un <code>&lt;iframe sandbox="allow-scripts"&gt;</code> sin <code>allow-same-origin</code>, en
 una página cuya política es <code>default-src 'none'</code>, así que es contenido de
 terceros mostrado en la zona de administración, no una capacidad de
-administración concedida al plugin.</p>
+administración concedida al plugin. Lo mismo vale para
+<code>admin.plugin.config</code>, con una llamada más del puente en ese slot:
+<code>evey.config.save</code> escribe la configuración del propio plugin y nada más, con
+la sesión del administrador y validada contra el esquema como el formulario
+generado. El host solo la atiende en ese slot.</p>
 <p>El puente limita lo que un marco puede pedir a la página: <code>evey.toast</code> como
 mucho 3 mensajes por segundo, 200 caracteres, sin HTML; <code>evey.navigate</code> solo
 <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> y <code>/search</code>;

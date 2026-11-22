@@ -2721,6 +2721,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyconfigsavevalues-slot-adminpluginconfig-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.config.save(values) (slot admin.plugin.config only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#on-a-television" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3518,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyconfigsavevalues-slot-adminpluginconfig-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.config.save(values) (slot admin.plugin.config only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#on-a-television" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3954,6 +3976,17 @@ image from the server directly; use it as an <code>&lt;img&gt;</code> source or 
 <p>Reads one of the plugin's own <code>web_root</code> files, by relative path, as a
 <code>data:</code> URL: a file the backend wrote at run time becomes usable in the frame
 without a cross-origin concern. Only the plugin's own assets are reachable.</p>
+<h3 id="eveyconfigsavevalues-slot-adminpluginconfig-only"><code>evey.config.save(values)</code> (slot <code>admin.plugin.config</code> only)<a class="headerlink" href="#eveyconfigsavevalues-slot-adminpluginconfig-only" title="Permanent link">¶</a></h3>
+<p>Writes the plugin's server config, the values an administrator sets against
+<code>config_schema</code>. The given keys are merged into the stored config, the other
+keys stay as they are, and the server validates the result against the
+schema exactly as it does the generated form. Values are strings, as in the
+form. The promise resolves to <code>{ values }</code>, the config as stored (secret
+fields masked), and is rejected with the server's message when a value is
+refused. Anywhere but <code>admin.plugin.config</code> the call is rejected.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>The current values arrive in <code>onInit</code> as <code>config</code>, as in every slot.</p>
 <h3 id="on-a-television">On a television<a class="headerlink" href="#on-a-television" title="Permanent link">¶</a></h3>
 <p>The television app runs the module in a WebView, and a few things that are
 true in a browser stop being true there:</p>
@@ -4011,13 +4044,20 @@ true in a browser stop being true there:</p>
 <td><code>admin.nav</code></td>
 <td>One entry in the admin menu, opening the plugin's own page</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>The plugin's own config panel, in its card on the admin plugins screen</td>
+</tr>
 </tbody>
 </table>
-<p><code>admin.nav</code> is the only admin-area slot. It injects nothing into existing
-admin screens: it adds a menu entry that opens the plugin's page in the same
-sandboxed frame, on an admin-gated route. Asking for it shows in the consent
-diff. Every other <code>admin.*</code>, <code>login.*</code>, <code>setup.*</code> and <code>profile.security.*</code>
-slot is refused at install.</p>
+<p><code>admin.nav</code> and <code>admin.plugin.config</code> are the only admin-area slots. Neither
+injects anything into existing admin screens: <code>admin.nav</code> adds a menu entry
+that opens the plugin's page in the same sandboxed frame, on an admin-gated
+route; <code>admin.plugin.config</code> takes the place of the form generated from
+<code>config_schema</code>, inside the plugin's own card, for a value a plain field
+cannot pick well (a city among homonyms, say). Asking for either shows in the
+consent diff. Every other <code>admin.*</code>, <code>login.*</code>, <code>setup.*</code> and
+<code>profile.security.*</code> slot is refused at install.</p>
 <h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">¶</a></h2>
 <p>A capability declares the role the plugin says it fulfils:
 <code>metadata.provider</code>, <code>media.read</code>, <code>media.write</code>, <code>webhook.receiver</code> or

@@ -3533,16 +3533,25 @@ Kritische Bereiche fehlen absichtlich.</p>
 <td>Ja</td>
 <td>Ein Navigationseintrag im Verwaltungsbereich, der die eigene Sandbox-Seite des Plugins öffnet; er fügt nichts in bestehende Verwaltungsbildschirme ein</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>Ja</td>
+<td>Das eigene Konfigurationspanel des Plugins, anstelle des generierten Formulars in seiner eigenen Karte auf dem Verwaltungsbildschirm der Plugins</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Nie erlaubt:</strong> <code>admin.*</code> (außer <code>admin.nav</code>), <code>login.*</code>, <code>setup.*</code>,
+<p><strong>Nie erlaubt:</strong> <code>admin.*</code> (außer <code>admin.nav</code> und <code>admin.plugin.config</code>), <code>login.*</code>, <code>setup.*</code>,
 <code>profile.security.*</code>. Diese Bereiche sind für Anmeldung oder Rechte kritisch,
 und ein Einfügen dort würde eine Rechteausweitung oder Phishing ermöglichen.</p>
 <p>Inhalt in <code>admin.nav</code> ist isoliert wie in jedem anderen Slot: Er wird in
 einem <code>&lt;iframe sandbox="allow-scripts"&gt;</code> ohne <code>allow-same-origin</code>
 dargestellt, in einer Seite mit der Richtlinie <code>default-src 'none'</code>. Er ist
 also fremder Inhalt, der im Verwaltungsbereich angezeigt wird, keine
-Verwaltungsfähigkeit, die dem Plugin gewährt wird.</p>
+Verwaltungsfähigkeit, die dem Plugin gewährt wird. Dasselbe gilt für
+<code>admin.plugin.config</code>, mit einem weiteren Brückenaufruf dort:
+<code>evey.config.save</code> schreibt die eigene Konfiguration dieses Plugins und sonst
+nichts, mit der Sitzung des Administrators und gegen das Schema geprüft wie
+das generierte Formular. Der Host beantwortet ihn nur in diesem Slot.</p>
 <p>Die Brücke begrenzt, was ein Frame von der Seite verlangen darf:
 <code>evey.toast</code> höchstens 3 Nachrichten pro Sekunde, 200 Zeichen, kein HTML;
 <code>evey.navigate</code> nur <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code>

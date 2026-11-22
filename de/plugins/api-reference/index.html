@@ -2721,6 +2721,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyconfigsavevalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.config.save(values) (nur Slot admin.plugin.config)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#on-a-television" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3518,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyconfigsavevalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.config.save(values) (nur Slot admin.plugin.config)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#on-a-television" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3968,6 +3990,19 @@ oder als Textur.</p>
 relativen Pfad, als <code>data:</code>-URL: Eine Datei, die das Backend zur Laufzeit
 geschrieben hat, wird im Frame nutzbar, ohne Probleme mit fremden Ursprüngen.
 Nur die eigenen Dateien des Plugins sind erreichbar.</p>
+<h3 id="eveyconfigsavevalues"><code>evey.config.save(values)</code> (nur Slot <code>admin.plugin.config</code>)<a class="headerlink" href="#eveyconfigsavevalues" title="Permanent link">¶</a></h3>
+<p>Schreibt die Server-Konfiguration des Plugins, also die Werte, die ein
+Administrator zu <code>config_schema</code> setzt. Die übergebenen Schlüssel werden in die
+gespeicherte Konfiguration eingemischt, die übrigen Schlüssel bleiben, wie sie
+sind, und der Server prüft das Ergebnis genau wie beim generierten Formular
+gegen das Schema. Die Werte sind Strings, wie im Formular. Das Promise wird mit
+<code>{ values }</code> erfüllt, der gespeicherten Konfiguration (geheime Felder
+maskiert), und mit der Meldung des Servers abgelehnt, wenn ein Wert
+zurückgewiesen wird. Überall außer in <code>admin.plugin.config</code> wird der Aufruf
+abgelehnt.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>Die aktuellen Werte kommen in <code>onInit</code> als <code>config</code> an, wie in jedem Slot.</p>
 <h3 id="on-a-television">Auf einem Fernseher<a class="headerlink" href="#on-a-television" title="Permanent link">¶</a></h3>
 <p>Die TV-App führt das Modul in einer WebView aus, und einiges, das im Browser
 gilt, gilt dort nicht mehr:</p>
@@ -4027,12 +4062,20 @@ gilt, gilt dort nicht mehr:</p>
 <td><code>admin.nav</code></td>
 <td>Ein Eintrag im Verwaltungsmenü, der die eigene Seite des Plugins öffnet</td>
 </tr>
+<tr>
+<td><code>admin.plugin.config</code></td>
+<td>Das eigene Konfigurationspanel des Plugins, in seiner Karte auf dem Verwaltungsbildschirm der Plugins</td>
+</tr>
 </tbody>
 </table>
-<p><code>admin.nav</code> ist der einzige Slot im Verwaltungsbereich. Er fügt nichts in
-bestehende Verwaltungsbildschirme ein: Er ergänzt einen Menüeintrag, der die
+<p><code>admin.nav</code> und <code>admin.plugin.config</code> sind die einzigen Slots im
+Verwaltungsbereich. Keiner von beiden fügt etwas in bestehende
+Verwaltungsbildschirme ein: <code>admin.nav</code> ergänzt einen Menüeintrag, der die
 Seite des Plugins im selben Sandbox-Frame öffnet, auf einer Route nur für
-Administratoren. Wer ihn verlangt, erscheint damit in der Übersicht der
+Administratoren; <code>admin.plugin.config</code> ersetzt das aus <code>config_schema</code>
+generierte Formular innerhalb der eigenen Karte des Plugins, für einen Wert,
+den ein einfaches Feld schlecht auswählen kann (etwa eine Stadt unter
+gleichnamigen). Wer einen von beiden verlangt, erscheint in der Übersicht der
 Änderungen, die bestätigt werden müssen. Jeder andere Slot <code>admin.*</code>,
 <code>login.*</code>, <code>setup.*</code> und <code>profile.security.*</code> wird bei der Installation
 abgelehnt.</p>
