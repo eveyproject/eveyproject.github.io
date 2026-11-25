@@ -3386,6 +3386,18 @@
 <td>插件界面可以读取媒体条目的一个安全投影（id、标题、类型、年份、简介、海报），永远读不到路径或流。请看 <a href="../api-reference/#eveymedia-permission-public"><code>evey.media.*</code></a>。</td>
 </tr>
 <tr>
+<td><code>media.files</code></td>
+<td>在 <code>public</code> 返回的内容上，加上每个媒体条目的文件路径和大小。只有正在查看的人是管理员时，令牌才带有它；对其他任何人，签发令牌时就会去掉。路径会暴露服务器的文件夹名，所以管理员会在安装同意中看到它。</td>
+</tr>
+<tr>
+<td><code>media.gaps</code></td>
+<td>插件界面可以读取媒体库缺少的内容（已有剧集的已播单集、已开始系列的已上映电影），由 Evey 根据其保存的 TMDB 信息计算。插件从不调用 TMDB。只有正在查看的人是管理员时，令牌才带有它。</td>
+</tr>
+<tr>
+<td><code>media.trash</code></td>
+<td>在自己的 <code>admin.nav</code> 页面上，插件界面可以请求 Evey 把媒体文件移到媒体库回收站。它从不是令牌作用域：宿主页面根据 Evey 的记录显示 Evey 自己的确认窗口，只有管理员在那里确认，才会以管理员的会话调用管理端点。文件被移到 <code>.evey-trash</code>，从不删除。</td>
+</tr>
+<tr>
 <td><code>prefs</code></td>
 <td>插件界面可以在插件自己的命名空间里读写当前用户的偏好。请看 <a href="../api-reference/#eveyprefs-permission-prefs"><code>evey.prefs.*</code></a>。</td>
 </tr>

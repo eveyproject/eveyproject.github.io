@@ -3412,6 +3412,18 @@ métadonnées (<code>metadata.provider</code>) sont des capacités, déclarées 
 <td>L'interface peut lire une projection sûre des médias (identifiant, titre, type, année, résumé, affiche), jamais les chemins ni les flux. Voir <a href="../api-reference/#eveymedia-permission-public"><code>evey.media.*</code></a>.</td>
 </tr>
 <tr>
+<td><code>media.files</code></td>
+<td>Ajoute le chemin et la taille du fichier de chaque média à ce que renvoie <code>public</code>. Le jeton ne la porte que si la personne qui regarde est administrateur ; pour toute autre personne elle est retirée à l'émission du jeton. Un chemin nomme les dossiers du serveur, l'administrateur la voit donc dans le consentement d'installation.</td>
+</tr>
+<tr>
+<td><code>media.gaps</code></td>
+<td>L'interface peut lire ce qui manque aux bibliothèques (épisodes diffusés des séries présentes, films sortis des sagas entamées), calculé par Evey d'après ce qu'il a stocké de TMDB. Jamais un appel à TMDB par le plugin. Le jeton ne la porte que si la personne qui regarde est administrateur.</td>
+</tr>
+<tr>
+<td><code>media.trash</code></td>
+<td>Sur sa page <code>admin.nav</code>, l'interface peut demander à Evey de mettre des fichiers à la corbeille de la bibliothèque. Jamais une portée de jeton : la page hôte affiche la confirmation d'Evey, tirée des fiches d'Evey, et seul le oui de l'administrateur appelle l'endpoint admin, sur la session de l'administrateur. Les fichiers sont déplacés dans <code>.evey-trash</code>, jamais effacés.</td>
+</tr>
+<tr>
 <td><code>prefs</code></td>
 <td>L'interface peut lire et écrire les préférences de l'utilisateur courant dans l'espace propre du plugin. Voir <a href="../api-reference/#eveyprefs-permission-prefs"><code>evey.prefs.*</code></a>.</td>
 </tr>

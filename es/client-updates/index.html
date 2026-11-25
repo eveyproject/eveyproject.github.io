@@ -3349,8 +3349,9 @@ conserva su propio código frente a un servidor más antiguo.</p>
 <li><strong>Las apps siguen al servidor activo.</strong> Una vez elegido un servidor, la app
   apunta expo-updates hacia él y descarga su bundle en segundo plano
   (<code>frontend/packages/client/src/native/clientUpdates.ts</code>). El bundle arranca
-  en el siguiente inicio; solo se ofrece un reinicio cuando es una versión de
-  la app distinta de la que está en marcha, y nunca encima del reproductor. Sin
+  en el siguiente inicio. El teléfono ofrece un reinicio cuando es una versión
+  de la app distinta de la que está en marcha, nunca encima del reproductor; la
+  TV nunca, porque recargar en caliente es demasiado pesado para un aparato pequeño. Sin
   servidor elegido, la app no pregunta a nadie.</li>
 </ul>
 <h2 id="native-runtime-version">Versión del runtime nativo<a class="headerlink" href="#native-runtime-version" title="Permanent link">¶</a></h2>

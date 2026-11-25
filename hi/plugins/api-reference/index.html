@@ -2710,6 +2710,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveymediagaps-permission-mediagaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.gaps() (अनुमति media.gaps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eveymediatrashids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.trash(ids) (अनुमति media.trash, सिर्फ़ स्लॉट admin.nav)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveyassetsreadpath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3529,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveymediagaps-permission-mediagaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.gaps() (अनुमति media.gaps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eveymediatrashids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.trash(ids) (अनुमति media.trash, सिर्फ़ स्लॉट admin.nav)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveyassetsreadpath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3964,13 +4008,68 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code> (अनुमति <code>public</code>)<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>मीडिया आइटम की एक सुरक्षित झलक: id, टाइटल, टाइप, साल, सारांश, पोस्टर का URL।
-कभी फ़ाइल का रास्ता, आकार, provider id या stream नहीं।</p>
+कभी provider id या stream नहीं, और फ़ाइल का रास्ता या आकार भी नहीं, जब तक प्लगइन
+के पास <code>media.files</code> भी न हो (नीचे देखें)।</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// { items, total }</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// पोस्टर, data: URL के रूप में</span>
 </span></code></pre></div>
+<p><code>list</code> ज़्यादा से ज़्यादा 500 आइटम का एक पेज लौटाता है, सारे टाइप मिले-जुले
+(सीरीज़, सीज़न, एपिसोड...), जब तक <code>type</code> उसे सीमित न करे। जिस प्लगइन को पूरी
+लाइब्रेरी चाहिए, वह एक टाइप माँगता है और पेज दर पेज तब तक चलता है जब तक उसके पास
+<code>total</code> आइटम न हो जाएँ:</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"MEDIA_ITEM_TYPE_MOVIE"</span><span class="p">,</span><span class="w"> </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">pageSize</span><span class="o">:</span><span class="w"> </span><span class="mf">500</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p><code>media.files</code> अनुमति के साथ, और सिर्फ़ तब जब देखने वाला एडमिन हो, हर आइटम में
+<code>filePath</code>, <code>fileSize</code> (एक स्ट्रिंग, API के हर 64-बिट नंबर की तरह) और <code>quality</code> भी
+होते हैं: <code>width</code>, <code>height</code>, <code>videoCodec</code>, <code>hdrType</code> (SDR में खाली), <code>bitDepth</code>,
+<code>bitrate</code> (बिट प्रति सेकंड), <code>durationMs</code>, <code>container</code>, <code>audioCodec</code> और
+<code>audioChannels</code>, पहले वीडियो ट्रैक और डिफ़ॉल्ट ऑडियो ट्रैक से।
+बाकी सबके लिए टोकन इस अनुमति के बिना बनता है और दोनों फ़ील्ड खाली रहते हैं: जो
+मॉड्यूल सबको दिखता है वह इन पर भरोसा न करे, इनकी जगह <code>admin.nav</code> स्लॉट है।</p>
 <p><code>poster</code> एक <code>data:</code> URL लौटाता है, क्योंकि फ़्रेम की नीति सर्वर से सीधे तस्वीर
 लोड करने से मना करती है; इसे <code>&lt;img&gt;</code> के स्रोत या texture की तरह इस्तेमाल करें।</p>
+<h3 id="eveymediagaps-permission-mediagaps"><code>evey.media.gaps()</code> (अनुमति <code>media.gaps</code>)<a class="headerlink" href="#eveymediagaps-permission-mediagaps" title="Permanent link">¶</a></h3>
+<p>लाइब्रेरी में क्या कम है, Evey का निकाला हुआ: मौजूद सीरीज़ के पहले से प्रसारित
+एपिसोड जो नहीं हैं, और शुरू की गई सीरीज़-फ़िल्मों (saga) की रिलीज़ हो चुकी फ़िल्में
+जो नहीं हैं। कोई सीरीज़ या saga क्या रखती है, यह Evey ख़ुद TMDB से अपनी रफ़्तार
+से जानता है (सहेजा जवाब एक हफ़्ते बाद नया होता है); प्लगइन कभी TMDB को कॉल नहीं
+करता, वह नतीजा पढ़ता है।</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">series</span><span class="p">,</span><span class="w"> </span><span class="nx">sagas</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">gaps</span><span class="p">();</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, fromCatalog, seasons: [{ season, whole,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   episodes: [{ episode, title, airDate }] }] }]</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, owned, missing: [{ title, releaseDate, posterUrl }] }]</span>
+</span></code></pre></div>
+<p>सिर्फ़ जो आ चुका है वही गिना जाता है: बिना तारीख़ का या आज के बाद की तारीख़ वाला
+एपिसोड या फ़िल्म अभी कम नहीं है, और स्पेशल (सीज़न 0) अलग रखे जाते हैं। जिस
+सीरीज़ को TMDB नहीं जानता, वह अपनी ही नंबरिंग के छेदों से दिखती है
+(<code>fromCatalog</code> false): सबसे ऊँचे मौजूद एपिसोड से नीचे के कम एपिसोड, सबसे ऊँचे
+मौजूद सीज़न से नीचे के कम सीज़न (<code>whole</code>, बिना एपिसोड सूची)। सिर्फ़ एडमिन के
+सेशन पर, <code>media.files</code> की तरह।</p>
+<h3 id="eveymediatrashids"><code>evey.media.trash(ids)</code> (अनुमति <code>media.trash</code>, सिर्फ़ स्लॉट <code>admin.nav</code>)<a class="headerlink" href="#eveymediatrashids" title="Permanent link">¶</a></h3>
+<p>Evey से मीडिया फ़ाइलों को उनकी लाइब्रेरी के ट्रैश में ले जाने को कहता है। प्लगइन
+सिर्फ़ माँगता है: Evey अपनी ही पुष्टि दिखाता है, हर आइटम के अपने रिकॉर्ड से
+(टाइटल, साल, रास्ता, आकार, क्वालिटी), प्लगइन के भेजे से कभी नहीं, और जब तक एडमिन
+वहाँ हाँ न कहे, कुछ नहीं हिलता।</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">trash</span><span class="p">([</span><span class="nx">id1</span><span class="p">,</span><span class="w"> </span><span class="nx">id2</span><span class="p">]);</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// { trashed: [{ id, trashedPath, pending }], failed: [{ id, message }] }</span>
+</span></code></pre></div>
+<p>हाँ कहने पर हर फ़ाइल, अपने सबटाइटल और <code>.nfo</code> के साथ, अपनी लाइब्रेरी की जड़ में
+<code>.evey-trash</code> में उसी relative रास्ते के नीचे चली जाती है, और आइटम Evey से हट जाता
+है। डिस्क से कुछ नहीं मिटता: एडमिन वह फ़ोल्डर खाली करता है, और वापस रखी गई फ़ाइल
+अगले स्कैन में लौट आती है। सिर्फ़ फ़िल्म या एपिसोड: सीरीज़ एक फ़ोल्डर है। एडमिन के
+ना कहने पर promise <code>cancelled</code> के साथ reject होता है, और ब्राउज़र में <code>media.trash</code>
+वाले प्लगइन के <code>admin.nav</code> पेज के अलावा कहीं भी <code>method not permitted</code> के साथ (फ़ोन
+और TV ऐप अभी यह नहीं देते)। किसी एक फ़ाइल का इनकार (रीड-ओनली माउंट, फ़ाइल पहले
+ही गायब) <code>failed</code> में लौटता है। <code>pending</code> तब true होता है जब फ़ाइल बैकग्राउंड में किसी
+दूसरे डिस्क के ट्रैश फ़ोल्डर में कॉपी हो रही हो: कॉपी पूरी होने तक आइटम
+<code>evey.media.list</code> में रहता है, और एडमिन को हर हाल में सूचना मिलती है।</p>
+<p><code>evey.media.restore(paths)</code> इसे उसी नियम के तहत पलटता है: <code>trashedPath</code> मानों से Evey
+हर फ़ाइल और उसके सबटाइटल को उनकी जगह वापस रखता है और लाइब्रेरी स्कैन करता है, ताकि
+टाइटल लौट आए, एक नई एंट्री के रूप में जो नाम से दोबारा पहचानी जाती है (पुरानी एंट्री
+की प्लेबैक स्थिति वापस नहीं आती)। नतीजा <code>{ restored: [{ trashedPath, restoredPath }],
+failed: [...] }</code> है; Evey लाइब्रेरी ट्रैश के बाहर का कोई भी रास्ता, और दोबारा भर चुकी
+जगह मना करता है। कोई पुष्टि नहीं: यह कुछ नष्ट नहीं करता।</p>
 <h3 id="eveyassetsreadpath"><code>evey.assets.read(path)</code><a class="headerlink" href="#eveyassetsreadpath" title="Permanent link">¶</a></h3>
 <p>प्लगइन की अपनी <code>web_root</code> की कोई फ़ाइल, relative रास्ते से, <code>data:</code> URL के रूप
 में पढ़ता है: जो फ़ाइल बैकएंड ने चलते समय लिखी, वह cross-origin की चिंता के बिना
@@ -3983,7 +4082,7 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 <code>{ values }</code> के साथ पूरा होता है, यानी सहेजा गया config (गोपनीय फ़ील्ड छिपे हुए),
 और किसी मान के अस्वीकार होने पर सर्वर के संदेश के साथ reject होता है।
 <code>admin.plugin.config</code> के अलावा कहीं भी यह कॉल reject हो जाती है।</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
 </span></code></pre></div>
 <p>मौजूदा मान <code>onInit</code> में <code>config</code> के रूप में आते हैं, हर स्लॉट की तरह।</p>
 <h3 id="on-a-television">टीवी पर<a class="headerlink" href="#on-a-television" title="Permanent link">¶</a></h3>

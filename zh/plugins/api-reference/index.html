@@ -2710,6 +2710,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveymediagaps-permission-mediagaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.gaps()（权限 media.gaps）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eveymediatrashids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.trash(ids)（权限 media.trash，仅限插槽 admin.nav）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveyassetsreadpath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3529,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveymediagaps-permission-mediagaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.gaps()（权限 media.gaps）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eveymediatrashids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.trash(ids)（权限 media.trash，仅限插槽 admin.nav）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveyassetsreadpath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3928,12 +3972,46 @@
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code>（权限 <code>public</code>）<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
-<p>媒体条目的一个安全投影：id、标题、类型、年份、简介、海报 URL。永远不会有文件路径、文件大小、提供方 id 或流。</p>
+<p>媒体条目的一个安全投影：id、标题、类型、年份、简介、海报 URL。永远不会有提供方 id 或流；除非插件还持有 <code>media.files</code>（见下文），也不会有文件路径和文件大小。</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// { items, total }</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// 海报，以 data: URL 的形式</span>
 </span></code></pre></div>
+<p><code>list</code> 返回一页，最多 500 个条目，所有类型混在一起（剧集、季、单集……），除非用 <code>type</code> 加以限定。
+需要整个媒体库的插件，应指定类型并逐页读取，直到拿到 <code>total</code> 个条目：</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"MEDIA_ITEM_TYPE_MOVIE"</span><span class="p">,</span><span class="w"> </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">pageSize</span><span class="o">:</span><span class="w"> </span><span class="mf">500</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>有 <code>media.files</code> 权限，并且只有当正在查看的人是管理员时，每个条目才会额外带上 <code>filePath</code>、<code>fileSize</code>
+（一个字符串，和 API 里所有 64 位数字一样）和 <code>quality</code>：<code>width</code>、<code>height</code>、<code>videoCodec</code>、<code>hdrType</code>（SDR 时为空）、
+<code>bitDepth</code>、<code>bitrate</code>（每秒比特数）、<code>durationMs</code>、<code>container</code>、<code>audioCodec</code> 和 <code>audioChannels</code>，取自第一条视频轨和默认音轨。对其他任何人，令牌在签发时就不带这个权限，两个字段都是空的：
+展示给所有人的模块不能依赖它们，它们该出现在 <code>admin.nav</code> 插槽里。</p>
 <p><code>poster</code> 返回 <code>data:</code> URL，是因为框架的策略禁止直接从服务器加载图片；可以把它用作 <code>&lt;img&gt;</code> 的来源，或者当作纹理。</p>
+<h3 id="eveymediagaps-permission-mediagaps"><code>evey.media.gaps()</code>（权限 <code>media.gaps</code>）<a class="headerlink" href="#eveymediagaps-permission-mediagaps" title="Permanent link">¶</a></h3>
+<p>媒体库缺了什么，由 Evey 计算：已有剧集中已播出但没有的单集，以及已开始收藏的系列电影中已上映但没有的影片。
+一部剧或一个系列包含什么，由 Evey 自己按节奏向 TMDB 查询（保存的结果一周后更新）；插件从不调用 TMDB，只读取结果。</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">series</span><span class="p">,</span><span class="w"> </span><span class="nx">sagas</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">gaps</span><span class="p">();</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, fromCatalog, seasons: [{ season, whole,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   episodes: [{ episode, title, airDate }] }] }]</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, owned, missing: [{ title, releaseDate, posterUrl }] }]</span>
+</span></code></pre></div>
+<p>只计算已经发布的内容：没有日期或日期晚于今天的单集或电影还不算缺失，特别篇（第 0 季）不计入。
+TMDB 不认识的剧集按其自身编号中的空缺列出（<code>fromCatalog</code> 为 false）：低于已有最高集号的缺失单集、低于已有最高季号的缺失整季（<code>whole</code>，不带单集列表）。
+仅限管理员会话，与 <code>media.files</code> 相同。</p>
+<h3 id="eveymediatrashids"><code>evey.media.trash(ids)</code>（权限 <code>media.trash</code>，仅限插槽 <code>admin.nav</code>）<a class="headerlink" href="#eveymediatrashids" title="Permanent link">¶</a></h3>
+<p>请求 Evey 把媒体文件移到其媒体库的回收站。插件只是请求：Evey 会显示自己的确认窗口，内容来自 Evey 自己对每个条目的记录
+（标题、年份、路径、大小、画质），绝不采用插件发来的内容；管理员在那里点确认之前，什么都不会移动。</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">trash</span><span class="p">([</span><span class="nx">id1</span><span class="p">,</span><span class="w"> </span><span class="nx">id2</span><span class="p">]);</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// { trashed: [{ id, trashedPath, pending }], failed: [{ id, message }] }</span>
+</span></code></pre></div>
+<p>确认后，每个文件连同字幕和 <code>.nfo</code> 会移到其媒体库根目录下的 <code>.evey-trash</code>，保持相同的相对路径，该条目随之从 Evey 中移除。
+磁盘上不会删除任何内容：由管理员清空该文件夹，移回原处的文件会在下次扫描时回来。只适用于电影或单集：剧集是一个文件夹。
+管理员拒绝时 Promise 以 <code>cancelled</code> 拒绝；在浏览器中，除了拥有 <code>media.trash</code> 的插件的 <code>admin.nav</code> 页面之外，
+任何地方都会以 <code>method not permitted</code> 拒绝（手机和电视应用暂不提供）。单个文件被拒（只读挂载、文件已不在）会出现在 <code>failed</code> 中。<code>pending</code> 为 true 表示文件正在后台复制到另一块盘上的回收站：
+复制完整之前该条目仍在 <code>evey.media.list</code> 中，无论结果如何管理员都会收到通知。</p>
+<p><code>evey.media.restore(paths)</code> 按同样的规则撤销：根据 <code>trashedPath</code> 值，Evey 把每个文件连同字幕移回原处并扫描媒体库，
+标题随之回来，作为按文件名重新识别的新条目（旧条目的播放进度不会恢复）。结果为
+<code>{ restored: [{ trashedPath, restoredPath }], failed: [...] }</code>；Evey 拒绝媒体库回收站之外的任何路径，以及已被重新占用的位置。
+无需确认：它不会销毁任何内容。</p>
 <h3 id="eveyassetsreadpath"><code>evey.assets.read(path)</code><a class="headerlink" href="#eveyassetsreadpath" title="Permanent link">¶</a></h3>
 <p>按相对路径读取插件自己 <code>web_root</code> 里的一个文件，返回 <code>data:</code> URL：后端在运行时写出的文件，
 就能在框架里直接使用，不用操心跨域问题。只能读到插件自己的资源。</p>
@@ -3942,7 +4020,7 @@
 其余的键保持原样，服务器会按模式校验合并后的结果，和校验生成的表单完全一样。值都是字符串，和表单里一样。
 Promise 会以 <code>{ values }</code> 兑现，即实际保存的配置（密钥字段会被遮蔽）；某个值被拒绝时，
 它会带着服务器的消息被拒绝。在 <code>admin.plugin.config</code> 之外的任何地方，这个调用都会被拒绝。</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
 </span></code></pre></div>
 <p>当前的值会在 <code>onInit</code> 里以 <code>config</code> 的形式传入，和每个插槽一样。</p>
 <h3 id="on-a-television">在电视上<a class="headerlink" href="#on-a-television" title="Permanent link">¶</a></h3>

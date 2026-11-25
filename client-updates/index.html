@@ -3347,9 +3347,10 @@ and keeps its own code in front of an older server.</p>
 <li><strong>The apps follow the active server.</strong> Once a server is chosen the app points
   expo-updates at it and downloads its bundle in the background
   (<code>frontend/packages/client/src/native/clientUpdates.ts</code>). The bundle starts
-  with the next launch; a restart is offered only when it is another app
-  version than the one running, and never over the player. With no server
-  chosen the app asks nobody.</li>
+  with the next launch. The phone offers a restart when it is another app
+  version than the one running, never over the player; the TV never does, a
+  reload in place being too heavy for a small box. With no server chosen the
+  app asks nobody.</li>
 </ul>
 <h2 id="native-runtime-version">Native runtime version<a class="headerlink" href="#native-runtime-version" title="Permanent link">¶</a></h2>
 <p>A bundle only runs on the native build it was made for. Each app declares a

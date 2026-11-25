@@ -1003,6 +1003,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trash folder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3268,6 +3279,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trash folder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3500,6 +3522,25 @@ Evey within a few minutes.</p>
 <p>On an NFS or SMB share, a file written by another machine sends no
 signal to the server. The regular reads find it.</p>
 </div>
+<h2 id="the-trash-folder">The trash folder<a class="headerlink" href="#the-trash-folder" title="Permanent link">¶</a></h2>
+<p>A plugin page granted <code>media.trash</code> (the Librarian, for duplicates) can
+offer to move files to the trash. Evey asks first, in its own window that
+names each file, its path, size and quality. On yes, the file goes, with its
+subtitles and <code>.nfo</code>, to <code>.evey-trash</code> at the root of its library, under the
+same folders, and the title leaves Evey.</p>
+<p>Nothing is deleted from the disk. Empty <code>.evey-trash</code> yourself once you are
+sure. To bring a file back, use <strong>Undo</strong> on the plugin page right after, or
+move it to where it was and scan the library.
+Evey never reads that folder. A library on a read-only mount cannot use the
+trash: the move is refused and the title stays.</p>
+<p>On pooled disks (mergerfs, unRAID) the trash folder can sit on another disk
+than the file. The file then gets there the way <code>mv</code> does it: copied, checked,
+then removed from its old place. For a large film that takes the time of a
+copy, a few minutes on spinning disks; the original stays untouched until the
+copy is whole.
+That copy runs in the background: the confirmation closes at once, the
+plugin page shows the move as in progress, and an Evey notification tells the
+administrators when it is done, or why the file stayed.</p>
 <h2 id="music-libraries">Music libraries<a class="headerlink" href="#music-libraries" title="Permanent link">¶</a></h2>
 <p>The scanner reads MP3, FLAC, M4A, OGG, Opus, WAV and AAC files, and takes each
 track from its tags: title (the file name when it is missing), artist, album

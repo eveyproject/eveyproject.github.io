@@ -2710,6 +2710,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveymediagaps-permission-mediagaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.gaps() (permiso media.gaps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eveymediatrashids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.trash(ids) (permiso media.trash, solo en el slot admin.nav)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveyassetsreadpath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,6 +3529,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveymediagaps-permission-mediagaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.gaps() (permiso media.gaps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eveymediatrashids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.media.trash(ids) (permiso media.trash, solo en el slot admin.nav)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveyassetsreadpath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3972,15 +4016,75 @@ el permiso, se rechaza.</p>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code> (permiso <code>public</code>)<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>Una versión segura de los elementos multimedia: id, título, tipo, año,
-resumen, URL del póster. Nunca una ruta de archivo, un tamaño, un id de
-proveedor ni un flujo.</p>
+resumen, URL del póster. Nunca un id de proveedor ni un flujo, y ni ruta ni
+tamaño de archivo salvo que el plugin tenga también <code>media.files</code> (abajo).</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// { items, total }</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// el póster como URL data:</span>
 </span></code></pre></div>
+<p><code>list</code> devuelve una página de 500 elementos como máximo, todos los tipos
+mezclados (series, temporadas, episodios...) salvo que <code>type</code> la limite. Un
+plugin que necesita toda la biblioteca pide un tipo y recorre las páginas
+hasta tener <code>total</code> elementos:</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"MEDIA_ITEM_TYPE_MOVIE"</span><span class="p">,</span><span class="w"> </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">pageSize</span><span class="o">:</span><span class="w"> </span><span class="mf">500</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>Con el permiso <code>media.files</code>, y solo cuando quien mira es administrador, cada
+elemento lleva también <code>filePath</code>, <code>fileSize</code> (una cadena, como todo número
+de 64 bits de la API) y <code>quality</code>: <code>width</code>, <code>height</code>, <code>videoCodec</code>, <code>hdrType</code>
+(vacío en SDR), <code>bitDepth</code>, <code>bitrate</code> (bits por segundo), <code>durationMs</code>,
+<code>container</code>, <code>audioCodec</code> y <code>audioChannels</code>, de la primera pista de vídeo y
+de la pista de audio por defecto. Para cualquier otra persona el token se emite sin ese
+permiso y los dos campos quedan vacíos: un módulo que ve todo el mundo no
+debe contar con ellos, su sitio es el slot <code>admin.nav</code>.</p>
 <p><code>poster</code> devuelve una URL <code>data:</code> porque la política del marco prohíbe cargar
 una imagen directamente desde el servidor; úsala como fuente de un <code>&lt;img&gt;</code> o
 como textura.</p>
+<h3 id="eveymediagaps-permission-mediagaps"><code>evey.media.gaps()</code> (permiso <code>media.gaps</code>)<a class="headerlink" href="#eveymediagaps-permission-mediagaps" title="Permanent link">¶</a></h3>
+<p>Lo que les falta a las bibliotecas, calculado por Evey: los episodios ya
+emitidos de las series presentes que no están, y las películas ya estrenadas
+de las sagas empezadas. Evey averigua lo que contiene una serie o una saga en
+TMDB por su cuenta, a su ritmo (una respuesta guardada se renueva al cabo de
+una semana); un plugin nunca llama a TMDB, lee el resultado.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">series</span><span class="p">,</span><span class="w"> </span><span class="nx">sagas</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">gaps</span><span class="p">();</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, fromCatalog, seasons: [{ season, whole,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   episodes: [{ episode, title, airDate }] }] }]</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, owned, missing: [{ title, releaseDate, posterUrl }] }]</span>
+</span></code></pre></div>
+<p>Solo cuenta lo que ya ha salido: un episodio o una película sin fecha, o con
+fecha posterior a hoy, todavía no falta, y los especiales (temporada 0) quedan
+fuera. Una serie que TMDB no conoce se lista según los huecos de su propia
+numeración (<code>fromCatalog</code> falso): episodios que faltan por debajo del más alto
+presente, temporadas que faltan por debajo de la más alta presente (<code>whole</code>,
+sin lista de episodios). Solo en la sesión de un administrador, como
+<code>media.files</code>.</p>
+<h3 id="eveymediatrashids"><code>evey.media.trash(ids)</code> (permiso <code>media.trash</code>, solo en el slot <code>admin.nav</code>)<a class="headerlink" href="#eveymediatrashids" title="Permanent link">¶</a></h3>
+<p>Pide a Evey que mueva archivos a la papelera de su biblioteca. El plugin solo
+pide: Evey muestra su propia confirmación, hecha con su propio registro de
+cada elemento (título, año, ruta, tamaño, calidad), nunca con lo que envió el
+plugin, y nada se mueve hasta que el administrador dice que sí ahí.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">trash</span><span class="p">([</span><span class="nx">id1</span><span class="p">,</span><span class="w"> </span><span class="nx">id2</span><span class="p">]);</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// { trashed: [{ id, trashedPath, pending }], failed: [{ id, message }] }</span>
+</span></code></pre></div>
+<p>Si dice que sí, cada archivo va, con sus subtítulos y su <code>.nfo</code>, a
+<code>.evey-trash</code> en la raíz de su biblioteca, bajo la misma ruta relativa, y el
+elemento sale de Evey. No se borra nada del disco: el administrador vacía esa
+carpeta, y un archivo devuelto a su sitio vuelve con el siguiente escaneo.
+Solo películas y episodios: una serie es una carpeta. La promesa se rechaza
+con <code>cancelled</code> cuando el administrador dice que no, y con <code>method not
+permitted</code> en cualquier sitio que no sea una página <code>admin.nav</code> de un plugin
+con <code>media.trash</code> en el navegador (las apps de teléfono y TV aún no lo
+ofrecen). Un rechazo por archivo (montaje de solo lectura, archivo ya
+desaparecido) vuelve en <code>failed</code>. <code>pending</code> es verdadero cuando el archivo
+se copia en segundo plano a una papelera en otro disco: el elemento sigue en
+<code>evey.media.list</code> hasta que la copia está completa, y los administradores
+reciben una notificación en cualquier caso.</p>
+<p><code>evey.media.restore(paths)</code> lo deshace, con la misma regla: a partir de los
+valores <code>trashedPath</code>, Evey devuelve cada archivo y sus subtítulos a su sitio
+y escanea la biblioteca, así que el título vuelve, como una entrada nueva
+reconocida otra vez por su nombre (el estado de reproducción de la entrada
+anterior no se recupera). Devuelve <code>{ restored: [{ trashedPath, restoredPath
+}], failed: [...] }</code>; Evey rechaza cualquier ruta fuera de una papelera de
+biblioteca, y un sitio ocupado de nuevo. Sin confirmación: no destruye nada.</p>
 <h3 id="eveyassetsreadpath"><code>evey.assets.read(path)</code><a class="headerlink" href="#eveyassetsreadpath" title="Permanent link">¶</a></h3>
 <p>Lee uno de los archivos de <code>web_root</code> del propio plugin, por ruta relativa,
 como URL <code>data:</code>: un archivo que el backend escribió mientras funcionaba se
@@ -3996,7 +4100,7 @@ resuelve con <code>{ values }</code>, la configuración tal como queda guardada 
 secretos enmascarados), y se rechaza con el mensaje del servidor cuando se
 rechaza un valor. En cualquier sitio que no sea <code>admin.plugin.config</code>, la
 llamada se rechaza.</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span><span class="w"> </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="s2">"Brest"</span><span class="p">,</span><span class="w"> </span><span class="nx">lat</span><span class="o">:</span><span class="w"> </span><span class="s2">"48.39"</span><span class="p">,</span><span class="w"> </span><span class="nx">lon</span><span class="o">:</span><span class="w"> </span><span class="s2">"-4.49"</span><span class="w"> </span><span class="p">});</span>
 </span></code></pre></div>
 <p>Los valores actuales llegan a <code>onInit</code> como <code>config</code>, como en todos los slots.</p>
 <h3 id="on-a-television">En un televisor<a class="headerlink" href="#on-a-television" title="Permanent link">¶</a></h3>

@@ -3404,6 +3404,18 @@ install. Receiving webhooks (<code>webhook.receiver</code>) and providing metada
 <td>The interface may read a safe projection of media items (id, title, type, year, overview, poster), never paths or streams. See <a href="../api-reference/#eveymedia-permission-public"><code>evey.media.*</code></a>.</td>
 </tr>
 <tr>
+<td><code>media.files</code></td>
+<td>Adds each media item's file path and size to what <code>public</code> returns. The token carries it only when the viewer is an administrator; for anyone else it is dropped when the token is minted. A path names the server's folders, so the administrator sees it in the install consent.</td>
+</tr>
+<tr>
+<td><code>media.gaps</code></td>
+<td>The interface may read what the libraries miss (aired episodes of held series, released films of started sagas), worked out by Evey from what it stored of TMDB. Never a call to TMDB by the plugin. The token carries it only when the viewer is an administrator.</td>
+</tr>
+<tr>
+<td><code>media.trash</code></td>
+<td>On its <code>admin.nav</code> page, the interface may ask Evey to move media files to the library trash. Never a token scope: the host page shows Evey's own confirmation, from Evey's records, and only the administrator's yes there calls the admin endpoint, on the administrator's session. Files are moved to <code>.evey-trash</code>, never deleted.</td>
+</tr>
+<tr>
 <td><code>prefs</code></td>
 <td>The interface may read and write the current user's preferences in the plugin's own namespace. See <a href="../api-reference/#eveyprefs-permission-prefs"><code>evey.prefs.*</code></a>.</td>
 </tr>

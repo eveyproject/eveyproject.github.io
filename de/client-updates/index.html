@@ -3350,8 +3350,9 @@ Code.</p>
 <li><strong>Die Apps folgen dem aktiven Server.</strong> Sobald ein Server gewählt ist,
   richtet die App expo-updates auf ihn aus und lädt sein Bundle im Hintergrund
   herunter (<code>frontend/packages/client/src/native/clientUpdates.ts</code>). Das
-  Bundle wird beim nächsten Start der App aktiv; ein Neustart wird nur angeboten, wenn
-  es eine andere App-Version ist als die laufende, und nie über dem Player.
+  Bundle wird beim nächsten Start der App aktiv. Das Telefon bietet einen Neustart an,
+  wenn es eine andere App-Version ist als die laufende, nie über dem Player; der
+  Fernseher nie, ein Neuladen im laufenden Betrieb ist für eine kleine Box zu schwer.
   Ist kein Server gewählt, fragt die App niemanden.</li>
 </ul>
 <h2 id="native-runtime-version">Version der nativen Laufzeit<a class="headerlink" href="#native-runtime-version" title="Permanent link">¶</a></h2>

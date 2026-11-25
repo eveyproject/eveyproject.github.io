@@ -1003,6 +1003,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La carpeta papelera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3268,6 +3279,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La carpeta papelera
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3511,6 +3533,27 @@ biblioteca:</p>
 <p>En una carpeta compartida NFS o SMB, un archivo escrito por otra máquina
 no envía ninguna señal al servidor. Las lecturas regulares lo encuentran.</p>
 </div>
+<h2 id="the-trash-folder">La carpeta papelera<a class="headerlink" href="#the-trash-folder" title="Permanent link">¶</a></h2>
+<p>Una página de plugin con el permiso <code>media.trash</code> (el Librarian, para los
+duplicados) puede ofrecer mover archivos a la papelera. Evey pregunta antes,
+en su propia ventana, que nombra cada archivo con su ruta, tamaño y calidad.
+Si dices que sí, el archivo va, con sus subtítulos y su <code>.nfo</code>, a
+<code>.evey-trash</code> en la raíz de su biblioteca, bajo las mismas carpetas, y el
+título sale de Evey.</p>
+<p>No se borra nada del disco. Vacía <code>.evey-trash</code> tú mismo cuando estés
+seguro; para recuperar un archivo, usa <strong>Undo</strong> en la página del plugin justo
+después, o devuélvelo a su sitio y escanea la biblioteca. Evey nunca lee esa carpeta. Una biblioteca montada en solo
+lectura no puede usar la papelera: el movimiento se rechaza y el título se
+queda.</p>
+<p>En discos agrupados (mergerfs, unRAID) la carpeta papelera puede estar en otro
+disco que el archivo. El archivo llega entonces como lo hace <code>mv</code>: copiado,
+comprobado y después retirado de su sitio anterior. Con una película grande
+tarda lo que una copia, unos minutos en discos mecánicos; el original no se
+toca hasta que la copia está completa.
+Esa copia se hace en segundo plano: la confirmación se cierra al momento, la
+página del plugin muestra el movimiento en curso y una notificación de Evey
+avisa a los administradores cuando termina, o dice por qué el archivo se
+quedó.</p>
 <h2 id="music-libraries">Bibliotecas de música<a class="headerlink" href="#music-libraries" title="Permanent link">¶</a></h2>
 <p>El escáner lee archivos MP3, FLAC, M4A, OGG, Opus, WAV y AAC, y toma los
 datos de cada pista de sus etiquetas: título (el nombre del archivo si

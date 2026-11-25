@@ -3412,6 +3412,18 @@ unter <code>capabilities</code> angegeben: siehe
 <td>Die Oberfläche darf eine sichere Projektion der Medien lesen (id, Titel, Typ, Jahr, Inhaltsangabe, Poster), nie Pfade oder Streams. Siehe <a href="../api-reference/#eveymedia-permission-public"><code>evey.media.*</code></a>.</td>
 </tr>
 <tr>
+<td><code>media.files</code></td>
+<td>Fügt dem, was <code>public</code> liefert, Dateipfad und Größe jedes Mediums hinzu. Das Token trägt sie nur, wenn die ansehende Person Administrator ist; für alle anderen wird sie beim Ausstellen des Tokens entfernt. Ein Pfad nennt die Ordner des Servers, daher sieht der Administrator sie in der Installationszustimmung.</td>
+</tr>
+<tr>
+<td><code>media.gaps</code></td>
+<td>Die Oberfläche darf lesen, was den Bibliotheken fehlt (ausgestrahlte Episoden vorhandener Serien, erschienene Filme begonnener Reihen), von Evey aus dem berechnet, was es von TMDB gespeichert hat. Nie ein Aufruf von TMDB durch das Plugin. Das Token trägt sie nur, wenn die ansehende Person Administrator ist.</td>
+</tr>
+<tr>
+<td><code>media.trash</code></td>
+<td>Auf ihrer <code>admin.nav</code>-Seite darf die Oberfläche Evey bitten, Mediendateien in den Papierkorb der Bibliothek zu verschieben. Nie ein Token-Scope: Die Host-Seite zeigt Eveys eigene Bestätigung aus Eveys Datensätzen, und nur das Ja des Administrators dort ruft den Admin-Endpunkt auf, mit dessen Sitzung. Dateien werden nach <code>.evey-trash</code> verschoben, nie gelöscht.</td>
+</tr>
+<tr>
 <td><code>prefs</code></td>
 <td>Die Oberfläche darf die Einstellungen des aktuellen Benutzers im eigenen Namensraum des Plugins lesen und schreiben. Siehe <a href="../api-reference/#eveyprefs-permission-prefs"><code>evey.prefs.*</code></a>.</td>
 </tr>

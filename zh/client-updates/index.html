@@ -3329,7 +3329,7 @@
 <li><strong>服务器只负责交出字节。</strong> <code>GET /api/v1/client-updates/{app}/manifest</code> 和 <code>.../assets/{platform}/{runtime}/{name}</code> 使用 Expo Updates 协议（<code>internal/adapters/driving/http/client_update_handler.go</code>）。实例不持有任何密钥，不构建任何 manifest，也只打开该目录内的文件。</li>
 <li><strong>应用负责验证。</strong> 每个 bundle 都由项目签名，并随签名密钥的证书一起发送；应用用编译进自身的根证书 <code>frontend/client-updates/certificate.pem</code> 来校验这张证书。实例只能分发已发布的代码，其他任何内容都会在设备上被拒绝。</li>
 <li><strong>应用从不回退。</strong> 见下文“版本下限”。</li>
-<li><strong>应用跟随当前服务器。</strong> 选定服务器后，应用把 expo-updates 指向它，并在后台下载它的 bundle（<code>frontend/packages/client/src/native/clientUpdates.ts</code>）。bundle 在下次启动时生效；只有当它与正在运行的应用不是同一个应用版本时才会提示重新启动，而且从不出现在播放器上方。没有选定服务器时，应用不向任何人查询。</li>
+<li><strong>应用跟随当前服务器。</strong> 选定服务器后，应用把 expo-updates 指向它，并在后台下载它的 bundle（<code>frontend/packages/client/src/native/clientUpdates.ts</code>）。bundle 在下次启动时生效。手机只有在它与正在运行的应用不是同一个应用版本时才会提示重新启动，而且从不出现在播放器上方；电视从不提示，因为就地重新加载对小盒子来说太重。没有选定服务器时，应用不向任何人查询。</li>
 </ul>
 <h2 id="native-runtime-version">原生运行时版本<a class="headerlink" href="#native-runtime-version" title="Permanent link">¶</a></h2>
 <p>一个 bundle 只能在它对应的原生构建上运行。每个应用在自己的 <code>app.json</code> 中声明一个 <code>runtimeVersion</code>（<code>mobile-1</code>、<code>tv-1</code>），bundle 就以这个名称存放和请求。</p>

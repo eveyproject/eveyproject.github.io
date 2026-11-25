@@ -1003,6 +1003,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Le dossier corbeille
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3268,6 +3279,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Le dossier corbeille
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3517,6 +3539,27 @@ la ligne de la bibliothèque :</p>
 n'envoie aucun signal au serveur. C'est la lecture régulière des
 dossiers qui le trouve.</p>
 </div>
+<h2 id="the-trash-folder">Le dossier corbeille<a class="headerlink" href="#the-trash-folder" title="Permanent link">¶</a></h2>
+<p>Une page de plugin qui a la permission <code>media.trash</code> (le Bibliothécaire,
+pour les doublons) peut proposer de mettre des fichiers à la corbeille. Evey
+demande d'abord, dans sa propre fenêtre qui nomme chaque fichier, son chemin,
+sa taille et sa qualité. Sur un oui, le fichier part, avec ses sous-titres et
+son <code>.nfo</code>, dans <code>.evey-trash</code> à la racine de sa bibliothèque, sous les mêmes
+dossiers, et le titre quitte Evey.</p>
+<p>Rien n'est effacé du disque. Videz <code>.evey-trash</code> vous-même une fois sûr ;
+pour récupérer un fichier, utilisez <strong>Annuler</strong> sur la page du plugin juste
+après, ou remettez-le à sa place et scannez la bibliothèque.
+Evey ne lit jamais ce dossier. Une bibliothèque montée en lecture seule ne
+peut pas utiliser la corbeille : le déplacement est refusé et le titre reste.</p>
+<p>Sur des disques en pool (mergerfs, unRAID), le dossier corbeille peut se
+trouver sur un autre disque que le fichier. Le fichier y va alors comme avec
+<code>mv</code> : copié, vérifié, puis retiré de son ancienne place. Pour un gros film
+cela prend le temps d'une copie, quelques minutes sur des disques mécaniques ;
+l'original reste intact tant que la copie n'est pas complète.
+Cette copie se fait en arrière-plan : la confirmation se ferme tout de suite,
+la page du plugin montre le déplacement en cours, et une notification Evey
+prévient les administrateurs quand c'est fini, ou dit pourquoi le fichier est
+resté.</p>
 <h2 id="music-libraries">Bibliothèques de musique<a class="headerlink" href="#music-libraries" title="Permanent link">¶</a></h2>
 <p>Le scanner lit les fichiers MP3, FLAC, M4A, OGG, Opus, WAV et AAC, et prend
 chaque morceau dans ses tags : titre (le nom du fichier s'il manque),

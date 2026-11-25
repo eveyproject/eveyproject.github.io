@@ -1003,6 +1003,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Der Papierkorb-Ordner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3268,6 +3279,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-trash-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Der Papierkorb-Ordner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#music-libraries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3516,6 +3538,27 @@ nutzen Sie die Zeile der Bibliothek:</p>
 Rechner geschrieben hat, kein Signal an den Server. Die regelmäßigen
 Durchgänge finden sie.</p>
 </div>
+<h2 id="the-trash-folder">Der Papierkorb-Ordner<a class="headerlink" href="#the-trash-folder" title="Permanent link">¶</a></h2>
+<p>Eine Plugin-Seite mit der Berechtigung <code>media.trash</code> (der Librarian, für
+Duplikate) kann anbieten, Dateien in den Papierkorb zu verschieben. Evey
+fragt zuerst, in einem eigenen Fenster, das jede Datei mit Pfad, Größe und
+Qualität nennt. Bei Ja wandert die Datei, mit ihren Untertiteln und der
+<code>.nfo</code>, nach <code>.evey-trash</code> im Stammverzeichnis ihrer Bibliothek, unter
+denselben Ordnern, und der Titel verschwindet aus Evey.</p>
+<p>Nichts wird von der Festplatte gelöscht. Leeren Sie <code>.evey-trash</code> selbst,
+wenn Sie sicher sind; um eine Datei zurückzuholen, nutzen Sie gleich danach <strong>Undo</strong> auf
+der Plugin-Seite, oder verschieben Sie sie an ihren Platz und scannen die
+Bibliothek. Evey liest diesen Ordner nie. Eine
+schreibgeschützt eingebundene Bibliothek kann den Papierkorb nicht nutzen:
+das Verschieben wird abgelehnt und der Titel bleibt.</p>
+<p>Bei zusammengefassten Platten (mergerfs, unRAID) kann der Papierkorb auf einer
+anderen Platte liegen als die Datei. Die Datei kommt dann so dorthin, wie <code>mv</code>
+es macht: kopiert, geprüft und danach an ihrem alten Platz entfernt. Bei einem
+großen Film dauert das so lange wie eine Kopie, auf drehenden Platten einige
+Minuten; das Original bleibt unangetastet, bis die Kopie vollständig ist.
+Diese Kopie läuft im Hintergrund: Die Bestätigung schließt sofort, die
+Plugin-Seite zeigt den Vorgang als laufend, und eine Evey-Benachrichtigung
+sagt den Administratoren, wann er fertig ist oder warum die Datei blieb.</p>
 <h2 id="music-libraries">Musikbibliotheken<a class="headerlink" href="#music-libraries" title="Permanent link">¶</a></h2>
 <p>Der Scanner liest MP3-, FLAC-, M4A-, OGG-, Opus-, WAV- und AAC-Dateien und
 entnimmt jeden Titel seinen Tags: Titel (der Dateiname, wenn er fehlt),

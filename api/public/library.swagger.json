@@ -506,6 +506,13 @@
             "in": "query",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "unwatchedOnly",
+            "description": "Keep only what the requesting profile has not watched (MediaUserData\nplayed): what a home rail shows.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "tags": [
@@ -851,6 +858,29 @@
         ]
       }
     },
+    "/api/v1/public/catalog-gaps": {
+      "get": {
+        "summary": "GetCatalogGaps lists what the libraries miss: aired episodes of the\nseries they hold (from the catalog source, else from the gaps in their\nown numbering) and released films of the sagas they started. Worked out\nfrom what the server stored; it never calls the catalog source itself.\nAdministrators only: a plugin token with the media.gaps scope, which is\nminted on an administrator's session alone.",
+        "operationId": "LibraryService_GetCatalogGaps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCatalogGapsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "LibraryService"
+        ]
+      }
+    },
     "/api/v1/public/media": {
       "get": {
         "operationId": "LibraryService_ListPublicMediaItems",
@@ -924,7 +954,7 @@
     },
     "/api/v1/public/media/{id}": {
       "get": {
-        "summary": "Public, non-sensitive projection of media items (id/title/type/year/poster/\noverview only - never file paths or provider ids). This is the read surface\na plugin may be granted via the `public` permission; regular users may call\nit too. Distinct from GetMediaItem/ListMediaItems, which return sensitive\nserver-side detail and are never exposed to plugin tokens.",
+        "summary": "Public, non-sensitive projection of media items (id/title/type/year/poster/\noverview, never provider ids). This is the read surface a plugin may be\ngranted via the `public` permission; regular users may call it too. The\nfile path and size are added only for a plugin token with `media.files`. Distinct from GetMediaItem/ListMediaItems, which return sensitive\nserver-side detail and are never exposed to plugin tokens.",
         "operationId": "LibraryService_GetPublicMediaItem",
         "responses": {
           "200": {
@@ -1111,6 +1141,25 @@
         "hasMore": {
           "type": "boolean",
           "description": "Whether rows remain past next_offset."
+        }
+      }
+    },
+    "v1GetCatalogGapsResponse": {
+      "type": "object",
+      "properties": {
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SeriesGaps"
+          }
+        },
+        "sagas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SagaGaps"
+          }
         }
       }
     },
@@ -1474,6 +1523,14 @@
           "type": "integer",
           "format": "int32",
           "description": "Season number of an episode's season (0 elsewhere), so a client can build\nthe S01E03 code without fetching the season."
+        },
+        "hasIndexNumber": {
+          "type": "boolean",
+          "description": "has_index_number tells an episode or season without a number (a file of\na season folder whose name states none) from number 0 (an episode E00,\nthe specials season): index_number reads 0 for both. Additive rather\nthan making index_number optional, a cardinality change buf breaking\nrefuses."
+        },
+        "userData": {
+          "$ref": "#/definitions/v1MediaUserData",
+          "description": "What the requesting profile did with this title, filled on every read\nthat returns a MediaItem. Clients read the watched mark and the progress\nhere, never from a list of their own."
         }
       }
     },
@@ -1609,6 +1666,24 @@
         },
         "level": {
           "type": "string"
+        },
+        "isCommentary": {
+          "type": "boolean",
+          "description": "Matroska/ffprobe disposition flags. Clients skip a commentary track when\npicking the default audio, as the server-side default selection does, and\nlabel commentary and accessibility tracks in the track picker."
+        },
+        "isHearingImpaired": {
+          "type": "boolean"
+        },
+        "isVisualImpaired": {
+          "type": "boolean"
+        },
+        "isOriginal": {
+          "type": "boolean"
+        },
+        "sourceTrackId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "source_track_id: the number the file itself gives the track (Matroska\nTrackNumber, MP4 track_ID), the id a native player names the track by.\nUnset when the probe did not report it."
         }
       }
     },
@@ -1622,6 +1697,67 @@
         "MEDIA_STREAM_TYPE_ATTACHMENT"
       ],
       "default": "MEDIA_STREAM_TYPE_UNSPECIFIED"
+    },
+    "v1MediaUserData": {
+      "type": "object",
+      "properties": {
+        "played": {
+          "type": "boolean"
+        },
+        "positionMs": {
+          "type": "string",
+          "format": "int64"
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "int64"
+        },
+        "percentComplete": {
+          "type": "number",
+          "format": "double"
+        },
+        "playCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "played is the server's one rule (media_watched): a film or an episode by\nits completed row, a series or a season once every episode is completed.\nposition_ms, duration_ms and percent_complete are the item's own progress\nrow (0 for a series or a season)."
+    },
+    "v1MissingEpisode": {
+      "type": "object",
+      "properties": {
+        "episode": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "type": "string"
+        },
+        "airDate": {
+          "type": "string",
+          "description": "air_date is YYYY-MM-DD, empty when unknown."
+        }
+      }
+    },
+    "v1MissingSeason": {
+      "type": "object",
+      "properties": {
+        "season": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "whole": {
+          "type": "boolean"
+        },
+        "episodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MissingEpisode"
+          }
+        }
+      },
+      "description": "MissingSeason groups a series' missing episodes. whole: not one episode of\nthe season is held (episodes may then be empty when its size is unknown)."
     },
     "v1PaginationRequest": {
       "type": "object",
@@ -1699,9 +1835,65 @@
         },
         "posterUrl": {
           "type": "string"
+        },
+        "filePath": {
+          "type": "string",
+          "description": "file_path and file_size are set only for a plugin token that carries the\n`media.files` scope, which is minted only on an administrator's session.\nEveryone else, a user session included, gets them empty."
+        },
+        "fileSize": {
+          "type": "string",
+          "format": "int64"
+        },
+        "quality": {
+          "$ref": "#/definitions/v1PublicMediaQuality",
+          "description": "quality describes the file, under the same rule as file_path."
         }
       },
-      "description": "PublicMediaItem is the non-sensitive projection exposed via the `public`\npermission. It deliberately omits file_path, file_size, provider_ids,\nstreams and any server-side detail."
+      "description": "PublicMediaItem is the non-sensitive projection exposed via the `public`\npermission. It omits provider_ids, streams and any server-side detail."
+    },
+    "v1PublicMediaQuality": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "videoCodec": {
+          "type": "string"
+        },
+        "hdrType": {
+          "type": "string",
+          "description": "hdr_type is the server's reading of the video (HDR10, HLG, Dolby Vision...),\nempty for SDR or unknown."
+        },
+        "bitDepth": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bitrate": {
+          "type": "string",
+          "format": "int64",
+          "description": "bitrate is the container's overall bitrate, bits per second."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "int64"
+        },
+        "container": {
+          "type": "string"
+        },
+        "audioCodec": {
+          "type": "string"
+        },
+        "audioChannels": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "PublicMediaQuality is enough to tell two copies of a film apart: the first\nvideo track and the default (else first) audio track."
     },
     "v1Rating": {
       "type": "object",
@@ -1718,6 +1910,44 @@
           "type": "number",
           "format": "double",
           "title": "10 for imdb/tmdb, 100 for rt/metacritic"
+        }
+      }
+    },
+    "v1SagaGaps": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owned": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SagaPart"
+          }
+        }
+      },
+      "description": "SagaGaps is a saga the libraries started and its released films they lack."
+    },
+    "v1SagaPart": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "releaseDate": {
+          "type": "string",
+          "description": "release_date is YYYY-MM-DD."
+        },
+        "posterUrl": {
+          "type": "string"
         }
       }
     },
@@ -1805,6 +2035,32 @@
         }
       },
       "description": "Aggregate runtime for a series: sum of every episode's duration across all\nseasons that are actually present in the library. Computed live (not\ndenormalized) via a recursive CTE."
+    },
+    "v1SeriesGaps": {
+      "type": "object",
+      "properties": {
+        "seriesId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "year": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fromCatalog": {
+          "type": "boolean"
+        },
+        "seasons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MissingSeason"
+          }
+        }
+      },
+      "description": "SeriesGaps is what one series misses. from_catalog: worked out from the\ncatalog source; otherwise from the gaps in the library's own numbering."
     },
     "v1SortOrder": {
       "type": "string",

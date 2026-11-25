@@ -3351,9 +3351,10 @@ celle qu'elle exécute, et garde son propre code face à un serveur plus ancien.
 <li><strong>Les applications suivent le serveur actif.</strong> Une fois un serveur choisi,
   l'application pointe expo-updates vers lui et télécharge son bundle en
   arrière-plan (<code>frontend/packages/client/src/native/clientUpdates.ts</code>). Le
-  bundle démarre au lancement suivant ; un redémarrage n'est proposé que si
-  c'est une autre version de l'application que celle qui tourne, et jamais
-  par-dessus le lecteur. Sans serveur choisi, l'application n'interroge
+  bundle démarre au lancement suivant. Le téléphone propose un redémarrage
+  quand c'est une autre version de l'application que celle qui tourne, jamais
+  par-dessus le lecteur ; la TV ne le propose jamais, un rechargement à chaud
+  étant trop lourd pour un petit boîtier. Sans serveur choisi, l'application n'interroge
   personne.</li>
 </ul>
 <h2 id="native-runtime-version">Version du runtime natif<a class="headerlink" href="#native-runtime-version" title="Permanent link">¶</a></h2>

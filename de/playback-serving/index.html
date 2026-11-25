@@ -3012,6 +3012,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#what-a-session-shows-two-witnesses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was eine Sitzung zeigt: zwei Zeugen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#packaging-cmaf-hls-dash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3225,6 +3236,17 @@
     <span class="md-ellipsis">
       
         Audio wird getrennt vom Video entschieden
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-session-shows-two-witnesses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was eine Sitzung zeigt: zwei Zeugen
       
     </span>
   </a>
@@ -3502,6 +3524,62 @@ seinen Namen: <code>canWasmDecodeAC3()</code>
 (<code>frontend/packages/client/src/web/codec.ts</code>) liefert nur dann true, wenn
 der Browser meldet, dass er AC-3 <em>nicht</em> selbst abspielen kann, und Safari
 meldet, dass er es kann.</p>
+<h2 id="what-a-session-shows-two-witnesses">Was eine Sitzung zeigt: zwei Zeugen<a class="headerlink" href="#what-a-session-shows-two-witnesses" title="Permanent link">¶</a></h2>
+<p>Das Stream-Panel jedes Players und die Sitzungskarten im Admin zeigen, was
+eine Wiedergabe IST, nie, was entschieden wurde. Die Entscheidung, die
+Auslieferungsstrategie des Plans und das Echo eines Urteils durch den Player
+sind Eingaben für das Ausliefern; ein Rückfall zur Laufzeit (ein Packager, der
+die Quelle nicht bauen kann, ein wasm-Decoder, der auf AAC zurückgefallen ist,
+eine Direktwiedergabe, die der Browser ablehnt) widerspricht ihnen. Zwei
+Zeugen füllen eine Sitzung, und nichts anderes schreibt sie:</p>
+<table>
+<thead>
+<tr>
+<th>Zeuge</th>
+<th>Was er festhält</th>
+<th>Wo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Der Server</td>
+<td>pro Strang (Video, Audio) die letzte Antwort, die Bytes trug: die Engine, die sie geschrieben hat (<code>mkvgo</code>, <code>ffmpeg</code>, <code>file</code>), ob ein Encoder lief, die Quellspur sowie Codec, Bild und Kanäle, gelesen aus dem ausgelieferten Init-Segment (oder bei einer Direktwiedergabe die eigenen Streams der Datei)</td>
+<td><code>http/served_witness.go</code> (eine Middleware auf den Medienrouten, die Handler stempeln, was sie schreiben)</td>
+</tr>
+<tr>
+<td>Der Player</td>
+<td>was er dekodiert: die Datei oder eine segmentierte Präsentation, die geladene Audio-Rendition (über die Spurnummer, die die Rendition trägt), den Codec, für den seine Puffer eingerichtet wurden, den nativen oder den wasm-Decoder</td>
+<td>das Feld <code>played</code> im Fortschritts-Tick (bei einem Cast-Receiver: ein Player-Ereignis <code>played</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Beide landen über <code>CommandService.RecordServed</code> und <code>RecordPlayed</code> in
+<code>play_sessions.served</code> / <code>played</code>; diese halten die letzte Beobachtung jeder
+laufenden Sitzung im Speicher und schreiben nur eine Änderung. Die Methode und
+die Zusammenfassungsspalten, die der Verlauf liest, werden aus dem
+ausgelieferten Pfad abgeleitet. Die Antwort auf den Fortschritts-Tick gibt den
+ausgelieferten Pfad an den Player zurück, sodass sein Panel und die
+Admin-Karte dieselben Fakten lesen; <code>describeSession</code> aus <code>@evey/api</code> macht
+daraus eine einzige Ansicht und sagt es, wenn die beiden Zeugen sich
+widersprechen (der Player spielt eine andere Spur oder dekodiert einen anderen
+Codec als den gesendeten).</p>
+<p>Regeln, die die Zeugen ehrlich halten:</p>
+<ul>
+<li>nur eine Antwort, die Bytes trug (200/206 mit Body), ist ein Beleg; eine
+  Medienantwort wird bei ihren ersten Bytes beobachtet (eine Direktwiedergabe
+  liest den ganzen Film über eine einzige Anfrage), ein Init, sobald es
+  vollständig ist (seine Bytes werden gelesen);</li>
+<li>eine Beobachtung wird nach dem Beginn der Antwort datiert, und eine ältere
+  ersetzt nie eine neuere, egal in welcher Reihenfolge sie fertig wurden;</li>
+<li>Bytes, deren Init sich nicht lesen lässt, halten nichts fest statt einer
+  Vermutung;</li>
+<li>eine Packager-Rendition benennt ihre Quellspur mit der Nummer, die die Datei
+  ihr gibt (<code>X-MKVGO-TRACK</code> im Master, die Track-ID des Inits): Ein Master, der
+  Renditions nach Codec gruppiert, listet in <code>hls.audioTracks</code> nur die der
+  aktuellen Gruppe, also wählt der Player eine Rendition über die Spur, die sie
+  trägt, über alle Gruppen hinweg (<code>hls.setAudioOption</code>), nie über ihren Platz
+  in einer Liste.</li>
+</ul>
 <h2 id="packaging-cmaf-hls-dash">Verpacken: CMAF, HLS, DASH<a class="headerlink" href="#packaging-cmaf-hls-dash" title="Permanent link">¶</a></h2>
 <p>Der Container ist immer <strong>CMAF</strong> (fMP4): ein <code>init.mp4</code> pro Variante plus
 <code>.m4s</code>-Segmente (der MPEG-TS-Zweig in <code>hls_transcoder.go</code> ist toter Code:
@@ -3575,6 +3653,7 @@ ladder, admission, fingerprint: internal/app/transcoding/admission_shaper.go - S
 engines: internal/adapters/driven/prober/dispatcher.go ; internal/adapters/driven/prober/keyframe_dispatcher.go ; internal/app/transcoding/ondemand.go - OnDemandPackager ; internal/adapters/driven/mkvgo/ondemand.go ; internal/adapters/driven/ffmpeg/hls_transcoder.go - BuildFFmpegArgs, needsFMP4Segments ; internal/adapters/driven/ffmpeg/trickplay.go, complexity_classifier.go, audio_delay.go
 packaging: internal/app/transcoding/manifest_generator.go - querySuffix, EVEY-AUDIO-URI ; internal/app/transcoding/manifest_generator_dash.go ; internal/domain/transcoding/segment_grid.go - SegmentTargetSeconds, gridFor ; internal/pkg/cmafparity ; internal/adapters/driven/ffmpeg/dash_grid_integration_test.go - TestDASHGridIntegration
 wasm: frontend/packages/client/src/web/codec.ts - canWasmDecodeAC3
+witnesses: internal/domain/playback/served.go - Served, ServedLeg, Played ; internal/adapters/driving/http/served_witness.go - servedWitness, deliveryStamp ; internal/app/playback/served_witness.go - RecordServed, RecordPlayed, Heartbeat ; frontend/packages/api/src/servedReality.ts - describeSession ; frontend/packages/client/src/lib/playedState.ts - playedState, trackRendition ; frontend/packages/client/src/lib/masterRenditions.ts ; frontend/packages/client/src/native/useNativePlayed.ts
 -->
 
 
