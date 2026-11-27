@@ -2666,6 +2666,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyopenexternalurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.openExternal(url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveytoastlevel-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3485,6 +3496,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyopenexternalurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.openExternal(url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveytoastlevel-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3956,6 +3978,10 @@
 <h3 id="eveynavigatepath"><code>evey.navigate(path)</code><a class="headerlink" href="#eveynavigatepath" title="Permanent link">¶</a></h3>
 <p>让宿主应用跳转到 <code>path</code>。只有 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、<code>/settings</code> 和 <code>/search</code> 开头的路径会被执行；
 其他路径（管理区域、登录页、绝对 URL）都会被直接丢弃，不给任何提示。</p>
+<h3 id="eveyopenexternalurl"><code>evey.openExternal(url)</code><a class="headerlink" href="#eveyopenexternalurl" title="Permanent link">¶</a></h3>
+<p>在浏览器的新标签页中打开一个公开的影视目录页面：只能是 <code>themoviedb.org</code> 或 <code>imdb.com</code> 上的 <code>https</code> 地址（其他地址都会被直接丢弃，不给任何提示）。
+只有在插件框架内点击之后才会打开标签页，所以插件不能自行打开页面。仅限网页端：手机和电视应用会忽略这个调用。
+旧版本的 Evey 没有这个调用；显示链接之前请先检查 <code>typeof evey.openExternal === "function"</code>。</p>
 <h3 id="eveytoastlevel-message"><code>evey.toast(level, message)</code><a class="headerlink" href="#eveytoastlevel-message" title="Permanent link">¶</a></h3>
 <p>在宿主界面里显示一条提示消息。<code>level</code> 取 <code>"success"</code>、<code>"error"</code> 或 <code>"info"</code>；<code>message</code> 是纯文本，超过 200 个字符的部分会被截掉；
 每秒最多显示 3 条。</p>
@@ -3972,7 +3998,7 @@
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">prefs</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">"units"</span><span class="p">);</span>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code>（权限 <code>public</code>）<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
-<p>媒体条目的一个安全投影：id、标题、类型、年份、简介、海报 URL。永远不会有提供方 id 或流；除非插件还持有 <code>media.files</code>（见下文），也不会有文件路径和文件大小。</p>
+<p>媒体条目的一个安全投影：id、标题、类型、年份、简介、海报 URL，以及电影或剧集的公开目录 id（<code>tmdbId</code>，未知时为 <code>0</code>；<code>imdbId</code>，未知时为空），方便插件链接到其 TMDB 或 IMDb 页面。永远不会有流；除非插件还持有 <code>media.files</code>（见下文），也不会有文件路径和文件大小。</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// { items, total }</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// 海报，以 data: URL 的形式</span>
@@ -3990,13 +4016,15 @@
 <p>媒体库缺了什么，由 Evey 计算：已有剧集中已播出但没有的单集，以及已开始收藏的系列电影中已上映但没有的影片。
 一部剧或一个系列包含什么，由 Evey 自己按节奏向 TMDB 查询（保存的结果一周后更新）；插件从不调用 TMDB，只读取结果。</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">series</span><span class="p">,</span><span class="w"> </span><span class="nx">sagas</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">gaps</span><span class="p">();</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, fromCatalog, seasons: [{ season, whole,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   episodes: [{ episode, title, airDate }] }] }]</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, owned, missing: [{ title, releaseDate, posterUrl }] }]</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, tmdbId, imdbId, fromCatalog, seasons: [{ season,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   whole, episodes: [{ episode, title, airDate }] }] }]</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, tmdbId, owned,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">//   missing: [{ title, releaseDate, posterUrl, tmdbId }] }]</span>
 </span></code></pre></div>
 <p>只计算已经发布的内容：没有日期或日期晚于今天的单集或电影还不算缺失，特别篇（第 0 季）不计入。
 TMDB 不认识的剧集按其自身编号中的空缺列出（<code>fromCatalog</code> 为 false）：低于已有最高集号的缺失单集、低于已有最高季号的缺失整季（<code>whole</code>，不带单集列表）。
 仅限管理员会话，与 <code>media.files</code> 相同。</p>
+<p><code>tmdbId</code>（剧集、系列、每部缺失的电影）和 <code>imdbId</code>（剧集）是公开的目录 id，未知时为 <code>0</code> 或空，方便一条发现链接到其 TMDB 或 IMDb 页面。</p>
 <h3 id="eveymediatrashids"><code>evey.media.trash(ids)</code>（权限 <code>media.trash</code>，仅限插槽 <code>admin.nav</code>）<a class="headerlink" href="#eveymediatrashids" title="Permanent link">¶</a></h3>
 <p>请求 Evey 把媒体文件移到其媒体库的回收站。插件只是请求：Evey 会显示自己的确认窗口，内容来自 Evey 自己对每个条目的记录
 （标题、年份、路径、大小、画质），绝不采用插件发来的内容；管理员在那里点确认之前，什么都不会移动。</p>

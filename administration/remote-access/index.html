@@ -1147,6 +1147,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="The real client address">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-and-ipv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker and IPv6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3268,6 +3285,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="The real client address">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-and-ipv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker and IPv6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3431,6 +3465,39 @@ proxy passes their real address. Run <code>evey admin doctor</code> after changi
 proxy settings: it shows the list in use and where it comes from, warns
 about a public range, and fails on a range covering every address.</p>
 </div>
+<h3 id="docker-and-ipv6">Docker and IPv6<a class="headerlink" href="#docker-and-ipv6" title="Permanent link">¶</a></h3>
+<p>Docker publishes a port on IPv4 with a firewall rule that keeps the visitor's
+address. On IPv6, when the container's network has no IPv6, it uses a relay
+instead: every IPv6 visitor reaches Evey from the network's gateway, a private
+address, wherever they really are. That address is in the local networks, so
+those visitors pass as local even with remote access off. Evey cannot tell them
+apart from the host itself, which reaches a port published on <code>127.0.0.1</code>
+through the same gateway: it lets such a request through, writes a warning in
+its log and shows one on <strong>Remote access</strong>. On a server only used at home, or
+opened from the host itself, the warning can be ignored.</p>
+<p>The compose files in this documentation publish the port on IPv4 only
+(<code>0.0.0.0:9091:9091</code>), so the relay never starts. To serve IPv6 as well, give
+the Docker network IPv6: Docker then forwards IPv6 like IPv4, real address
+included.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">networks</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">evey</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">networks</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">enable_ipv6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fd00:e7e7::/64</span>
+</span></code></pre></div>
+<p>Older Docker versions also need <code>ip6tables</code> turned on in the daemon
+configuration: see Docker's IPv6 documentation.</p>
+<p>A reverse proxy running on the host, outside Docker, reaches Evey from the
+same gateway. Publish Evey's port on <code>127.0.0.1</code> so that nothing else can
+arrive that way, and list the gateway in the trusted proxies so that Evey sees
+the visitor's address the proxy passes on.</p>
 <!-- sources
 inference and explicit choice: docs/adr/0026-remote-access-inferred-from-a-published-url.md ; internal/config/remote_access_resolve.go - ResolveRemoteAccess, IsPubliclyReachableURL
 gate, live switch and LAN list: cmd/evey/gateway.go - networkMiddleware ; cmd/evey/network_middleware_test.go - TestNetworkMiddleware_LANListChangeAppliesWithoutRestart
@@ -3440,6 +3507,7 @@ proxy settings: docs/reverse-proxy.md
 https mode and trusted proxies live: internal/config/network_live.go - EffectiveHTTPS, EffectiveTrustedProxies ; internal/adapters/driving/http/access_handler_live_test.go
 catch-all range refused: internal/config/trusted_proxies.go - IsCatchAllProxyRange ; internal/config/network_live.go
 doctor check: cmd/evey/admin_ops.go - checkTrustedProxies
+docker gateway relay: internal/pkg/network/relay.go - DefaultGateways, IsRelay ; internal/pkg/network/relay_test.go - TestDetectIP_RelayKeepsTheLANListVerdict ; cmd/evey/network_middleware_test.go - TestNetworkMiddleware_GatewayRelayIsReportedNotRefused ; i18n admin.remoteAccess.relayedClientsTitle
 exact field labels: i18n admin.remoteAccess.trustedProxies, lanNetworks, maxRemoteBitrate, lockoutRiskTitle ; apps message: i18n auth.remoteAccess.title
 -->
 

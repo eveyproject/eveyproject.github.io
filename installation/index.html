@@ -3347,7 +3347,7 @@ marked 5). For example, if your films are in <code>/srv/media</code>, the line b
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"0.0.0.0:9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./evey-data:/data</span><span class="w"> </span><span class="c1"># (3)!</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-cache:/cache</span><span class="w"> </span><span class="c1"># (4)!</span>
@@ -3363,7 +3363,10 @@ marked 5). For example, if your films are in <code>/srv/media</code>, the line b
    version, use a release tag such as <code>0.1.0</code>, or a <code>sha-&lt;commit&gt;</code> tag: see
    <a href="../backups/#updating-evey">Backups and updates</a>.</li>
 <li>The port. The number on the left is the one you will type in the browser
-   and in the apps. Keep <code>9091</code> unless another program already uses it.</li>
+   and in the apps. Keep <code>9091</code> unless another program already uses it.
+   <code>0.0.0.0:</code> publishes it on IPv4 only, so that Evey always sees the real
+   address of each device: see
+   <a href="../administration/remote-access/#docker-and-ipv6">Docker and IPv6</a>.</li>
 <li>Evey's own data: database, keys, generated passwords, search index,
    artwork, logs, backups, plugins. <strong>This is the folder to back up.</strong></li>
 <li>A cache of converted video, resized photos and music covers. It can be

@@ -3568,7 +3568,9 @@ formulaire généré. L'hôte ne le traite que dans cet emplacement.</p>
 <p>Le pont limite ce qu'un cadre peut demander à la page : <code>evey.toast</code> au plus
 3 messages par seconde, 200 caractères, sans HTML ; <code>evey.navigate</code> seulement
 <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> et <code>/search</code> ;
-<code>evey.resize</code> borné à 50-800 px. Le cadre ne détient aucun jeton : l'hôte
+<code>evey.openExternal</code> seulement des pages https de <code>themoviedb.org</code> et
+<code>imdb.com</code>, dans un nouvel onglet, après un clic dans le cadre (web
+seulement) ; <code>evey.resize</code> borné à 50-800 px. Le cadre ne détient aucun jeton : l'hôte
 émet un jeton de cinq minutes limité à (plugin, utilisateur) pour les appels
 <code>public</code> et <code>prefs</code>, et le serveur refuse par défaut toute méthode que ce
 jeton ne nomme pas.</p>

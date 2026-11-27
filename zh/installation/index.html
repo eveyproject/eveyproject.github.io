@@ -3326,7 +3326,7 @@
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"0.0.0.0:9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./evey-data:/data</span><span class="w"> </span><span class="c1"># (3)!</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-cache:/cache</span><span class="w"> </span><span class="c1"># (4)!</span>
@@ -3339,7 +3339,8 @@
 </span></code></pre></div>
 <ol>
 <li>Evey 的版本。<code>latest</code> 是最新的正式版本。如果想固定在某个版本，请使用 <code>0.1.0</code> 这样的版本标签，或 <code>sha-&lt;commit&gt;</code> 标签：见<a href="../backups/#updating-evey">备份与更新</a>。</li>
-<li>端口。左边的数字就是您以后在浏览器和应用里要输入的那个。除非已经有别的程序占用了 <code>9091</code>，否则保持不变。</li>
+<li>端口。左边的数字就是您以后在浏览器和应用里要输入的那个。除非已经有别的程序占用了 <code>9091</code>，否则保持不变。
+   <code>0.0.0.0:</code> 表示只在 IPv4 上发布，这样 Evey 总能看到每台设备的真实地址：参见 <a href="../administration/remote-access/#docker-and-ipv6">Docker 与 IPv6</a>。</li>
 <li>Evey 自己的数据：数据库、密钥、自动生成的密码、搜索索引、海报图片、日志、备份、插件。<strong>需要备份的就是这个文件夹。</strong></li>
 <li>缓存：转换过的视频、缩放过的照片和音乐封面。随时可以删除，它会自动重新生成。海报的各种尺寸不在其中，它们位于 <code>evey-data/artworks</code>。</li>
 <li>您的媒体。把 <code>/path/to/your/media</code> 换成真实的文件夹。在 Evey 里，这个文件夹叫 <code>/media</code>。它特意设成可写，这样您要求时，<a href="../runbooks/media-health/">媒体健康</a>才能修复文件。在末尾加上 <code>:ro</code> 就变成只读：Evey 就无法在其中写入，修复也会失败。</li>

@@ -3565,7 +3565,9 @@ generado. El host solo la atiende en ese slot.</p>
 <p>El puente limita lo que un marco puede pedir a la página: <code>evey.toast</code> como
 mucho 3 mensajes por segundo, 200 caracteres, sin HTML; <code>evey.navigate</code> solo
 <code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> y <code>/search</code>;
-<code>evey.resize</code> limitado a 50-800 px. El marco no tiene ningún token: la página
+<code>evey.openExternal</code> solo páginas https de <code>themoviedb.org</code> e <code>imdb.com</code>, en
+una pestaña nueva, tras un clic en el marco (solo web); <code>evey.resize</code>
+limitado a 50-800 px. El marco no tiene ningún token: la página
 anfitriona emite un token de cinco minutos limitado a (plugin, usuario) para
 las llamadas <code>public</code> y <code>prefs</code>, y el servidor rechaza por defecto cualquier
 método que ese token no nombre.</p>

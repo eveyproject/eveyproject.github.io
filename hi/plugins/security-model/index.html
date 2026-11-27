@@ -3552,8 +3552,9 @@ config लिखता है, और कुछ नहीं, एडमिन �
 फ़ॉर्म। होस्ट इसका जवाब सिर्फ़ उसी स्लॉट में देता है।</p>
 <p>bridge सीमित करता है कि फ़्रेम पेज से क्या माँग सकता है: <code>evey.toast</code> एक सेकंड में
 ज़्यादा से ज़्यादा 3 संदेश, 200 अक्षर, कोई HTML नहीं; <code>evey.navigate</code> सिर्फ़
-<code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> और <code>/search</code>; <code>evey.resize</code>
-50-800 px के बीच। फ़्रेम के पास कोई token नहीं होता: <code>public</code> और <code>prefs</code> कॉल के
+<code>/home</code>, <code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> और <code>/search</code>;
+<code>evey.openExternal</code> सिर्फ़ <code>themoviedb.org</code> और <code>imdb.com</code> के https पेज, नए टैब
+में, फ़्रेम में क्लिक के बाद (सिर्फ़ वेब); <code>evey.resize</code> 50-800 px के बीच। फ़्रेम के पास कोई token नहीं होता: <code>public</code> और <code>prefs</code> कॉल के
 लिए होस्ट (प्लगइन, उपयोगकर्ता) तक सीमित पाँच मिनट का एक token बनाता है, और सर्वर
 डिफ़ॉल्ट रूप से हर वह method मना करता है जिसका नाम उस token में नहीं है।</p>
 <h2 id="update-workflow">अपडेट का तरीका<a class="headerlink" href="#update-workflow" title="Permanent link">¶</a></h2>

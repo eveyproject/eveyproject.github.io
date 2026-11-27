@@ -1147,6 +1147,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="क्लाइंट का असली पता">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-and-ipv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker और IPv6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3268,6 +3285,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="क्लाइंट का असली पता">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-and-ipv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker और IPv6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3435,6 +3469,40 @@ HTTPS मोड चालू कर देता है, भले ही base U
 दिखाता है, सार्वजनिक रेंज पर चेतावनी देता है, और हर पते को ढकने वाली रेंज
 पर विफल होता है।</p>
 </div>
+<h3 id="docker-and-ipv6">Docker और IPv6<a class="headerlink" href="#docker-and-ipv6" title="Permanent link">¶</a></h3>
+<p>Docker IPv4 पर पोर्ट एक फ़ायरवॉल नियम से प्रकाशित करता है, जो विज़िटर का पता
+बनाए रखता है। IPv6 पर, जब कंटेनर के नेटवर्क में IPv6 नहीं होता, तो Docker इसकी
+जगह एक रिले का इस्तेमाल करता है: हर IPv6 विज़िटर Evey तक नेटवर्क के गेटवे से
+पहुँचता है, जो एक प्राइवेट पता है, चाहे वह असल में कहीं भी हो। यह पता लोकल
+नेटवर्क में आता है, इसलिए रिमोट एक्सेस बंद होने पर भी ये विज़िटर लोकल माने
+जाते हैं। Evey इन्हें खुद होस्ट से अलग नहीं कर सकता, जो <code>127.0.0.1</code> पर
+प्रकाशित पोर्ट तक उसी गेटवे से पहुँचता है: वह ऐसे अनुरोध को आने देता है, अपने
+लॉग में एक चेतावनी लिखता है और <strong>रिमोट एक्सेस</strong> में एक चेतावनी दिखाता है। जो
+सर्वर सिर्फ़ घर पर इस्तेमाल होता है, या होस्ट से ही खोला जाता है, उस पर इस
+चेतावनी को अनदेखा किया जा सकता है।</p>
+<p>इस दस्तावेज़ की compose फ़ाइलें पोर्ट को सिर्फ़ IPv4 पर प्रकाशित करती हैं
+(<code>0.0.0.0:9091:9091</code>), इसलिए रिले कभी शुरू नहीं होता। IPv6 भी सर्व करने के
+लिए Docker नेटवर्क को IPv6 दें: तब Docker IPv6 को भी IPv4 की तरह आगे भेजता
+है, असली पते के साथ।</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">networks</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">evey</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">networks</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">enable_ipv6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fd00:e7e7::/64</span>
+</span></code></pre></div>
+<p>Docker के पुराने वर्ज़न में daemon की कॉन्फ़िगरेशन में <code>ip6tables</code> भी चालू
+करना पड़ता है: Docker का IPv6 दस्तावेज़ देखें।</p>
+<p>होस्ट पर, Docker के बाहर चलने वाला रिवर्स प्रॉक्सी भी Evey तक उसी गेटवे से
+पहुँचता है। Evey का पोर्ट <code>127.0.0.1</code> पर प्रकाशित करें, ताकि उस रास्ते से और
+कुछ न आ सके, और गेटवे को विश्वसनीय प्रॉक्सी में जोड़ें, ताकि Evey को वह
+विज़िटर पता दिखे जो प्रॉक्सी आगे भेजता है।</p>
 <!-- sources
 inference and explicit choice: docs/adr/0026-remote-access-inferred-from-a-published-url.md ; internal/config/remote_access_resolve.go - ResolveRemoteAccess, IsPubliclyReachableURL
 gate, live switch and LAN list: cmd/evey/gateway.go - networkMiddleware ; cmd/evey/network_middleware_test.go - TestNetworkMiddleware_LANListChangeAppliesWithoutRestart
@@ -3442,6 +3510,7 @@ remote cap live: internal/adapters/driving/grpcapi/playback_remote_bitrate_test.
 labels: i18n admin.remoteAccess.* (enableRemoteAccess, externalUrl, trustedProxies, lanNetworks, maxRemoteBitrate, lockoutRiskTitle)
 proxy settings: docs/reverse-proxy.md
 https mode and trusted proxies live: internal/config/network_live.go - EffectiveHTTPS, EffectiveTrustedProxies ; internal/adapters/driving/http/access_handler_live_test.go
+docker gateway relay: internal/pkg/network/relay.go - DefaultGateways, IsRelay ; internal/pkg/network/relay_test.go - TestDetectIP_RelayKeepsTheLANListVerdict ; cmd/evey/network_middleware_test.go - TestNetworkMiddleware_GatewayRelayIsReportedNotRefused ; i18n admin.remoteAccess.relayedClientsTitle
 catch-all range refused: internal/config/trusted_proxies.go - IsCatchAllProxyRange ; internal/config/network_live.go
 doctor check: cmd/evey/admin_ops.go - checkTrustedProxies
 exact field labels: i18n admin.remoteAccess.trustedProxies, lanNetworks, maxRemoteBitrate, lockoutRiskTitle ; apps message: i18n auth.remoteAccess.title

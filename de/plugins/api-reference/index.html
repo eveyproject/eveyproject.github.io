@@ -2666,6 +2666,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyopenexternalurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.openExternal(url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveytoastlevel-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3485,6 +3496,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyopenexternalurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.openExternal(url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveytoastlevel-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3996,6 +4018,14 @@ aufgerufen.</p>
 <code>/media</code>, <code>/player</code>, <code>/settings</code> und <code>/search</code> werden befolgt. Alles andere
 (der Verwaltungsbereich, die Anmeldung, eine absolute URL) wird
 stillschweigend verworfen.</p>
+<h3 id="eveyopenexternalurl"><code>evey.openExternal(url)</code><a class="headerlink" href="#eveyopenexternalurl" title="Permanent link">¶</a></h3>
+<p>Öffnet eine öffentliche Katalogseite in einem neuen Browser-Tab: eine
+<code>https</code>-Adresse auf <code>themoviedb.org</code> oder <code>imdb.com</code>, sonst nichts (jede
+andere Adresse wird stillschweigend verworfen). Der Tab öffnet sich nur nach
+einem Klick im Rahmen des Plugins, ein Plugin kann also keine Seiten von sich
+aus öffnen. Nur im Web: die Telefon- und TV-Apps ignorieren den Aufruf. Ein
+älteres Evey kennt ihn nicht; prüfen Sie
+<code>typeof evey.openExternal === "function"</code>, bevor Sie einen Link anzeigen.</p>
 <h3 id="eveytoastlevel-message"><code>evey.toast(level, message)</code><a class="headerlink" href="#eveytoastlevel-message" title="Permanent link">¶</a></h3>
 <p>Zeigt eine kurze Meldung (Toast) in der Oberfläche des Hosts. <code>level</code> ist
 <code>"success"</code>, <code>"error"</code> oder <code>"info"</code>; <code>message</code> ist reiner Text, nach 200
@@ -4020,8 +4050,10 @@ Berechtigung, wird es abgelehnt.</p>
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code> (Berechtigung <code>public</code>)<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>Eine sichere Projektion der Medien: ID, Titel, Typ, Jahr, Inhaltsangabe,
-URL des Posters. Nie eine Anbieter-ID oder ein Stream, und weder Dateipfad
-noch Größe, außer das Plugin hat auch <code>media.files</code> (siehe unten).</p>
+URL des Posters und die öffentlichen Katalog-IDs eines Films oder einer Serie
+(<code>tmdbId</code>, <code>0</code> wenn unbekannt, und <code>imdbId</code>, leer wenn unbekannt), damit ein
+Plugin auf die TMDB- oder IMDb-Seite verlinken kann. Nie ein Stream, und weder
+Dateipfad noch Größe, außer das Plugin hat auch <code>media.files</code> (siehe unten).</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// { items, total }</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// das Poster als data:-URL</span>
@@ -4051,9 +4083,10 @@ der begonnenen Reihen. Was eine Serie oder Reihe enthält, erfährt Evey selbst
 bei TMDB, in seinem eigenen Tempo (eine gespeicherte Antwort wird nach einer
 Woche erneuert); ein Plugin ruft TMDB nie auf, es liest das Ergebnis.</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">series</span><span class="p">,</span><span class="w"> </span><span class="nx">sagas</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">gaps</span><span class="p">();</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, fromCatalog, seasons: [{ season, whole,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   episodes: [{ episode, title, airDate }] }] }]</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, owned, missing: [{ title, releaseDate, posterUrl }] }]</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, tmdbId, imdbId, fromCatalog, seasons: [{ season,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   whole, episodes: [{ episode, title, airDate }] }] }]</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, tmdbId, owned,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">//   missing: [{ title, releaseDate, posterUrl, tmdbId }] }]</span>
 </span></code></pre></div>
 <p>Nur Erschienenes zählt: Eine Episode oder ein Film ohne Datum oder mit einem
 Datum nach heute fehlt noch nicht, und Specials (Staffel 0) bleiben außen vor.
@@ -4062,6 +4095,9 @@ Nummerierung gelistet (<code>fromCatalog</code> falsch): fehlende Episoden unter
 höchsten vorhandenen, fehlende Staffeln unter der höchsten vorhandenen
 (<code>whole</code>, ohne Episodenliste). Nur in der Sitzung eines Administrators, wie
 <code>media.files</code>.</p>
+<p><code>tmdbId</code> (eine Serie, eine Saga, jeder fehlende Film) und <code>imdbId</code> (eine Serie)
+sind die öffentlichen Katalog-IDs, <code>0</code> oder leer wenn unbekannt, damit ein
+Befund auf seine TMDB- oder IMDb-Seite verlinken kann.</p>
 <h3 id="eveymediatrashids"><code>evey.media.trash(ids)</code> (Berechtigung <code>media.trash</code>, nur Slot <code>admin.nav</code>)<a class="headerlink" href="#eveymediatrashids" title="Permanent link">¶</a></h3>
 <p>Bittet Evey, Mediendateien in den Papierkorb ihrer Bibliothek zu verschieben.
 Das Plugin bittet nur: Evey zeigt eine eigene Bestätigung, gebaut aus seinem

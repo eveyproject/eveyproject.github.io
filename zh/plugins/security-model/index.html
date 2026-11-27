@@ -3520,7 +3520,7 @@
 <code>evey.config.save</code> 只写入这个插件自己的配置，别的什么都不写，使用管理员的会话，并像生成的表单一样按模式校验。
 宿主只在该插槽里响应它。</p>
 <p>桥接层限制了框架能向页面提出的请求：<code>evey.toast</code> 每秒最多 3 条消息，每条 200 个字符，不能含 HTML；
-<code>evey.navigate</code> 只能导航到 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、<code>/settings</code> 和 <code>/search</code>；<code>evey.resize</code> 被限制在 50 到 800 px 之间。
+<code>evey.navigate</code> 只能导航到 <code>/home</code>、<code>/library</code>、<code>/media</code>、<code>/player</code>、<code>/settings</code> 和 <code>/search</code>；<code>evey.openExternal</code> 只能在新标签页中打开 <code>themoviedb.org</code> 和 <code>imdb.com</code> 的 https 页面，且必须是在框架内点击之后（仅限网页端）；<code>evey.resize</code> 被限制在 50 到 800 px 之间。
 框架本身不持有令牌：宿主为 <code>public</code> 和 <code>prefs</code> 调用签发一个限定于（插件，用户）、有效期五分钟的令牌，
 而服务器默认拒绝这个令牌没有列出的所有方法。</p>
 <h2 id="update-workflow">更新流程<a class="headerlink" href="#update-workflow" title="Permanent link">¶</a></h2>

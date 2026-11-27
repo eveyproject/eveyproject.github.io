@@ -3554,8 +3554,10 @@ administrator's session, validated against the schema like the generated
 form. The host answers it in that slot only.</p>
 <p>The bridge limits what a frame can ask of the page: <code>evey.toast</code> at most 3
 messages per second, 200 characters, no HTML; <code>evey.navigate</code> only <code>/home</code>,
-<code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> and <code>/search</code>; <code>evey.resize</code>
-clamped to 50-800 px. The frame holds no token: the host mints a five-minute
+<code>/library</code>, <code>/media</code>, <code>/player</code>, <code>/settings</code> and <code>/search</code>;
+<code>evey.openExternal</code> only https pages of <code>themoviedb.org</code> and <code>imdb.com</code>, in a
+new tab, on a click in the frame (web only); <code>evey.resize</code> clamped to
+50-800 px. The frame holds no token: the host mints a five-minute
 token scoped to (plugin, user) for the <code>public</code> and <code>prefs</code> calls, and the
 server refuses by default every method that token does not name.</p>
 <h2 id="update-workflow">Update workflow<a class="headerlink" href="#update-workflow" title="Permanent link">¶</a></h2>

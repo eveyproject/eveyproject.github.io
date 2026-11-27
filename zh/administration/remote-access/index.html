@@ -1147,6 +1147,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="客户端的真实地址">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-and-ipv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker 与 IPv6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3268,6 +3285,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="客户端的真实地址">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-and-ipv6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker 与 IPv6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -3386,6 +3420,24 @@
 <p class="admonition-title">修正代理设置会改变哪些人被视为远程</p>
 <p>如果远程访问原本是关闭的，那么从代理开始转发真实地址的那一刻起，家庭网络以外的人就会被拒绝。修改代理设置后，请运行 <code>evey admin doctor</code>：它会显示正在使用的列表及其来源，对公网地址范围发出警告，并对覆盖所有地址的范围报告失败。</p>
 </div>
+<h3 id="docker-and-ipv6">Docker 与 IPv6<a class="headerlink" href="#docker-and-ipv6" title="Permanent link">¶</a></h3>
+<p>Docker 在 IPv4 上通过一条防火墙规则发布端口，这条规则会保留访客的地址。在 IPv6 上，如果容器所在的网络没有 IPv6，Docker 会改用一个中继：每个 IPv6 访客都从该网络的网关到达 Evey，而网关是一个私有地址，无论访客实际身在何处。这个地址属于本地网络，因此即使远程访问已关闭，这些访客也会被当作本地。Evey 无法把他们与主机本身区分开，因为主机访问发布在 <code>127.0.0.1</code> 上的端口时也经过同一个网关：Evey 会放行这样的请求，在日志中写一条警告，并在<strong>远程访问</strong>页面显示警告。如果服务器只在家里使用，或从主机本身打开，可以忽略这条警告。</p>
+<p>本文档中的 compose 文件只在 IPv4 上发布端口（<code>0.0.0.0:9091:9091</code>），因此中继永远不会启动。如果也要提供 IPv6，请为 Docker 网络启用 IPv6：这样 Docker 会像转发 IPv4 一样转发 IPv6，真实地址也会保留。</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">networks</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">evey</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">networks</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">evey</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">enable_ipv6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fd00:e7e7::/64</span>
+</span></code></pre></div>
+<p>较旧的 Docker 版本还需要在守护进程配置中开启 <code>ip6tables</code>：请参阅 Docker 的 IPv6 文档。</p>
+<p>在主机上、Docker 之外运行的反向代理，也是通过同一个网关到达 Evey。请把 Evey 的端口发布在 <code>127.0.0.1</code> 上，这样就不会有其他请求从这条路进来，并把网关加入受信任的代理，让 Evey 看到代理转发的访客地址。</p>
 <!-- sources
 inference and explicit choice: docs/adr/0026-remote-access-inferred-from-a-published-url.md ; internal/config/remote_access_resolve.go - ResolveRemoteAccess, IsPubliclyReachableURL
 gate, live switch and LAN list: cmd/evey/gateway.go - networkMiddleware ; cmd/evey/network_middleware_test.go - TestNetworkMiddleware_LANListChangeAppliesWithoutRestart
@@ -3393,6 +3445,7 @@ remote cap live: internal/adapters/driving/grpcapi/playback_remote_bitrate_test.
 labels: i18n admin.remoteAccess.* (enableRemoteAccess, externalUrl, trustedProxies, lanNetworks, maxRemoteBitrate, lockoutRiskTitle)
 proxy settings: docs/reverse-proxy.md
 https mode and trusted proxies live: internal/config/network_live.go - EffectiveHTTPS, EffectiveTrustedProxies ; internal/adapters/driving/http/access_handler_live_test.go
+docker gateway relay: internal/pkg/network/relay.go - DefaultGateways, IsRelay ; internal/pkg/network/relay_test.go - TestDetectIP_RelayKeepsTheLANListVerdict ; cmd/evey/network_middleware_test.go - TestNetworkMiddleware_GatewayRelayIsReportedNotRefused ; i18n admin.remoteAccess.relayedClientsTitle
 catch-all range refused: internal/config/trusted_proxies.go - IsCatchAllProxyRange ; internal/config/network_live.go
 doctor check: cmd/evey/admin_ops.go - checkTrustedProxies
 exact field labels: i18n admin.remoteAccess.trustedProxies, lanNetworks, maxRemoteBitrate, lockoutRiskTitle ; apps message: i18n auth.remoteAccess.title

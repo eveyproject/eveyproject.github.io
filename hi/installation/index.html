@@ -3348,7 +3348,7 @@ CPU की कोई सेटिंग नहीं।</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eveyproject/evey:latest</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-server</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"0.0.0.0:9091:9091"</span><span class="w"> </span><span class="c1"># (2)!</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./evey-data:/data</span><span class="w"> </span><span class="c1"># (3)!</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evey-cache:/cache</span><span class="w"> </span><span class="c1"># (4)!</span>
@@ -3365,7 +3365,10 @@ CPU की कोई सेटिंग नहीं।</p>
    देखें <a href="../backups/#updating-evey">बैकअप और अपडेट</a>।</li>
 <li>पोर्ट। बाईं तरफ़ वाला नंबर वह है जो आप ब्राउज़र में और ऐप में टाइप करेंगे।
    <code>9091</code> ही रहने दें, जब तक कोई दूसरा प्रोग्राम उसे पहले से इस्तेमाल न कर रहा
-   हो।</li>
+   हो।
+   <code>0.0.0.0:</code> इसे सिर्फ़ IPv4 पर प्रकाशित करता है, ताकि Evey को हर डिवाइस का
+   असली पता हमेशा दिखे: देखें
+   <a href="../administration/remote-access/#docker-and-ipv6">Docker और IPv6</a>।</li>
 <li>Evey का अपना डेटा: डेटाबेस, कुंजियाँ, अपने-आप बने पासवर्ड, सर्च इंडेक्स,
    पोस्टर और इमेज, लॉग, बैकअप, प्लगइन। <strong>इसी फ़ोल्डर का बैकअप लेना है।</strong></li>
 <li>बदले हुए वीडियो, छोटे किए गए फ़ोटो और संगीत के कवर का कैश। इसे कभी भी मिटाया जा

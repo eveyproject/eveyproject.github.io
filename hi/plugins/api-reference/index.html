@@ -2666,6 +2666,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyopenexternalurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.openExternal(url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveytoastlevel-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3485,6 +3496,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#eveyopenexternalurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evey.openExternal(url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#eveytoastlevel-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3986,6 +4008,13 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 <p>होस्ट ऐप्लिकेशन को <code>path</code> पर ले जाता है। सिर्फ़ <code>/home</code>, <code>/library</code>, <code>/media</code>,
 <code>/player</code>, <code>/settings</code> और <code>/search</code> से शुरू होने वाले रास्ते माने जाते हैं; बाकी
 सब (एडमिन वाला हिस्सा, साइन-इन, पूरा URL) चुपचाप छोड़ दिया जाता है।</p>
+<h3 id="eveyopenexternalurl"><code>evey.openExternal(url)</code><a class="headerlink" href="#eveyopenexternalurl" title="Permanent link">¶</a></h3>
+<p>किसी सार्वजनिक कैटलॉग पेज को ब्राउज़र के नए टैब में खोलता है: <code>themoviedb.org</code> या
+<code>imdb.com</code> का कोई <code>https</code> पता, इसके अलावा कुछ नहीं (कोई और पता चुपचाप छोड़ दिया
+जाता है)। टैब सिर्फ़ प्लगइन के फ़्रेम में क्लिक के बाद खुलता है, इसलिए कोई प्लगइन
+अपने आप पेज नहीं खोल सकता। सिर्फ़ वेब पर: फ़ोन और TV ऐप इसे अनदेखा करते हैं।
+पुराने Evey में यह कॉल नहीं है; लिंक दिखाने से पहले
+<code>typeof evey.openExternal === "function"</code> जाँच लें।</p>
 <h3 id="eveytoastlevel-message"><code>evey.toast(level, message)</code><a class="headerlink" href="#eveytoastlevel-message" title="Permanent link">¶</a></h3>
 <p>होस्ट इंटरफ़ेस में एक toast दिखाता है। <code>level</code> <code>"success"</code>, <code>"error"</code> या <code>"info"</code>
 है; <code>message</code> सादा टेक्स्ट है, 200 अक्षरों पर काटा जाता है; एक सेकंड में ज़्यादा
@@ -4008,8 +4037,10 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 </span></code></pre></div>
 <h3 id="eveymedia-permission-public"><code>evey.media.*</code> (अनुमति <code>public</code>)<a class="headerlink" href="#eveymedia-permission-public" title="Permanent link">¶</a></h3>
 <p>मीडिया आइटम की एक सुरक्षित झलक: id, टाइटल, टाइप, साल, सारांश, पोस्टर का URL।
-कभी provider id या stream नहीं, और फ़ाइल का रास्ता या आकार भी नहीं, जब तक प्लगइन
-के पास <code>media.files</code> भी न हो (नीचे देखें)।</p>
+साथ में फ़िल्म या सीरीज़ की सार्वजनिक कैटलॉग id (<code>tmdbId</code>, अज्ञात हो तो <code>0</code>, और
+<code>imdbId</code>, अज्ञात हो तो खाली), ताकि प्लगइन उसके TMDB या IMDb पेज का लिंक दे सके।
+कभी stream नहीं, और फ़ाइल का रास्ता या आकार भी नहीं, जब तक प्लगइन के पास
+<code>media.files</code> भी न हो (नीचे देखें)।</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">item</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">list</span><span class="p">({</span><span class="w"> </span><span class="nx">libraryId</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// { items, total }</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">poster</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span><span class="w">  </span><span class="c1">// पोस्टर, data: URL के रूप में</span>
@@ -4036,9 +4067,10 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 से जानता है (सहेजा जवाब एक हफ़्ते बाद नया होता है); प्लगइन कभी TMDB को कॉल नहीं
 करता, वह नतीजा पढ़ता है।</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">series</span><span class="p">,</span><span class="w"> </span><span class="nx">sagas</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evey</span><span class="p">.</span><span class="nx">media</span><span class="p">.</span><span class="nx">gaps</span><span class="p">();</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, fromCatalog, seasons: [{ season, whole,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   episodes: [{ episode, title, airDate }] }] }]</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, owned, missing: [{ title, releaseDate, posterUrl }] }]</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// series: [{ seriesId, title, year, tmdbId, imdbId, fromCatalog, seasons: [{ season,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">//   whole, episodes: [{ episode, title, airDate }] }] }]</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">// sagas: [{ collectionId, name, tmdbId, owned,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">//   missing: [{ title, releaseDate, posterUrl, tmdbId }] }]</span>
 </span></code></pre></div>
 <p>सिर्फ़ जो आ चुका है वही गिना जाता है: बिना तारीख़ का या आज के बाद की तारीख़ वाला
 एपिसोड या फ़िल्म अभी कम नहीं है, और स्पेशल (सीज़न 0) अलग रखे जाते हैं। जिस
@@ -4046,6 +4078,8 @@ string हैं जिन्हें सर्वर नहीं पढ़त
 (<code>fromCatalog</code> false): सबसे ऊँचे मौजूद एपिसोड से नीचे के कम एपिसोड, सबसे ऊँचे
 मौजूद सीज़न से नीचे के कम सीज़न (<code>whole</code>, बिना एपिसोड सूची)। सिर्फ़ एडमिन के
 सेशन पर, <code>media.files</code> की तरह।</p>
+<p><code>tmdbId</code> (सीरीज़, सागा, हर कम फ़िल्म) और <code>imdbId</code> (सीरीज़) सार्वजनिक कैटलॉग id हैं,
+अज्ञात हों तो <code>0</code> या खाली, ताकि कोई निष्कर्ष अपने TMDB या IMDb पेज से जोड़ा जा सके।</p>
 <h3 id="eveymediatrashids"><code>evey.media.trash(ids)</code> (अनुमति <code>media.trash</code>, सिर्फ़ स्लॉट <code>admin.nav</code>)<a class="headerlink" href="#eveymediatrashids" title="Permanent link">¶</a></h3>
 <p>Evey से मीडिया फ़ाइलों को उनकी लाइब्रेरी के ट्रैश में ले जाने को कहता है। प्लगइन
 सिर्फ़ माँगता है: Evey अपनी ही पुष्टि दिखाता है, हर आइटम के अपने रिकॉर्ड से
