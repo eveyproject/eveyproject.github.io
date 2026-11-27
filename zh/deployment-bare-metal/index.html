@@ -3512,7 +3512,7 @@
   单凭普通的文件权限，它既无法读取服务器的密钥，也无法读取另一个插件的文件。这些 uid 不需要在 <code>/etc/passwd</code> 里有账户。</li>
 </ul>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">警告</p>
 <p>组 id 很重要：启动器会把插件切换到它的 uid 和服务器自己的组，并且拒绝任何小于 1000 的 uid 或 gid。
 只用 <code>useradd --system</code> 创建的组会得到一个小于 1000 的系统 id，这时 <code>basic</code> 模式下的插件就会被拒绝。</p>
 </div>
@@ -3585,7 +3585,7 @@
 <p>启动器拒绝任何小于 1000 的目标 uid 或 gid。如果无法切换（缺少能力，或者设置了 <code>no_new_privs</code>），
 <code>basic</code> 模式下的插件会被拒绝，因为在那里 uid 是它唯一的保护；在 Landlock 下，它会记录一条警告，然后以服务器的 uid 运行。</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">警告</p>
 <p>uid 分离和 <code>no_new_privs</code> 不能同时使用。如果服务器在 systemd 的 <code>NoNewPrivileges=yes</code> 下运行，
 文件能力在 exec 时会被忽略：<code>basic</code> 模式下的插件会被拒绝，而在 Landlock 下，uid 分离会退化为使用同一个 uid。只能二选一。</p>
 </div>

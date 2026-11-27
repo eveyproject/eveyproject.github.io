@@ -3432,7 +3432,7 @@
 avec la même configuration et la même base de données que le serveur, puis
 s'arrête. Cette page liste les commandes et la façon de les lancer dans le
 conteneur ; les procédures du quotidien (mot de passe perdu, rotation de clé,
-restauration) sont dans <a href="../recovery/">Restauration</a>.</p>
+restauration) sont dans <a href="../recovery/">Récupération</a>.</p>
 <h2 id="running-a-command">Lancer une commande<a class="headerlink" href="#running-a-command" title="Permanent link">¶</a></h2>
 <p>Dans l'installation standard, les commandes se lancent dans le conteneur, qui
 contient déjà le mot de passe de la base et la configuration <code>EVEY_*</code> :</p>
@@ -3526,7 +3526,7 @@ toujours la liste à jour.</p>
 celles de l'utilisateur pour le premier, celles de tout le monde pour le
 second. Les applications ouvertes s'en aperçoivent en 30 secondes environ et
 redemandent une connexion. Les procédures complètes sont dans
-<a href="../recovery/">Restauration</a>.</p>
+<a href="../recovery/">Récupération</a>.</p>
 <h3 id="schema">Schéma<a class="headerlink" href="#schema" title="Permanent link">¶</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>evey admin migrate up [--no-backup]          Apply every pending migration.
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>evey admin migrate down [--no-backup]        Roll back exactly one migration step.
@@ -3664,7 +3664,7 @@ l'image Docker ne les contient pas :</p>
 </table>
 <h2 id="related-runbooks">Runbooks liés<a class="headerlink" href="#related-runbooks" title="Permanent link">¶</a></h2>
 <ul>
-<li><a href="../recovery/">Restauration</a> : réinitialisation de mot de passe, rotation de la clé JWT, restauration d'une sauvegarde.</li>
+<li><a href="../recovery/">Récupération</a> : réinitialisation de mot de passe, rotation de la clé JWT, restauration d'une sauvegarde.</li>
 <li><a href="../migration-runbook/">Procédures de migration</a> : déploiement du schéma, retour en arrière, récupération d'un état « dirty ».</li>
 <li><a href="../incident-runbook/">Procédures d'incident</a> : les premiers gestes quand le serveur présente un problème.</li>
 </ul>

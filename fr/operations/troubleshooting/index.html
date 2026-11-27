@@ -3525,7 +3525,7 @@ dans <a href="../../runbooks/cli/">Ligne de commande</a>.</p>
 </tbody>
 </table>
 <p>Mot de passe administrateur perdu, clé de signature compromise ou base
-endommagée : <a href="../../runbooks/recovery/">Restauration</a>.</p>
+endommagée : <a href="../../runbooks/recovery/">Récupération</a>.</p>
 <h2 id="nobody-can-sign-in">Personne ne peut se connecter<a class="headerlink" href="#nobody-can-sign-in" title="Permanent link">¶</a></h2>
 <p>Deux causes habituelles :</p>
 <ul>
@@ -3538,11 +3538,11 @@ endommagée : <a href="../../runbooks/recovery/">Restauration</a>.</p>
 <p>La procédure pas à pas :
 <a href="../../runbooks/incident-runbook/#every-login-returns-401">Toutes les connexions renvoient 401</a>.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">Remarque</p>
 <p>Une clé de signature perdue ou remplacée ne déconnecte personne à elle
 seule : les applications renouvellent leurs jetons. Pour mettre fin à
 toutes les sessions volontairement, c'est <code>evey admin rotate-jwt-key</code>,
-voir <a href="../../runbooks/recovery/#rotate-the-key-that-signs-access-tokens">Restauration</a>.</p>
+voir <a href="../../runbooks/recovery/#rotate-the-key-that-signs-access-tokens">Récupération</a>.</p>
 </div>
 <p>Le serveur répond sur le réseau domestique mais pas ailleurs, ou les
 applications indiquent que l'accès distant est désactivé :

@@ -3526,7 +3526,7 @@ binary की नहीं: bare metal पर दोनों आप खुद �
   इन uid के लिए <code>/etc/passwd</code> में किसी खाते की ज़रूरत नहीं है।</li>
 </ul>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">चेतावनी</p>
 <p>ग्रुप id मायने रखती है: launcher प्लगइन को उसके uid और सर्वर के अपने ग्रुप
 पर स्विच करता है, और 1000 से नीचे की कोई भी uid या gid मना कर देता है। सिर्फ़
 <code>useradd --system</code> से बने ग्रुप को 1000 से नीचे की system id मिलती है, और तब
@@ -3621,7 +3621,7 @@ capability के रहता है; launcher के पास एक file cap
 मना कर दिया जाता है, क्योंकि वहाँ uid ही उसकी एकमात्र सुरक्षा है; Landlock में वह लॉग
 में चेतावनी लिखता है और सर्वर की uid पर चलता है।</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">चेतावनी</p>
 <p>uid separation <code>no_new_privs</code> के साथ नहीं चलता। अगर सर्वर systemd
 <code>NoNewPrivileges=yes</code> के साथ चलता है, तो exec पर file capability अनदेखी हो
 जाती है: <code>basic</code> मोड में प्लगइन मना कर दिए जाते हैं, और Landlock में uid

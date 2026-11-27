@@ -3490,7 +3490,7 @@ services avec lesquels le serveur communique :</p>
 <tbody>
 <tr>
 <td><strong>ffmpeg</strong> et <strong>ffprobe</strong></td>
-<td>transcodage, analyse ; l'image embarque aussi les pilotes VAAPI et <code>fpcalc</code> (chromaprint) pour la détection des génériques</td>
+<td>transcodage, analyse ; l'image embarque aussi les pilotes VAAPI et <code>fpcalc</code> (chromaprint) pour la détection des intros</td>
 </tr>
 <tr>
 <td><strong>PostgreSQL</strong> (serveur plus une base) et <strong><code>pg_dump</code></strong></td>
@@ -3529,7 +3529,7 @@ privilège, comme le fait l'image :</p>
   <code>/etc/passwd</code>.</li>
 </ul>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">Attention</p>
 <p>L'identifiant du groupe compte : le launcher abaisse un plugin vers son
 uid et vers le groupe du serveur lui-même, et refuse tout uid ou gid
 inférieur à 1000. Un groupe créé par <code>useradd --system</code> seul reçoit un
@@ -3632,7 +3632,7 @@ pas abaisser (capability absente, <code>no_new_privs</code> positionné), un plu
 mode <code>basic</code> est refusé, puisque l'uid y est sa seule protection ; sous
 Landlock il journalise un avertissement et tourne sous l'uid du serveur.</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">Attention</p>
 <p>La séparation d'uid est incompatible avec <code>no_new_privs</code>. Si le serveur
 tourne sous systemd avec <code>NoNewPrivileges=yes</code>, la capability de fichier
 est ignorée à l'exec : les plugins sont refusés en mode <code>basic</code>, et sous

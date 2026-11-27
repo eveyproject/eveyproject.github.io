@@ -4009,7 +4009,7 @@
 </span></code></pre></div>
 <p>有 <code>media.files</code> 权限，并且只有当正在查看的人是管理员时，每个条目才会额外带上 <code>filePath</code>、<code>fileSize</code>
 （一个字符串，和 API 里所有 64 位数字一样）和 <code>quality</code>：<code>width</code>、<code>height</code>、<code>videoCodec</code>、<code>hdrType</code>（SDR 时为空）、
-<code>bitDepth</code>、<code>bitrate</code>（每秒比特数）、<code>durationMs</code>、<code>container</code>、<code>audioCodec</code> 和 <code>audioChannels</code>，取自第一条视频轨和默认音轨。对其他任何人，令牌在签发时就不带这个权限，两个字段都是空的：
+<code>bitDepth</code>、<code>bitrate</code>（每秒比特数）、<code>durationMs</code>、<code>container</code>、<code>audioCodec</code> 和 <code>audioChannels</code>，取自第一条视频轨和默认音轨。对其他任何人，令牌在签发时就不带这个权限，这些字段都是空的：
 展示给所有人的模块不能依赖它们，它们该出现在 <code>admin.nav</code> 插槽里。</p>
 <p><code>poster</code> 返回 <code>data:</code> URL，是因为框架的策略禁止直接从服务器加载图片；可以把它用作 <code>&lt;img&gt;</code> 的来源，或者当作纹理。</p>
 <h3 id="eveymediagaps-permission-mediagaps"><code>evey.media.gaps()</code>（权限 <code>media.gaps</code>）<a class="headerlink" href="#eveymediagaps-permission-mediagaps" title="Permanent link">¶</a></h3>

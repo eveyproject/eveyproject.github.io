@@ -3530,7 +3530,7 @@ Benutzer ohne Sonderrechte an, wie das Image es tut:</p>
   <code>/etc/passwd</code>.</li>
 </ul>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">Warnung</p>
 <p>Die Gruppen-ID ist wichtig: Der Launcher lässt ein Plugin zu seiner UID
 und zur eigenen Gruppe des Servers wechseln und lehnt jede UID oder GID unter
 1000 ab. Eine Gruppe, die nur durch <code>useradd --system</code> entsteht, bekommt
@@ -3636,7 +3636,7 @@ wechseln (Capability fehlt, <code>no_new_privs</code> gesetzt), wird ein Plugin 
 Landlock schreibt er eine Warnung ins Protokoll und startet das Plugin mit der
 UID des Servers.</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">Warnung</p>
 <p>Die UID-Trennung ist nicht mit <code>no_new_privs</code> vereinbar. Läuft der
 Server unter systemd mit <code>NoNewPrivileges=yes</code>, wird die
 Datei-Capability beim exec ignoriert: Plugins werden im Modus <code>basic</code>

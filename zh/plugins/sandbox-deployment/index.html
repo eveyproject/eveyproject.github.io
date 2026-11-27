@@ -3382,7 +3382,7 @@ uid 分离只是一层冗余的额外防护。</p>
 </tbody>
 </table>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">警告</p>
 <p>uid 分离和 Docker 的 <code>no-new-privileges</code> 选项不能同时使用：只能二选一。在旧机器上（<code>basic</code>），
 如果无法切换用户，服务器会拒绝启动该插件，而不是让它在能接触到您密钥的环境中运行；在现代机器上，
 服务器会记录一条警告，然后在没有这层额外保护的情况下运行插件。镜像里已经带好了所需的一切，您只需要设置这个变量。</p>

@@ -3628,7 +3628,7 @@ encodeur (<code>$TOKEN</code> est un JWT d'administrateur) :</p>
 </span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"value":"false"}'</span>
 </span></code></pre></div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">Remarque</p>
 <p>Laissez le journal de progression désactivé hors investigation : un fichier
 par encodeur, quelques Mo par session, pour chaque lecture sur la machine.
 Le nom du fichier porte le hachage de décision, le palier (<code>-vN-</code>) et le
@@ -3775,7 +3775,7 @@ machine n'est nécessaire. Les heures sont en UTC. Chaque balise est une ligne
 <ol>
 <li><strong>Le récepteur était-il actif, et jusqu'à quand ?</strong> Cherchez
    <code>cast_receiver_alive</code>. Le récepteur en envoie une toutes les 30 s pendant
-   la lecture ; <code>details</code> porte <code>buf=&lt;arrière&gt;/&lt;avant&gt;/&lt;plages&gt;</code> (secondes en
+   la lecture ; <code>details</code> porte <code>buf=&lt;behind&gt;/&lt;ahead&gt;/&lt;ranges&gt;</code> (secondes en
    tampon autour de la tête de lecture) et <code>pos_sec</code>. Une lecture saine
    montre <code>ahead</code> à plusieurs dizaines de secondes. L'heure de la dernière
    balise est le moment où le récepteur s'est arrêté ou a été arrêté de force : rien après

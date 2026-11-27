@@ -3300,7 +3300,7 @@
 <h2 id="if-ac3go-cannot-run">如果 ac3go 无法运行<a class="headerlink" href="#if-ac3go-cannot-run" title="Permanent link">¶</a></h2>
 <p>当解码器加载失败、在某个分段上出错，或者服务器没有给它指定音频流时，播放器会在这部影片剩下的时间里不再使用它，并向服务器请求普通的视频流，其中的声音已转换为 AAC。电影仍然有声音；此时<strong>流信息</strong>会显示转换，而不是<em>客户端解码</em>。</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<p class="admonition-title">警告</p>
 <p>如果反向代理设置了自己的 Content-Security-Policy，就必须在 <code>script-src</code> 里允许 <code>'wasm-unsafe-eval'</code>，否则解码器无法启动。它还必须像网页应用的其他部分一样，提供 <code>/wasm/</code> 下的解码器文件。见<a href="../../reverse-proxy/#security-headers--csp---read-this-if-your-proxy-sets-its-own">反向代理配置</a>。</p>
 </div>
 <h2 id="on-a-cast-receiver">在投屏接收器上<a class="headerlink" href="#on-a-cast-receiver" title="Permanent link">¶</a></h2>

@@ -3294,7 +3294,7 @@ Aufbewahrungsdauer des Verlaufs und den Endpunkten für eine externe
 <tr>
 <td><code>EVEY_BACKUP_RETENTION_DAYS</code></td>
 <td><code>30</code></td>
-<td>Ältere Sicherungen werden gelöscht, wenn das Intervall darüber gesetzt ist: beim Start und nach jedem seiner Läufe. Der Zeitplan im Verwaltungsbereich hat seine eigene <strong>Aufbewahrung</strong>.</td>
+<td>Sicherungen, die älter sind, werden gelöscht, wenn das Intervall darüber gesetzt ist: beim Start und nach jedem seiner Läufe. Der Zeitplan im Verwaltungsbereich hat seine eigene <strong>Aufbewahrung</strong>.</td>
 <td>Sicherung &amp; Wiederherstellung → Zeitplan → <strong>Aufbewahrung</strong>, sofort</td>
 </tr>
 </tbody>
@@ -3319,7 +3319,7 @@ Aufbewahrungsdauer des Verlaufs und den Endpunkten für eine externe
 <tr>
 <td><code>EVEY_LOG_DIR</code></td>
 <td><code>/data/logs</code></td>
-<td>Wohin die tägliche Protokolldatei <code>evey-YYYY-MM-DD.log</code> geschrieben wird. Vom Image gesetzt. Diese Datei ist maßgeblich: <code>docker logs</code> zeigt denselben Strom, aber Docker rotiert ihn.</td>
+<td>Wohin die tägliche Protokolldatei <code>evey-YYYY-MM-DD.log</code> geschrieben wird (mit einem Stundensuffix, sobald eine Datei 50 MB überschreitet). Vom Image gesetzt. Diese Datei ist maßgeblich: <code>docker logs</code> zeigt denselben Strom, aber Docker rotiert ihn.</td>
 <td>keine</td>
 </tr>
 <tr>

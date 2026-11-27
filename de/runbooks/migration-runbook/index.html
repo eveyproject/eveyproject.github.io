@@ -3401,7 +3401,7 @@ Beispiele, die schon ausgeliefert wurden:</p>
 <li><strong>Eine Spalte ersetzen (erweitern, migrieren, zusammenziehen)</strong>: Packen Sie
   <code>ADD COLUMN</code> + Nachfüllen + <code>SET NOT NULL</code> + <code>DROP COLUMN</code> nicht in eine
   Datei. Diese Form funktioniert nur, weil Evey als einzelne Instanz läuft
-  und die Migrationen beim Start der Reihe nach angewendet werden; bei einem
+  und die Migrationen beim Start synchron angewendet werden; bei einem
   schrittweisen Ausrollen würden die noch nicht aktualisierten Instanzen Fehler liefern.
   <code>000077</code> und <code>000098_playlists_profile_id.up.sql</code> wurden so geschrieben und
   bleiben so, weil sie schon ausgeliefert sind. Verteilen Sie eine neue auf
